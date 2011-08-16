@@ -1,7 +1,7 @@
 Create a simple test page
 
 !|script|Page Builder|
-|line|!-!path classes-!|
+|line|!-!path build/classes-!|
 |line|!-!path fitnesse.jar-!|
 |line|!-!|-!fitnesse.testutil.${FIXTURE_NAME}!-|-!|
 |line|!-|blah|-!|

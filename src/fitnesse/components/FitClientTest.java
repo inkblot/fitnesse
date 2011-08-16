@@ -26,7 +26,7 @@ public class FitClientTest extends RegexTestCase implements TestSystemListener {
 
   public void setUp() throws Exception {
     CommandRunningFitClient.TIMEOUT = 5000;
-    client = new CommandRunningFitClient(this, "java -cp classes fit.FitServer -v", port, new SocketDealer());
+    client = new CommandRunningFitClient(this, "java -cp build/classes fit.FitServer -v", port, new SocketDealer());
     receiver = new CustomFitSocketReceiver(port);
   }
 

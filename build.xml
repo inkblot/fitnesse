@@ -13,7 +13,7 @@
 
     <property name="src" location="${basedir}/src"/>
     <property name="build" location="${basedir}/build"/>
-    <property name="build.classes" location="classes"/>
+    <property name="build.classes" location="${build}/classes"/>
     <property name="lib" location="${basedir}/lib"/>
     <property name="dist" location="${basedir}/dist"/>
     <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
@@ -29,7 +29,6 @@
 
     <target name="clean" description="delete all build-generated data">
         <delete dir="${build}"/>
-        <delete dir="${build.classes}"/>
         <delete dir="${results.dir}"/>
         <delete dir="${lib}"/>
         <delete dir="${dist}"/>
@@ -92,7 +91,6 @@
     </target>
 
     <target name="copyResources" description="copy images, css, and other resources into the classes directory">
-        <mkdir dir="${build.classes}/Resources"/>
         <copy todir="${build.classes}/Resources/FitNesseRoot/files">
             <fileset dir="FitNesseRoot/files">
                 <include name="images/**"/>

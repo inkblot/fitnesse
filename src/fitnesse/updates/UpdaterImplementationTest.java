@@ -55,16 +55,16 @@ public class UpdaterImplementationTest {
   }
 
   private void createFakeUpdateListFiles() {
-    updateList = new File("classes/Resources/updateList");
-    updateDoNotCopyOver = new File("classes/Resources/updateDoNotCopyOverList");
+    updateList = new File("build/classes/Resources/updateList");
+    updateDoNotCopyOver = new File("build/classes/Resources/updateDoNotCopyOverList");
     FileUtil.createFile(updateList, "files/TestFile\nfiles/BestFile\n");
     FileUtil.createFile(updateDoNotCopyOver, "SpecialFile");
   }
 
   private void createFakeJarFileResources() throws IOException {
-    FileUtil.createFile("classes/Resources/files/TestFile","") ;
-    FileUtil.createFile("classes/Resources/files/BestFile","") ;
-    FileUtil.createFile("classes/Resources/SpecialFile","");
+    FileUtil.createFile("build/classes/Resources/files/TestFile","") ;
+    FileUtil.createFile("build/classes/Resources/files/BestFile","") ;
+    FileUtil.createFile("build/classes/Resources/SpecialFile","");
   }
 
   @Test
@@ -80,8 +80,8 @@ public class UpdaterImplementationTest {
 
   @Test
   public void shouldBeAbleToGetThePathOfJustTheParent() throws Exception {
-    String filePath = updater.getCorrectPathForTheDestination("classes/files/moreFiles/TestFile");
-    assertSubString(portablePath("classes/files/moreFiles"), filePath);
+    String filePath = updater.getCorrectPathForTheDestination("build/classes/files/moreFiles/TestFile");
+    assertSubString(portablePath("build/classes/files/moreFiles"), filePath);
   }
 
   private String portablePath(String path) {
@@ -163,7 +163,7 @@ public class UpdaterImplementationTest {
 
   @After
   public void tearDown() {
-    FileUtil.deleteFileSystemDirectory("classes/Resources");
+    FileUtil.deleteFileSystemDirectory("build/classes/Resources");
     FileUtil.deleteFileSystemDirectory("testDir");
   }
 

@@ -39,14 +39,14 @@ public class RequestBuilderTest extends RegexTestCase {
     builder.addInput("responder", "saveData");
     String content = "!fixture fit.ColumnFixture\n" +
     "\n" +
-    "!path classes\n" +
+    "!path build/classes\n" +
     "\n" +
     "!2 ";
     builder.addInput("pageContent", content);
 
     String inputString = builder.inputString();
     assertSubString("responder=saveData", inputString);
-    assertSubString("pageContent=%21fixture+fit.ColumnFixture%0A%0A%21path+classes%0A%0A%212+", inputString);
+    assertSubString("pageContent=%21fixture+fit.ColumnFixture%0A%0A%21path+build%2Fclasses%0A%0A%212+", inputString);
     assertSubString("&", inputString);
   }
 

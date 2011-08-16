@@ -14,7 +14,7 @@ To run the unit tests:
  * build all the class files
  * set your working directory where you unpacked the source
  * add to your classpath:
-  * the 'classes' directory
+  * the 'build/classes' directory
   * junit.jar.
  * run all tests.
 

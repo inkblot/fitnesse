@@ -64,7 +64,7 @@ public class SlimTestSystemTest {
     request = new MockRequest();
     responder = getSlimResponder();
     responder.setFastTest(true);
-    testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!path classes");
+    testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!path build/classes");
     SlimTestSystem.clearSlimPortOffset();
   }
 
@@ -439,7 +439,7 @@ public class SlimTestSystemTest {
   @Test
   public void checkTestClassPrecededByDefine() throws Exception {
     getResultsForPageContents("!define PI {3.141592}\n" +
-      "!path classes\n" +
+      "!path build/classes\n" +
       "!path fitnesse.jar\n" +
       "|fitnesse.testutil.PassFixture|\n");
     assertTestResultsContain("PassFixture");

@@ -6,7 +6,7 @@ This example shows just one test subpage being executed.
 Create a Suite page
 
 |script|Page Builder|
-|line|!-!path classes-!|
+|line|!-!path build/classes-!|
 |line|!-!path fitnesse.jar-!|
 |page|!-SuitePage-!|
 

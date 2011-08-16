@@ -3,7 +3,7 @@ When you execute a suite page, the execution status box will be displayed in the
 Create a Suite page
 
 !|script|Page Builder|
-|line|!-!path classes-!|
+|line|!-!path build/classes-!|
 |line|!-!path fitnesse.jar-!|
 |page|!-SuitePage-!|
 

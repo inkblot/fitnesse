@@ -119,7 +119,7 @@ public class MultipleTestsRunnerTest {
   }
   
   private String classpathWidgets() {
-    return "!path classes\n" +
+    return "!path build/classes\n" +
       "!path lib/dummy.jar\n";
   }
   

@@ -1,5 +1,5 @@
 !define TEST_SYSTEM {slim}
-!path classes
+!path build/classes
 
 !|script|fitnesse.slim.test.TestSlim|
 |$X=|echo string|yahoo|

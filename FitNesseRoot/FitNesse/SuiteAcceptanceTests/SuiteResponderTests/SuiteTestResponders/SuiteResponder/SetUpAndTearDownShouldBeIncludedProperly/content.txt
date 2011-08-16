@@ -1,7 +1,7 @@
 !define TEST_SYSTEM {slim}
 
 !define PATHS {
-!path classes
+!path build/classes
 !path fitnesse.jar
 !-!define TEST_SYSTEM (slim:A)-!
 !-!define SLIM_PORT (9000)-!

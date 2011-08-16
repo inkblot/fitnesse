@@ -2,7 +2,7 @@
 |!contents -g|
 
 !path fitnesse.jar
-!path classes
+!path build/classes
 
 
 

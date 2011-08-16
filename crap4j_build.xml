@@ -22,7 +22,7 @@
 
             <classes>
                 <!-- put the project's class directories here. These are the classes you want crap numbers for -->
-                <pathElement location="classes"/>
+                <pathElement location="${build.classes}"/>
             </classes>
 
             <srces>
@@ -34,7 +34,7 @@
                 <!-- The project's test classes.
  Note, separating it from the project classes makes life so much easier
  but if you didn't, then you probably just want to repeat the classDir entry here -->
-                <pathElement location="classes"/>
+                <pathElement location="${build.classes}"/>
             </testClasses>
 
             <libClasspath>

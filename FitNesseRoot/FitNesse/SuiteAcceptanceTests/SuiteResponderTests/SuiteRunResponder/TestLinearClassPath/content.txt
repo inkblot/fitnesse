@@ -7,7 +7,7 @@ When you execute a test page, !-FitNesse-! gathers up the classpaths prior to ru
 !define PROPERTY_DISPLAY (
 &bang;define TEST_SYSTEM {SLIM}
 &bang;define SLIM_PORT {9900}
-!path classes
+!path build/classes
 !path fitnesse.jar
 
 !|Import|
@@ -24,4 +24,4 @@ When you execute a test page, !-FitNesse-! gathers up the classpaths prior to ru
 |given page|ParentPage.TestPage|with content|${PROPERTY_DISPLAY}|
 
 -!|script|
-|page|ParentPage.TestPage?test|should contain|classes${path.separator}fitnesse.jar${path.separator}parentPath|
+|page|ParentPage.TestPage?test|should contain|build/classes${path.separator}fitnesse.jar${path.separator}parentPath|

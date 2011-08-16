@@ -1,6 +1,6 @@
 !include -c .FitNesse.SuiteAcceptanceTests.SetUp
 !*< classpath
-!path classes
+!path build/classes
 !path lib/*.jar
 *!
 ----

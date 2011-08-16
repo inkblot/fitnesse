@@ -13,7 +13,7 @@ public class CommandRunnerTest extends RegexTestCase {
   }
 
   public void testBasics() throws Exception {
-    CommandRunner runner = new CommandRunner("java -cp ./classes fitnesse.testutil.Echo", "echo this!");
+    CommandRunner runner = new CommandRunner("java -cp ./build/classes fitnesse.testutil.Echo", "echo this!");
     runner.run();
     assertHasRegexp("echo this!", runner.getOutput());
     assertEquals("", runner.getError());

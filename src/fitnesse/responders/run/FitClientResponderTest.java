@@ -34,7 +34,7 @@ public class FitClientResponderTest extends RegexTestCase {
 
   public static void buildSuite(WikiPage root) throws Exception {
     crawler = root.getPageCrawler();
-    suite = crawler.addPage(root, PathParser.parse("SuitePage"), "!path classes\n");
+    suite = crawler.addPage(root, PathParser.parse("SuitePage"), "!path build/classes\n");
     WikiPage page1 = crawler.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");
     WikiPage page2 = crawler.addPage(suite, PathParser.parse("TestFailing"), "!|fitnesse.testutil.FailFixture|\n");
     WikiPage page3 = crawler.addPage(suite, PathParser.parse("TestAnotherFailing"), "!|fitnesse.testutil.FailFixture|\n");
@@ -108,14 +108,14 @@ public class FitClientResponderTest extends RegexTestCase {
 
   public void testWithClasspathOnSuite() throws Exception {
     String result = getResultFor("SuitePage", true);
-    assertTrue(result.startsWith("00000000000000000007classes"));
+    assertTrue("was: " + result, result.startsWith("00000000000000000013build/classes"));
   }
 
   public void testWithClasspathOnTestInSuite() throws Exception {
     crawler.addPage(suite, PathParser.parse("TestPage"), "!path jar.jar\n!path /some/dir/with/.class/files\n!|fitnesse.testutil.IgnoreFixture|\n");
     String result = getResultFor("SuitePage.TestPage", true);
 
-    assertSubString("classes", result);
+    assertSubString("build/classes", result);
     assertSubString("jar.jar", result);
     assertSubString("/some/dir/with/.class/files", result);
   }

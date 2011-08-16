@@ -10,7 +10,7 @@ import org.junit.Test;
 import java.io.File;
 
 public class FileUpdateTest extends UpdateTestCase {
-  public final File testFile = new File("classes/testFile");
+  public final File testFile = new File("build/classes/testFile");
 
   protected Update makeUpdate() throws Exception {
     return new FileUpdate(context.rootPagePath, "testFile", "files"+File.separator+"images");

@@ -5,13 +5,14 @@
 
     <property environment="env"/>
     <property name="env.FITNESSE_TEST_PORT" value="8080"/>
-    <property name="src" location="src"/>
     <property name="src2" location="srcFitServerTests"/>
     <property name="fitnesseRoot" value="FitNesseRoot"/>
     <property name="fitnesseRootZip" value="FitNesseRoot.zip"/>
     <property name="zipDir" location="dist/fitnesse"/>
     <property name="results.dir" location="test-results"/>
 
+    <property name="src" location="${basedir}/src"/>
+    <property name="build" location="${basedir}/build"/>
     <property name="build.classes" location="classes"/>
     <property name="lib" location="${basedir}/lib"/>
 
@@ -24,10 +25,20 @@
         </fileset>
     </path>
 
-    <target name="build" depends="clean, compile" description="clean, then compile the source"/>
+    <target name="clean" description="delete everything in the classes directory">
+        <delete dir="${build}"/>
+        <delete dir="${build.classes}"/>
+        <delete dir="${results.dir}"/>
+        <delete dir="${lib}"/>
+    </target>
 
-    <target name="unit_tests" depends="clean, unit_test"
-            description="builds code from scratch, runs all the unit tests"/>
+    <target name="init">
+        <mkdir dir="${build}"/>
+        <mkdir dir="${build.classes}"/>
+        <mkdir dir="${results.dir}"/>
+        <mkdir dir="${lib}"/>
+        <mkdir dir="${lib}/compile"/>
+    </target>
 
     <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
         <mkdir dir="dist"/>
@@ -122,12 +133,6 @@
               tofile="FitNesseRoot/FrontPage/content.txt"/>
     </target>
 
-    <target name="clean" description="delete everything in the classes directory">
-        <delete dir="${build.classes}"/>
-        <delete dir="${results.dir}"/>
-        <delete dir="${lib}"/>
-    </target>
-
     <target name="unit_test" depends="compile" description="run the unit tests">
         <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
             <classpath refid="classpath"/>
@@ -144,13 +149,6 @@
                 </fileset>
             </batchtest>
         </junit>
-    </target>
-
-    <target name="init">
-        <mkdir dir="${build.classes}"/>
-        <mkdir dir="${results.dir}"/>
-        <mkdir dir="${lib}"/>
-        <mkdir dir="${lib}/compile"/>
     </target>
 
     <target name="acceptance_tests_xml" depends="jar">
@@ -170,6 +168,11 @@
             <arg value="9234"/>
         </java>
     </target>
+
+    <target name="unit_tests" depends="clean, unit_test"
+            description="builds code from scratch, runs all the unit tests"/>
+
+    <target name="build" depends="clean, compile" description="clean, then compile the source"/>
 
     <target name="dist" depends="unit_tests,acceptance_tests_xml,jar"/>
 

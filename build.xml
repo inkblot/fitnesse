@@ -147,10 +147,6 @@
 		<mkdir dir="test-results" />
 	</target>
 
-	<target name="load_fitnesse_taskdef">
-		<taskdef classpathref="classpath" resource="tasks.properties" />
-	</target>
-
 	<target name="release" depends="unit_tests, acceptance_tests" />
 
   <target  name="release_xml" depends="unit_tests, acceptance_tests_xml" />

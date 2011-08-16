@@ -1,4 +1,4 @@
-<project name="Fitnesse" default="all" basedir=".">
+<project name="Fitnesse" default="dist" basedir=".">
     <description>
         Fitnesse is a wiki wrapper for fit, an acceptance test framework.
     </description>
@@ -179,4 +179,7 @@
             <arg value="9234"/>
         </java>
     </target>
+
+    <target name="dist" depends="unit_tests,acceptance_tests_xml,jar"/>
+
 </project>

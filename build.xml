@@ -15,6 +15,8 @@
     <property name="build" location="${basedir}/build"/>
     <property name="build.classes" location="classes"/>
     <property name="lib" location="${basedir}/lib"/>
+    <property name="dist" location="${basedir}/dist"/>
+    <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
 
     <path id="classpath">
         <pathelement path="${build.classes}"/>
@@ -25,26 +27,26 @@
         </fileset>
     </path>
 
-    <target name="clean" description="delete everything in the classes directory">
+    <target name="clean" description="delete all build-generated data">
         <delete dir="${build}"/>
         <delete dir="${build.classes}"/>
         <delete dir="${results.dir}"/>
         <delete dir="${lib}"/>
+        <delete dir="${dist}"/>
     </target>
 
     <target name="init">
         <mkdir dir="${build}"/>
         <mkdir dir="${build.classes}"/>
+        <mkdir dir="${build.classes}/Resources"/>
         <mkdir dir="${results.dir}"/>
         <mkdir dir="${lib}"/>
         <mkdir dir="${lib}/compile"/>
+        <mkdir dir="${dist}"/>
     </target>
 
     <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
-        <mkdir dir="dist"/>
-        <delete file="dist/fitnesse.jar"/>
-
-        <jar jarfile="dist/fitnesse.jar" basedir="${build.classes}">
+        <jar jarfile="${fitnesse.jar}" basedir="${build.classes}">
             <include name="**/*.class"/>
             <exclude name="**/*Test.class"/>
             <exclude name="**/*TestSuite.class"/>
@@ -62,7 +64,6 @@
                 <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
             </manifest>
         </jar>
-        <delete dir="${build.classes}/Resources"/>
     </target>
 
     <target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
@@ -91,7 +92,6 @@
     </target>
 
     <target name="copyResources" description="copy images, css, and other resources into the classes directory">
-        <delete dir="${build.classes}/Resources"/>
         <mkdir dir="${build.classes}/Resources"/>
         <copy todir="${build.classes}/Resources/FitNesseRoot/files">
             <fileset dir="FitNesseRoot/files">
@@ -152,7 +152,7 @@
     </target>
 
     <target name="acceptance_tests_xml" depends="jar">
-        <java jar="dist/fitnesse.jar" failonerror="true" fork="true" output="fitnesse-results.xml">
+        <java jar="${fitnesse.jar}" failonerror="true" fork="true" output="${build}/fitnesse-results.xml">
             <arg value="-c"/>
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml"/>
             <arg value="-p"/>
@@ -161,7 +161,7 @@
     </target>
 
     <target name="acceptance_tests" depends="jar">
-        <java jar="dist/fitnesse.jar" failonerror="true" fork="true">
+        <java jar="${fitnesse.jar}" failonerror="true" fork="true">
             <arg value="-c"/>
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
             <arg value="-p"/>

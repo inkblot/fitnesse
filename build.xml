@@ -15,7 +15,7 @@
 
 	<path id="classpath">
 		<pathelement path="classes" />
-		<fileset dir="lib">
+		<fileset dir="legacy-lib">
 			<include name="*.jar" />
 			<exclude name="dummy.jar" />
 		</fileset>
@@ -40,9 +40,9 @@
 
 			<fileset dir="classes" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class" />
 
-			<zipfileset src="lib/htmlparser.jar" />
-			<zipfileset src="lib/json.jar" />
-			<zipfileset src="lib/velocity-1.6.2-dep.jar" />
+			<zipfileset src="legacy-lib/htmlparser.jar" />
+			<zipfileset src="legacy-lib/json.jar" />
+			<zipfileset src="legacy-lib/velocity-1.6.2-dep.jar" />
 
 			<manifest>
 				<attribute name="Built-By" value="Object Mentor, Inc." />

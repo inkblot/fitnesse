@@ -23,7 +23,6 @@
         <fileset dir="${lib}/compile"/>
         <fileset dir="legacy-lib">
             <include name="*.jar"/>
-            <exclude name="dummy.jar"/>
         </fileset>
     </path>
 

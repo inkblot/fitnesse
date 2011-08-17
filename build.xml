@@ -11,6 +11,7 @@
     <property name="lib" location="${basedir}/lib"/>
     <property name="dist" location="${basedir}/dist"/>
     <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
+    <property name="temp" location="${build}/tmp"/>
 
     <target name="clean" description="delete all build-generated data">
         <delete dir="${build}"/>
@@ -28,6 +29,7 @@
         <mkdir dir="${lib}/compile"/>
         <mkdir dir="${lib}/test"/>
         <mkdir dir="${dist}"/>
+        <mkdir dir="${temp}"/>
     </target>
 
     <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
@@ -35,8 +37,6 @@
             <include name="**/*.class"/>
             <include name="Resources/**"/>
             <include name="tasks.properties"/>
-
-            <fileset dir="${build.classes}" includes="**/SystemUnderTest.class,**/MySystemUnderTest.class"/>
 
             <zipfileset src="legacy-lib/htmlparser.jar"/>
             <zipfileset src="legacy-lib/json.jar"/>
@@ -138,6 +138,7 @@
                 <fileset dir="${lib}/compile" includes="*.jar"/>
                 <fileset dir="${basedir}/legacy-lib" includes="*.jar"/>
             </classpath>
+            <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <formatter type="xml" usefile="true"/>
             <formatter type="plain" usefile="false"/>
             <batchtest todir="${test.results}">
@@ -146,8 +147,6 @@
                     <exclude name="**/ShutdownResponderTest.java"/>
                     <exclude name="**/QueryTableBaseTest.java"/>
                     <exclude name="**/Test.java"/>
-                    <exclude name="**/SystemUnderTest.java"/>
-                    <exclude name="**/MySystemUnderTest.java"/>
                 </fileset>
             </batchtest>
         </junit>
@@ -155,6 +154,7 @@
 
     <target name="acceptance_tests_xml" depends="jar">
         <java jar="${fitnesse.jar}" failonerror="true" fork="true" output="${build}/fitnesse-results.xml">
+            <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-c"/>
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml"/>
             <arg value="-p"/>
@@ -164,6 +164,7 @@
 
     <target name="acceptance_tests" depends="jar">
         <java jar="${fitnesse.jar}" failonerror="true" fork="true">
+            <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-c"/>
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
             <arg value="-p"/>

@@ -31,8 +31,8 @@ public class MyFixture {
 |file support|
 
 |script|my fixture|
-|do business logic|/tmp|
-|delete|/tmp|
+|do business logic|build/tmp|
+|delete|build/tmp|
 
 
 '''Order of method execution'''

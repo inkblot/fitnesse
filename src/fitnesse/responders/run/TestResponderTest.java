@@ -32,12 +32,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import util.Clock;
-import util.FileUtil;
+import util.*;
 
 import static util.RegexTestCase.*;
-
-import util.XmlUtil;
 
 import static util.XmlUtil.getElementByTagName;
 
@@ -47,6 +44,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TestResponderTest {
+  private static final String TEST_TIME = "12/5/2008 01:19:00";
     private WikiPage root;
     private MockRequest request;
     private TestResponder responder;
@@ -74,6 +72,11 @@ public class TestResponderTest {
         context = FitNesseUtil.makeTestContext(root);
         receiver = new FitSocketReceiver(0, context.socketDealer);
         context.port = receiver.receiveSocket();
+
+        // holy side-effects, batman!  you wouldn't think from reading this line
+        // that it has an effect on anything, but it tweaks some static context
+        // data in order to "set the time" for the running system
+        new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
     }
 
     @After

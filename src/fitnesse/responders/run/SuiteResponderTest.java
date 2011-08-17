@@ -26,12 +26,15 @@ import org.w3c.dom.NodeList;
 import static util.RegexTestCase.*;
 
 import util.Clock;
+import util.DateAlteringClock;
+import util.DateTimeUtil;
 import util.XmlUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
 
 public class SuiteResponderTest {
+    private static final String TEST_TIME = "12/5/2008 01:19:00";
     private MockRequest request;
     private SuiteResponder responder;
     private WikiPage root;
@@ -66,6 +69,11 @@ public class SuiteResponderTest {
         context = FitNesseUtil.makeTestContext(root);
 
         receiver = new FitSocketReceiver(0, context.socketDealer);
+
+        // holy side-effects, batman!  you wouldn't think from reading this line
+        // that it has an effect on anything, but it tweaks some static context
+        // data in order to "set the time" for the running system
+        new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
     }
 
     @After
@@ -366,8 +374,7 @@ public class SuiteResponderTest {
     public void normalSuiteRunWithThreePassingTestsProducesSuiteResultFile() throws Exception {
         File xmlResultsFile = expectedXmlResultsFile();
 
-        if (xmlResultsFile.exists())
-            xmlResultsFile.delete();
+        assertFalse("Unclean test environment.  tearDown did not successfully tear down.", xmlResultsFile.exists());
 
         addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
         addTestToSuite("SlimTestTwo", simpleSlimDecisionTable);
@@ -376,15 +383,13 @@ public class SuiteResponderTest {
         FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
         XmlUtil.newDocument(xmlResultsStream);
         xmlResultsStream.close();
-        xmlResultsFile.delete();
     }
 
     @Test
     public void NoHistory_avoidsProducingSuiteResultFile() throws Exception {
         File xmlResultsFile = expectedXmlResultsFile();
 
-        if (xmlResultsFile.exists())
-            xmlResultsFile.delete();
+        assertFalse("Unclean test environment.  tearDown did not successfully tear down.", xmlResultsFile.exists());
 
         request.addInput("nohistory", "true");
         addTestToSuite("SlimTestOne", simpleSlimDecisionTable);
@@ -417,8 +422,7 @@ public class SuiteResponderTest {
                 context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
         File xmlResultsFile = new File(resultsFileName);
 
-        if (xmlResultsFile.exists())
-            xmlResultsFile.delete();
+        assertFalse("Unclean test environment.  tearDown did not successfully tear down.", xmlResultsFile.exists());
 
         addTestToSuite("SlimTest", simpleSlimDecisionTable);
         runSuite();
@@ -427,7 +431,6 @@ public class SuiteResponderTest {
         FileInputStream xmlResultsStream = new FileInputStream(xmlResultsFile);
         XmlUtil.newDocument(xmlResultsStream);
         xmlResultsStream.close();
-        xmlResultsFile.delete();
     }
 
     @Test

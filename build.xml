@@ -6,16 +6,11 @@
     <property name="src" location="${basedir}/src"/>
     <property name="build" location="${basedir}/build"/>
     <property name="build.classes" location="${build}/classes"/>
+    <property name="test.classes" location="${build}/test/classes"/>
     <property name="test.results" location="${build}/test/results"/>
     <property name="lib" location="${basedir}/lib"/>
     <property name="dist" location="${basedir}/dist"/>
     <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
-
-    <path id="classpath">
-        <pathelement path="${build.classes}"/>
-        <fileset dir="${lib}/compile" includes="*.jar"/>
-        <fileset dir="${basedir}/legacy-lib" includes="*.jar"/>
-    </path>
 
     <target name="clean" description="delete all build-generated data">
         <delete dir="${build}"/>
@@ -27,17 +22,17 @@
         <mkdir dir="${build}"/>
         <mkdir dir="${build.classes}"/>
         <mkdir dir="${build.classes}/Resources"/>
+        <mkdir dir="${test.classes}"/>
         <mkdir dir="${test.results}"/>
         <mkdir dir="${lib}"/>
         <mkdir dir="${lib}/compile"/>
+        <mkdir dir="${lib}/test"/>
         <mkdir dir="${dist}"/>
     </target>
 
     <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
         <jar jarfile="${fitnesse.jar}" basedir="${build.classes}">
             <include name="**/*.class"/>
-            <exclude name="**/*Test.class"/>
-            <exclude name="**/*TestSuite.class"/>
             <include name="Resources/**"/>
             <include name="tasks.properties"/>
 
@@ -99,8 +94,26 @@
     </target>
 
     <target name="compile" depends="init, stamp-version" description="compile the source (make)">
-        <javac srcdir="src" destdir="${build.classes}" classpathref="classpath" debug="true" source="1.6" target="1.6"/>
+        <javac srcdir="src" destdir="${build.classes}" debug="true" source="1.6" target="1.6">
+            <classpath>
+                <pathelement path="${build.classes}"/>
+                <fileset dir="${lib}/compile" includes="*.jar"/>
+                <fileset dir="${basedir}/legacy-lib" includes="*.jar"/>
+            </classpath>
+        </javac>
         <copy file="extra/ant/tasks.properties" todir="${build.classes}"/>
+    </target>
+
+    <target name="compile-tests" depends="compile" description="compile the unit tests">
+        <javac srcdir="test" destdir="${test.classes}" debug="true" source="1.6" target="1.6">
+            <classpath>
+                <pathelement path="${test.classes}"/>
+                <pathelement path="${build.classes}"/>
+                <fileset dir="${lib}/test" includes="*.jar"/>
+                <fileset dir="${lib}/compile" includes="*.jar"/>
+                <fileset dir="${basedir}/legacy-lib" includes="*.jar"/>
+            </classpath>
+        </javac>
     </target>
 
     <target name="stamp-version">
@@ -116,13 +129,19 @@
               tofile="FitNesseRoot/FrontPage/content.txt"/>
     </target>
 
-    <target name="unit_test" depends="compile" description="run the unit tests">
+    <target name="unit_test" depends="compile,compile-tests" description="run the unit tests">
         <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${build}">
-            <classpath refid="classpath"/>
+            <classpath>
+                <pathelement path="${test.classes}"/>
+                <pathelement path="${build.classes}"/>
+                <fileset dir="${lib}/test" includes="*.jar"/>
+                <fileset dir="${lib}/compile" includes="*.jar"/>
+                <fileset dir="${basedir}/legacy-lib" includes="*.jar"/>
+            </classpath>
             <formatter type="xml" usefile="true"/>
             <formatter type="plain" usefile="false"/>
             <batchtest todir="${test.results}">
-                <fileset dir="src">
+                <fileset dir="test">
                     <include name="**/*Test.java"/>
                     <exclude name="**/ShutdownResponderTest.java"/>
                     <exclude name="**/QueryTableBaseTest.java"/>

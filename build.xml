@@ -9,11 +9,11 @@
     <property name="fitnesseRoot" value="FitNesseRoot"/>
     <property name="fitnesseRootZip" value="FitNesseRoot.zip"/>
     <property name="zipDir" location="dist/fitnesse"/>
-    <property name="results.dir" location="test-results"/>
 
     <property name="src" location="${basedir}/src"/>
     <property name="build" location="${basedir}/build"/>
     <property name="build.classes" location="${build}/classes"/>
+    <property name="test.results" location="${build}/test/results"/>
     <property name="lib" location="${basedir}/lib"/>
     <property name="dist" location="${basedir}/dist"/>
     <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
@@ -28,7 +28,6 @@
 
     <target name="clean" description="delete all build-generated data">
         <delete dir="${build}"/>
-        <delete dir="${results.dir}"/>
         <delete dir="${lib}"/>
         <delete dir="${dist}"/>
     </target>
@@ -37,7 +36,7 @@
         <mkdir dir="${build}"/>
         <mkdir dir="${build.classes}"/>
         <mkdir dir="${build.classes}/Resources"/>
-        <mkdir dir="${results.dir}"/>
+        <mkdir dir="${test.results}"/>
         <mkdir dir="${lib}"/>
         <mkdir dir="${lib}/compile"/>
         <mkdir dir="${dist}"/>
@@ -135,7 +134,7 @@
             <classpath refid="classpath"/>
             <formatter type="xml" usefile="true"/>
             <formatter type="plain" usefile="false"/>
-            <batchtest todir="${results.dir}">
+            <batchtest todir="${test.results}">
                 <fileset dir="src">
                     <include name="**/*Test.java"/>
                     <exclude name="**/ShutdownResponderTest.java"/>

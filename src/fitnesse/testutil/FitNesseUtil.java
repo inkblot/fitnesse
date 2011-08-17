@@ -13,45 +13,45 @@ import org.apache.velocity.app.VelocityEngine;
 import util.FileUtil;
 
 public class FitNesseUtil {
-  private static FitNesse instance = null;
-  public static final int port = 1999;
-  public static FitNesseContext context;
-  public static final String URL = "http://localhost:" + port + "/";
+    private static FitNesse instance = null;
+    public static final int port = 1999;
+    public static FitNesseContext context;
+    public static final String URL = "http://localhost:" + port + "/";
 
-  public static void startFitnesse(WikiPage root) throws Exception {
-    context = makeTestContext(root);
-    context.responderFactory = new ResponderFactory(context.rootPagePath);
-    context.port = port;
-    startFitnesseWithContext(context);
-  }
+    public static void startFitnesse(WikiPage root) throws Exception {
+        context = makeTestContext(root);
+        context.responderFactory = new ResponderFactory(context.rootPagePath);
+        context.port = port;
+        startFitnesseWithContext(context);
+    }
 
-  public static void startFitnesseWithContext(FitNesseContext context) {
-    instance = new FitNesse(context);
-    instance.start();
-  }
+    public static void startFitnesseWithContext(FitNesseContext context) {
+        instance = new FitNesse(context);
+        instance.start();
+    }
 
-  public static void stopFitnesse() throws Exception {
-    instance.stop();
-    FileUtil.deleteFileSystemDirectory("TestDir");
-  }
+    public static void stopFitnesse() throws Exception {
+        instance.stop();
+        FileUtil.deleteFileSystemDirectory("TestDir");
+    }
 
-  public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) throws Exception {
-    VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
-    ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
-  }
+    public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) throws Exception {
+        VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
+        ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
+    }
 
-  public static FitNesseContext makeTestContext(WikiPage root) throws Exception {
-    FitNesseContext context = new FitNesseContext(root);
-    context.rootDirectoryName = "TestDir";
-    context.setRootPagePath();
-    VelocityFactory.makeVelocityFactory(context);
-    VelocityEngine engine = new VelocityEngine();
-    engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "FitNesseRoot/files/templates");
-    VelocityFactory.setVelocityEngine(engine);
-    return context;
-  }
+    public static FitNesseContext makeTestContext(WikiPage root) throws Exception {
+        FitNesseContext context = new FitNesseContext(root);
+        context.rootDirectoryName = "TestDir";
+        context.setRootPagePath();
+        VelocityFactory.makeVelocityFactory(context);
+        VelocityEngine engine = new VelocityEngine();
+        engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "../FitNesseRoot/files/templates");
+        VelocityFactory.setVelocityEngine(engine);
+        return context;
+    }
 
-  public static void destroyTestContext() {
-    FileUtil.deleteFileSystemDirectory("TestDir");
-  }
+    public static void destroyTestContext() {
+        FileUtil.deleteFileSystemDirectory("TestDir");
+    }
 }

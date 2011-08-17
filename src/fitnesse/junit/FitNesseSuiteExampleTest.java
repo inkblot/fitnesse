@@ -10,12 +10,12 @@ import fitnesse.junit.FitNesseSuite.OutputDir;
 
 @RunWith(FitNesseSuite.class)
 @Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
-@FitnesseDir(".")
+@FitnesseDir("..")
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
 public class FitNesseSuiteExampleTest {
 
-  @Test
-  public void dummy(){
-    
-  }
+    @Test
+    public void dummy() {
+
+    }
 }

@@ -3,13 +3,6 @@
         Fitnesse is a wiki wrapper for fit, an acceptance test framework.
     </description>
 
-    <property environment="env"/>
-    <property name="env.FITNESSE_TEST_PORT" value="8080"/>
-    <property name="src2" location="srcFitServerTests"/>
-    <property name="fitnesseRoot" value="FitNesseRoot"/>
-    <property name="fitnesseRootZip" value="FitNesseRoot.zip"/>
-    <property name="zipDir" location="dist/fitnesse"/>
-
     <property name="src" location="${basedir}/src"/>
     <property name="build" location="${basedir}/build"/>
     <property name="build.classes" location="${build}/classes"/>
@@ -20,10 +13,8 @@
 
     <path id="classpath">
         <pathelement path="${build.classes}"/>
-        <fileset dir="${lib}/compile"/>
-        <fileset dir="legacy-lib">
-            <include name="*.jar"/>
-        </fileset>
+        <fileset dir="${lib}/compile" includes="*.jar"/>
+        <fileset dir="${basedir}/legacy-lib" includes="*.jar"/>
     </path>
 
     <target name="clean" description="delete all build-generated data">
@@ -66,6 +57,8 @@
     <target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
         <java classpath="${build.classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
             <arg value="-baseDirectory:${build.classes}/Resources"/>
+            <arg value="-updateList:${build.classes}/Resources/updateList"/>
+            <arg value="-doNotCopyList:${build.classes}/Resources/updateDoNotCopyOverList"/>
             <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css"/>
             <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css"/>
             <arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt"/>
@@ -80,12 +73,6 @@
             <arg value="FitNesseRoot/PageFooter"/>
             <arg value="FitNesseRoot/PageHeader"/>
         </java>
-        <copy todir="${build.classes}/Resources">
-            <fileset dir=".">
-                <include name="updateList"/>
-                <include name="updateDoNotCopyOverList"/>
-            </fileset>
-        </copy>
     </target>
 
     <target name="copyResources" description="copy images, css, and other resources into the classes directory">
@@ -130,7 +117,7 @@
     </target>
 
     <target name="unit_test" depends="compile" description="run the unit tests">
-        <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${basedir}">
+        <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${build}">
             <classpath refid="classpath"/>
             <formatter type="xml" usefile="true"/>
             <formatter type="plain" usefile="false"/>

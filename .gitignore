@@ -1,29 +1,25 @@
-TestDir
-updateList
-updateDoNotCopyOverList
-#FitNesseRoot/JunkParent/*
-#FitNesseRoot/JunkPage/*
-#FitNesseRoot/ProjectPage/*
-FitNesseRoot/ErrorLogs/*
-FitNesseRoot/files/testResults/*
-test-results/*
-jsunit/*
-agitar/*
+# Build artifacts
 dist/*
 build/*
+lib/*
+
+# Revision control stuff
 .svn
-*-*.zip
-*.ipr
-fitnesse*.zip
-fitnesse.jar
 .DS_Store
-target/*
-*.iml
+
+# IDE project files
 *.ipr
 *.iws
 .idea
-desktop.ini
-inst.log
-velocity.log*
+
+# FitNesse's trail (todo: less stuff left behind)
+FitNesseRoot/ErrorLogs/*
+FitNesseRoot/files/testResults/*
 FitNesseRoot/files/javascript/jsunit/*
-junk/*
+FitNesseRoot/updateList
+FitNesseRoot/updateDoNotCopyOverList
+
+# No idea what these are
+#FitNesseRoot/JunkParent/*
+#FitNesseRoot/JunkPage/*
+#FitNesseRoot/ProjectPage/*

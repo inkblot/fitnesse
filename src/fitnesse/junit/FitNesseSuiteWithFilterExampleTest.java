@@ -12,13 +12,13 @@ import fitnesse.junit.FitNesseSuite.SuiteFilter;
 
 @RunWith(FitNesseSuite.class)
 @Name("FitNesse.SuiteAcceptanceTests.SuiteSlimTests")
-@FitnesseDir(".")
+@FitnesseDir("..")
 @OutputDir(systemProperty = "java.io.tmpdir", pathExtension = "fitnesse")
 @SuiteFilter("testSuite")
 @DebugMode(true)
 public class FitNesseSuiteWithFilterExampleTest {
-  @Test
-  public void dummy(){
-    
-  }
+    @Test
+    public void dummy() {
+
+    }
 }

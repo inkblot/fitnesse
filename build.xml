@@ -13,7 +13,7 @@
     <property name="lib" location="${basedir}/lib"/>
     <property name="lib.runtime" location="${lib}/runtime"/>
     <property name="lib.test" location="${lib}/test"/>
-    <property name="dist" location="${basedir}/dist"/>
+    <property name="dist" location="${build}/dist"/>
     <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
     <property name="temp" location="${build}/tmp"/>
     <property name="built.by" value="Nate Riffe &lt;inkblot@movealong.org&gt;"/>
@@ -23,7 +23,6 @@
     <target name="clean" description="delete all build-generated data">
         <delete dir="${build}"/>
         <delete dir="${lib}"/>
-        <delete dir="${dist}"/>
     </target>
 
     <target name="init" depends="resolve">

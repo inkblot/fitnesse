@@ -127,12 +127,7 @@
             <formatter type="xml" usefile="true"/>
             <formatter type="plain" usefile="false"/>
             <batchtest todir="${test.results}">
-                <fileset dir="test">
-                    <include name="**/*Test.java"/>
-                    <exclude name="**/ShutdownResponderTest.java"/>
-                    <exclude name="**/QueryTableBaseTest.java"/>
-                    <exclude name="**/Test.java"/>
-                </fileset>
+                <fileset dir="${test.classes}" includes="**/*Test.class"/>
             </batchtest>
         </junit>
     </target>

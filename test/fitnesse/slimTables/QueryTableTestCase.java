@@ -20,7 +20,7 @@ import fitnesse.wikitext.Utils;
 
 import static util.ListUtility.*;
 
-public abstract class QueryTableBaseTest {
+public abstract class QueryTableTestCase {
   private WikiPage root;
   private List<Object> instructions;
   private String queryTableHeader;

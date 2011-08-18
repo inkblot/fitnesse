@@ -57,6 +57,6 @@ public class ShutdownResponderTest extends TestCase {
   }
 
   public void testIsSecure() throws Exception {
-    assertTrue((new ShutdownResponder().getSecureOperation() instanceof AlwaysSecureOperation) == true);
+    assertTrue(new ShutdownResponder().getSecureOperation() instanceof AlwaysSecureOperation);
   }
 }

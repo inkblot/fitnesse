@@ -4,7 +4,7 @@ import static util.ListUtility.list;
 
 import org.junit.Test;
 
-public class OrderedQueryTableTest extends QueryTableBaseTest {
+public class OrderedQueryTableTest extends QueryTableTestCase {
   @Override
   protected Class<? extends QueryTable> queryTableClass() {
     return OrderedQueryTable.class;

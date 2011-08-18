@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static util.ListUtility.list;
 
-public class QueryTableTest extends QueryTableBaseTest {
+public class QueryTableTest extends QueryTableTestCase {
 
   protected String tableType() {
     return "query";

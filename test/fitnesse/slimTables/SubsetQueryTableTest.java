@@ -4,7 +4,7 @@ package fitnesse.slimTables;
 
 import org.junit.Test;
 
-public class SubsetQueryTableTest extends QueryTableBaseTest {
+public class SubsetQueryTableTest extends QueryTableTestCase {
 
   protected String tableType() {
     return "subset query";

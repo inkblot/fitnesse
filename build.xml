@@ -28,6 +28,7 @@
     <target name="init" depends="resolve">
         <mkdir dir="${build}"/>
         <mkdir dir="${build.classes}"/>
+        <mkdir dir="${build.classes}/fitnesse"/>
         <mkdir dir="${build.classes}/Resources"/>
         <mkdir dir="${test.classes}"/>
         <mkdir dir="${test.results}"/>
@@ -35,36 +36,19 @@
         <mkdir dir="${temp}"/>
     </target>
 
-    <target name="jar" depends="compile, build-properties, createUpdateLists" description="generate the jar file">
-        <jar jarfile="${fitnesse.jar}">
-            <manifest>
-                <attribute name="Built-By" value="${built.by}"/>
-                <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
-            </manifest>
-
-            <fileset dir="${build.classes}" includes="**/*"/>
-            <fileset dir="${resources}" includes="**/*"/>
-        </jar>
+    <target name="compile" depends="init" description="compile the source (make)">
+        <javac srcdir="${src}" destdir="${build.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
+            <classpath>
+                <fileset dir="${lib.runtime}" includes="*.jar"/>
+            </classpath>
+        </javac>
     </target>
 
-    <target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
-        <java classpath="${build.classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
-            <arg value="-baseDirectory:${build.classes}/Resources"/>
-            <arg value="-updateList:${build.classes}/Resources/updateList"/>
-            <arg value="-doNotCopyList:${build.classes}/Resources/updateDoNotCopyOverList"/>
-            <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css"/>
-            <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css"/>
-            <arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt"/>
-            <arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml"/>
-            <arg value="FitNesseRoot/files/images"/>
-            <arg value="FitNesseRoot/files/css"/>
-            <arg value="FitNesseRoot/files/javascript"/>
-            <arg value="FitNesseRoot/files/html"/>
-            <arg value="FitNesseRoot/files/templates"/>
-            <arg value="FitNesseRoot/FrontPage"/>
-            <arg value="FitNesseRoot/PageFooter"/>
-            <arg value="FitNesseRoot/PageHeader"/>
-        </java>
+    <target name="build-properties">
+        <tstamp/>
+        <propertyfile file="${build.classes}/fitnesse/build.properties">
+            <entry key="build.version" value="v${DSTAMP}"/>
+        </propertyfile>
     </target>
 
     <target name="copyResources" description="copy images, css, and other resources into the classes directory">
@@ -87,19 +71,36 @@
         </copy>
     </target>
 
-    <target name="compile" depends="init" description="compile the source (make)">
-        <javac srcdir="${src}" destdir="${build.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
-            <classpath>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-            </classpath>
-        </javac>
+    <target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
+        <java classpath="${build.classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
+            <arg value="-baseDirectory:${build.classes}/Resources"/>
+            <arg value="-updateList:${build.classes}/Resources/updateList"/>
+            <arg value="-doNotCopyList:${build.classes}/Resources/updateDoNotCopyOverList"/>
+            <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css"/>
+            <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css"/>
+            <arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt"/>
+            <arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml"/>
+            <arg value="FitNesseRoot/files/images"/>
+            <arg value="FitNesseRoot/files/css"/>
+            <arg value="FitNesseRoot/files/javascript"/>
+            <arg value="FitNesseRoot/files/html"/>
+            <arg value="FitNesseRoot/files/templates"/>
+            <arg value="FitNesseRoot/FrontPage"/>
+            <arg value="FitNesseRoot/PageFooter"/>
+            <arg value="FitNesseRoot/PageHeader"/>
+        </java>
     </target>
 
-    <target name="build-properties" depends="compile">
-        <tstamp/>
-        <propertyfile file="${build.classes}/fitnesse/build.properties">
-            <entry key="build.version" value="v${DSTAMP}"/>
-        </propertyfile>
+    <target name="jar" depends="compile, build-properties, createUpdateLists" description="generate the jar file">
+        <jar jarfile="${fitnesse.jar}">
+            <manifest>
+                <attribute name="Built-By" value="${built.by}"/>
+                <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
+            </manifest>
+
+            <fileset dir="${build.classes}" includes="**/*"/>
+            <fileset dir="${resources}" includes="**/*"/>
+        </jar>
     </target>
 
     <target name="compile-tests" depends="compile" description="compile the unit tests">

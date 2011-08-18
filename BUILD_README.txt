@@ -28,7 +28,6 @@ Direct any questions to the FitNesse yahoo group or to fitnesse@objectmentor.com
 Note: Working with Eclipse and IntelliJ
 
 The ant build generates two files from the templates in the "templates" directory:
- * FrontPage.content.txt.template is used to generate FitNesseRoot/FrontPage/context.txt
  * FitNesseVersion.java.template is used to generate src/fitnesse/FitNesseVersion.java
  
 So, run "ant all" before loading a fresh checkout into an IDE.

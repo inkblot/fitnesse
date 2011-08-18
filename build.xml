@@ -63,7 +63,6 @@
             <arg value="FitNesseRoot/files/javascript"/>
             <arg value="FitNesseRoot/files/html"/>
             <arg value="FitNesseRoot/files/templates"/>
-            <arg value="FitNesseRoot/FitNesse"/>
             <arg value="FitNesseRoot/FrontPage"/>
             <arg value="FitNesseRoot/PageFooter"/>
             <arg value="FitNesseRoot/PageHeader"/>
@@ -71,24 +70,21 @@
     </target>
 
     <target name="copyResources" description="copy images, css, and other resources into the classes directory">
-        <copy todir="${build.classes}/Resources/FitNesseRoot/files">
-            <fileset dir="FitNesseRoot/files">
-                <include name="images/**"/>
-                <include name="css/*.css"/>
-                <include name="javascript/**/*.js"/>
-                <include name="html/**"/>
-                <include name="templates/**"/>
-                <exclude name="juUnitTestLink.js"/>
-                <exclude name="**/unused/**"/>
-            </fileset>
-        </copy>
         <copy todir="${build.classes}/Resources/FitNesseRoot">
             <fileset dir="FitNesseRoot">
-                <include name="FitNesse/**"/>
-                <include name="FrontPage/**"/>
-                <include name="PageHeader/**"/>
-                <include name="PageFooter/**"/>
-                <exclude name="**/*.zip"/>
+                <include name="files/images/**"/>
+                <include name="files/css/*.css"/>
+                <include name="files/javascript/**/*.js"/>
+                <include name="files/html/**"/>
+                <include name="files/templates/**"/>
+                <exclude name="files/juUnitTestLink.js"/>
+                <exclude name="files/**/unused/**"/>
+                <include name="FrontPage/**/content.txt"/>
+                <include name="FrontPage/**/properties.xml"/>
+                <include name="PageHeader/**/content.txt"/>
+                <include name="PageHeader/**/properties.xml"/>
+                <include name="PageFooter/**/content.txt"/>
+                <include name="PageFooter/**/properties.xml"/>
             </fileset>
         </copy>
     </target>
@@ -119,14 +115,11 @@
     <target name="stamp-version">
         <delete file="pom.xml"/>
         <delete file="src/fitnesse/FitNesseVersion.java"/>
-        <delete file="FitNesseRoot/FrontPage/content.txt"/>
         <tstamp/>
         <filter token="version" value="${DSTAMP}"/>
         <copy filtering="true" file="templates/pom.xml.template" tofile="pom.xml"/>
         <copy filtering="true" file="templates/FitNesseVersion.java.template"
               tofile="src/fitnesse/FitNesseVersion.java"/>
-        <copy filtering="true" file="templates/FrontPage.content.txt.template"
-              tofile="FitNesseRoot/FrontPage/content.txt"/>
     </target>
 
     <target name="unit_test" depends="compile,compile-tests" description="run the unit tests">

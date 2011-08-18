@@ -14,8 +14,7 @@
 
 !2 ''Classpaths''
 !path build/classes
-!path legacy-lib/*.jar
-!path lib/compile/*.jar
+!path lib/runtime/*.jar
 ----
 !2 ''Port''
 FitNesse is running on port: ${FITNESSE_PORT}

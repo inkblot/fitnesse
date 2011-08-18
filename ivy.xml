@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+    <info organisation="org.movealong" module="fitnesse" revision="1.0.0"/>
+
+    <configurations>
+        <conf name="default" extends="runtime" description="Distributed artifacts"/>
+        <!--<conf name="compile" description="Libraries that the source code depends on for compilation"/>-->
+        <conf name="runtime" description="Libraries that are required as dependencies at runtime"/>
+        <conf name="sources" description="Source code for the library"/>
+        <conf name="javadoc" description="Documentation for the library"/>
+        <conf name="test" description="Libraries that are required to compile/run the test suite"/>
+        <conf name="build" description="Cobertura and its dependencies"/>
+    </configurations>
+
+    <publications>
+        <artifact name="fitnesse" type="jar" ext="jar" conf="default"/>
+        <!--<artifact name="fitnesse-source" type="source" ext="jar" conf="sources"/>-->
+    </publications>
+
+    <dependencies>
+        <dependency org="ant" name="ant" rev="1.7.0" conf="runtime->default"/>
+        <dependency org="org.htmlparser" name="htmlparser" rev="1.6" conf="runtime->default"/>
+        <dependency org="org.json" name="json" rev="20090211" conf="runtime->default"/>
+        <dependency org="org.mockito" name="mockito-all" rev="1.7" conf="runtime->default"/>
+        <dependency org="org.apache.velocity" name="velocity" rev="1.6.2" conf="runtime->default"/>
+
+        <dependency org="junit" name="junit" rev="4.6" conf="test->default"/>
+        <dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default"/>
+    </dependencies>
+
+</ivy-module>

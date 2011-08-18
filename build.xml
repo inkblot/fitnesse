@@ -9,9 +9,13 @@
     <property name="test.classes" location="${build}/test/classes"/>
     <property name="test.results" location="${build}/test/results"/>
     <property name="lib" location="${basedir}/lib"/>
+    <property name="lib.runtime" location="${lib}/runtime"/>
+    <property name="lib.test" location="${lib}/test"/>
     <property name="dist" location="${basedir}/dist"/>
     <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
     <property name="temp" location="${build}/tmp"/>
+
+    <import file="build-ivy.xml"/>
 
     <target name="clean" description="delete all build-generated data">
         <delete dir="${build}"/>
@@ -19,29 +23,22 @@
         <delete dir="${dist}"/>
     </target>
 
-    <target name="init">
+    <target name="init" depends="resolve">
         <mkdir dir="${build}"/>
         <mkdir dir="${build.classes}"/>
         <mkdir dir="${build.classes}/Resources"/>
         <mkdir dir="${test.classes}"/>
         <mkdir dir="${test.results}"/>
-        <mkdir dir="${lib}"/>
-        <mkdir dir="${lib}/compile"/>
-        <mkdir dir="${lib}/test"/>
         <mkdir dir="${dist}"/>
         <mkdir dir="${temp}"/>
     </target>
 
-    <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
+    <target name="jar" depends="compile, createUpdateLists" description="generate the jar file">
         <property name="built.by" value="Nate Riffe &lt;inkblot@movealong.org&gt;"/>
         <jar jarfile="${fitnesse.jar}" basedir="${build.classes}">
             <include name="**/*.class"/>
             <include name="Resources/**"/>
             <include name="tasks.properties"/>
-
-            <zipfileset src="legacy-lib/htmlparser.jar"/>
-            <zipfileset src="legacy-lib/json.jar"/>
-            <zipfileset src="legacy-lib/velocity-1.6.2-dep.jar"/>
 
             <manifest>
                 <attribute name="Built-By" value="${built.by}"/>
@@ -91,36 +88,31 @@
     </target>
 
     <target name="compile" depends="init, stamp-version" description="compile the source (make)">
-        <javac srcdir="src" destdir="${build.classes}" debug="true" source="1.6" target="1.6">
+        <javac srcdir="${src}" destdir="${build.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
             <classpath>
-                <pathelement path="${build.classes}"/>
-                <fileset dir="${lib}/compile" includes="*.jar"/>
-                <fileset dir="${basedir}/legacy-lib" includes="*.jar"/>
+                <fileset dir="${lib.runtime}" includes="*.jar"/>
             </classpath>
         </javac>
         <copy file="extra/ant/tasks.properties" todir="${build.classes}"/>
     </target>
 
     <target name="compile-tests" depends="compile" description="compile the unit tests">
-        <javac srcdir="test" destdir="${test.classes}" debug="true" source="1.6" target="1.6">
+        <javac srcdir="test" destdir="${test.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
             <classpath>
                 <pathelement path="${test.classes}"/>
                 <pathelement path="${build.classes}"/>
-                <fileset dir="${lib}/test" includes="*.jar"/>
-                <fileset dir="${lib}/compile" includes="*.jar"/>
-                <fileset dir="${basedir}/legacy-lib" includes="*.jar"/>
+                <fileset dir="${lib.test}" includes="*.jar"/>
+                <fileset dir="${lib.runtime}" includes="*.jar"/>
             </classpath>
         </javac>
     </target>
 
     <target name="stamp-version">
-        <delete file="pom.xml"/>
-        <delete file="src/fitnesse/FitNesseVersion.java"/>
+        <delete file="${src}/fitnesse/FitNesseVersion.java"/>
         <tstamp/>
         <filter token="version" value="${DSTAMP}"/>
-        <copy filtering="true" file="templates/pom.xml.template" tofile="pom.xml"/>
         <copy filtering="true" file="templates/FitNesseVersion.java.template"
-              tofile="src/fitnesse/FitNesseVersion.java"/>
+              tofile="${src}/fitnesse/FitNesseVersion.java"/>
     </target>
 
     <target name="unit_test" depends="compile,compile-tests" description="run the unit tests">
@@ -128,9 +120,8 @@
             <classpath>
                 <pathelement path="${test.classes}"/>
                 <pathelement path="${build.classes}"/>
-                <fileset dir="${lib}/test" includes="*.jar"/>
-                <fileset dir="${lib}/compile" includes="*.jar"/>
-                <fileset dir="${basedir}/legacy-lib" includes="*.jar"/>
+                <fileset dir="${lib.test}" includes="*.jar"/>
+                <fileset dir="${lib.runtime}" includes="*.jar"/>
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <formatter type="xml" usefile="true"/>
@@ -147,7 +138,11 @@
     </target>
 
     <target name="acceptance_tests_xml" depends="jar">
-        <java jar="${fitnesse.jar}" failonerror="true" fork="true" output="${build}/fitnesse-results.xml">
+        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true" output="${build}/fitnesse-results.xml">
+            <classpath>
+                <fileset file="${fitnesse.jar}"/>
+                <fileset dir="${lib.runtime}" includes="*.jar"/>
+            </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-c"/>
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml"/>
@@ -157,7 +152,11 @@
     </target>
 
     <target name="acceptance_tests" depends="jar">
-        <java jar="${fitnesse.jar}" failonerror="true" fork="true">
+        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
+            <classpath>
+                <fileset file="${fitnesse.jar}"/>
+                <fileset dir="${lib.runtime}" includes="*.jar"/>
+            </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-c"/>
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
@@ -166,11 +165,6 @@
         </java>
     </target>
 
-    <target name="unit_tests" depends="clean, unit_test"
-            description="builds code from scratch, runs all the unit tests"/>
-
-    <target name="build" depends="clean, compile" description="clean, then compile the source"/>
-
-    <target name="dist" depends="unit_tests,acceptance_tests_xml,jar"/>
+    <target name="dist" depends="clean,unit_test,acceptance_tests_xml,jar"/>
 
 </project>

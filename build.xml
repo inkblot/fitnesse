@@ -33,7 +33,7 @@
     </target>
 
     <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
-        <property name="built.by" value="Nate Riffe <inkblot@movealong.org>"/>
+        <property name="built.by" value="Nate Riffe &lt;inkblot@movealong.org&gt;"/>
         <jar jarfile="${fitnesse.jar}" basedir="${build.classes}">
             <include name="**/*.class"/>
             <include name="Resources/**"/>

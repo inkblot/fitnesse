@@ -25,6 +25,7 @@
         <dependency org="org.json" name="json" rev="20090211" conf="runtime->default"/>
         <dependency org="org.mockito" name="mockito-all" rev="1.7" conf="runtime->default"/>
         <dependency org="org.apache.velocity" name="velocity" rev="1.6.2" conf="runtime->default"/>
+        <dependency org="commons-io" name="commons-io" rev="+" conf="runtime->default"/>
 
         <dependency org="junit" name="junit" rev="4.6" conf="test->default"/>
         <dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default"/>

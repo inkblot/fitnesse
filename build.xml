@@ -3,7 +3,9 @@
         Fitnesse is a wiki wrapper for fit, an acceptance test framework.
     </description>
 
+    <property environment="env"/>
     <property name="src" location="${basedir}/src"/>
+    <property name="resources" location="${basedir}/resources"/>
     <property name="build" location="${basedir}/build"/>
     <property name="build.classes" location="${build}/classes"/>
     <property name="test.classes" location="${build}/test/classes"/>
@@ -14,6 +16,7 @@
     <property name="dist" location="${basedir}/dist"/>
     <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
     <property name="temp" location="${build}/tmp"/>
+    <property name="built.by" value="Nate Riffe &lt;inkblot@movealong.org&gt;"/>
 
     <import file="build-ivy.xml"/>
 
@@ -33,17 +36,15 @@
         <mkdir dir="${temp}"/>
     </target>
 
-    <target name="jar" depends="compile, createUpdateLists" description="generate the jar file">
-        <property name="built.by" value="Nate Riffe &lt;inkblot@movealong.org&gt;"/>
-        <jar jarfile="${fitnesse.jar}" basedir="${build.classes}">
-            <include name="**/*.class"/>
-            <include name="Resources/**"/>
-            <include name="tasks.properties"/>
-
+    <target name="jar" depends="compile, build-properties, createUpdateLists" description="generate the jar file">
+        <jar jarfile="${fitnesse.jar}">
             <manifest>
                 <attribute name="Built-By" value="${built.by}"/>
                 <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
             </manifest>
+
+            <fileset dir="${build.classes}" includes="**/*"/>
+            <fileset dir="${resources}" includes="**/*"/>
         </jar>
     </target>
 
@@ -87,13 +88,19 @@
         </copy>
     </target>
 
-    <target name="compile" depends="init, stamp-version" description="compile the source (make)">
+    <target name="compile" depends="init" description="compile the source (make)">
         <javac srcdir="${src}" destdir="${build.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
             <classpath>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
             </classpath>
         </javac>
-        <copy file="extra/ant/tasks.properties" todir="${build.classes}"/>
+    </target>
+
+    <target name="build-properties" depends="compile">
+        <tstamp/>
+        <propertyfile file="${build.classes}/fitnesse/build.properties">
+            <entry key="build.version" value="v${DSTAMP}"/>
+        </propertyfile>
     </target>
 
     <target name="compile-tests" depends="compile" description="compile the unit tests">
@@ -107,18 +114,11 @@
         </javac>
     </target>
 
-    <target name="stamp-version">
-        <delete file="${src}/fitnesse/FitNesseVersion.java"/>
-        <tstamp/>
-        <filter token="version" value="${DSTAMP}"/>
-        <copy filtering="true" file="templates/FitNesseVersion.java.template"
-              tofile="${src}/fitnesse/FitNesseVersion.java"/>
-    </target>
-
-    <target name="unit_test" depends="compile,compile-tests" description="run the unit tests">
+    <target name="unit_test" depends="compile, build-properties, compile-tests" description="run the unit tests">
         <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${build}">
             <classpath>
                 <pathelement path="${test.classes}"/>
+                <pathelement path="${resources}"/>
                 <pathelement path="${build.classes}"/>
                 <fileset dir="${lib.test}" includes="*.jar"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>

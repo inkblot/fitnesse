@@ -33,6 +33,7 @@
     </target>
 
     <target name="jar" depends="build, createUpdateLists" description="generate the jar file">
+        <property name="built.by" value="Nate Riffe <inkblot@movealong.org>"/>
         <jar jarfile="${fitnesse.jar}" basedir="${build.classes}">
             <include name="**/*.class"/>
             <include name="Resources/**"/>
@@ -43,7 +44,7 @@
             <zipfileset src="legacy-lib/velocity-1.6.2-dep.jar"/>
 
             <manifest>
-                <attribute name="Built-By" value="Object Mentor, Inc."/>
+                <attribute name="Built-By" value="${built.by}"/>
                 <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
             </manifest>
         </jar>

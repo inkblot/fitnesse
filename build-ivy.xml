@@ -1,7 +1,7 @@
 <project name="build-ivy" xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <property name="ivy.version" value="2.0.0"/>
-    <property name="ivy.lib" location="${lib}/ivy"/>
+    <property name="ivy.lib" location="${env.HOME}/.ant/lib"/>
     <property name="ivy.jar.file" location="${ivy.lib}/ivy-${ivy.version}.jar"/>
 
     <target name="-check-ivy">

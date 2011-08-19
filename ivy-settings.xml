@@ -16,5 +16,25 @@
             <ibiblio name="oauth" m2compatible="true" root="http://oauth.googlecode.com/svn/code/maven/"/>
         </chain>
 
+        <ssh name="dorothy-public" user="jenkins" host="dorothy.movealong.org" port="24"
+             keyFile="${user.home}/.ssh/id_ivy" m2compatible="true" publishPermissions="0644">
+            <ivy pattern="/var/www/ivy.movealong.org/public/[organization]/[module]/[revision]/ivy-[revision].[ext]"/>
+            <artifact
+                    pattern="/var/www/ivy.movealong.org/public/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+        </ssh>
+
+        <ssh name="dorothy-mirror" user="jenkins" host="dorothy.movealong.org" port="24"
+             keyFile="${user.home}/.ssh/id_ivy" m2compatible="true" publishPermissions="0644">
+            <ivy pattern="/var/www/ivy.movealong.org/mirror/[organization]/[module]/[revision]/ivy-[revision].[ext]"/>
+            <artifact
+                    pattern="/var/www/ivy.movealong.org/mirror/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+        </ssh>
+
+        <ssh name="dorothy-private" user="jenkins" host="dorothy.movealong.org" port="24"
+             keyFile="${user.home}/.ssh/id_ivy" m2compatible="true" publishPermissions="0644">
+            <ivy pattern="/var/www/ivy.movealong.org/private/[organization]/[module]/[revision]/ivy-[revision].[ext]"/>
+            <artifact
+                    pattern="/var/www/ivy.movealong.org/private/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+        </ssh>
     </resolvers>
 </ivysettings>

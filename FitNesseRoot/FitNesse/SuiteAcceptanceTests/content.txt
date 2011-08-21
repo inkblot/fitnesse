@@ -13,8 +13,9 @@
 |>SuiteTestHistory|''Test History tests''|
 
 !2 ''Classpaths''
-!path build/classes
+!path build/dist/fitnesse.jar
 !path lib/runtime/*.jar
+!path build/test/classes
 ----
 !2 ''Port''
 FitNesse is running on port: ${FITNESSE_PORT}

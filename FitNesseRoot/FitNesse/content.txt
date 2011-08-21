@@ -1,8 +1,9 @@
 |!c !2 Contents|
 |!contents -g|
 
-!path fitnesse.jar
-!path build/classes
+!path build/dist/fitnesse.jar
+!path lib/runtime/*.jar
+!path build/test/classes
 
 
 

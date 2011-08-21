@@ -10,6 +10,8 @@
     <property name="build.classes" location="${build}/classes"/>
     <property name="test.classes" location="${build}/test/classes"/>
     <property name="test.results" location="${build}/test/results"/>
+    <property name="integration" location="${build}/integration"/>
+    <property name="integration.tests" location="${integration}/tests"/>
     <property name="lib" location="${basedir}/lib"/>
     <property name="lib.runtime" location="${lib}/runtime"/>
     <property name="lib.test" location="${lib}/test"/>
@@ -22,8 +24,6 @@
     <property name="ivy.version" value="2.0.0"/>
     <property name="ivy.lib" location="${env.HOME}/.ant/lib"/>
     <property name="ivy.jar.file" location="${ivy.lib}/ivy-${ivy.version}.jar"/>
-
-    <import file="build-ivy.xml"/>
 
     <target name="clean" description="delete all build-generated data">
         <delete dir="${build}"/>
@@ -69,6 +69,8 @@
         <mkdir dir="${build.classes}/Resources"/>
         <mkdir dir="${test.classes}"/>
         <mkdir dir="${test.results}"/>
+        <mkdir dir="${integration}"/>
+        <mkdir dir="${integration.tests}"/>
         <mkdir dir="${dist}"/>
         <mkdir dir="${temp}"/>
     </target>
@@ -169,13 +171,23 @@
         </junit>
     </target>
 
-    <target name="acceptance_tests_xml" depends="jar">
-        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true" output="${build}/fitnesse-results.xml">
+    <target name="copy-integration-tests" depends="init">
+        <copy todir="${integration.tests}">
+            <fileset dir="${basedir}/FitNesseRoot" includes="**/*"/>
+        </copy>
+    </target>
+
+    <target name="acceptance_tests_xml" depends="jar, compile-tests, copy-integration-tests">
+        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true" output="${integration}/fitnesse-results.xml">
             <classpath>
                 <fileset file="${fitnesse.jar}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
+            <arg value="-d"/>
+            <arg value="${integration}"/>
+            <arg value="-r"/>
+            <arg value="tests"/>
             <arg value="-c"/>
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml"/>
             <arg value="-p"/>
@@ -183,15 +195,46 @@
         </java>
     </target>
 
-    <target name="acceptance_tests" depends="jar">
+    <target name="acceptance_tests" depends="jar, compile-tests, copy-integration-tests">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
                 <fileset file="${fitnesse.jar}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
+            <arg value="-d"/>
+            <arg value="${integration}"/>
+            <arg value="-r"/>
+            <arg value="tests"/>
             <arg value="-c"/>
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
+            <arg value="-p"/>
+            <arg value="9234"/>
+        </java>
+    </target>
+
+    <target name="fitnesse" depends="jar, compile-tests, copy-integration-tests">
+        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
+            <classpath>
+                <fileset file="${fitnesse.jar}"/>
+                <fileset dir="${lib.runtime}" includes="*.jar"/>
+            </classpath>
+            <arg value="tests"/>
+            <arg value="-p"/>
+            <arg value="9234"/>
+        </java>
+    </target>
+
+    <target name="debug-fitnesse" depends="jar, compile-tests, copy-integration-tests">
+        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
+            <classpath>
+                <fileset file="${fitnesse.jar}"/>
+                <fileset dir="${lib.runtime}" includes="*.jar"/>
+            </classpath>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xnoagent"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,server=n,suspend=n,address=8888"/>
+            <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-p"/>
             <arg value="9234"/>
         </java>

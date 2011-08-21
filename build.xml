@@ -222,7 +222,7 @@
         </java>
     </target>
 
-    <target name="dist" depends="clean,test,integration-test,jar"/>
+    <target name="dist" depends="clean,jar,test,integration-test" description="Produce the fitnesse jar and run all automated tests"/>
 
     <target name="publish-local" depends="dist" description="Publish artifacts to local repository">
         <ivy:publish resolver="local" overwrite="true">

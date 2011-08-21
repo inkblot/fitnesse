@@ -25,8 +25,7 @@ public abstract class UpdateTestCase {
 
   @Before
   public void setUp() throws Exception {
-    context = new FitNesseContext();
-    context.rootPath = testDir;
+    context = new FitNesseContext(null, testDir);
     context.rootDirectoryName = rootName;
     context.rootPagePath = testDir + "/" + rootName;
 

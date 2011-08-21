@@ -85,9 +85,8 @@ public class FitNesseMain {
 
   private static FitNesseContext loadContext(Arguments arguments)
     throws Exception {
-    FitNesseContext context = new FitNesseContext();
+    FitNesseContext context = new FitNesseContext(null, arguments.getRootPath());
     context.port = arguments.getPort();
-    context.rootPath = arguments.getRootPath();
     ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
     context.rootDirectoryName = arguments.getRootDirectory();
     context.setRootPagePath();

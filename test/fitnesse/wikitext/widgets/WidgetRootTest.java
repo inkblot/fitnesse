@@ -151,8 +151,7 @@ public class WidgetRootTest {
 
   @Test
     public void testShouldHaveRootPathVariableAvailable() throws Exception {
-    FitNesseContext context = new FitNesseContext();
-    context.rootPath = "/home/fitnesse";
+    FitNesseContext context = new FitNesseContext(null, "/home/fitnesse");
     new FitNesse(context, false);
     WidgetRoot root = new WidgetRoot("", rootPage);
     assertEquals("/home/fitnesse", root.getVariable("FITNESSE_ROOTPATH"));

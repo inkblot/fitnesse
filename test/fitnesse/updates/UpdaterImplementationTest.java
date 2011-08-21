@@ -51,8 +51,7 @@ public class UpdaterImplementationTest {
     }
 
     private void setTheContext() {
-        context = new FitNesseContext();
-        context.rootPath = testDir;
+        context = new FitNesseContext(null, testDir);
         context.rootDirectoryName = rootName;
         context.rootPagePath = testDir + "/" + rootName;
     }

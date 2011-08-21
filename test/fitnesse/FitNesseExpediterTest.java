@@ -29,8 +29,7 @@ public class FitNesseExpediterTest extends RegexTestCase {
         InMemoryPage root = (InMemoryPage) InMemoryPage.makeRoot("RooT");
         root.addChildPage("FrontPage");
         socket = new MockSocket();
-        context = new FitNesseContext(root);
-        context.rootPath = "..";
+        context = new FitNesseContext(root, "..");
         VelocityFactory.makeVelocityFactory(context);
         context.responderFactory = new ResponderFactory(".");
         expediter = new FitNesseExpediter(socket, context);

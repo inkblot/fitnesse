@@ -75,7 +75,7 @@
         <mkdir dir="${temp}"/>
     </target>
 
-    <target name="compile" depends="init" description="compile the source (make)">
+    <target name="compile" depends="init">
         <javac srcdir="${src}" destdir="${build.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
             <classpath>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
@@ -83,14 +83,7 @@
         </javac>
     </target>
 
-    <target name="build-properties">
-        <tstamp/>
-        <propertyfile file="${build.classes}/fitnesse/build.properties">
-            <entry key="build.version" value="v${DSTAMP}"/>
-        </propertyfile>
-    </target>
-
-    <target name="copyResources" description="copy images, css, and other resources into the classes directory">
+    <target name="-copy-wiki-resources" depends="init">
         <copy todir="${build.classes}/Resources/FitNesseRoot">
             <fileset dir="FitNesseRoot">
                 <include name="files/images/**"/>
@@ -110,7 +103,7 @@
         </copy>
     </target>
 
-    <target name="createUpdateLists" depends="copyResources" description="creates two lists of files to be udpated">
+    <target name="-create-update-lists" depends="compile, -copy-wiki-resources">
         <java classpath="${build.classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
             <arg value="-baseDirectory:${build.classes}/Resources"/>
             <arg value="-updateList:${build.classes}/Resources/updateList"/>
@@ -130,7 +123,14 @@
         </java>
     </target>
 
-    <target name="jar" depends="compile, build-properties, createUpdateLists" description="generate the jar file">
+    <target name="build-properties" depends="init">
+        <tstamp/>
+        <propertyfile file="${build.classes}/fitnesse/build.properties">
+            <entry key="build.version" value="v${DSTAMP}"/>
+        </propertyfile>
+    </target>
+
+    <target name="jar" depends="compile, build-properties, -create-update-lists">
         <jar jarfile="${fitnesse.jar}">
             <manifest>
                 <attribute name="Built-By" value="${built.by}"/>
@@ -153,7 +153,7 @@
         </javac>
     </target>
 
-    <target name="unit_test" depends="compile, build-properties, compile-tests" description="run the unit tests">
+    <target name="test" depends="compile, build-properties, compile-tests">
         <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${build}">
             <classpath>
                 <pathelement path="${test.classes}"/>
@@ -177,7 +177,7 @@
         </copy>
     </target>
 
-    <target name="acceptance_tests_xml" depends="jar, compile-tests, copy-integration-tests">
+    <target name="integration-test" depends="jar, compile-tests, copy-integration-tests">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true" output="${integration}/fitnesse-results.xml">
             <classpath>
                 <fileset file="${fitnesse.jar}"/>
@@ -195,25 +195,7 @@
         </java>
     </target>
 
-    <target name="acceptance_tests" depends="jar, compile-tests, copy-integration-tests">
-        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
-            <classpath>
-                <fileset file="${fitnesse.jar}"/>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-            </classpath>
-            <sysproperty key="java.io.tmpdir" value="${temp}"/>
-            <arg value="-d"/>
-            <arg value="${integration}"/>
-            <arg value="-r"/>
-            <arg value="tests"/>
-            <arg value="-c"/>
-            <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
-            <arg value="-p"/>
-            <arg value="9234"/>
-        </java>
-    </target>
-
-    <target name="fitnesse" depends="jar, compile-tests, copy-integration-tests">
+    <target name="fitnesse" depends="jar, compile-tests, copy-integration-tests" description="Run the fitnesse wiki">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
                 <fileset file="${fitnesse.jar}"/>
@@ -225,7 +207,7 @@
         </java>
     </target>
 
-    <target name="debug-fitnesse" depends="jar, compile-tests, copy-integration-tests">
+    <target name="debug-fitnesse" depends="jar, compile-tests, copy-integration-tests" description="Run the fitnesse wiki an connect to a listening debugger">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
                 <fileset file="${fitnesse.jar}"/>
@@ -240,7 +222,7 @@
         </java>
     </target>
 
-    <target name="dist" depends="clean,unit_test,acceptance_tests_xml,jar"/>
+    <target name="dist" depends="clean,test,integration-test,jar"/>
 
     <target name="publish-local" depends="dist" description="Publish artifacts to local repository">
         <ivy:publish resolver="local" overwrite="true">

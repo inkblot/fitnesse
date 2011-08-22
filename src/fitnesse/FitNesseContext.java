@@ -14,10 +14,16 @@ import fitnesse.wiki.WikiPage;
 import java.io.File;
 
 public class FitNesseContext {
+    public static final String DEFAULT_PATH = ".";
+    public static final String DEFAULT_ROOT = "FitNesseRoot";
+    public static final int DEFAULT_PORT = 80;
+    public static final int DEFAULT_COMMAND_PORT = 9123;
+    public static final int DEFAULT_VERSION_DAYS = 14;
+
     public FitNesse fitnesse;
-    public int port = 80;
+    public int port = DEFAULT_PORT;
     public final String rootPath;
-    public String rootDirectoryName = "FitNesseRoot";
+    public String rootDirectoryName = DEFAULT_ROOT;
     public String rootPagePath = "";
     public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
     public WikiPage root;
@@ -31,7 +37,6 @@ public class FitNesseContext {
     public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
     public static FitNesseContext globalContext;
     public String testResultsDirectoryName = "testResults";
-    public boolean shouldCollectHistory = false;
     public boolean doNotChunk;
 
     public FitNesseContext() {
@@ -39,7 +44,7 @@ public class FitNesseContext {
     }
 
     public FitNesseContext(WikiPage root) {
-        this(root, ".");
+        this(root, DEFAULT_PATH);
     }
 
     public FitNesseContext(WikiPage root, String rootPath) {
@@ -50,7 +55,7 @@ public class FitNesseContext {
 
     public String toString() {
         String endl = System.getProperty("line.separator");
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("\t").append("port:              ").append(port).append(endl);
         buffer.append("\t").append("root page:         ").append(root).append(endl);
         buffer.append("\t").append("logger:            ").append(logger == null ? "none" : logger.toString()).append(endl);

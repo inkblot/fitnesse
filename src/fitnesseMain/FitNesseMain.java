@@ -5,7 +5,6 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.components.Logger;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
@@ -96,7 +95,6 @@ public class FitNesseMain {
             context.defaultNewPageContent = defaultNewPageContent;
         WikiPageFactory wikiPageFactory = new WikiPageFactory();
         context.responderFactory = new ResponderFactory(context.rootPagePath);
-        context.logger = makeLogger(arguments);
         context.authenticator = makeAuthenticator(arguments.getUserpass(),
                 componentFactory);
         context.htmlPageFactory = componentFactory
@@ -141,11 +139,6 @@ public class FitNesseMain {
             arguments.setInstallOnly(commandLine.hasOption("i"));
         }
         return arguments;
-    }
-
-    private static Logger makeLogger(Arguments arguments) {
-        String logDirectory = arguments.getLogDirectory();
-        return logDirectory != null ? new Logger(logDirectory) : null;
     }
 
     public static Authenticator makeAuthenticator(String authenticationParameter,

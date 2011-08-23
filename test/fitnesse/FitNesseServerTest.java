@@ -5,9 +5,6 @@ package fitnesse;
 import java.util.regex.Pattern;
 
 import util.RegexTestCase;
-import fitnesse.components.LogData;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.testutil.MockSocket;
@@ -97,26 +94,6 @@ public class FitNesseServerTest extends RegexTestCase {
     public void testServingRegularFiles() throws Exception {
         String output = getSocketOutput("GET /files/testDir/testFile2 HTTP/1.1\r\n\r\n", new WikiPageDummy());
         assertHasRegexp("file2 content", output);
-    }
-
-    public void testLoggingDataCreation() throws Exception {
-        MockRequest request = new MockRequest();
-        SimpleResponse response = new SimpleResponse(200);
-        MockSocket socket = new MockSocket("something");
-
-        socket.setHost("1.2.3.4");
-        request.setRequestLine("GET / HTTP/1.1");
-        response.setContent("abc");
-        request.setCredentials("billy", "bob");
-
-        LogData data = FitNesseExpediter.makeLogData(socket, request, response);
-
-        assertEquals("1.2.3.4", data.host);
-        assertNotNull(data.time);
-        assertEquals("GET / HTTP/1.1", data.requestLine);
-        assertEquals(200, data.status);
-        assertEquals(3, data.size);
-        assertEquals("billy", data.username);
     }
 
     private String getSocketOutput(String requestLine, WikiPage page) throws Exception {

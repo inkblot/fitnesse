@@ -4,7 +4,6 @@ package fitnesse;
 
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
-import fitnesse.components.Logger;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
@@ -28,7 +27,6 @@ public class FitNesseContext {
     public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
     public WikiPage root;
     public ResponderFactory responderFactory = new ResponderFactory(rootPagePath);
-    public Logger logger;
     public SocketDealer socketDealer = new SocketDealer();
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
     public Authenticator authenticator = new PromiscuousAuthenticator();
@@ -58,7 +56,6 @@ public class FitNesseContext {
         StringBuilder buffer = new StringBuilder();
         buffer.append("\t").append("port:              ").append(port).append(endl);
         buffer.append("\t").append("root page:         ").append(root).append(endl);
-        buffer.append("\t").append("logger:            ").append(logger == null ? "none" : logger.toString()).append(endl);
         buffer.append("\t").append("authenticator:     ").append(authenticator).append(endl);
         buffer.append("\t").append("html page factory: ").append(htmlPageFactory).append(endl);
 

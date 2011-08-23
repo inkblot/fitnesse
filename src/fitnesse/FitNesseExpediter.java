@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.components.LogData;
 import fitnesse.http.HttpException;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -14,12 +13,8 @@ import util.StringUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.GregorianCalendar;
-
-//import fitnesseMain.FitNesseMain;
 
 public class FitNesseExpediter implements ResponseSender {
     private Socket socket;
@@ -69,7 +64,6 @@ public class FitNesseExpediter implements ResponseSender {
 
     public void close() throws Exception {
         try {
-            log(socket, request, response);
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -180,20 +174,4 @@ public class FitNesseExpediter implements ResponseSender {
         }
     }
 
-    public static LogData makeLogData(Socket socket, Request request, Response response) {
-        LogData data = new LogData();
-        data.host = ((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress();
-        data.time = new GregorianCalendar();
-        data.requestLine = request.getRequestLine();
-        data.status = response.getStatus();
-        data.size = response.getContentSize();
-        data.username = request.getAuthorizationUsername();
-
-        return data;
-    }
-
-    public void log(Socket s, Request request, Response response) throws Exception {
-        if (context.logger != null)
-            context.logger.log(makeLogData(s, request, response));
-    }
 }

@@ -27,7 +27,6 @@ public class ExposeThreadingIssueInMockResponseTest {
     private MockRequest request;
     private TestResponder responder;
     private FitNesseContext context;
-    private String results;
     private PageCrawler crawler;
     private FitSocketReceiver receiver;
 
@@ -38,10 +37,9 @@ public class ExposeThreadingIssueInMockResponseTest {
         request = new MockRequest();
         responder = new TestResponder();
         context = FitNesseUtil.makeTestContext(root);
-        int port = 9123;
-        context.port = port;
+        context.port = 9123;
 
-        receiver = new FitSocketReceiver(port, context.socketDealer);
+        receiver = new FitSocketReceiver(context.port, context.socketDealer);
         receiver.receiveSocket();
     }
 
@@ -59,7 +57,7 @@ public class ExposeThreadingIssueInMockResponseTest {
 
     @Test
     public void testDoSimpleSlimTable() throws Exception {
-        doSimpleRun(simpleSlimDecisionTable());
+        String results = doSimpleRun(simpleSlimDecisionTable());
         assertHasRegexp("<td><span class=\"pass\">wow</span></td>", results);
     }
 
@@ -68,7 +66,7 @@ public class ExposeThreadingIssueInMockResponseTest {
                 + "|wow|wow|\n";
     }
 
-    private void doSimpleRun(String fixtureTable) throws Exception {
+    private String doSimpleRun(String fixtureTable) throws Exception {
         String simpleRunPageName = "TestPage";
         WikiPage testPage = crawler.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
         request.setResource(testPage.getName());
@@ -77,7 +75,7 @@ public class ExposeThreadingIssueInMockResponseTest {
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 
-        results = sender.sentData();
+        return sender.sentData();
     }
 
     private String classpathWidgets() {

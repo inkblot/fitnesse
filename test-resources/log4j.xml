@@ -15,13 +15,6 @@
         <param name="File" value="build/test.log"/>
         <param name="Append" value="true"/>
 
-        <!-- Rollover at midnight each day -->
-        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
-
-        <!-- Rollover at the top of each hour
-        <param name="DatePattern" value="'.'yyyy-MM-dd-HH"/>
-        -->
-
         <layout class="org.apache.log4j.PatternLayout">
             <!-- The full pattern: Date MS Priority [Category] (Thread:NDC) Message\n -->
             <param name="ConversionPattern" value="%d %-5r %-5p [%c{1}] (%t:%x) %m%n"/>

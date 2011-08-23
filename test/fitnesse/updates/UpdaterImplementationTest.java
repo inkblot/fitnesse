@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
-import static util.RegexTestCase.assertSubString;
+import static util.RegexAssertions.assertSubString;
 
 import java.io.File;
 import java.io.IOException;

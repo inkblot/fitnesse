@@ -4,62 +4,65 @@ package fitnesse.http;
 
 import java.net.Socket;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 
-public class SimpleResponseTest extends RegexTestCase implements ResponseSender {
-  private String text;
-  private boolean closed = false;
+import static util.RegexAssertions.assertHasRegexp;
+import static util.RegexAssertions.assertSubString;
 
-  public void send(byte[] bytes) throws Exception {
-    text = new String(bytes, "UTF-8");
-  }
+public class SimpleResponseTest extends TestCase implements ResponseSender {
+    private String text;
+    private boolean closed = false;
 
-  public void close() {
-    closed = true;
-  }
+    public void send(byte[] bytes) throws Exception {
+        text = new String(bytes, "UTF-8");
+    }
 
-  public Socket getSocket() throws Exception {
-    return null;
-  }
+    public void close() {
+        closed = true;
+    }
 
-  public void setUp() throws Exception {
-  }
+    public Socket getSocket() throws Exception {
+        return null;
+    }
 
-  public void tearDown() throws Exception {
-  }
+    public void setUp() throws Exception {
+    }
 
-  public void testSimpleResponse() throws Exception {
-    SimpleResponse response = new SimpleResponse();
-    response.setContent("some content");
-    response.readyToSend(this);
-    assertTrue(text.startsWith("HTTP/1.1 200 OK\r\n"));
-    assertHasRegexp("Content-Length: 12", text);
-    assertHasRegexp("Content-Type: text/html", text);
-    assertTrue(text.endsWith("some content"));
-    assertTrue(closed);
-  }
+    public void tearDown() throws Exception {
+    }
 
-  public void testPageNotFound() throws Exception {
-    SimpleResponse response = new SimpleResponse(404);
-    response.readyToSend(this);
-    assertHasRegexp("404 Not Found", text);
-  }
+    public void testSimpleResponse() throws Exception {
+        SimpleResponse response = new SimpleResponse();
+        response.setContent("some content");
+        response.readyToSend(this);
+        assertTrue(text.startsWith("HTTP/1.1 200 OK\r\n"));
+        assertHasRegexp("Content-Length: 12", text);
+        assertHasRegexp("Content-Type: text/html", text);
+        assertTrue(text.endsWith("some content"));
+        assertTrue(closed);
+    }
 
-  public void testRedirect() throws Exception {
-    SimpleResponse response = new SimpleResponse();
-    response.redirect("some url");
-    response.readyToSend(this);
-    assertEquals(303, response.getStatus());
-    assertHasRegexp("Location: some url\r\n", text);
-  }
+    public void testPageNotFound() throws Exception {
+        SimpleResponse response = new SimpleResponse(404);
+        response.readyToSend(this);
+        assertHasRegexp("404 Not Found", text);
+    }
 
-  public void testUnicodeCharacters() throws Exception {
-    SimpleResponse response = new SimpleResponse();
-    response.setContent("\uba80\uba81\uba82\uba83");
-    response.readyToSend(this);
+    public void testRedirect() throws Exception {
+        SimpleResponse response = new SimpleResponse();
+        response.redirect("some url");
+        response.readyToSend(this);
+        assertEquals(303, response.getStatus());
+        assertHasRegexp("Location: some url\r\n", text);
+    }
 
-    assertSubString("\uba80\uba81\uba82\uba83", text);
-  }
+    public void testUnicodeCharacters() throws Exception {
+        SimpleResponse response = new SimpleResponse();
+        response.setContent("\uba80\uba81\uba82\uba83");
+        response.readyToSend(this);
+
+        assertSubString("\uba80\uba81\uba82\uba83", text);
+    }
 }
 
 

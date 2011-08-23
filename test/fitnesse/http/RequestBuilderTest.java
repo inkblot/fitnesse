@@ -4,9 +4,12 @@ package fitnesse.http;
 
 import java.io.ByteArrayInputStream;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 
-public class RequestBuilderTest extends RegexTestCase {
+import static util.RegexAssertions.assertHasRegexp;
+import static util.RegexAssertions.assertSubString;
+
+public class RequestBuilderTest extends TestCase {
     private RequestBuilder builder;
 
     public void setUp() {

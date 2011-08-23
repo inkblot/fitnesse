@@ -5,55 +5,56 @@ package fitnesse.runner;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import fitnesse.responders.run.TestSummary;
 
-public class StandardResultHandlerTest extends RegexTestCase {
-  private StandardResultHandler handler;
-  private ByteArrayOutputStream bytes;
+import static util.RegexAssertions.assertSubString;
 
-  public void setUp() throws Exception {
-    bytes = new ByteArrayOutputStream();
-    handler = new StandardResultHandler(new PrintStream(bytes));
-  }
+public class StandardResultHandlerTest extends TestCase {
+    private StandardResultHandler handler;
+    private ByteArrayOutputStream bytes;
 
-  public void testHandleResultPassing() throws Exception {
-    String output = getOutputForResultWithCount(new TestSummary(5, 0, 0, 0));
-    assertSubString(".....", output);
-  }
+    public void setUp() throws Exception {
+        bytes = new ByteArrayOutputStream();
+        handler = new StandardResultHandler(new PrintStream(bytes));
+    }
 
-  public void testHandleResultFailing() throws Exception {
-    String output = getOutputForResultWithCount(new TestSummary(0, 1, 0, 0));
-    assertSubString("SomePage has failures", output);
-  }
+    public void testHandleResultPassing() throws Exception {
+        String output = getOutputForResultWithCount(new TestSummary(5, 0, 0, 0));
+        assertSubString(".....", output);
+    }
 
-  public void testHandleResultWithErrors() throws Exception {
-    String output = getOutputForResultWithCount(new TestSummary(0, 0, 0, 1));
-    assertSubString("SomePage has errors", output);
-  }
+    public void testHandleResultFailing() throws Exception {
+        String output = getOutputForResultWithCount(new TestSummary(0, 1, 0, 0));
+        assertSubString("SomePage has failures", output);
+    }
 
-  public void testHandleErrorWithBlankTitle() throws Exception {
-    String output = getOutputForResultWithCount("", new TestSummary(0, 0, 0, 1));
-    assertSubString("The test has errors", output);
-  }
+    public void testHandleResultWithErrors() throws Exception {
+        String output = getOutputForResultWithCount(new TestSummary(0, 0, 0, 1));
+        assertSubString("SomePage has errors", output);
+    }
 
-  public void testFinalCount() throws Exception {
-    TestSummary testSummary = new TestSummary(5, 4, 3, 2);
-    handler.acceptFinalCount(testSummary);
+    public void testHandleErrorWithBlankTitle() throws Exception {
+        String output = getOutputForResultWithCount("", new TestSummary(0, 0, 0, 1));
+        assertSubString("The test has errors", output);
+    }
 
-    assertSubString(testSummary.toString(), bytes.toString());
-  }
+    public void testFinalCount() throws Exception {
+        TestSummary testSummary = new TestSummary(5, 4, 3, 2);
+        handler.acceptFinalCount(testSummary);
 
-  private String getOutputForResultWithCount(TestSummary testSummary) throws Exception {
-    return getOutputForResultWithCount("SomePage", testSummary);
-  }
+        assertSubString(testSummary.toString(), bytes.toString());
+    }
 
-  private String getOutputForResultWithCount(String title, TestSummary testSummary) throws Exception {
-    PageResult result = new PageResult(title);
-    result.setTestSummary(testSummary);
-    handler.acceptResult(result);
-    String output = bytes.toString();
-    return output;
-  }
+    private String getOutputForResultWithCount(TestSummary testSummary) throws Exception {
+        return getOutputForResultWithCount("SomePage", testSummary);
+    }
+
+    private String getOutputForResultWithCount(String title, TestSummary testSummary) throws Exception {
+        PageResult result = new PageResult(title);
+        result.setTestSummary(testSummary);
+        handler.acceptResult(result);
+        return bytes.toString();
+    }
 
 }

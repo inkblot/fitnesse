@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 
-import static util.RegexTestCase.assertSubString;
+import static util.RegexAssertions.assertSubString;
 
 import util.TimeMeasurement;
 

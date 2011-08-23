@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 
-public class CommandRunnerTest extends RegexTestCase {
+import static util.RegexAssertions.assertHasRegexp;
+
+public class CommandRunnerTest extends TestCase {
 
     public void setUp() throws Exception {
     }

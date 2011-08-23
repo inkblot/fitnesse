@@ -2,31 +2,34 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 
-public class ErrorResponderTest extends RegexTestCase {
-  public void testResponse() throws Exception {
-    Responder responder = new ErrorResponder(new Exception("some error message"));
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
+import static util.RegexAssertions.assertHasRegexp;
+import static util.RegexAssertions.assertSubString;
 
-    assertEquals(400, response.getStatus());
+public class ErrorResponderTest extends TestCase {
+    public void testResponse() throws Exception {
+        Responder responder = new ErrorResponder(new Exception("some error message"));
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
 
-    String body = response.getContent();
+        assertEquals(400, response.getStatus());
 
-    assertHasRegexp("<html>", body);
-    assertHasRegexp("<body", body);
-    assertHasRegexp("java.lang.Exception: some error message", body);
-  }
+        String body = response.getContent();
 
-  public void testWithMessage() throws Exception {
-    Responder responder = new ErrorResponder("error Message");
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
-    String body = response.getContent();
+        assertHasRegexp("<html>", body);
+        assertHasRegexp("<body", body);
+        assertHasRegexp("java.lang.Exception: some error message", body);
+    }
 
-    assertSubString("error Message", body);
-  }
+    public void testWithMessage() throws Exception {
+        Responder responder = new ErrorResponder("error Message");
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
+        String body = response.getContent();
+
+        assertSubString("error Message", body);
+    }
 }

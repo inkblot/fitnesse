@@ -2,22 +2,24 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 
-public class ItalicWidgetTest extends RegexTestCase {
-  public void setUp() throws Exception {
-  }
+import static util.RegexAssertions.assertMatches;
 
-  public void tearDown() throws Exception {
-  }
+public class ItalicWidgetTest extends TestCase {
+    public void setUp() throws Exception {
+    }
 
-  public void testRegexp() throws Exception {
-    assertMatches(ItalicWidget.REGEXP, "''italic''");
-    assertMatches(ItalicWidget.REGEXP, "'' 'italic' ''");
-  }
+    public void tearDown() throws Exception {
+    }
 
-  public void testItalicWidgetRendersHtmlItalics() throws Exception {
-    ItalicWidget widget = new ItalicWidget(new MockWidgetRoot(), "''italic text''");
-    assertEquals("<i>italic text</i>", widget.render());
-  }
+    public void testRegexp() throws Exception {
+        assertMatches(ItalicWidget.REGEXP, "''italic''");
+        assertMatches(ItalicWidget.REGEXP, "'' 'italic' ''");
+    }
+
+    public void testItalicWidgetRendersHtmlItalics() throws Exception {
+        ItalicWidget widget = new ItalicWidget(new MockWidgetRoot(), "''italic text''");
+        assertEquals("<i>italic text</i>", widget.render());
+    }
 }

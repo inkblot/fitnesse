@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -13,7 +13,10 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
-public class FitClientResponderTest extends RegexTestCase {
+import static util.RegexAssertions.assertNotSubString;
+import static util.RegexAssertions.assertSubString;
+
+public class FitClientResponderTest extends TestCase {
     private FitClientResponder responder;
     private MockRequest request;
     private FitNesseContext context;

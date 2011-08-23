@@ -11,13 +11,13 @@ import fitnesse.http.ResponseParser;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
-import util.RegexTestCase;
+import junit.framework.TestCase;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-public class FitNesseExpediterTest extends RegexTestCase {
+public class FitNesseExpediterTest extends TestCase {
     private FitNesseExpediter expediter;
     private MockSocket socket;
     private FitNesseContext context;

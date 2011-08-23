@@ -2,31 +2,33 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 
-public class DeleteConfirmationResponderTest extends RegexTestCase {
-  MockRequest request;
-  private FitNesseContext context;
+import static util.RegexAssertions.assertSubString;
 
-  public void setUp() throws Exception {
-    request = new MockRequest();
-    context = new FitNesseContext();
-  }
+public class DeleteConfirmationResponderTest extends TestCase {
+    MockRequest request;
+    private FitNesseContext context;
 
-  public void testContentOfPage() throws Exception {
-    request.setResource("files");
-    request.addInput("filename", "MyFile.txt");
-    Responder responder = new DeleteConfirmationResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-    String content = response.getContent();
+    public void setUp() throws Exception {
+        request = new MockRequest();
+        context = new FitNesseContext();
+    }
 
-    assertSubString("deleteFile", content);
-    assertSubString("Delete File", content);
-    assertSubString("MyFile.txt", content);
-  }
+    public void testContentOfPage() throws Exception {
+        request.setResource("files");
+        request.addInput("filename", "MyFile.txt");
+        Responder responder = new DeleteConfirmationResponder();
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        String content = response.getContent();
+
+        assertSubString("deleteFile", content);
+        assertSubString("Delete File", content);
+        assertSubString("MyFile.txt", content);
+    }
 
 }

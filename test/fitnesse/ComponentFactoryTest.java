@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Properties;
 
 import fitnesse.wikitext.parser.*;
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
@@ -26,7 +26,9 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetInterceptor;
 import fitnesse.wikitext.WikiWidget;
 
-public class ComponentFactoryTest extends RegexTestCase {
+import static util.RegexAssertions.assertSubString;
+
+public class ComponentFactoryTest extends TestCase {
     private Properties testProperties;
     private ComponentFactory factory;
     private SymbolProvider testProvider;

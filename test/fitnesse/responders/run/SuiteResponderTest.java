@@ -16,6 +16,7 @@ import fitnesse.wiki.*;
 
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.*;
@@ -23,7 +24,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import static util.RegexTestCase.*;
+import static util.RegexAssertions.*;
 
 import util.Clock;
 import util.DateAlteringClock;
@@ -241,9 +242,9 @@ public class SuiteResponderTest {
         addTestPagesWithSuiteProperty();
         request.setQueryString("suiteFilter=xxx");
         String results = runSuite();
-        assertDoesntHaveRegexp(".*href=\\\"#TestOne\\\".*", results);
-        assertDoesntHaveRegexp(".*href=\\\"#TestTwo\\\".*", results);
-        assertDoesntHaveRegexp(".*href=\\\"#TestThree\\\".*", results);
+        assertDoesNotHaveRegexp(".*href=\\\"#TestOne\\\".*", results);
+        assertDoesNotHaveRegexp(".*href=\\\"#TestTwo\\\".*", results);
+        assertDoesNotHaveRegexp(".*href=\\\"#TestThree\\\".*", results);
     }
 
     @Test
@@ -251,9 +252,9 @@ public class SuiteResponderTest {
         addTestPagesWithSuiteProperty();
         request.setQueryString("suiteFilter=foo");
         String results = runSuite();
-        assertDoesntHaveRegexp(".*href=\\\"#TestOne.*", results);
+        assertDoesNotHaveRegexp(".*href=\\\"#TestOne.*", results);
         assertSubString("href=\\\"#TestTwo1\\\"", results);
-        assertDoesntHaveRegexp(".*href=\\\"#TestThree.*", results);
+        assertDoesNotHaveRegexp(".*href=\\\"#TestThree.*", results);
     }
 
     @Test
@@ -261,8 +262,8 @@ public class SuiteResponderTest {
         addTestPagesWithSuiteProperty();
         request.setQueryString("suiteFilter=smoke");
         String results = runSuite();
-        assertDoesntHaveRegexp(".*href=\\\"#TestOne.*", results);
-        assertDoesntHaveRegexp(".*href=\\\"#TestTwo.*", results);
+        assertDoesNotHaveRegexp(".*href=\\\"#TestOne.*", results);
+        assertDoesNotHaveRegexp(".*href=\\\"#TestTwo.*", results);
         assertSubString("href=\\\"#TestThree1\\\"", results);
     }
 
@@ -271,7 +272,7 @@ public class SuiteResponderTest {
         addTestPagesWithSuiteProperty();
         request.setQueryString("suiteFilter=smoke,foo");
         String results = runSuite();
-        assertDoesntHaveRegexp("#TestOne", results);
+        assertDoesNotHaveRegexp("#TestOne", results);
         assertHasRegexp("#TestTwo", results);
         assertHasRegexp("#TestThree", results);
     }
@@ -283,7 +284,7 @@ public class SuiteResponderTest {
         request.setQueryString("excludeSuiteFilter=foo");
         String results = runSuite();
         assertHasRegexp("#TestOne", results);
-        assertDoesntHaveRegexp("#TestTwo", results);
+        assertDoesNotHaveRegexp("#TestTwo", results);
         assertHasRegexp("#TestThree", results);
     }
 
@@ -293,7 +294,7 @@ public class SuiteResponderTest {
         addTestPagesWithSuiteProperty();
         request.setQueryString("firstTest=TestThree");
         String results = runSuite();
-        assertDoesntHaveRegexp("#TestOne", results);
+        assertDoesNotHaveRegexp("#TestOne", results);
         assertHasRegexp("#TestTwo", results);
         assertHasRegexp("#TestThree", results);
     }
@@ -303,7 +304,7 @@ public class SuiteResponderTest {
         addTestPagesWithSuiteProperty();
         request.setQueryString("firstTest=SuitePage.TestThree");
         String results = runSuite();
-        assertDoesntHaveRegexp("#TestOne", results);
+        assertDoesNotHaveRegexp("#TestOne", results);
         assertHasRegexp("#TestTwo", results);
         assertHasRegexp("#TestThree", results);
     }

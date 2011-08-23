@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
@@ -13,35 +13,37 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
-public class WhereUsedResponderTest extends RegexTestCase {
-  private WikiPage root;
-  private WikiPage pageTwo;
+import static util.RegexAssertions.assertHasRegexp;
 
-  public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
-    PageCrawler crawler = root.getPageCrawler();
-    crawler.addPage(root, PathParser.parse("PageOne"), "PageOne");
-    pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne");
-    crawler.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
-  }
+public class WhereUsedResponderTest extends TestCase {
+    private WikiPage root;
+    private WikiPage pageTwo;
 
-  public void testResponse() throws Exception {
-    MockRequest request = new MockRequest();
-    request.setResource("PageOne");
-    WhereUsedResponder responder = new WhereUsedResponder();
+    public void setUp() throws Exception {
+        root = InMemoryPage.makeRoot("RooT");
+        FitNesseContext context = FitNesseUtil.makeTestContext(root);
+        PageCrawler crawler = root.getPageCrawler();
+        crawler.addPage(root, PathParser.parse("PageOne"), "PageOne");
+        pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne");
+        crawler.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
+    }
 
-    Response response = responder.makeResponse(new FitNesseContext(root), request);
-    MockResponseSender sender = new MockResponseSender();
-    response.readyToSend(sender);
-    sender.waitForClose(5000);
+    public void testResponse() throws Exception {
+        MockRequest request = new MockRequest();
+        request.setResource("PageOne");
+        WhereUsedResponder responder = new WhereUsedResponder();
 
-    String content = sender.sentData();
-    assertEquals(200, response.getStatus());
-    assertHasRegexp("Where Used", content);
-    assertHasRegexp(">PageOne<", content);
-    assertHasRegexp(">PageTwo<", content);
-    assertHasRegexp(">PageTwo\\.ChildPage<", content);
-  }
+        Response response = responder.makeResponse(new FitNesseContext(root), request);
+        MockResponseSender sender = new MockResponseSender();
+        response.readyToSend(sender);
+        sender.waitForClose(5000);
+
+        String content = sender.sentData();
+        assertEquals(200, response.getStatus());
+        assertHasRegexp("Where Used", content);
+        assertHasRegexp(">PageOne<", content);
+        assertHasRegexp(">PageTwo<", content);
+        assertHasRegexp(">PageTwo\\.ChildPage<", content);
+    }
 }
 

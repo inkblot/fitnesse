@@ -19,11 +19,6 @@ import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -34,7 +29,8 @@ import org.w3c.dom.NodeList;
 
 import util.*;
 
-import static util.RegexTestCase.*;
+import static org.junit.Assert.*;
+import static util.RegexAssertions.*;
 
 import static util.XmlUtil.getElementByTagName;
 
@@ -44,7 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TestResponderTest {
-  private static final String TEST_TIME = "12/5/2008 01:19:00";
+    private static final String TEST_TIME = "12/5/2008 01:19:00";
     private WikiPage root;
     private MockRequest request;
     private TestResponder responder;

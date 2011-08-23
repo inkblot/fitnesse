@@ -6,7 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import util.RegexTestCase;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
@@ -17,98 +16,101 @@ import fitnesse.runner.HtmlResultFormatter;
 import fitnesse.runner.MockResultFormatter;
 import fitnesse.runner.PageResult;
 import fitnesse.runner.XmlResultFormatter;
+import junit.framework.TestCase;
 
-public class TestResultFormattingResponderTest extends RegexTestCase {
-  private PipedOutputStream output;
-  private PipedInputStream input;
-  private TestResultFormattingResponder responder;
-  private MockResultFormatter formatter;
-  private PageResult result1;
-  private PageResult result2;
-  private FitNesseContext context;
+import static util.RegexAssertions.assertSubString;
 
-  public void setUp() throws Exception {
-    output = new PipedOutputStream();
-    input = new PipedInputStream(output);
+public class TestResultFormattingResponderTest extends TestCase {
+    private PipedOutputStream output;
+    private PipedInputStream input;
+    private TestResultFormattingResponder responder;
+    private MockResultFormatter formatter;
+    private PageResult result1;
+    private PageResult result2;
+    private FitNesseContext context;
 
-    responder = new TestResultFormattingResponder();
-    formatter = new MockResultFormatter();
-    responder.formatter = formatter;
+    public void setUp() throws Exception {
+        output = new PipedOutputStream();
+        input = new PipedInputStream(output);
 
-    result1 = new PageResult("Result1Title", new TestSummary(1, 2, 3, 4), "result1 data");
-    result2 = new PageResult("Result2Title", new TestSummary(4, 3, 2, 1), "result2 data");
+        responder = new TestResultFormattingResponder();
+        formatter = new MockResultFormatter();
+        responder.formatter = formatter;
 
-    context = new FitNesseContext();
-  }
+        result1 = new PageResult("Result1Title", new TestSummary(1, 2, 3, 4), "result1 data");
+        result2 = new PageResult("Result2Title", new TestSummary(4, 3, 2, 1), "result2 data");
 
-  public void testOneResult() throws Exception {
-    FitProtocol.writeData(result1.toString(), output);
-    FitProtocol.writeCounts(new Counts(0, 0, 0, 0), output);
-    responder.processResults(input);
+        context = new FitNesseContext();
+    }
 
-    assertEquals(1, formatter.results.size());
-    assertEquals(result1.toString(), formatter.results.get(0).toString());
-  }
+    public void testOneResult() throws Exception {
+        FitProtocol.writeData(result1.toString(), output);
+        FitProtocol.writeCounts(new Counts(0, 0, 0, 0), output);
+        responder.processResults(input);
 
-  public void testTwoResults() throws Exception {
-    FitProtocol.writeData(result1.toString(), output);
-    FitProtocol.writeData(result2.toString(), output);
-    FitProtocol.writeCounts(new Counts(0, 0, 0, 0), output);
-    responder.processResults(input);
+        assertEquals(1, formatter.results.size());
+        assertEquals(result1.toString(), formatter.results.get(0).toString());
+    }
 
-    assertEquals(2, formatter.results.size());
-    assertEquals(result1.toString(), formatter.results.get(0).toString());
-    assertEquals(result2.toString(), formatter.results.get(1).toString());
-  }
+    public void testTwoResults() throws Exception {
+        FitProtocol.writeData(result1.toString(), output);
+        FitProtocol.writeData(result2.toString(), output);
+        FitProtocol.writeCounts(new Counts(0, 0, 0, 0), output);
+        responder.processResults(input);
 
-  public void testFinalCounts() throws Exception {
-    FitProtocol.writeData(result1.toString(), output);
-    Counts counts = new Counts(1, 2, 3, 4);
-    FitProtocol.writeCounts(counts, output);
-    responder.processResults(input);
+        assertEquals(2, formatter.results.size());
+        assertEquals(result1.toString(), formatter.results.get(0).toString());
+        assertEquals(result2.toString(), formatter.results.get(1).toString());
+    }
 
-    TestSummary summary = formatter.finalSummary;
-    assertEquals(counts.right, summary.getRight());
-    assertEquals(counts.wrong, summary.getWrong());
-    assertEquals(counts.ignores, summary.getIgnores());
-    assertEquals(counts.exceptions, summary.getExceptions());
-  }
+    public void testFinalCounts() throws Exception {
+        FitProtocol.writeData(result1.toString(), output);
+        Counts counts = new Counts(1, 2, 3, 4);
+        FitProtocol.writeCounts(counts, output);
+        responder.processResults(input);
 
-  public void testMakeResponse() throws Exception {
-    MockRequest request = new MockRequest();
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
-    FitProtocol.writeData(result1.toString(), output);
-    FitProtocol.writeData(result2.toString(), output);
-    FitProtocol.writeCounts(new Counts(5, 5, 5, 5), output);
-    request.addInput("results", output.toString());
+        TestSummary summary = formatter.finalSummary;
+        assertEquals(counts.right, summary.getRight());
+        assertEquals(counts.wrong, summary.getWrong());
+        assertEquals(counts.ignores, summary.getIgnores());
+        assertEquals(counts.exceptions, summary.getExceptions());
+    }
 
-    Response response = responder.makeResponse(context, request);
-    MockResponseSender sender = new MockResponseSender();
-    sender.doSending(response);
-    String content = sender.sentData();
+    public void testMakeResponse() throws Exception {
+        MockRequest request = new MockRequest();
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        FitProtocol.writeData(result1.toString(), output);
+        FitProtocol.writeData(result2.toString(), output);
+        FitProtocol.writeCounts(new Counts(5, 5, 5, 5), output);
+        request.addInput("results", output.toString());
 
-    assertSubString("Mock Results", content);
-  }
+        Response response = responder.makeResponse(context, request);
+        MockResponseSender sender = new MockResponseSender();
+        sender.doSending(response);
+        String content = sender.sentData();
 
-  public void testMockFormatter() throws Exception {
-    checkFormatterCreated(null, MockResultFormatter.class);
-  }
+        assertSubString("Mock Results", content);
+    }
 
-  public void testHtmlFormatter() throws Exception {
-    checkFormatterCreated("html", HtmlResultFormatter.class);
-  }
+    public void testMockFormatter() throws Exception {
+        checkFormatterCreated(null, MockResultFormatter.class);
+    }
 
-  public void testXmlFormatter() throws Exception {
-    checkFormatterCreated("xml", XmlResultFormatter.class);
-  }
+    public void testHtmlFormatter() throws Exception {
+        checkFormatterCreated("html", HtmlResultFormatter.class);
+    }
 
-  private void checkFormatterCreated(String format, Class<?> formatterClass) throws Exception {
-    MockRequest request = new MockRequest();
-    request.addHeader("Host", "locahost:8080");
-    request.setResource("/");
-    if (format != null)
-      request.addInput("format", format);
-    responder.init(context, request);
-    assertEquals(formatterClass, responder.formatter.getClass());
-  }
+    public void testXmlFormatter() throws Exception {
+        checkFormatterCreated("xml", XmlResultFormatter.class);
+    }
+
+    private void checkFormatterCreated(String format, Class<?> formatterClass) throws Exception {
+        MockRequest request = new MockRequest();
+        request.addHeader("Host", "locahost:8080");
+        request.setResource("/");
+        if (format != null)
+            request.addInput("format", format);
+        responder.init(context, request);
+        assertEquals(formatterClass, responder.formatter.getClass());
+    }
 }

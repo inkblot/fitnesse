@@ -4,7 +4,7 @@ package fitnesse;
 
 import java.util.regex.Pattern;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.testutil.MockSocket;
@@ -16,7 +16,10 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;
 
-public class FitNesseServerTest extends RegexTestCase {
+import static util.RegexAssertions.assertHasRegexp;
+import static util.RegexAssertions.assertSubString;
+
+public class FitNesseServerTest extends TestCase {
     private PageCrawler crawler;
     private WikiPage root;
     private WikiPagePath pageOnePath;

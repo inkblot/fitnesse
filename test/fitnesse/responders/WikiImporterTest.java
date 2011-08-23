@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import junit.framework.TestCase;
 import org.w3c.dom.Document;
 
 import util.Clock;
-import util.RegexTestCase;
 import util.XmlUtil;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
@@ -19,255 +19,255 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-public class WikiImporterTest extends RegexTestCase implements WikiImporterClient {
-  public WikiPage pageOne;
-  public WikiPage childPageOne;
-  public WikiPage pageTwo;
-  public WikiPage remoteRoot;
-  private WikiImporter importer;
-  private LinkedList<WikiPage> imports;
-  private LinkedList<Exception> errors;
-  public WikiPage localRoot;
+import static util.RegexAssertions.assertSubString;
 
-  public void setUp() throws Exception {
-    createRemoteRoot();
-    createLocalRoot();
+public class WikiImporterTest extends TestCase implements WikiImporterClient {
+    public WikiPage pageOne;
+    public WikiPage childPageOne;
+    public WikiPage pageTwo;
+    public WikiPage remoteRoot;
+    private WikiImporter importer;
+    private LinkedList<WikiPage> imports;
+    private LinkedList<Exception> errors;
+    public WikiPage localRoot;
 
-    FitNesseUtil.startFitnesse(remoteRoot);
+    public void setUp() throws Exception {
+        createRemoteRoot();
+        createLocalRoot();
 
-    importer = new WikiImporter();
-    importer.setWikiImporterClient(this);
-    importer.parseUrl("http://localhost:" + FitNesseUtil.port);
+        FitNesseUtil.startFitnesse(remoteRoot);
 
-    imports = new LinkedList<WikiPage>();
-    errors = new LinkedList<Exception>();
-  }
+        importer = new WikiImporter();
+        importer.setWikiImporterClient(this);
+        importer.parseUrl("http://localhost:" + FitNesseUtil.port);
 
-  public void createLocalRoot() throws Exception {
-    localRoot = InMemoryPage.makeRoot("RooT2");
-    pageOne = localRoot.addChildPage("PageOne");
-    childPageOne = pageOne.addChildPage("ChildOne");
-    pageTwo = localRoot.addChildPage("PageTwo");
-  }
-
-  public WikiPage createRemoteRoot() throws Exception {
-    remoteRoot = InMemoryPage.makeRoot("RooT");
-    PageCrawler crawler = remoteRoot.getPageCrawler();
-    crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
-    crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
-    crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
-    return remoteRoot;
-  }
-
-  public void tearDown() throws Exception {
-    FitNesseUtil.stopFitnesse();
-  }
-
-  public void testEnterChildPage() throws Exception {
-    importer.enterChildPage(pageOne, Clock.currentDate());
-
-    PageData data = pageOne.getData();
-    assertEquals("page one", data.getContent());
-  }
-
-  public void testChildPageAdded() throws Exception {
-    importer.enterChildPage(pageOne, Clock.currentDate());
-    importer.enterChildPage(childPageOne, Clock.currentDate());
-
-    PageData data = childPageOne.getData();
-    assertEquals("child one", data.getContent());
-  }
-
-  public void testEnterChildPageWhenRemotePageNotModified() throws Exception {
-    importer.enterChildPage(pageOne, Clock.currentDate());
-    importer.exitPage();
-
-    PageData data = pageOne.getData();
-    data.setContent("new content");
-    pageOne.commit(data);
-
-    importer.enterChildPage(pageOne, new Date(0));
-
-    assertEquals("new content", pageOne.getData().getContent());
-  }
-
-  public void testExiting() throws Exception {
-    importer.enterChildPage(pageOne, Clock.currentDate());
-    importer.enterChildPage(childPageOne, Clock.currentDate());
-    importer.exitPage();
-    importer.exitPage();
-    importer.enterChildPage(pageTwo, Clock.currentDate());
-
-    PageData data = pageTwo.getData();
-    assertEquals("page two", data.getContent());
-  }
-
-  public void testGetPageTree() throws Exception {
-    Document doc = importer.getPageTree();
-    assertNotNull(doc);
-    String xml = XmlUtil.xmlAsString(doc);
-
-    assertSubString("PageOne", xml);
-    assertSubString("PageTwo", xml);
-  }
-
-  public void testUrlParsing() throws Exception {
-    testUrlParsing("http://mysite.com", "mysite.com", 80, "");
-    testUrlParsing("http://mysite.com/", "mysite.com", 80, "");
-    testUrlParsing("http://mysite.com:8080/", "mysite.com", 8080, "");
-    testUrlParsing("http://mysite.com:8080", "mysite.com", 8080, "");
-    testUrlParsing("http://mysite.com:80/", "mysite.com", 80, "");
-    testUrlParsing("http://mysite.com/PageOne", "mysite.com", 80, "PageOne");
-    testUrlParsing("http://mysite.com/PageOne.ChildOne", "mysite.com", 80, "PageOne.ChildOne");
-  }
-
-  private void testUrlParsing(String url, String host, int port, String path) throws Exception {
-    importer.parseUrl(url);
-    assertEquals(host, importer.getRemoteHostname());
-    assertEquals(port, importer.getRemotePort());
-    assertEquals(path, PathParser.render(importer.getRemotePath()));
-  }
-
-  public void testParsingBadUrl() throws Exception {
-    try {
-      importer.parseUrl("blah");
-      fail("should have exception");
+        imports = new LinkedList<WikiPage>();
+        errors = new LinkedList<Exception>();
     }
-    catch (Exception e) {
-      assertEquals("blah is not a valid URL.", e.getMessage());
+
+    public void createLocalRoot() throws Exception {
+        localRoot = InMemoryPage.makeRoot("RooT2");
+        pageOne = localRoot.addChildPage("PageOne");
+        childPageOne = pageOne.addChildPage("ChildOne");
+        pageTwo = localRoot.addChildPage("PageTwo");
     }
-  }
 
-  public void testParsingUrlWithNonWikiWord() throws Exception {
-    try {
-      importer.parseUrl("http://blah.com/notawikiword");
-      fail("should throw exception");
+    public WikiPage createRemoteRoot() throws Exception {
+        remoteRoot = InMemoryPage.makeRoot("RooT");
+        PageCrawler crawler = remoteRoot.getPageCrawler();
+        crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
+        crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
+        crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
+        return remoteRoot;
     }
-    catch (Exception e) {
-      assertEquals("The URL's resource path, notawikiword, is not a valid WikiWord.", e.getMessage());
+
+    public void tearDown() throws Exception {
+        FitNesseUtil.stopFitnesse();
     }
-  }
 
-  public void testImportingWiki() throws Exception {
-    localRoot = InMemoryPage.makeRoot("LocalRoot");
-    importer.importWiki(localRoot);
+    public void testEnterChildPage() throws Exception {
+        importer.enterChildPage(pageOne, Clock.currentDate());
 
-    assertEquals(2, localRoot.getChildren().size());
-    assertEquals(3, imports.size());
-    assertEquals(0, errors.size());
-  }
+        PageData data = pageOne.getData();
+        assertEquals("page one", data.getContent());
+    }
 
-  public void testFindsOrphansOnLocalWiki() throws Exception {
-    performImportWithExtraLocalPages();
+    public void testChildPageAdded() throws Exception {
+        importer.enterChildPage(pageOne, Clock.currentDate());
+        importer.enterChildPage(childPageOne, Clock.currentDate());
 
-    List<WikiPagePath> orphans = importer.getOrphans();
-    assertEquals(3, orphans.size());
-    assertTrue(orphans.contains(new WikiPagePath().addNameToEnd("PageThree")));
-    assertTrue(orphans.contains(new WikiPagePath().addNameToEnd("PageOne").addNameToEnd("ChildTwo")));
-    assertTrue(orphans.contains(new WikiPagePath().addNameToEnd("PageOne").addNameToEnd("ChildOne").addNameToEnd("GrandChildOne")));
-    assertFalse(orphans.contains(new WikiPagePath().addNameToEnd("PageThatDoesntImport")));
-    assertFalse(orphans.contains(new WikiPagePath().addNameToEnd("OtherImportRoot")));
-  }
+        PageData data = childPageOne.getData();
+        assertEquals("child one", data.getContent());
+    }
 
-  private void performImportWithExtraLocalPages() throws Exception {
-    addLocalPageWithImportProperty(localRoot, "PageThree", false);
-    addLocalPageWithImportProperty(pageOne, "ChildTwo", false);
-    addLocalPageWithImportProperty(childPageOne, "GrandChildOne", false);
-    localRoot.addChildPage("PageThatDoesntImport");
-    addLocalPageWithImportProperty(localRoot, "OtherImportRoot", true);
+    public void testEnterChildPageWhenRemotePageNotModified() throws Exception {
+        importer.enterChildPage(pageOne, Clock.currentDate());
+        importer.exitPage();
 
-    importer.importWiki(localRoot);
-  }
+        PageData data = pageOne.getData();
+        data.setContent("new content");
+        pageOne.commit(data);
 
-  public void testOrphansAreRemoved() throws Exception {
-    performImportWithExtraLocalPages();
+        importer.enterChildPage(pageOne, new Date(0));
 
-    assertFalse(localRoot.hasChildPage("PageThree"));
-    assertFalse(pageOne.hasChildPage("ChildTwo"));
-    assertFalse(childPageOne.hasChildPage("GrandChildOne"));
+        assertEquals("new content", pageOne.getData().getContent());
+    }
 
-    assertTrue(localRoot.hasChildPage("PageThatDoesntImport"));
-    assertTrue(localRoot.hasChildPage("OtherImportRoot"));
-  }
+    public void testExiting() throws Exception {
+        importer.enterChildPage(pageOne, Clock.currentDate());
+        importer.enterChildPage(childPageOne, Clock.currentDate());
+        importer.exitPage();
+        importer.exitPage();
+        importer.enterChildPage(pageTwo, Clock.currentDate());
 
-  public void testWholeTreeOrphaned() throws Exception {
-    importer.importWiki(localRoot);
+        PageData data = pageTwo.getData();
+        assertEquals("page two", data.getContent());
+    }
 
-    remoteRoot.removeChildPage("PageOne");
+    public void testGetPageTree() throws Exception {
+        Document doc = importer.getPageTree();
+        assertNotNull(doc);
+        String xml = XmlUtil.xmlAsString(doc);
 
-    importer.importWiki(localRoot);
+        assertSubString("PageOne", xml);
+        assertSubString("PageTwo", xml);
+    }
 
-    assertFalse(localRoot.hasChildPage("PageOne"));
-  }
+    public void testUrlParsing() throws Exception {
+        testUrlParsing("http://mysite.com", "mysite.com", 80, "");
+        testUrlParsing("http://mysite.com/", "mysite.com", 80, "");
+        testUrlParsing("http://mysite.com:8080/", "mysite.com", 8080, "");
+        testUrlParsing("http://mysite.com:8080", "mysite.com", 8080, "");
+        testUrlParsing("http://mysite.com:80/", "mysite.com", 80, "");
+        testUrlParsing("http://mysite.com/PageOne", "mysite.com", 80, "PageOne");
+        testUrlParsing("http://mysite.com/PageOne.ChildOne", "mysite.com", 80, "PageOne.ChildOne");
+    }
 
-  public void testContextIsNotOrphanWhenUpdatingNonRoot() throws Exception {
-    addLocalPageWithImportProperty(localRoot, "PageOne", false);
-    importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
+    private void testUrlParsing(String url, String host, int port, String path) throws Exception {
+        importer.parseUrl(url);
+        assertEquals(host, importer.getRemoteHostname());
+        assertEquals(port, importer.getRemotePort());
+        assertEquals(path, PathParser.render(importer.getRemotePath()));
+    }
 
-    importer.importWiki(localRoot.getChildPage("PageOne"));
+    public void testParsingBadUrl() throws Exception {
+        try {
+            importer.parseUrl("blah");
+            fail("should have exception");
+        } catch (Exception e) {
+            assertEquals("blah is not a valid URL.", e.getMessage());
+        }
+    }
 
-    assertEquals(0, importer.getOrphans().size());
-  }
+    public void testParsingUrlWithNonWikiWord() throws Exception {
+        try {
+            importer.parseUrl("http://blah.com/notawikiword");
+            fail("should throw exception");
+        } catch (Exception e) {
+            assertEquals("The URL's resource path, notawikiword, is not a valid WikiWord.", e.getMessage());
+        }
+    }
 
-  public void testAutoUpdatePropertySetOnRoot() throws Exception {
-    addLocalPageWithImportProperty(localRoot, "PageOne", false);
-    importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
-    importer.setAutoUpdateSetting(true);
-    WikiPage importedPage = localRoot.getChildPage("PageOne");
-    importer.importWiki(importedPage);
+    public void testImportingWiki() throws Exception {
+        localRoot = InMemoryPage.makeRoot("LocalRoot");
+        importer.importWiki(localRoot);
 
-    WikiImportProperty importProp = WikiImportProperty.createFrom(importedPage.getData().getProperties());
-    assertTrue(importProp.isAutoUpdate());
+        assertEquals(2, localRoot.getChildren().size());
+        assertEquals(3, imports.size());
+        assertEquals(0, errors.size());
+    }
 
-    importer.setAutoUpdateSetting(false);
-    importer.importWiki(importedPage);
+    public void testFindsOrphansOnLocalWiki() throws Exception {
+        performImportWithExtraLocalPages();
 
-    importProp = WikiImportProperty.createFrom(importedPage.getData().getProperties());
-    assertFalse(importProp.isAutoUpdate());
-  }
+        List<WikiPagePath> orphans = importer.getOrphans();
+        assertEquals(3, orphans.size());
+        assertTrue(orphans.contains(new WikiPagePath().addNameToEnd("PageThree")));
+        assertTrue(orphans.contains(new WikiPagePath().addNameToEnd("PageOne").addNameToEnd("ChildTwo")));
+        assertTrue(orphans.contains(new WikiPagePath().addNameToEnd("PageOne").addNameToEnd("ChildOne").addNameToEnd("GrandChildOne")));
+        assertFalse(orphans.contains(new WikiPagePath().addNameToEnd("PageThatDoesntImport")));
+        assertFalse(orphans.contains(new WikiPagePath().addNameToEnd("OtherImportRoot")));
+    }
 
-  public void testAutoUpdate_NewPage() throws Exception {
-    importer.setAutoUpdateSetting(true);
-    importer.enterChildPage(pageOne, Clock.currentDate());
+    private void performImportWithExtraLocalPages() throws Exception {
+        addLocalPageWithImportProperty(localRoot, "PageThree", false);
+        addLocalPageWithImportProperty(pageOne, "ChildTwo", false);
+        addLocalPageWithImportProperty(childPageOne, "GrandChildOne", false);
+        localRoot.addChildPage("PageThatDoesntImport");
+        addLocalPageWithImportProperty(localRoot, "OtherImportRoot", true);
 
-    WikiImportProperty importProps = WikiImportProperty.createFrom(pageOne.getData().getProperties());
-    assertTrue(importProps.isAutoUpdate());
-  }
+        importer.importWiki(localRoot);
+    }
 
-  public void testAutoUpdateWhenRemotePageNotModified() throws Exception {
-    importer.enterChildPage(pageOne, Clock.currentDate());
-    importer.exitPage();
+    public void testOrphansAreRemoved() throws Exception {
+        performImportWithExtraLocalPages();
 
-    PageData data = pageOne.getData();
-    data.setContent("new content");
-    pageOne.commit(data);
+        assertFalse(localRoot.hasChildPage("PageThree"));
+        assertFalse(pageOne.hasChildPage("ChildTwo"));
+        assertFalse(childPageOne.hasChildPage("GrandChildOne"));
 
-    importer.setAutoUpdateSetting(true);
-    importer.enterChildPage(pageOne, new Date(0));
+        assertTrue(localRoot.hasChildPage("PageThatDoesntImport"));
+        assertTrue(localRoot.hasChildPage("OtherImportRoot"));
+    }
 
-    WikiImportProperty importProps = WikiImportProperty.createFrom(pageOne.getData().getProperties());
-    assertTrue(importProps.isAutoUpdate());
-  }
+    public void testWholeTreeOrphaned() throws Exception {
+        importer.importWiki(localRoot);
 
-  private WikiPage addLocalPageWithImportProperty(WikiPage parentPage, String pageName, boolean isRoot) throws Exception {
-    WikiPage page = parentPage.addChildPage(pageName);
-    PageData data = page.getData();
+        remoteRoot.removeChildPage("PageOne");
 
-    WikiPagePath pagePath = localRoot.getPageCrawler().getFullPath(page);
-    WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.port + "/" + PathParser.render(pagePath));
-    if (isRoot)
-      importProps.setRoot(true);
-    importProps.addTo(data.getProperties());
-    page.commit(data);
+        importer.importWiki(localRoot);
 
-    return page;
-  }
+        assertFalse(localRoot.hasChildPage("PageOne"));
+    }
 
-  public void pageImported(WikiPage page) {
-    imports.add(page);
-  }
+    public void testContextIsNotOrphanWhenUpdatingNonRoot() throws Exception {
+        addLocalPageWithImportProperty(localRoot, "PageOne", false);
+        importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
 
-  public void pageImportError(WikiPage page, Exception e) {
-    errors.add(e);
-  }
+        importer.importWiki(localRoot.getChildPage("PageOne"));
+
+        assertEquals(0, importer.getOrphans().size());
+    }
+
+    public void testAutoUpdatePropertySetOnRoot() throws Exception {
+        addLocalPageWithImportProperty(localRoot, "PageOne", false);
+        importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
+        importer.setAutoUpdateSetting(true);
+        WikiPage importedPage = localRoot.getChildPage("PageOne");
+        importer.importWiki(importedPage);
+
+        WikiImportProperty importProp = WikiImportProperty.createFrom(importedPage.getData().getProperties());
+        assertTrue(importProp.isAutoUpdate());
+
+        importer.setAutoUpdateSetting(false);
+        importer.importWiki(importedPage);
+
+        importProp = WikiImportProperty.createFrom(importedPage.getData().getProperties());
+        assertFalse(importProp.isAutoUpdate());
+    }
+
+    public void testAutoUpdate_NewPage() throws Exception {
+        importer.setAutoUpdateSetting(true);
+        importer.enterChildPage(pageOne, Clock.currentDate());
+
+        WikiImportProperty importProps = WikiImportProperty.createFrom(pageOne.getData().getProperties());
+        assertTrue(importProps.isAutoUpdate());
+    }
+
+    public void testAutoUpdateWhenRemotePageNotModified() throws Exception {
+        importer.enterChildPage(pageOne, Clock.currentDate());
+        importer.exitPage();
+
+        PageData data = pageOne.getData();
+        data.setContent("new content");
+        pageOne.commit(data);
+
+        importer.setAutoUpdateSetting(true);
+        importer.enterChildPage(pageOne, new Date(0));
+
+        WikiImportProperty importProps = WikiImportProperty.createFrom(pageOne.getData().getProperties());
+        assertTrue(importProps.isAutoUpdate());
+    }
+
+    private WikiPage addLocalPageWithImportProperty(WikiPage parentPage, String pageName, boolean isRoot) throws Exception {
+        WikiPage page = parentPage.addChildPage(pageName);
+        PageData data = page.getData();
+
+        WikiPagePath pagePath = localRoot.getPageCrawler().getFullPath(page);
+        WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.port + "/" + PathParser.render(pagePath));
+        if (isRoot)
+            importProps.setRoot(true);
+        importProps.addTo(data.getProperties());
+        page.commit(data);
+
+        return page;
+    }
+
+    public void pageImported(WikiPage page) {
+        imports.add(page);
+    }
+
+    public void pageImportError(WikiPage page, Exception e) {
+        errors.add(e);
+    }
 }

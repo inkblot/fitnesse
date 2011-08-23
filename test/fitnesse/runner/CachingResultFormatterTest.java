@@ -2,11 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import util.StreamReader;
 import fitnesse.responders.run.TestSummary;
 
-public class CachingResultFormatterTest extends RegexTestCase {
+import static util.RegexAssertions.assertSubString;
+
+public class CachingResultFormatterTest extends TestCase {
   public void testAddResult() throws Exception {
     CachingResultFormatter formatter = new CachingResultFormatter();
     PageResult result = new PageResult("PageTitle", new TestSummary(1, 2, 3, 4), "content");

@@ -5,8 +5,8 @@ package fitnesse.responders;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 
+import junit.framework.TestCase;
 import util.FileUtil;
-import util.RegexTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
@@ -23,141 +23,144 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageProperties;
 import fitnesse.wiki.WikiPageProperty;
 
-public class SerializedPageResponderTest extends RegexTestCase {
-  private final String RootPath = "TestRooT";
-  private PageCrawler crawler;
-  private WikiPage root;
-  private MockRequest request;
+import static util.RegexAssertions.assertNotSubString;
+import static util.RegexAssertions.assertSubString;
 
-  public void setUp() throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
-    crawler = root.getPageCrawler();
-    request = new MockRequest();
-  }
+public class SerializedPageResponderTest extends TestCase {
+    private final String RootPath = "TestRooT";
+    private PageCrawler crawler;
+    private WikiPage root;
+    private MockRequest request;
 
-  public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory(RootPath);
-  }
+    public void setUp() throws Exception {
+        root = InMemoryPage.makeRoot("RooT");
+        crawler = root.getPageCrawler();
+        request = new MockRequest();
+    }
 
-  public void testWithInMemory() throws Exception {
-    Object obj = doSetUpWith(root, "bones");
-    doTestWith(obj);
+    public void tearDown() throws Exception {
+        FileUtil.deleteFileSystemDirectory(RootPath);
+    }
 
-  }
+    public void testWithInMemory() throws Exception {
+        Object obj = doSetUpWith(root, "bones");
+        doTestWith(obj);
 
-  public void testWithFileSystem() throws Exception {
-    root = new FileSystemPage(".", RootPath);
-    Object obj = doSetUpWith(root, "bones");
-    FileUtil.deleteFileSystemDirectory(RootPath);
-    doTestWith(obj);
-  }
+    }
 
-  private void doTestWith(Object obj) throws Exception {
-    assertNotNull(obj);
-    assertEquals(true, obj instanceof ProxyPage);
-    WikiPage page = (WikiPage) obj;
-    assertEquals("PageOne", page.getName());
-  }
+    public void testWithFileSystem() throws Exception {
+        root = new FileSystemPage(".", RootPath);
+        Object obj = doSetUpWith(root, "bones");
+        FileUtil.deleteFileSystemDirectory(RootPath);
+        doTestWith(obj);
+    }
 
-  private Object doSetUpWith(WikiPage root, String proxyType) throws Exception {
-    WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "this is page one");
-    PageData data = page1.getData();
-    data.setAttribute("Attr1", "true");
-    page1.commit(data);
-    crawler.addPage(page1, PathParser.parse("ChildOne"), "this is child one");
+    private void doTestWith(Object obj) throws Exception {
+        assertNotNull(obj);
+        assertEquals(true, obj instanceof ProxyPage);
+        WikiPage page = (WikiPage) obj;
+        assertEquals("PageOne", page.getName());
+    }
 
-    request.addInput("type", proxyType);
-    request.setResource("PageOne");
+    private Object doSetUpWith(WikiPage root, String proxyType) throws Exception {
+        WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "this is page one");
+        PageData data = page1.getData();
+        data.setAttribute("Attr1", "true");
+        page1.commit(data);
+        crawler.addPage(page1, PathParser.parse("ChildOne"), "this is child one");
 
-    return getObject(root, request);
-  }
+        request.addInput("type", proxyType);
+        request.setResource("PageOne");
 
-  private Object getObject(WikiPage root, MockRequest request) throws Exception {
-    Responder responder = new SerializedPageResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        return getObject(root, request);
+    }
 
-    ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));
-    return ois.readObject();
-  }
+    private Object getObject(WikiPage root, MockRequest request) throws Exception {
+        Responder responder = new SerializedPageResponder();
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
 
-  public void testGetContentAndAttributes() throws Exception {
-    Object obj = doSetUpWith(root, "meat");
-    assertNotNull(obj);
-    assertTrue(obj instanceof PageData);
-    PageData data = (PageData) obj;
+        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));
+        return ois.readObject();
+    }
 
-    assertEquals("this is page one", data.getContent());
+    public void testGetContentAndAttributes() throws Exception {
+        Object obj = doSetUpWith(root, "meat");
+        assertNotNull(obj);
+        assertTrue(obj instanceof PageData);
+        PageData data = (PageData) obj;
 
-    WikiPageProperties props = data.getProperties();
-    assertTrue(props.has("Attr1"));
-  }
+        assertEquals("this is page one", data.getContent());
 
-  public void testGetVersionOfPageData() throws Exception {
-    WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
-    VersionInfo commitRecord = page.commit(page.getData());
+        WikiPageProperties props = data.getProperties();
+        assertTrue(props.has("Attr1"));
+    }
 
-    request.addInput("type", "meat");
-    request.addInput("version", commitRecord.getName());
-    request.setResource("PageOne");
+    public void testGetVersionOfPageData() throws Exception {
+        WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
+        VersionInfo commitRecord = page.commit(page.getData());
 
-    Object obj = getObject(root, request);
-    assertEquals(PageData.class, obj.getClass());
-    PageData data = (PageData) obj;
-    assertEquals("some content", data.getContent());
-  }
+        request.addInput("type", "meat");
+        request.addInput("version", commitRecord.getName());
+        request.setResource("PageOne");
 
-  public void testGetPageHieratchyAsXml() throws Exception {
-    crawler.addPage(root, PathParser.parse("PageOne"));
-    crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    crawler.addPage(root, PathParser.parse("PageTwo"));
+        Object obj = getObject(root, request);
+        assertEquals(PageData.class, obj.getClass());
+        PageData data = (PageData) obj;
+        assertEquals("some content", data.getContent());
+    }
 
-    request.setResource("root");
-    request.addInput("type", "pages");
-    Responder responder = new SerializedPageResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-    String xml = response.getContent();
+    public void testGetPageHieratchyAsXml() throws Exception {
+        crawler.addPage(root, PathParser.parse("PageOne"));
+        crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
+        crawler.addPage(root, PathParser.parse("PageTwo"));
 
-    assertEquals("text/xml", response.getContentType());
-    assertSubString("<name>PageOne</name>", xml);
-    assertSubString("<name>PageTwo</name>", xml);
-    assertSubString("<name>ChildOne</name>", xml);
-  }
+        request.setResource("root");
+        request.addInput("type", "pages");
+        Responder responder = new SerializedPageResponder();
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        String xml = response.getContent();
 
-  public void testGetPageHieratchyAsXmlDoesntContainSymbolicLinks() throws Exception {
-    WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"));
-    crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
-    crawler.addPage(root, PathParser.parse("PageTwo"));
+        assertEquals("text/xml", response.getContentType());
+        assertSubString("<name>PageOne</name>", xml);
+        assertSubString("<name>PageTwo</name>", xml);
+        assertSubString("<name>ChildOne</name>", xml);
+    }
 
-    PageData data = pageOne.getData();
-    WikiPageProperties properties = data.getProperties();
-    WikiPageProperty symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
-    symLinks.set("SymPage", "PageTwo");
-    pageOne.commit(data);
+    public void testGetPageHieratchyAsXmlDoesntContainSymbolicLinks() throws Exception {
+        WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"));
+        crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
+        crawler.addPage(root, PathParser.parse("PageTwo"));
 
-    request.setResource("root");
-    request.addInput("type", "pages");
-    Responder responder = new SerializedPageResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-    String xml = response.getContent();
+        PageData data = pageOne.getData();
+        WikiPageProperties properties = data.getProperties();
+        WikiPageProperty symLinks = properties.set(SymbolicPage.PROPERTY_NAME);
+        symLinks.set("SymPage", "PageTwo");
+        pageOne.commit(data);
 
-    assertEquals("text/xml", response.getContentType());
-    assertSubString("<name>PageOne</name>", xml);
-    assertSubString("<name>PageTwo</name>", xml);
-    assertSubString("<name>ChildOne</name>", xml);
-    assertNotSubString("SymPage", xml);
-  }
+        request.setResource("root");
+        request.addInput("type", "pages");
+        Responder responder = new SerializedPageResponder();
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        String xml = response.getContent();
 
-  public void testGetDataAsHtml() throws Exception {
-    crawler.addPage(root, PathParser.parse("TestPageOne"), "test page");
+        assertEquals("text/xml", response.getContentType());
+        assertSubString("<name>PageOne</name>", xml);
+        assertSubString("<name>PageTwo</name>", xml);
+        assertSubString("<name>ChildOne</name>", xml);
+        assertNotSubString("SymPage", xml);
+    }
 
-    request.setResource("TestPageOne");
-    request.addInput("type", "data");
-    Responder responder = new SerializedPageResponder();
-    SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-    String xml = response.getContent();
+    public void testGetDataAsHtml() throws Exception {
+        crawler.addPage(root, PathParser.parse("TestPageOne"), "test page");
 
-    assertEquals("text/xml", response.getContentType());
-    assertSubString("test page", xml);
-    assertSubString("<Test", xml);
-  }
+        request.setResource("TestPageOne");
+        request.addInput("type", "data");
+        Responder responder = new SerializedPageResponder();
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        String xml = response.getContent();
+
+        assertEquals("text/xml", response.getContentType());
+        assertSubString("test page", xml);
+        assertSubString("<Test", xml);
+    }
 }

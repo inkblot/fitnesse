@@ -5,7 +5,7 @@ package fitnesse.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import util.TimeMeasurement;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSummary;
@@ -14,7 +14,9 @@ import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.testutil.MockSocket;
 import fitnesse.testutil.SimpleSocketDoner;
 
-public class FitClientTest extends RegexTestCase implements TestSystemListener {
+import static util.RegexAssertions.assertSubString;
+
+public class FitClientTest extends TestCase implements TestSystemListener {
     private List<String> outputs = new ArrayList<String>();
     private List<TestSummary> counts = new ArrayList<TestSummary>();
     private CommandRunningFitClient client;

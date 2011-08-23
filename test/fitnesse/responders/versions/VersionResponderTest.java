@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
-import util.RegexTestCase;
+import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
@@ -13,50 +13,54 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 
-public class VersionResponderTest extends RegexTestCase {
-  private String oldVersion;
-  private SimpleResponse response;
-  private WikiPage root;
-  private WikiPage page;
+import static util.RegexAssertions.assertDoesNotHaveRegexp;
+import static util.RegexAssertions.assertHasRegexp;
+import static util.RegexAssertions.assertSubString;
 
-  private void makeTestResponse(String pageName) throws Exception {
-    root = InMemoryPage.makeRoot("RooT");
-    page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original content");
-    PageData data = page.getData();
-    data.setContent("new stuff");
-    VersionInfo commitRecord = page.commit(data);
-    oldVersion = commitRecord.getName();
+public class VersionResponderTest extends TestCase {
+    private String oldVersion;
+    private SimpleResponse response;
+    private WikiPage root;
+    private WikiPage page;
 
-    MockRequest request = new MockRequest();
-    request.setResource(pageName);
-    request.addInput("version", oldVersion);
+    private void makeTestResponse(String pageName) throws Exception {
+        root = InMemoryPage.makeRoot("RooT");
+        page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original content");
+        PageData data = page.getData();
+        data.setContent("new stuff");
+        VersionInfo commitRecord = page.commit(data);
+        oldVersion = commitRecord.getName();
 
-    Responder responder = new VersionResponder();
-    response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
-  }
+        MockRequest request = new MockRequest();
+        request.setResource(pageName);
+        request.addInput("version", oldVersion);
 
-  public void testVersionName() throws Exception {
-    makeTestResponse("PageOne");
+        Responder responder = new VersionResponder();
+        response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+    }
 
-    assertHasRegexp("original content", response.getContent());
-    assertDoesntHaveRegexp("new stuff", response.getContent());
-    assertHasRegexp(oldVersion, response.getContent());
-  }
+    public void testVersionName() throws Exception {
+        makeTestResponse("PageOne");
 
-  public void testButtons() throws Exception {
-    makeTestResponse("PageOne");
+        assertHasRegexp("original content", response.getContent());
+        assertDoesNotHaveRegexp("new stuff", response.getContent());
+        assertHasRegexp(oldVersion, response.getContent());
+    }
 
-    assertDoesntHaveRegexp("Edit button", response.getContent());
-    assertDoesntHaveRegexp("Search button", response.getContent());
-    assertDoesntHaveRegexp("Test button", response.getContent());
-    assertDoesntHaveRegexp("Suite button", response.getContent());
-    assertDoesntHaveRegexp("Versions button", response.getContent());
+    public void testButtons() throws Exception {
+        makeTestResponse("PageOne");
 
-    assertHasRegexp("Rollback button", response.getContent());
-  }
+        assertDoesNotHaveRegexp("Edit button", response.getContent());
+        assertDoesNotHaveRegexp("Search button", response.getContent());
+        assertDoesNotHaveRegexp("Test button", response.getContent());
+        assertDoesNotHaveRegexp("Suite button", response.getContent());
+        assertDoesNotHaveRegexp("Versions button", response.getContent());
 
-  public void testNameNoAtRootLevel() throws Exception {
-    makeTestResponse("PageOne.PageTwo");
-    assertSubString("PageOne.PageTwo?responder=", response.getContent());
-  }
+        assertHasRegexp("Rollback button", response.getContent());
+    }
+
+    public void testNameNoAtRootLevel() throws Exception {
+        makeTestResponse("PageOne.PageTwo");
+        assertSubString("PageOne.PageTwo?responder=", response.getContent());
+    }
 }

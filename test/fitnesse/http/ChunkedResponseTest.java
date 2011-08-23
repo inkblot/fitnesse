@@ -6,8 +6,8 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertTrue;
-import static util.RegexTestCase.assertHasRegexp;
-import static util.RegexTestCase.assertSubString;
+import static util.RegexAssertions.assertHasRegexp;
+import static util.RegexAssertions.assertSubString;
 
 import java.net.Socket;
 

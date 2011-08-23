@@ -6,6 +6,7 @@
     <property environment="env"/>
     <property name="src" location="${basedir}/src"/>
     <property name="resources" location="${basedir}/resources"/>
+    <property name="test.resources" location="${basedir}/test-resources"/>
     <property name="build" location="${basedir}/build"/>
     <property name="build.classes" location="${build}/classes"/>
     <property name="test.classes" location="${build}/test/classes"/>
@@ -14,6 +15,7 @@
     <property name="integration.tests" location="${integration}/tests"/>
     <property name="lib" location="${basedir}/lib"/>
     <property name="lib.runtime" location="${lib}/runtime"/>
+    <property name="lib.compile" location="${lib}/compile"/>
     <property name="lib.test" location="${lib}/test"/>
     <property name="dist" location="${build}/dist"/>
     <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
@@ -79,6 +81,7 @@
         <javac srcdir="${src}" destdir="${build.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
             <classpath>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
+                <fileset dir="${lib.compile}" includes="*.jar"/>
             </classpath>
         </javac>
     </target>
@@ -149,6 +152,7 @@
                 <pathelement path="${build.classes}"/>
                 <fileset dir="${lib.test}" includes="*.jar"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
+                <fileset dir="${lib.compile}" includes="*.jar"/>
             </classpath>
         </javac>
     </target>
@@ -156,11 +160,13 @@
     <target name="test" depends="compile, build-properties, compile-tests">
         <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${build}">
             <classpath>
+                <pathelement path="${test.resources}"/>
                 <pathelement path="${test.classes}"/>
                 <pathelement path="${resources}"/>
                 <pathelement path="${build.classes}"/>
                 <fileset dir="${lib.test}" includes="*.jar"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
+                <fileset dir="${lib.compile}" includes="*.jar"/>
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <formatter type="xml" usefile="true"/>
@@ -180,8 +186,10 @@
     <target name="integration-test" depends="jar, compile-tests, copy-integration-tests">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true" output="${integration}/fitnesse-results.xml">
             <classpath>
+                <pathelement path="${test.resources}"/>
                 <fileset file="${fitnesse.jar}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
+                <fileset dir="${lib.compile}" includes="*.jar"/>
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-d"/>
@@ -198,8 +206,10 @@
     <target name="fitnesse" depends="jar, compile-tests, copy-integration-tests" description="Run the fitnesse wiki">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
+                <pathelement path="${test.resources}"/>
                 <fileset file="${fitnesse.jar}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
+                <fileset dir="${lib.compile}" includes="*.jar"/>
             </classpath>
             <arg value="tests"/>
             <arg value="-p"/>
@@ -210,8 +220,10 @@
     <target name="debug-fitnesse" depends="jar, compile-tests, copy-integration-tests" description="Run the fitnesse wiki an connect to a listening debugger">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
+                <pathelement path="${test.resources}"/>
                 <fileset file="${fitnesse.jar}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
+                <fileset dir="${lib.compile}" includes="*.jar"/>
             </classpath>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xnoagent"/>

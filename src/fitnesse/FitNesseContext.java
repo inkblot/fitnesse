@@ -9,10 +9,14 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
 public class FitNesseContext {
+    private static final Logger logger = LoggerFactory.getLogger(FitNesseContext.class);
+
     public static final String DEFAULT_PATH = ".";
     public static final String DEFAULT_ROOT = "FitNesseRoot";
     public static final int DEFAULT_PORT = 80;
@@ -48,6 +52,10 @@ public class FitNesseContext {
     public FitNesseContext(WikiPage root, String rootPath) {
         this.root = root;
         this.rootPath = rootPath;
+        String absolutePath = new File(this.rootPath).getAbsolutePath();
+        if (!absolutePath.equals(this.rootPath)) {
+            logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());
+        }
     }
 
 

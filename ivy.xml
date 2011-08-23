@@ -6,7 +6,7 @@
 
     <configurations>
         <conf name="default" extends="runtime" description="Distributed artifacts"/>
-        <!--<conf name="compile" description="Libraries that the source code depends on for compilation"/>-->
+        <conf name="compile" description="Libraries that the source code depends on for compilation"/>
         <conf name="runtime" description="Libraries that are required as dependencies at runtime"/>
         <conf name="sources" description="Source code for the library"/>
         <conf name="javadoc" description="Documentation for the library"/>
@@ -29,10 +29,11 @@
         <dependency org="commons-lang" name="commons-lang" rev="2.6" conf="runtime->default"/>
         <dependency org="org.slf4j" name="slf4j-api" rev="1.6.2" conf="runtime->default"/>
 
+        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.2" conf="compile->default"/>
+        <dependency org="log4j" name="log4j" rev="1.2.16" conf="compile->default"/>
+
         <dependency org="junit" name="junit" rev="4.6" conf="test->default"/>
         <dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default"/>
-        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.2" conf="test->default"/>
-        <dependency org="log4j" name="log4j" rev="1.2.16" conf="test->default"/>
     </dependencies>
 
 </ivy-module>

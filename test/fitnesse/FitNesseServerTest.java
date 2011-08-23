@@ -4,7 +4,6 @@ package fitnesse;
 
 import java.util.regex.Pattern;
 
-import junit.framework.TestCase;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.testutil.MockSocket;
@@ -15,11 +14,15 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class FitNesseServerTest extends TestCase {
+public class FitNesseServerTest {
     private SampleFileUtility sample = new SampleFileUtility();
 
     private PageCrawler crawler;
@@ -28,9 +31,7 @@ public class FitNesseServerTest extends TestCase {
     private WikiPagePath pageOneTwoPath;
     private FitNesseContext context;
 
-    public FitNesseServerTest() {
-    }
-
+    @Before
     public void setUp() throws Exception {
         sample.makeSampleFiles();
         root = InMemoryPage.makeRoot("RootPage");
@@ -40,10 +41,12 @@ public class FitNesseServerTest extends TestCase {
         context = FitNesseUtil.makeTestContext(root);
     }
 
+    @After
     public void tearDown() throws Exception {
         sample.deleteSampleFiles();
     }
 
+    @Test
     public void testSimple() throws Exception {
         crawler.addPage(root, PathParser.parse("SomePage"), "some string");
         String output = getSocketOutput("GET /SomePage HTTP/1.1\r\n\r\n", root);
@@ -52,12 +55,14 @@ public class FitNesseServerTest extends TestCase {
         assertTrue("Should have canned Content", hasSubString("some string", output));
     }
 
+    @Test
     public void testNotFound() throws Exception {
         String output = getSocketOutput("GET /WikiWord HTTP/1.1\r\n\r\n", new WikiPageDummy());
 
         assertSubString("Page doesn't exist.", output);
     }
 
+    @Test
     public void testBadRequest() throws Exception {
         String output = getSocketOutput("Bad Request \r\n\r\n", new WikiPageDummy());
 
@@ -65,6 +70,7 @@ public class FitNesseServerTest extends TestCase {
         assertSubString("The request string is malformed and can not be parsed", output);
     }
 
+    @Test
     public void testSomeOtherPage() throws Exception {
         crawler.addPage(root, pageOnePath, "Page One Content");
         String output = getSocketOutput("GET /PageOne HTTP/1.1\r\n\r\n", root);
@@ -72,6 +78,7 @@ public class FitNesseServerTest extends TestCase {
         assertTrue("Should have page one", hasSubString(expected, output));
     }
 
+    @Test
     public void testSecondLevelPage() throws Exception {
         crawler.addPage(root, pageOnePath, "Page One Content");
         crawler.addPage(root, pageOneTwoPath, "Page Two Content");
@@ -81,6 +88,7 @@ public class FitNesseServerTest extends TestCase {
         assertTrue("Should have page Two", hasSubString(expected, output));
     }
 
+    @Test
     public void testRelativeAndAbsoluteLinks() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RootPage");
         crawler.addPage(root, pageOnePath, "PageOne");
@@ -96,6 +104,7 @@ public class FitNesseServerTest extends TestCase {
         assertTrue("Should have absolute link", hasSubString(expected, output));
     }
 
+    @Test
     public void testServingRegularFiles() throws Exception {
         String output = getSocketOutput("GET /files/testDir/testFile2 HTTP/1.1\r\n\r\n", new WikiPageDummy());
         assertHasRegexp("file2 content", output);

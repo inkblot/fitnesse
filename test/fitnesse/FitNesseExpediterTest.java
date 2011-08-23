@@ -11,13 +11,18 @@ import fitnesse.http.ResponseParser;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-public class FitNesseExpediterTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     private FitNesseExpediter expediter;
     private MockSocket socket;
     private FitNesseContext context;
@@ -25,19 +30,25 @@ public class FitNesseExpediterTest extends TestCase {
     private PipedOutputStream clientOutput;
     private ResponseParser response;
 
+    @Before
     public void setUp() throws Exception {
         InMemoryPage root = (InMemoryPage) InMemoryPage.makeRoot("RooT");
         root.addChildPage("FrontPage");
         socket = new MockSocket();
-        context = new FitNesseContext(root, "..");
+        context = makeContext(root);
+        context.rootDirectoryName = "RooT";
+        context.setRootPagePath();
+        context.responderFactory = new ResponderFactory(context.rootPagePath);
+        installUpdates();
         VelocityFactory.makeVelocityFactory(context);
-        context.responderFactory = new ResponderFactory(".");
         expediter = new FitNesseExpediter(socket, context);
     }
 
+    @After
     public void tearDown() throws Exception {
     }
 
+    @Test
     public void testAuthenticationGetsCalled() throws Exception {
         context.authenticator = new StoneWallAuthenticator();
         MockRequest request = new MockRequest();
@@ -45,6 +56,7 @@ public class FitNesseExpediterTest extends TestCase {
         assertEquals(401, response.getStatus());
     }
 
+    @Test
     public void testClosedSocketMidResponse() throws Exception {
         try {
             MockRequest request = new MockRequest();
@@ -56,6 +68,7 @@ public class FitNesseExpediterTest extends TestCase {
         }
     }
 
+    @Test
     public void testIncompleteRequestsTimeOut() throws Exception {
         final FitNesseExpediter sender = preparePipedFitNesseExpediter();
 
@@ -81,6 +94,7 @@ public class FitNesseExpediterTest extends TestCase {
         return sender;
     }
 
+    @Test
     public void testCompleteRequest() throws Exception {
         final FitNesseExpediter sender = preparePipedFitNesseExpediter();
 
@@ -97,6 +111,7 @@ public class FitNesseExpediterTest extends TestCase {
         assertEquals(200, response.getStatus());
     }
 
+    @Test
     public void testSlowButCompleteRequest() throws Exception {
         final FitNesseExpediter sender = preparePipedFitNesseExpediter();
 

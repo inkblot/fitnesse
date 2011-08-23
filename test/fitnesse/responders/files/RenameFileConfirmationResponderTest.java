@@ -11,6 +11,8 @@ import fitnesse.http.SimpleResponse;
 import static util.RegexAssertions.assertSubString;
 
 public class RenameFileConfirmationResponderTest extends TestCase {
+    private SampleFileUtility sample = new SampleFileUtility();
+
     MockRequest request;
     private FitNesseContext context;
     private String content;
@@ -20,12 +22,12 @@ public class RenameFileConfirmationResponderTest extends TestCase {
     public void setUp() throws Exception {
         request = new MockRequest();
         context = new FitNesseContext();
-        context.rootPagePath = SampleFileUtility.base;
-        SampleFileUtility.makeSampleFiles();
+        context.rootPagePath = sample.base;
+        sample.makeSampleFiles();
     }
 
     public void tearDown() throws Exception {
-        SampleFileUtility.deleteSampleFiles();
+        sample.deleteSampleFiles();
     }
 
     public void testContentOfPage() throws Exception {

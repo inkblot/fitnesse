@@ -20,6 +20,8 @@ import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
 public class FitNesseServerTest extends TestCase {
+    private SampleFileUtility sample = new SampleFileUtility();
+
     private PageCrawler crawler;
     private WikiPage root;
     private WikiPagePath pageOnePath;
@@ -30,7 +32,7 @@ public class FitNesseServerTest extends TestCase {
     }
 
     public void setUp() throws Exception {
-        SampleFileUtility.makeSampleFiles();
+        sample.makeSampleFiles();
         root = InMemoryPage.makeRoot("RootPage");
         crawler = root.getPageCrawler();
         pageOnePath = PathParser.parse("PageOne");
@@ -39,7 +41,7 @@ public class FitNesseServerTest extends TestCase {
     }
 
     public void tearDown() throws Exception {
-        SampleFileUtility.deleteSampleFiles();
+        sample.deleteSampleFiles();
     }
 
     public void testSimple() throws Exception {
@@ -101,8 +103,8 @@ public class FitNesseServerTest extends TestCase {
 
     private String getSocketOutput(String requestLine, WikiPage page) throws Exception {
         MockSocket s = new MockSocket(requestLine);
-        context.rootPagePath = SampleFileUtility.base;
-        context.responderFactory = new ResponderFactory(SampleFileUtility.base);
+        context.rootPagePath = sample.base;
+        context.responderFactory = new ResponderFactory(sample.base);
         context.root = page;
         FitNesseServer server = new FitNesseServer(context);
         server.serve(s, 1000);

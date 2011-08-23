@@ -7,33 +7,38 @@ import java.io.File;
 import util.FileUtil;
 
 public class SampleFileUtility {
-  public static String base = "testdir";
-  public static File filesDir;
-  public static File testDir;
-  public static File testFile1;
-  public static File testFile2;
-  public static File testFile3;
-  public static File testFile4;
+    public final String base;
+    public final File testDir;
+    public final File testFile1;
 
-  public static void makeSampleFiles() {
-    File dir = new File(base);
-    dir.mkdir();
-    filesDir = new File(dir, "files");
-    filesDir.mkdir();
-    testDir = new File(filesDir, "testDir");
-    testDir.mkdir();
+    public SampleFileUtility() {
+        this("testdir");
+    }
 
-    testFile1 = FileUtil.createFile(base + "/files/testFile1", "file1 content");
-    testFile2 = FileUtil.createFile(base + "/files/testDir/testFile2", "file2 content");
-    testFile3 = FileUtil.createFile(base + "/files/testDir/testFile3", "file3 content");
-    testFile4 = FileUtil.createFile(base + "/files/file4 with spaces.txt", "file4 content");
-  }
+    public SampleFileUtility(String base) {
+        this.base = base;
+        testDir = new File(new File(base, "files"), "testDir");
+        testFile1 = new File(base, "files/testFile1");
+    }
 
-  public static void deleteSampleFiles() {
-    FileUtil.deleteFileSystemDirectory(base);
-  }
+    public void makeSampleFiles() {
+        File dir = new File(base);
+        dir.mkdir();
+        File filesDir = new File(dir, "files");
+        filesDir.mkdir();
+        testDir.mkdir();
 
-  public static void addFile(String name, String content) {
-    FileUtil.createFile(base + name, content);
-  }
+        FileUtil.createFile(testFile1, "file1 content");
+        FileUtil.createFile(base + "/files/testDir/testFile2", "file2 content");
+        FileUtil.createFile(base + "/files/testDir/testFile3", "file3 content");
+        FileUtil.createFile(base + "/files/file4 with spaces.txt", "file4 content");
+    }
+
+    public void deleteSampleFiles() {
+        FileUtil.deleteFileSystemDirectory(base);
+    }
+
+    public void addFile(String name, String content) {
+        FileUtil.createFile(base + name, content);
+    }
 }

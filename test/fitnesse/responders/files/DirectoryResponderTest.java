@@ -12,6 +12,8 @@ import fitnesse.http.SimpleResponse;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class DirectoryResponderTest extends TestCase {
+    private SampleFileUtility sample = new SampleFileUtility();
+
     MockRequest request;
     private SimpleResponse response;
     private FitNesseContext context;
@@ -19,17 +21,17 @@ public class DirectoryResponderTest extends TestCase {
     public void setUp() throws Exception {
         request = new MockRequest();
         context = new FitNesseContext();
-        context.rootPagePath = SampleFileUtility.base;
-        SampleFileUtility.makeSampleFiles();
+        context.rootPagePath = sample.base;
+        sample.makeSampleFiles();
     }
 
     public void tearDown() throws Exception {
-        SampleFileUtility.deleteSampleFiles();
+        sample.deleteSampleFiles();
     }
 
     public void testDirectotyListing() throws Exception {
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
+        Responder responder = FileResponder.makeResponder(request, sample.base);
         response = (SimpleResponse) responder.makeResponse(context, request);
         assertHasRegexp("testDir", response.getContent());
         assertHasRegexp("testFile2</a>", response.getContent());
@@ -39,7 +41,7 @@ public class DirectoryResponderTest extends TestCase {
 
     public void testButtons() throws Exception {
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
+        Responder responder = FileResponder.makeResponder(request, sample.base);
         response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertHasRegexp("upload form", response.getContent());
@@ -48,14 +50,14 @@ public class DirectoryResponderTest extends TestCase {
 
     public void testHtml() throws Exception {
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
+        Responder responder = FileResponder.makeResponder(request, sample.base);
         response = (SimpleResponse) responder.makeResponse(context, request);
         assertHasRegexp("/files/", response.getContent());
     }
 
     public void testRedirectForDirectory() throws Exception {
         request.setResource("files/testDir");
-        Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
+        Responder responder = FileResponder.makeResponder(request, sample.base);
         Response response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
         assertEquals("/files/testDir/", response.getHeader("Location"));
@@ -63,7 +65,7 @@ public class DirectoryResponderTest extends TestCase {
 
     public void testFrontPageSidebarButtonPresent() throws Exception {
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, SampleFileUtility.base);
+        Responder responder = FileResponder.makeResponder(request, sample.base);
         response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertHasRegexp("<div class=\"sidebar\">", response.getContent());
@@ -72,7 +74,7 @@ public class DirectoryResponderTest extends TestCase {
     }
 
     public void testSizeString() throws Exception {
-        assertEquals("", DirectoryResponder.getSizeString(SampleFileUtility.testDir));
-        assertEquals("13 bytes", DirectoryResponder.getSizeString(SampleFileUtility.testFile1));
+        assertEquals("", DirectoryResponder.getSizeString(sample.testDir));
+        assertEquals("13 bytes", DirectoryResponder.getSizeString(sample.testFile1));
     }
 }

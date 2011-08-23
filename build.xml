@@ -106,7 +106,7 @@
         </copy>
     </target>
 
-    <target name="-create-update-lists" depends="compile, -copy-wiki-resources">
+    <target name="create-update-lists" depends="compile, -copy-wiki-resources">
         <java classpath="${build.classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
             <arg value="-baseDirectory:${build.classes}/Resources"/>
             <arg value="-updateList:${build.classes}/Resources/updateList"/>
@@ -133,7 +133,7 @@
         </propertyfile>
     </target>
 
-    <target name="jar" depends="compile, build-properties, -create-update-lists">
+    <target name="jar" depends="compile, build-properties, create-update-lists">
         <jar jarfile="${fitnesse.jar}">
             <manifest>
                 <attribute name="Built-By" value="${built.by}"/>

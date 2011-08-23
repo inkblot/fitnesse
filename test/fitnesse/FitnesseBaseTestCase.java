@@ -1,11 +1,13 @@
 package fitnesse;
 
+import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
 
 import java.io.File;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static util.FileUtil.deleteFileSystemDirectory;
 
@@ -18,6 +20,7 @@ import static util.FileUtil.deleteFileSystemDirectory;
 public class FitnesseBaseTestCase {
 
     private FitNesseContext context;
+    private SampleFileUtility samples;
 
     protected final FitNesseContext makeContext() {
         return makeContext(null);
@@ -33,9 +36,15 @@ public class FitnesseBaseTestCase {
     }
 
     protected final void installUpdates() throws Exception {
+        assertNotNull(context);
         assertTrue(new File(context.rootPagePath).mkdir());
         UpdaterImplementation updater = new UpdaterImplementation(context);
         updater.update();
+    }
+
+    protected final void makeSampleFiles() {
+        assertNotNull(context);
+        samples = new SampleFileUtility(context.rootPath);
     }
 
     @After
@@ -43,6 +52,9 @@ public class FitnesseBaseTestCase {
         if (context != null) {
             deleteFileSystemDirectory(context.rootPath);
             context = null;
+        }
+        if (samples != null) {
+            samples = null;
         }
     }
 }

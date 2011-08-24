@@ -44,7 +44,8 @@ public class FitnesseBaseTestCase {
 
     protected final void makeSampleFiles() {
         assertNotNull(context);
-        samples = new SampleFileUtility(context.rootPath);
+        samples = new SampleFileUtility(context.rootPagePath);
+        samples.makeSampleFiles();
     }
 
     @After

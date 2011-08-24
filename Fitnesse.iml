@@ -25,8 +25,33 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="runtime" level="project" />
-    <orderEntry type="library" scope="TEST" name="test" level="project" />
+    <orderEntry type="module-library">
+      <library name="runtime">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/resources" />
+          <root url="file://$MODULE_DIR$/lib/runtime" />
+          <root url="file://$MODULE_DIR$/lib/compile" />
+          <root url="file://$MODULE_DIR$/lib/runtime" />
+          <root url="file://$MODULE_DIR$/lib/compile" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib/compile" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/lib/runtime" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library name="test">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/test-resources" />
+          <root url="file://$MODULE_DIR$/lib/test" />
+          <root url="file://$MODULE_DIR$/lib/test" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib/test" recursive="false" />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

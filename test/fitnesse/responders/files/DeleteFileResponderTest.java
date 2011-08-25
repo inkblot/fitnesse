@@ -17,7 +17,7 @@ public class DeleteFileResponderTest extends TestCase {
     public void setUp() {
         FileUtil.makeDir("testdir");
         request = new MockRequest();
-        context = new FitNesseContext();
+        context = new FitNesseContext("RooT");
         context.rootPagePath = "testdir";
     }
 

@@ -24,7 +24,7 @@ public class SocketCatchingResponderTest extends TestCase {
         seeker = new SimpleSocketSeeker();
         sender = new MockResponseSender();
         responder = new SocketCatchingResponder();
-        context = new FitNesseContext();
+        context = new FitNesseContext("RooT");
         context.socketDealer = dealer;
         request = new MockRequest();
     }

@@ -30,7 +30,7 @@ public class InMemoryPage extends CommitingPage {
       this(rootPageName, null);
     }
 
-  protected InMemoryPage(String name, WikiPage parent) throws Exception {
+  protected InMemoryPage(String name, WikiPage parent) {
     super(name, parent);
     addExtention(new VirtualCouplingExtension(this));
     versions.put(currentVersionName, new PageData(this, ""));
@@ -42,7 +42,7 @@ public class InMemoryPage extends CommitingPage {
     return page;
   }
 
-  public static WikiPage makeRoot(String name) throws Exception {
+  public static WikiPage makeRoot(String name) {
     return new InMemoryPage(name, null);
   }
 

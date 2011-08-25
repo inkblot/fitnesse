@@ -16,7 +16,7 @@ public class HtmlResultFormatterTest extends TestCase {
     private HtmlResultFormatter formatter;
 
     public void setUp() throws Exception {
-        formatter = new HtmlResultFormatter(new FitNesseContext(), "somehost.com:8080", "FitNesse");
+        formatter = new HtmlResultFormatter(new FitNesseContext("RooT"), "somehost.com:8080", "FitNesse");
     }
 
     public void testIsValidHtml() throws Exception {

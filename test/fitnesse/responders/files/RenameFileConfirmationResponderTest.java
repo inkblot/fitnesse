@@ -16,12 +16,10 @@ public class RenameFileConfirmationResponderTest extends TestCase {
     MockRequest request;
     private FitNesseContext context;
     private String content;
-    private SimpleResponse response;
-    private Responder responder;
 
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = new FitNesseContext();
+        context = new FitNesseContext("RooT");
         context.rootPagePath = sample.base;
         sample.makeSampleFiles();
     }
@@ -47,8 +45,8 @@ public class RenameFileConfirmationResponderTest extends TestCase {
     private void getContentForSimpleRename() throws Exception {
         request.setResource("files");
         request.addInput("filename", "MyFile.txt");
-        responder = new RenameFileConfirmationResponder();
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        Responder responder = new RenameFileConfirmationResponder();
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         content = response.getContent();
     }
 

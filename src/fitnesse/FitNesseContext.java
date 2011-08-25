@@ -8,6 +8,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,8 @@ public class FitNesseContext {
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
-    public FitNesseContext() {
-        this(null);
+    public FitNesseContext(String rootName) {
+        this(InMemoryPage.makeRoot(rootName));
     }
 
     public FitNesseContext(WikiPage root) {

@@ -29,7 +29,7 @@ public class FitNesseMainTest {
 
   @Before
   public void setUp() throws Exception {
-    context = new FitNesseContext();
+    context = new FitNesseContext("RooT");
   }
 
   @After

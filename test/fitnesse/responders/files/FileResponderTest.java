@@ -38,7 +38,7 @@ public class FileResponderTest {
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = new FitNesseContext();
+        context = new FitNesseContext("RooT");
         context.rootPagePath = sample.base;
         sample.makeSampleFiles();
         response = null;

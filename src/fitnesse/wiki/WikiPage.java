@@ -8,43 +8,44 @@ import java.util.List;
 
 
 public interface WikiPage extends Serializable, Comparable<Object> {
-  public WikiPage getParent() throws Exception;
+    public WikiPage getParent();
 
-  public WikiPage getParentForVariables() throws Exception;
+    public WikiPage getParentForVariables() throws Exception;
 
-  public void setParentForVariables(WikiPage parent);
+    public void setParentForVariables(WikiPage parent);
 
-  public WikiPage addChildPage(String name) throws Exception;
+    public WikiPage addChildPage(String name) throws Exception;
 
-  public boolean hasChildPage(String name) throws Exception;
+    public boolean hasChildPage(String name) throws Exception;
 
-  public WikiPage getChildPage(String name) throws Exception;
+    public WikiPage getChildPage(String name) throws Exception;
 
-  public void removeChildPage(String name) throws Exception;
+    public void removeChildPage(String name) throws Exception;
 
-  public List<WikiPage> getChildren() throws Exception;
+    public List<WikiPage> getChildren() throws Exception;
 
-  public String getName();
+    public String getName();
 
-  public PageData getData() throws Exception;
+    public PageData getData() throws Exception;
 
-  public PageData getDataVersion(String versionName) throws Exception;
+    public PageData getDataVersion(String versionName) throws Exception;
 
-  public VersionInfo commit(PageData data) throws Exception;
+    public VersionInfo commit(PageData data) throws Exception;
 
-  public PageCrawler getPageCrawler();
+    public PageCrawler getPageCrawler();
 
-  public WikiPage getHeaderPage() throws Exception;
+    public WikiPage getHeaderPage() throws Exception;
 
-  public WikiPage getFooterPage() throws Exception;
-  //TODO Delete these method alone with ProxyPage when the time is right.
-  public boolean hasExtension(String extensionName);
+    public WikiPage getFooterPage() throws Exception;
 
-  public Extension getExtension(String extensionName);
+    //TODO Delete these method alone with ProxyPage when the time is right.
+    public boolean hasExtension(String extensionName);
 
-  public String getHelpText() throws Exception;
+    public Extension getExtension(String extensionName);
 
-  public List<WikiPageAction> getActions() throws Exception;
+    public String getHelpText() throws Exception;
+
+    public List<WikiPageAction> getActions() throws Exception;
 }
 
 

@@ -7,103 +7,103 @@ import java.util.HashMap;
 import java.util.List;
 
 public class VirtualCouplingPage implements WikiPage {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  private WikiPage hostPage;
-  private HashMap<String, WikiPage> children = new HashMap<String, WikiPage>();
+    private WikiPage hostPage;
+    private HashMap<String, WikiPage> children = new HashMap<String, WikiPage>();
 
-  protected VirtualCouplingPage(WikiPage hostPage) {
-    this.hostPage = hostPage;
-  }
-
-  public VirtualCouplingPage(WikiPage hostPage, WikiPage proxy) throws Exception {
-    this.hostPage = hostPage;
-    List<WikiPage> proxyChildren = proxy.getChildren();
-    for (WikiPage child : proxyChildren) {
-      CommitingPage wikiPage = (CommitingPage) child;
-      wikiPage.parent = this;
-      children.put(wikiPage.getName(), wikiPage);
+    protected VirtualCouplingPage(WikiPage hostPage) {
+        this.hostPage = hostPage;
     }
-  }
 
-  public boolean hasChildPage(String pageName) throws Exception {
-    return children.containsKey(pageName);
-  }
+    public VirtualCouplingPage(WikiPage hostPage, WikiPage proxy) throws Exception {
+        this.hostPage = hostPage;
+        List<WikiPage> proxyChildren = proxy.getChildren();
+        for (WikiPage child : proxyChildren) {
+            CommitingPage wikiPage = (CommitingPage) child;
+            wikiPage.parent = this;
+            children.put(wikiPage.getName(), wikiPage);
+        }
+    }
 
-  public PageData getData() throws Exception {
-    return hostPage.getData();
-  }
+    public boolean hasChildPage(String pageName) throws Exception {
+        return children.containsKey(pageName);
+    }
 
-  public int compareTo(Object o) {
-    return 0;
-  }
+    public PageData getData() throws Exception {
+        return hostPage.getData();
+    }
 
-  public WikiPage addChildPage(String name) throws Exception {
-    return null;
-  }
+    public int compareTo(Object o) {
+        return 0;
+    }
 
-  public void removeChildPage(String name) throws Exception {
-  }
+    public WikiPage addChildPage(String name) throws Exception {
+        return null;
+    }
 
-  public PageData getDataVersion(String versionName) throws Exception {
-    return null;
-  }
+    public void removeChildPage(String name) throws Exception {
+    }
 
-  public WikiPage getParent() throws Exception {
-    return hostPage.getParent();
-  }
+    public PageData getDataVersion(String versionName) throws Exception {
+        return null;
+    }
 
-  public void setParentForVariables(WikiPage parent) {
-    hostPage.setParentForVariables(parent);
-  }
+    public WikiPage getParent() {
+        return hostPage.getParent();
+    }
 
-  public WikiPage getParentForVariables() throws Exception {
-    return hostPage.getParentForVariables();
-  }
+    public void setParentForVariables(WikiPage parent) {
+        hostPage.setParentForVariables(parent);
+    }
 
-  public String getName() {
-    return hostPage.getName();
-  }
+    public WikiPage getParentForVariables() throws Exception {
+        return hostPage.getParentForVariables();
+    }
 
-  public WikiPage getChildPage(String name) throws Exception {
-    WikiPage subpage = children.get(name);
-    if (subpage == null) subpage = hostPage.getChildPage(name);
-    return subpage;
-  }
+    public String getName() {
+        return hostPage.getName();
+    }
 
-  public List<WikiPage> getChildren() throws Exception {
-    return new ArrayList<WikiPage>(children.values());
-  }
+    public WikiPage getChildPage(String name) throws Exception {
+        WikiPage subpage = children.get(name);
+        if (subpage == null) subpage = hostPage.getChildPage(name);
+        return subpage;
+    }
 
-  public VersionInfo commit(PageData data) throws Exception {
-    return null;
-  }
+    public List<WikiPage> getChildren() throws Exception {
+        return new ArrayList<WikiPage>(children.values());
+    }
 
-  public boolean hasExtension(String extensionName) {
-    return false;
-  }
+    public VersionInfo commit(PageData data) throws Exception {
+        return null;
+    }
 
-  public Extension getExtension(String extensionName) {
-    return null;
-  }
+    public boolean hasExtension(String extensionName) {
+        return false;
+    }
 
-  public PageCrawler getPageCrawler() {
-    return hostPage.getPageCrawler();
-  }
+    public Extension getExtension(String extensionName) {
+        return null;
+    }
 
-  public WikiPage getHeaderPage() throws Exception {
-    return null;
-  }
+    public PageCrawler getPageCrawler() {
+        return hostPage.getPageCrawler();
+    }
 
-  public WikiPage getFooterPage() throws Exception {
-    return null;
-  }
+    public WikiPage getHeaderPage() throws Exception {
+        return null;
+    }
 
-  public String getHelpText() throws Exception {
-    return "Virtual coupling help text";
-  }
+    public WikiPage getFooterPage() throws Exception {
+        return null;
+    }
 
-  public List<WikiPageAction> getActions() throws Exception {
-    return null;
-  }
+    public String getHelpText() throws Exception {
+        return "Virtual coupling help text";
+    }
+
+    public List<WikiPageAction> getActions() throws Exception {
+        return null;
+    }
 }

@@ -17,7 +17,7 @@ public class FitNesseUtil {
     public static final String URL = "http://localhost:" + port + "/";
 
     public static void startFitnesse(WikiPage root) throws Exception {
-        context = makeTestContext(root);
+        context = new FitNesseContext(root);
         context.responderFactory = new ResponderFactory(context.rootPagePath);
         context.port = port;
         startFitnesseWithContext(context);
@@ -36,13 +36,6 @@ public class FitNesseUtil {
     public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) throws Exception {
         VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
         ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
-    }
-
-    public static FitNesseContext makeTestContext(WikiPage root) throws Exception {
-        FitNesseContext context = new FitNesseContext(root);
-        context.rootDirectoryName = "TestDir";
-        context.setRootPagePath();
-        return context;
     }
 
     public static void destroyTestContext() {

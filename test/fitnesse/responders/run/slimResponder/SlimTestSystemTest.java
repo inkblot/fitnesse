@@ -11,7 +11,6 @@ import fitnesse.slim.SlimClient;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.Collapsible;
@@ -60,7 +59,7 @@ public class SlimTestSystemTest {
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("root");
         crawler = root.getPageCrawler();
-        context = FitNesseUtil.makeTestContext(root);
+        context = new FitNesseContext(root);
         request = new MockRequest();
         responder = getSlimResponder();
         responder.setFastTest(true);

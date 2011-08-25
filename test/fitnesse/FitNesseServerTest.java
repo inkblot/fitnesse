@@ -26,13 +26,11 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RootPage");
+        WikiPage root = InMemoryPage.makeRoot("TestDir");
         crawler = root.getPageCrawler();
         pageOnePath = PathParser.parse("PageOne");
         pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
         context = makeContext(root);
-        context.rootDirectoryName = "TestDir";
-        context.setRootPagePath();
         context.responderFactory = new ResponderFactory(context.rootPagePath);
         makeSampleFiles();
     }

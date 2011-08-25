@@ -3,7 +3,6 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 
 import static org.mockito.Mockito.*;
@@ -37,7 +36,7 @@ public class MultipleTestsRunnerTest {
     public void setUp() throws Exception {
         String suitePageName = "SuitePage";
         root = InMemoryPage.makeRoot("RooT");
-        context = FitNesseUtil.makeTestContext(root);
+        context = new FitNesseContext(root);
         crawler = root.getPageCrawler();
         PageData data = root.getData();
         data.setContent(classpathWidgets());

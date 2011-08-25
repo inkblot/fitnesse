@@ -46,8 +46,6 @@ public class UpdaterImplementationTest {
     private void setTheContext() throws Exception {
         root = new FileSystemPage(testDir, rootName);
         context = new FitNesseContext(root, testDir);
-        context.rootDirectoryName = rootName;
-        context.setRootPagePath();
     }
 
     private void setTheRoot() throws Exception {
@@ -110,14 +108,6 @@ public class UpdaterImplementationTest {
         assertFalse(testFile.isDirectory());
         assertFalse(bestFile.isDirectory());
         assertFalse(specialFile.isDirectory());
-    }
-
-    @Test
-    public void shouldReplaceFitNesseRootWithDirectoryRoot() throws Exception {
-        String filePath = "FitNesseRoot/someFolder/someFile";
-        context.rootDirectoryName = "MyNewRoot";
-        String updatedPath = updater.getCorrectPathForTheDestination(filePath);
-        assertEquals(portablePath("MyNewRoot/someFolder"), updatedPath);
     }
 
     @Test

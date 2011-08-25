@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.MockRequest;
@@ -39,7 +40,7 @@ import java.io.FileInputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TestResponderTest {
+public class TestResponderTest extends FitnesseBaseTestCase {
     private static final String TEST_TIME = "12/5/2008 01:19:00";
     private WikiPage root;
     private MockRequest request;
@@ -57,15 +58,13 @@ public class TestResponderTest {
 
     @Before
     public void setUp() throws Exception {
-        File testDir = new File("TestDir");
-        testDir.mkdir();
         root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
         responder = new TestResponder();
         responder.setFastTest(true);
-        context = FitNesseUtil.makeTestContext(root);
+        context = makeContext(root);
         receiver = new FitSocketReceiver(0, context.socketDealer);
         context.port = receiver.receiveSocket();
 

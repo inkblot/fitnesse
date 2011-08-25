@@ -36,8 +36,6 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         root.addChildPage("FrontPage");
         socket = new MockSocket();
         context = makeContext(root);
-        context.rootDirectoryName = "RooT";
-        context.setRootPagePath();
         context.responderFactory = new ResponderFactory(context.rootPagePath);
         expediter = new FitNesseExpediter(socket, context);
     }

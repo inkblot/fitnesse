@@ -17,7 +17,6 @@ import fitnesse.responders.run.TestExecutionReport.InstructionResult;
 import fitnesse.responders.run.TestExecutionReport.Row;
 import fitnesse.responders.run.TestExecutionReport.Table;
 import fitnesse.responders.run.TestExecutionReport.TestResult;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 
 public class TestExecutionReportTest {
@@ -30,7 +29,7 @@ public class TestExecutionReportTest {
   public void setup() throws Exception {
     expected = new TestExecutionReport();
     makeHeader();
-    context = FitNesseUtil.makeTestContext(InMemoryPage.makeRoot("RooT"));
+      context = new FitNesseContext(InMemoryPage.makeRoot("RooT"));
   }
 
   private void makeHeader() {

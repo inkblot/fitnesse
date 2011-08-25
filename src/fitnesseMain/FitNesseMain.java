@@ -90,8 +90,6 @@ public class FitNesseMain {
                 arguments.getRootDirectory(), componentFactory);
         FitNesseContext context = new FitNesseContext(root, arguments.getRootPath());
         context.port = arguments.getPort();
-        context.rootDirectoryName = arguments.getRootDirectory();
-        context.setRootPagePath();
         String defaultNewPageContent = componentFactory
                 .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
         if (defaultNewPageContent != null)

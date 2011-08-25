@@ -26,13 +26,12 @@ public class FitNesseContext {
 
     public final String rootPath;
     public final WikiPage root;
+    public String rootPagePath;
+    public ResponderFactory responderFactory;
 
     public FitNesse fitnesse;
     public int port = DEFAULT_PORT;
-    public String rootDirectoryName = DEFAULT_ROOT;
-    public String rootPagePath = "";
     public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
-    public ResponderFactory responderFactory = new ResponderFactory(rootPagePath);
     public SocketDealer socketDealer = new SocketDealer();
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
     public Authenticator authenticator = new PromiscuousAuthenticator();
@@ -58,6 +57,8 @@ public class FitNesseContext {
         if (!absolutePath.equals(this.rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());
         }
+        rootPagePath = rootPath + File.separator + root.getName();
+        responderFactory = new ResponderFactory(rootPagePath);
     }
 
 
@@ -79,10 +80,6 @@ public class FitNesseContext {
 
     public File getTestHistoryDirectory() {
         return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
-    }
-
-    public void setRootPagePath() {
-        rootPagePath = rootPath + "/" + rootDirectoryName;
     }
 
 }

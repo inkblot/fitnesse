@@ -4,21 +4,14 @@ import static org.hamcrest.core.IsNot.*;
 import static org.junit.Assert.*;
 import static org.junit.internal.matchers.StringContains.*;
 
-import java.util.regex.Pattern;
-
 import fitnesse.wiki.*;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.core.IsNot;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.matchers.TypeSafeMatcher;
 
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.testutil.FitNesseUtil;
 
 public class SearchReplaceResponderTest {
   private WikiPage root;
@@ -38,7 +31,7 @@ public class SearchReplaceResponderTest {
     responder = new SearchReplaceResponder();
     request = new MockRequest();
     request.setResource("SomePage");
-    context = FitNesseUtil.makeTestContext(root);
+      context = new FitNesseContext(root);
   }
 
   @Test

@@ -19,7 +19,6 @@ import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.responders.testHistory.PageHistory;
-import fitnesse.testutil.FitNesseUtil;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
 
@@ -38,7 +37,7 @@ public class CachingSuiteXmlFormatterTest {
     @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
-        context = FitNesseUtil.makeTestContext(root);
+        context = new FitNesseContext(root);
         testSummary = new TestSummary(1, 2, 3, 4);
         testPage = root.addChildPage("TestPage");
         formatter = new CachingSuiteXmlFormatter(context, root, null);

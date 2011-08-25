@@ -29,7 +29,7 @@ public class WikiPageResponderTest extends TestCase {
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("root");
         crawler = root.getPageCrawler();
-        context = FitNesseUtil.makeTestContext(root);
+        context = new FitNesseContext(root);
     }
 
     public void testResponse() throws Exception {
@@ -163,7 +163,6 @@ public class WikiPageResponderTest extends TestCase {
 
     public void testResponderIsSecureReadOperation() throws Exception {
         final Responder responder = new WikiPageResponder();
-        assertTrue(responder instanceof SecureResponder);
         final SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
         assertEquals(SecureReadOperation.class, operation.getClass());
     }

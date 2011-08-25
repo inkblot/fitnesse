@@ -26,7 +26,7 @@ public class FitNesseContext {
 
     public final String rootPath;
     public final WikiPage root;
-    public String rootPagePath;
+    public final String rootPagePath;
     public ResponderFactory responderFactory;
 
     public FitNesse fitnesse;

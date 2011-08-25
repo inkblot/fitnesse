@@ -9,7 +9,6 @@ import fitnesse.components.SaveRecorder;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.*;
 
-import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
 import util.FileUtil;
@@ -22,10 +21,8 @@ public class SetUp extends Fixture {
         WikiImportTestEventListener.register();
 
         root = InMemoryPage.makeRoot("RooT");
-        context = new FitNesseContext(root);
-        context.responderFactory = new ResponderFactory(baseDir + "/RooT/");
+        context = new FitNesseContext(root, baseDir);
         context.port = 9123;
-        context.rootPagePath = baseDir;
         fitnesse = new FitNesse(context, false);
         File historyDirectory = context.getTestHistoryDirectory();
         if (historyDirectory.exists())

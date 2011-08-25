@@ -211,7 +211,6 @@
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
                 <fileset dir="${lib.compile}" includes="*.jar"/>
             </classpath>
-            <arg value="tests"/>
             <arg value="-p"/>
             <arg value="9234"/>
         </java>

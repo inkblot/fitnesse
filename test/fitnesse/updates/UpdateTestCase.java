@@ -12,42 +12,41 @@ import org.junit.Before;
 import util.FileUtil;
 
 public abstract class UpdateTestCase {
-  public static final String testDir = "testDir";
-  public static final String rootName = "RooT";
+    public static final String testDir = "testDir";
+    public static final String rootName = "RooT";
 
-  protected WikiPage root;
-  protected Update update;
-  protected UpdaterBase updater;
-  protected WikiPage pageOne;
-  protected WikiPage pageTwo;
-  protected FitNesseContext context;
-  protected PageCrawler crawler;
+    protected WikiPage root;
+    protected Update update;
+    protected UpdaterBase updater;
+    protected WikiPage pageOne;
+    protected WikiPage pageTwo;
+    protected FitNesseContext context;
+    protected PageCrawler crawler;
 
-  @Before
-  public void setUp() throws Exception {
-    context = new FitNesseContext(null, testDir);
-    context.rootDirectoryName = rootName;
-    context.setRootPagePath();
+    @Before
+    public void setUp() throws Exception {
+        root = new FileSystemPage(testDir, rootName);
+        context = new FitNesseContext(root, testDir);
+        context.rootDirectoryName = rootName;
+        context.setRootPagePath();
 
-    FileUtil.makeDir(testDir);
-    root = new FileSystemPage(context.rootPath, context.rootDirectoryName);
-    crawler = root.getPageCrawler();
-    context.root = root;
+        FileUtil.makeDir(testDir);
+        crawler = root.getPageCrawler();
 
-    pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
-    pageTwo = crawler.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
+        pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
+        pageTwo = crawler.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
 
-    updater = new UpdaterBase(context);
-    update = makeUpdate();
+        updater = new UpdaterBase(context);
+        update = makeUpdate();
 
-  }
+    }
 
-  @After
-  public void tearDown() throws Exception {
-    FileUtil.deleteFileSystemDirectory(testDir);
-  }
+    @After
+    public void tearDown() throws Exception {
+        FileUtil.deleteFileSystemDirectory(testDir);
+    }
 
-  protected Update makeUpdate() throws Exception {
-    return null;
-  }
+    protected Update makeUpdate() throws Exception {
+        return null;
+    }
 }

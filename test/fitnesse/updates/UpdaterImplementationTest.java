@@ -43,17 +43,22 @@ public class UpdaterImplementationTest {
         updater = new UpdaterImplementation(context);
     }
 
-    private void setTheRoot() throws Exception {
-        FileUtil.makeDir(testDir);
-        root = new FileSystemPage(context.rootPath, context.rootDirectoryName);
-        crawler = root.getPageCrawler();
-        context.root = root;
-    }
-
-    private void setTheContext() {
-        context = new FitNesseContext(null, testDir);
+    private void setTheContext() throws Exception {
+        root = new FileSystemPage(testDir, rootName);
+        context = new FitNesseContext(root, testDir);
         context.rootDirectoryName = rootName;
         context.setRootPagePath();
+    }
+
+    private void setTheRoot() throws Exception {
+        FileUtil.makeDir(testDir);
+        crawler = root.getPageCrawler();
+    }
+
+    private void createFakeJarFileResources() throws IOException {
+        FileUtil.createFile("classes/Resources/files/TestFile", "");
+        FileUtil.createFile("classes/Resources/files/BestFile", "");
+        FileUtil.createFile("classes/Resources/SpecialFile", "");
     }
 
     private void createFakeUpdateListFiles() {
@@ -61,12 +66,6 @@ public class UpdaterImplementationTest {
         updateDoNotCopyOver = new File("classes/Resources/updateDoNotCopyOverList");
         FileUtil.createFile(updateList, "files/TestFile\nfiles/BestFile\n");
         FileUtil.createFile(updateDoNotCopyOver, "SpecialFile");
-    }
-
-    private void createFakeJarFileResources() throws IOException {
-        FileUtil.createFile("classes/Resources/files/TestFile", "");
-        FileUtil.createFile("classes/Resources/files/BestFile", "");
-        FileUtil.createFile("classes/Resources/SpecialFile", "");
     }
 
     @Test

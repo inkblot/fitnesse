@@ -23,13 +23,14 @@ public class FitNesseContext {
     public static final int DEFAULT_COMMAND_PORT = 9123;
     public static final int DEFAULT_VERSION_DAYS = 14;
 
+    public final String rootPath;
+    public final WikiPage root;
+
     public FitNesse fitnesse;
     public int port = DEFAULT_PORT;
-    public final String rootPath;
     public String rootDirectoryName = DEFAULT_ROOT;
     public String rootPagePath = "";
     public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
-    public WikiPage root;
     public ResponderFactory responderFactory = new ResponderFactory(rootPagePath);
     public SocketDealer socketDealer = new SocketDealer();
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();

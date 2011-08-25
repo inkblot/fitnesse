@@ -4,7 +4,6 @@ package fitnesse.testutil;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;
@@ -18,7 +17,6 @@ public class FitNesseUtil {
 
     public static void startFitnesse(WikiPage root) throws Exception {
         context = new FitNesseContext(root);
-        context.responderFactory = new ResponderFactory(context.rootPagePath);
         context.port = port;
         startFitnesseWithContext(context);
     }

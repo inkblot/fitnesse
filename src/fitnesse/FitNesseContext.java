@@ -27,7 +27,7 @@ public class FitNesseContext {
     public final String rootPath;
     public final WikiPage root;
     public final String rootPagePath;
-    public ResponderFactory responderFactory;
+    public final ResponderFactory responderFactory;
 
     public FitNesse fitnesse;
     public int port = DEFAULT_PORT;

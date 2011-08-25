@@ -4,7 +4,6 @@ package fitnesse;
 
 import java.util.regex.Pattern;
 
-import fitnesse.responders.ResponderFactory;
 import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
@@ -31,7 +30,6 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
         pageOnePath = PathParser.parse("PageOne");
         pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
         context = makeContext(root);
-        context.responderFactory = new ResponderFactory(context.rootPagePath);
         makeSampleFiles();
     }
 

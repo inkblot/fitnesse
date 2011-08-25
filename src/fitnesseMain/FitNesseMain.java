@@ -7,7 +7,6 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
@@ -94,7 +93,6 @@ public class FitNesseMain {
                 .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
         if (defaultNewPageContent != null)
             context.defaultNewPageContent = defaultNewPageContent;
-        context.responderFactory = new ResponderFactory(context.rootPagePath);
         context.authenticator = makeAuthenticator(arguments.getUserpass(),
                 componentFactory);
         context.htmlPageFactory = componentFactory

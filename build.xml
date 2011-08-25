@@ -184,7 +184,7 @@
     </target>
 
     <target name="integration-test" depends="jar, compile-tests, copy-integration-tests">
-        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true" output="${integration}/fitnesse-results.xml">
+        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
                 <pathelement path="${test.resources}"/>
                 <fileset file="${fitnesse.jar}"/>
@@ -197,7 +197,7 @@
             <arg value="-r"/>
             <arg value="tests"/>
             <arg value="-c"/>
-            <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml"/>
+            <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
             <arg value="-p"/>
             <arg value="9234"/>
         </java>

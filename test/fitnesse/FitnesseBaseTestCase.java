@@ -21,10 +21,14 @@ import static util.FileUtil.deleteFileSystemDirectory;
 public class FitnesseBaseTestCase {
 
     private FitNesseContext context;
-    private SampleFileUtility samples;
+    protected SampleFileUtility samples;
 
     protected final FitNesseContext makeContext() {
-        return makeContext(InMemoryPage.makeRoot("RooT"));
+        return makeContext("RooT");
+    }
+
+    protected final FitNesseContext makeContext(String rootName) {
+        return makeContext(InMemoryPage.makeRoot(rootName));
     }
 
     protected final FitNesseContext makeContext(WikiPage root) {

@@ -2,36 +2,35 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class DirectoryResponderTest extends TestCase {
-    private SampleFileUtility sample = new SampleFileUtility();
+public class DirectoryResponderTest extends FitnesseBaseTestCase {
 
     MockRequest request;
     private SimpleResponse response;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = new FitNesseContext("RooT");
-        context.rootPagePath = sample.base;
-        sample.makeSampleFiles();
+        context = makeContext();
+        makeSampleFiles();
     }
 
-    public void tearDown() throws Exception {
-        sample.deleteSampleFiles();
-    }
-
+    @Test
     public void testDirectotyListing() throws Exception {
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, sample.base);
+        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
         response = (SimpleResponse) responder.makeResponse(context, request);
         assertHasRegexp("testDir", response.getContent());
         assertHasRegexp("testFile2</a>", response.getContent());
@@ -39,33 +38,37 @@ public class DirectoryResponderTest extends TestCase {
         assertHasRegexp("<a href=\"/", response.getContent());
     }
 
+    @Test
     public void testButtons() throws Exception {
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, sample.base);
+        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
         response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertHasRegexp("upload form", response.getContent());
         assertHasRegexp("create directory form", response.getContent());
     }
 
+    @Test
     public void testHtml() throws Exception {
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, sample.base);
+        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
         response = (SimpleResponse) responder.makeResponse(context, request);
         assertHasRegexp("/files/", response.getContent());
     }
 
+    @Test
     public void testRedirectForDirectory() throws Exception {
         request.setResource("files/testDir");
-        Responder responder = FileResponder.makeResponder(request, sample.base);
+        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
         Response response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
         assertEquals("/files/testDir/", response.getHeader("Location"));
     }
 
+    @Test
     public void testFrontPageSidebarButtonPresent() throws Exception {
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, sample.base);
+        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
         response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertHasRegexp("<div class=\"sidebar\">", response.getContent());
@@ -73,8 +76,9 @@ public class DirectoryResponderTest extends TestCase {
         assertHasRegexp("<a href=\"/FrontPage\" accesskey=\"f\">FrontPage</a>", response.getContent());
     }
 
+    @Test
     public void testSizeString() throws Exception {
-        assertEquals("", DirectoryResponder.getSizeString(sample.testDir));
-        assertEquals("13 bytes", DirectoryResponder.getSizeString(sample.testFile1));
+        assertEquals("", DirectoryResponder.getSizeString(samples.testDir));
+        assertEquals("13 bytes", DirectoryResponder.getSizeString(samples.testFile1));
     }
 }

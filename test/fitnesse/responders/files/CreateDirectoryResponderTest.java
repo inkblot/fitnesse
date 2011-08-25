@@ -21,8 +21,7 @@ public class CreateDirectoryResponderTest extends TestCase {
     }
 
     public void testMakeResponse() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
-        context.rootPagePath = "testdir";
+        FitNesseContext context = new FitNesseContext("testdir");
         CreateDirectoryResponder responder = new CreateDirectoryResponder();
         MockRequest request = new MockRequest();
         request.addInput("dirname", "subdir");

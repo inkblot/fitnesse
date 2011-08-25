@@ -4,29 +4,32 @@ package fitnesse.responders.files;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 
-public class RenameFileResponderTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class RenameFileResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private FitNesseContext context;
 
+    @Before
     public void setUp() {
-        FileUtil.makeDir("testdir");
         request = new MockRequest();
-        context = new FitNesseContext("RooT");
-        context.rootPagePath = "testdir";
+        context = makeContext("testdir");
+        FileUtil.makeDir(context.rootPagePath);
     }
 
-    public void tearDown() throws Exception {
-        FileUtil.deleteFileSystemDirectory("testdir");
-    }
-
+    @Test
     public void testMakeResponse() throws Exception {
-        File file = new File("testdir/testfile");
+        File file = new File(context.rootPagePath, "testfile");
         assertTrue(file.createNewFile());
         RenameFileResponder responder = new RenameFileResponder();
         request.addInput("filename", "testfile");
@@ -34,13 +37,14 @@ public class RenameFileResponderTest extends TestCase {
         request.setResource("");
         Response response = responder.makeResponse(context, request);
         assertFalse(file.exists());
-        assertTrue(new File("testdir/newName").exists());
+        assertTrue(new File(context.rootPagePath, "newName").exists());
         assertEquals(303, response.getStatus());
         assertEquals("/", response.getHeader("Location"));
     }
 
+    @Test
     public void testRenameWithTrailingSpace() throws Exception {
-        File file = new File("testdir/testfile");
+        File file = new File(context.rootPagePath, "testfile");
         assertTrue(file.createNewFile());
         RenameFileResponder responder = new RenameFileResponder();
         request.addInput("filename", "testfile");
@@ -48,7 +52,7 @@ public class RenameFileResponderTest extends TestCase {
         request.setResource("");
         responder.makeResponse(context, request);
         assertFalse(file.exists());
-        assertTrue(new File("testdir/new Name With Space").exists());
+        assertTrue(new File(context.rootPagePath, "new Name With Space").exists());
     }
 
 }

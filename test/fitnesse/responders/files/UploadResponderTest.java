@@ -4,41 +4,43 @@ package fitnesse.responders.files;
 
 import java.io.File;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.UploadedFile;
 
-public class UploadResponderTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class UploadResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private UploadResponder responder;
     private MockRequest request;
     private File testFile;
 
+    @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
-        context.rootPagePath = "testdir";
-        FileUtil.makeDir("testdir");
-        FileUtil.makeDir("testdir/files");
-        testFile = FileUtil.createFile("testdir/tempFile.txt", "test content");
+        context = makeContext("testdir");
+        FileUtil.makeDir(context.rootPagePath);
+        FileUtil.makeDir(context.rootPagePath + "/files");
+        testFile = FileUtil.createFile(context.rootPagePath + "/tempFile.txt", "test content");
 
         responder = new UploadResponder();
         request = new MockRequest();
     }
 
-    public void tearDown() throws Exception {
-        FileUtil.deleteFileSystemDirectory("testdir");
-    }
-
+    @Test
     public void testMakeResponse() throws Exception {
         request.addInput("file", new UploadedFile("sourceFilename.txt", "plain/text", testFile));
         request.setResource("files/");
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File("testdir/files/sourceFilename.txt");
+        File file = new File(context.rootPagePath, "files/sourceFilename.txt");
         assertTrue(file.exists());
         assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -46,13 +48,14 @@ public class UploadResponderTest extends TestCase {
         assertEquals("/files/", response.getHeader("Location"));
     }
 
+    @Test
     public void testMakeResponseSpaceInFileName() throws Exception {
         request.addInput("file", new UploadedFile("source filename.txt", "plain/text", testFile));
         request.setResource("files/");
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File("testdir/files/source filename.txt");
+        File file = new File(context.rootPagePath, "files/source filename.txt");
         assertTrue(file.exists());
         assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -60,14 +63,15 @@ public class UploadResponderTest extends TestCase {
         assertEquals("/files/", response.getHeader("Location"));
     }
 
+    @Test
     public void testMakeResponseSpaceInDirectoryName() throws Exception {
-        FileUtil.makeDir("testdir/files/Folder With Space");
+        FileUtil.makeDir(context.rootPagePath + "/files/Folder With Space");
         request.addInput("file", new UploadedFile("filename.txt", "plain/text", testFile));
         request.setResource("files/Folder%20With%20Space/");
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File("testdir/files/Folder With Space/filename.txt");
+        File file = new File(context.rootPagePath, "files/Folder With Space/filename.txt");
         assertTrue(file.exists());
         assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -75,6 +79,7 @@ public class UploadResponderTest extends TestCase {
         assertEquals("/files/Folder%20With%20Space/", response.getHeader("Location"));
     }
 
+    @Test
     public void testMakeRelativeFilename() throws Exception {
         String name1 = "name1.txt";
         String name2 = "name2";
@@ -87,6 +92,7 @@ public class UploadResponderTest extends TestCase {
         assertEquals("name4.txt", UploadResponder.makeRelativeFilename(name4));
     }
 
+    @Test
     public void testMakeNewFilename() throws Exception {
         assertEquals("file_copy1.txt", UploadResponder.makeNewFilename("file.txt", 1));
         assertEquals("file_copy2.txt", UploadResponder.makeNewFilename("file.txt", 2));
@@ -94,10 +100,11 @@ public class UploadResponderTest extends TestCase {
         assertEquals("somefile_copy1", UploadResponder.makeNewFilename("somefile", 1));
     }
 
+    @Test
     public void testWriteFile() throws Exception {
-        File file = new File("testdir/testFile");
-        File inputFile = FileUtil.createFile("testdir/testInput", "heres the content");
-        UploadedFile uploaded = new UploadedFile("testdir/testOutput", "text", inputFile);
+        File file = new File(context.rootPagePath, "testFile");
+        File inputFile = FileUtil.createFile(context.rootPagePath + "/testInput", "heres the content");
+        UploadedFile uploaded = new UploadedFile(context.rootPagePath + "/testOutput", "text", inputFile);
 
         long inputFileLength = inputFile.length();
         String inputFileContent = FileUtil.getFileContent(inputFile);

@@ -93,7 +93,6 @@
                 <include name="files/css/*.css"/>
                 <include name="files/javascript/**/*.js"/>
                 <include name="files/html/**"/>
-                <include name="files/templates/**"/>
                 <exclude name="files/juUnitTestLink.js"/>
                 <exclude name="files/**/unused/**"/>
                 <include name="FrontPage/**/content.txt"/>
@@ -119,7 +118,6 @@
             <arg value="FitNesseRoot/files/css"/>
             <arg value="FitNesseRoot/files/javascript"/>
             <arg value="FitNesseRoot/files/html"/>
-            <arg value="FitNesseRoot/files/templates"/>
             <arg value="FitNesseRoot/FrontPage"/>
             <arg value="FitNesseRoot/PageFooter"/>
             <arg value="FitNesseRoot/PageHeader"/>

@@ -358,7 +358,7 @@ public class PageHistoryResponderTest {
     private void generateSuiteResultFile(SuiteExecutionReport report, File resultFile) throws Exception {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("suiteExecutionReport", report);
-        Template template = VelocityFactory.getVelocityEngine().getTemplate("suiteHistoryXML.vm");
+        Template template = VelocityFactory.getVelocityEngine().getTemplate("fitnesse/templates/suiteHistoryXML.vm");
         FileWriter fileWriter = new FileWriter(resultFile);
         template.merge(velocityContext, fileWriter);
         fileWriter.close();
@@ -383,7 +383,7 @@ public class PageHistoryResponderTest {
     private void generateTestResultFile(TestExecutionReport testResponse, File resultFile) throws Exception {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("response", testResponse);
-        Template template = VelocityFactory.getVelocityEngine().getTemplate("testResults.vm");
+        Template template = VelocityFactory.getVelocityEngine().getTemplate("fitnesse/templates/testResults.vm");
         FileWriter fileWriter = new FileWriter(resultFile);
         template.merge(velocityContext, fileWriter);
         fileWriter.close();

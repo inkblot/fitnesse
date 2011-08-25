@@ -39,8 +39,6 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         context.rootDirectoryName = "RooT";
         context.setRootPagePath();
         context.responderFactory = new ResponderFactory(context.rootPagePath);
-        installUpdates();
-        VelocityFactory.makeVelocityFactory(context);
         expediter = new FitNesseExpediter(socket, context);
     }
 

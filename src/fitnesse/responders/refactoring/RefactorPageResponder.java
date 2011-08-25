@@ -20,27 +20,27 @@ import fitnesse.wiki.PathParser;
 
 public class RefactorPageResponder implements SecureResponder {
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    String resource = request.getResource();
+    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+        String resource = request.getResource();
 
-    VelocityContext velocityContext = new VelocityContext();
+        VelocityContext velocityContext = new VelocityContext();
 
-    StringWriter writer = new StringWriter();
+        StringWriter writer = new StringWriter();
 
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("refactorForm.vm");
+        Template template = VelocityFactory.getVelocityEngine().getTemplate("fitnesse/templates/refactorForm.vm");
 
-    velocityContext.put("pageTitle", new PageTitle("Refactor", PathParser.parse(resource)));
-    velocityContext.put("refactoredRootPage", resource);
-    velocityContext.put("request", request);
+        velocityContext.put("pageTitle", new PageTitle("Refactor", PathParser.parse(resource)));
+        velocityContext.put("refactoredRootPage", resource);
+        velocityContext.put("request", request);
 
-    template.merge(velocityContext, writer);
+        template.merge(velocityContext, writer);
 
-    SimpleResponse response = new SimpleResponse();
-    response.setContent(writer.toString());
-    return response;
-  }
+        SimpleResponse response = new SimpleResponse();
+        response.setContent(writer.toString());
+        return response;
+    }
 
-  public SecureOperation getSecureOperation() {
-    return new AlwaysSecureOperation();
-  }
+    public SecureOperation getSecureOperation() {
+        return new AlwaysSecureOperation();
+    }
 }

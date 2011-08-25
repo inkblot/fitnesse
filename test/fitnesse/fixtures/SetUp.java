@@ -5,7 +5,6 @@ package fitnesse.fixtures;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.components.SaveRecorder;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.*;
@@ -27,7 +26,6 @@ public class SetUp extends Fixture {
         context.responderFactory = new ResponderFactory(baseDir + "/RooT/");
         context.port = 9123;
         context.rootPagePath = baseDir;
-        VelocityFactory.makeVelocityFactory(context);
         fitnesse = new FitNesse(context, false);
         File historyDirectory = context.getTestHistoryDirectory();
         if (historyDirectory.exists())

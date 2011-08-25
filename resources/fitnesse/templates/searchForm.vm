@@ -1,6 +1,6 @@
 #set ($page_title="Search Form")
 #set ($load_actions="document.forms[0].searchString.focus()")
-#parse("pageHead.vm")
+#parse("fitnesse/templates/pageHead.vm")
 				<form action="search" method="post">
 					<input type="hidden" name="responder" value="search"/>
 Search String:
@@ -106,4 +106,4 @@ Searches in the content of every page.  Don't hold your breath.				</form>
 						</div>
 					</div>
 				</form>
-#parse("pageFooter.vm")
+#parse("fitnesse/templates/pageFooter.vm")

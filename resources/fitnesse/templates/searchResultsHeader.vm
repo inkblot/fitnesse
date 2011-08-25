@@ -1,4 +1,4 @@
-#parse("pageHead.vm")
+#parse("fitnesse/templates/pageHead.vm")
 <script src="/files/javascript/clientSideSort.js"> </script>
 <div id="feedback">Searching...</div>
 <table id="searchResultsTable" cellspacing="0" cellpadding="0" border="0" class="dirListing"><thead>

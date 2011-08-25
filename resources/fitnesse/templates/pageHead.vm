@@ -12,5 +12,5 @@
   <div class="actions"></div>
 </div>
 <div class="mainbar">
-  #if($pageTitle)#parse("pageTitle.vm")#end
+  #if($pageTitle)#parse("fitnesse/templates/pageTitle.vm")#end
   <div class="main">

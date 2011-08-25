@@ -11,7 +11,6 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,10 +34,6 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
         context.rootDirectoryName = "TestDir";
         context.setRootPagePath();
         context.responderFactory = new ResponderFactory(context.rootPagePath);
-        VelocityFactory.makeVelocityFactory(context);
-        VelocityEngine engine = new VelocityEngine();
-        engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "../FitNesseRoot/files/templates");
-        VelocityFactory.setVelocityEngine(engine);
         makeSampleFiles();
     }
 

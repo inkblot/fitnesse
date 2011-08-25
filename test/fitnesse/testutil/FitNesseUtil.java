@@ -4,12 +4,10 @@ package fitnesse.testutil;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;
-import org.apache.velocity.app.VelocityEngine;
 import util.FileUtil;
 
 public class FitNesseUtil {
@@ -44,10 +42,6 @@ public class FitNesseUtil {
         FitNesseContext context = new FitNesseContext(root);
         context.rootDirectoryName = "TestDir";
         context.setRootPagePath();
-        VelocityFactory.makeVelocityFactory(context);
-        VelocityEngine engine = new VelocityEngine();
-        engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "../FitNesseRoot/files/templates");
-        VelocityFactory.setVelocityEngine(engine);
         return context;
     }
 

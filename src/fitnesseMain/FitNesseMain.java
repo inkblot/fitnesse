@@ -33,7 +33,6 @@ public class FitNesseMain {
     public static void launchFitNesse(Arguments arguments) throws Exception {
         loadPlugins();
         FitNesseContext context = loadContext(arguments);
-        VelocityFactory.makeVelocityFactory(context);
         Updater updater = null;
         if (!arguments.isOmittingUpdates())
             updater = new UpdaterImplementation(context);

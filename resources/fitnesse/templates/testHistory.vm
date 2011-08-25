@@ -1,5 +1,5 @@
 #set ($page_title="Test History")
-#parse("pageHead.vm")
+#parse("fitnesse/templates/pageHead.vm")
 #set($noHistory = true)
 <table style="border:none;background:none">
   <tr>
@@ -71,4 +71,4 @@
 
 </table>
 #if ($noHistory)No History#end
-#parse("pageFooter.vm")
+#parse("fitnesse/templates/pageFooter.vm")

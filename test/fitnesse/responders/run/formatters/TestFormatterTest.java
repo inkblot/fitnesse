@@ -4,7 +4,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
@@ -15,14 +14,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import util.DateAlteringClock;
 import util.TimeMeasurement;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -38,7 +35,7 @@ public class TestFormatterTest {
   @Parameterized.Parameters
   public static Collection formatters() throws Exception {
     WikiPage root = InMemoryPage.makeRoot("RooT");
-    FitNesseContext context = FitNesseUtil.makeTestContext(root);
+      FitNesseContext context = new FitNesseContext(root);
     ChunkedResponse response = mock(ChunkedResponse.class);
     WikiPageDummy page = new WikiPageDummy("testPage", "testContent");
     XmlFormatter.WriterFactory writerFactory = mock(XmlFormatter.WriterFactory.class);

@@ -11,7 +11,6 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.widgets.WidgetRoot;
 
 public class TestSystemTest {
 
@@ -111,7 +110,7 @@ public class TestSystemTest {
     @Test
     public void testTestRunnerWithRootPathVariable() throws Exception {
         String fitnesseRootpath = "/home/fitnesse";
-        FitNesseContext context = new FitNesseContext(null, fitnesseRootpath);
+        FitNesseContext context = new FitNesseContext(InMemoryPage.makeRoot("RooT"), fitnesseRootpath);
         new FitNesse(context, false);
 
         String specifiedPageText = "!define TEST_RUNNER (${FITNESSE_ROOTPATH}/rubyslim.rb)\n";

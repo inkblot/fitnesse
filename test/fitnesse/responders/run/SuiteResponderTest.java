@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -34,7 +35,7 @@ import util.XmlUtil;
 import java.io.File;
 import java.io.FileInputStream;
 
-public class SuiteResponderTest {
+public class SuiteResponderTest extends FitnesseBaseTestCase {
     private static final String TEST_TIME = "12/5/2008 01:19:00";
     private MockRequest request;
     private SuiteResponder responder;
@@ -67,7 +68,7 @@ public class SuiteResponderTest {
         responder.turnOffChunking();
         responder.setFastTest(true);
         responder.page = suite;
-        context = FitNesseUtil.makeTestContext(root);
+        context = makeContext(root);
 
         receiver = new FitSocketReceiver(0, context.socketDealer);
 

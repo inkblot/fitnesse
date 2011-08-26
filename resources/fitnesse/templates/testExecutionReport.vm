@@ -1,5 +1,5 @@
 #set ($page_title="Test Execution Report")
-#parse("pageHead.vm")
+#parse("fitnesse/templates/pageHead.vm")
 #if($testExecutionReport)
 <table border="1" cellspacing="0">
   <tr>
@@ -41,4 +41,4 @@
 <div>$testResult.Content</div>
 #end
 #end
-  #parse("pageFooter.vm")
+  #parse("fitnesse/templates/pageFooter.vm")

@@ -18,13 +18,12 @@ public class TestHtmlFormatterTest extends TestCase {
     private StringBuffer pageBuffer = new StringBuffer();
     private WikiPage page;
     private WikiPage root;
-    private FitNesseContext context;
 
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
         page = root.addChildPage("NewPage");
         page.getData().setContent("page content here");
-        context = new FitNesseContext();
+        FitNesseContext context = new FitNesseContext("RooT");
 
         formatter = new TestHtmlFormatter(context, page, new HtmlPageFactory()) {
             @Override

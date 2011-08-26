@@ -1,5 +1,5 @@
 #set ($page_title="Refactor: $pageTitle.link")
-#parse("pageHead.vm")
+#parse("fitnesse/templates/pageHead.vm")
 				<h2>Replace</h2>
 				<form action="$refactoredRootPage" method="post">
 					<input type="hidden" name="responder" value="replace"/>

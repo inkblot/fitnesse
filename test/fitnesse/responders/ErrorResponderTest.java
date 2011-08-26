@@ -14,7 +14,7 @@ import static util.RegexAssertions.assertSubString;
 public class ErrorResponderTest extends TestCase {
     public void testResponse() throws Exception {
         Responder responder = new ErrorResponder(new Exception("some error message"));
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext("RooT"), new MockRequest());
 
         assertEquals(400, response.getStatus());
 
@@ -27,7 +27,7 @@ public class ErrorResponderTest extends TestCase {
 
     public void testWithMessage() throws Exception {
         Responder responder = new ErrorResponder("error Message");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext("RooT"), new MockRequest());
         String body = response.getContent();
 
         assertSubString("error Message", body);

@@ -4,12 +4,9 @@ package fitnesse.testutil;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.VelocityFactory;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.VirtualCouplingExtension;
 import fitnesse.wiki.VirtualCouplingPage;
 import fitnesse.wiki.WikiPage;
-import org.apache.velocity.app.VelocityEngine;
 import util.FileUtil;
 
 public class FitNesseUtil {
@@ -19,8 +16,7 @@ public class FitNesseUtil {
     public static final String URL = "http://localhost:" + port + "/";
 
     public static void startFitnesse(WikiPage root) throws Exception {
-        context = makeTestContext(root);
-        context.responderFactory = new ResponderFactory(context.rootPagePath);
+        context = new FitNesseContext(root);
         context.port = port;
         startFitnesseWithContext(context);
     }
@@ -38,17 +34,6 @@ public class FitNesseUtil {
     public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) throws Exception {
         VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
         ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
-    }
-
-    public static FitNesseContext makeTestContext(WikiPage root) throws Exception {
-        FitNesseContext context = new FitNesseContext(root);
-        context.rootDirectoryName = "TestDir";
-        context.setRootPagePath();
-        VelocityFactory.makeVelocityFactory(context);
-        VelocityEngine engine = new VelocityEngine();
-        engine.setProperty(VelocityEngine.FILE_RESOURCE_LOADER_PATH, "../FitNesseRoot/files/templates");
-        VelocityFactory.setVelocityEngine(engine);
-        return context;
     }
 
     public static void destroyTestContext() {

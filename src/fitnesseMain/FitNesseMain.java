@@ -7,11 +7,11 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
+import fitnesse.wiki.WikiPage;
 import util.CommandLine;
 
 import java.io.File;
@@ -33,7 +33,6 @@ public class FitNesseMain {
     public static void launchFitNesse(Arguments arguments) throws Exception {
         loadPlugins();
         FitNesseContext context = loadContext(arguments);
-        VelocityFactory.makeVelocityFactory(context);
         Updater updater = null;
         if (!arguments.isOmittingUpdates())
             updater = new UpdaterImplementation(context);
@@ -84,17 +83,16 @@ public class FitNesseMain {
 
     private static FitNesseContext loadContext(Arguments arguments)
             throws Exception {
-        FitNesseContext context = new FitNesseContext(null, arguments.getRootPath());
+        WikiPageFactory wikiPageFactory = new WikiPageFactory();
+        ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
+        WikiPage root = wikiPageFactory.makeRootPage(arguments.getRootPath(),
+                arguments.getRootDirectory(), componentFactory);
+        FitNesseContext context = new FitNesseContext(root, arguments.getRootPath());
         context.port = arguments.getPort();
-        ComponentFactory componentFactory = new ComponentFactory(context.rootPath);
-        context.rootDirectoryName = arguments.getRootDirectory();
-        context.setRootPagePath();
         String defaultNewPageContent = componentFactory
                 .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
         if (defaultNewPageContent != null)
             context.defaultNewPageContent = defaultNewPageContent;
-        WikiPageFactory wikiPageFactory = new WikiPageFactory();
-        context.responderFactory = new ResponderFactory(context.rootPagePath);
         context.authenticator = makeAuthenticator(arguments.getUserpass(),
                 componentFactory);
         context.htmlPageFactory = componentFactory
@@ -107,8 +105,6 @@ public class FitNesseMain {
         extraOutput += componentFactory.loadSymbolTypes();
         extraOutput += componentFactory.loadContentFilter();
 
-        context.root = wikiPageFactory.makeRootPage(context.rootPath,
-                context.rootDirectoryName, componentFactory);
 
         WikiImportTestEventListener.register();
 

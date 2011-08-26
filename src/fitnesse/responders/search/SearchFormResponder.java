@@ -18,32 +18,32 @@ import org.apache.velocity.VelocityContext;
 import java.io.StringWriter;
 
 public class SearchFormResponder implements Responder {
-  public static final String[] SEARCH_ACTION_ATTRIBUTES = { PropertyEDIT, PropertyVERSIONS,
-    PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED, PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH };
-  public static final String[] SPECIAL_ATTRIBUTES = { "obsolete", "SetUp", "TearDown" };
+    public static final String[] SEARCH_ACTION_ATTRIBUTES = {PropertyEDIT, PropertyVERSIONS,
+            PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED, PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH};
+    public static final String[] SPECIAL_ATTRIBUTES = {"obsolete", "SetUp", "TearDown"};
 
-  public Response makeResponse(FitNesseContext context, Request request)
-  throws Exception {
-    SimpleResponse response = new SimpleResponse();
+    public Response makeResponse(FitNesseContext context, Request request)
+            throws Exception {
+        SimpleResponse response = new SimpleResponse();
 
-    VelocityContext velocityContext = new VelocityContext();
+        VelocityContext velocityContext = new VelocityContext();
 
-    StringWriter writer = new StringWriter();
+        StringWriter writer = new StringWriter();
 
-    Template template = VelocityFactory.getVelocityEngine().getTemplate("searchForm.vm");
+        Template template = VelocityFactory.getVelocityEngine().getTemplate("fitnesse/templates/searchForm.vm");
 
-    velocityContext.put("pageTitle", new PageTitle("Search Form"));
-    velocityContext.put("pageTypeAttributes", PageType.values());
-    velocityContext.put("actionAttributes", SEARCH_ACTION_ATTRIBUTES);
-    velocityContext.put("securityAttributes", SECURITY_ATTRIBUTES);
-    velocityContext.put("specialAttributes", SPECIAL_ATTRIBUTES);
-    velocityContext.put("searchedRootPage", request.getResource());
-    velocityContext.put("request", request);
+        velocityContext.put("pageTitle", new PageTitle("Search Form"));
+        velocityContext.put("pageTypeAttributes", PageType.values());
+        velocityContext.put("actionAttributes", SEARCH_ACTION_ATTRIBUTES);
+        velocityContext.put("securityAttributes", SECURITY_ATTRIBUTES);
+        velocityContext.put("specialAttributes", SPECIAL_ATTRIBUTES);
+        velocityContext.put("searchedRootPage", request.getResource());
+        velocityContext.put("request", request);
 
-    template.merge(velocityContext, writer);
-    response.setContent(writer.toString());
+        template.merge(velocityContext, writer);
+        response.setContent(writer.toString());
 
-    return response;
-  }
+        return response;
+    }
 
 }

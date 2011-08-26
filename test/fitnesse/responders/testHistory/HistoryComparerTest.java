@@ -3,7 +3,6 @@ package fitnesse.responders.testHistory;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.responders.run.TestExecutionReport;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.After;
@@ -39,8 +38,8 @@ public class HistoryComparerTest {
                     return null;
             }
         };
-        context = FitNesseUtil.makeTestContext(root);
         root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext(root);
         firstContent = getContentWith("pass");
         secondContent = getContentWith("fail");
         comparer.resultContent = new ArrayList<String>();
@@ -283,8 +282,7 @@ public class HistoryComparerTest {
                         "La la la";
         WikiPage myPage = crawler.addPage(root, PathParser.parse("MyPage"), pageText);
         PageData myData = myPage.getData();
-        String html = myData.getHtml();
-        return html;
+        return myData.getHtml();
     }
 
     private String getContentWith(String passOrFail) throws Exception {

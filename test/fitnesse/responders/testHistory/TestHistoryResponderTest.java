@@ -7,7 +7,6 @@ import fitnesse.responders.run.TestSummary;
 
 import static fitnesse.responders.testHistory.PageHistory.BarGraph;
 
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
@@ -45,7 +44,7 @@ public class TestHistoryResponderTest {
         responder = new TestHistoryResponder();
         responder.setResultsDirectory(resultsDirectory);
         WikiPage root = InMemoryPage.makeRoot("RooT");
-        context = FitNesseUtil.makeTestContext(root);
+        context = new FitNesseContext(root);
     }
 
     private void makeResponse() throws Exception {

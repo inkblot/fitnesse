@@ -18,7 +18,7 @@ public class NotFoundResponderTest extends TestCase {
         request.setResource("some page");
 
         Responder responder = new NotFoundResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext("RooT"), request);
 
         assertEquals(404, response.getStatus());
 

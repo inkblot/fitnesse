@@ -51,7 +51,6 @@ public class WidgetRootTest {
     @Test
     public void testParentPageNameVariableWithNoParent() throws Exception {
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-        WikiPage root = crawler.addPage(rootPage, PathParser.parse("RootPage"));
         WikiPage includedPage = crawler.addPage(rootPage, PathParser.parse("IncludedPage"));
         WidgetRoot includedRoot = new WidgetRoot(includedPage);
         assertEquals("IncludedPage", includedRoot.getVariable("PAGE_NAME"));
@@ -139,7 +138,7 @@ public class WidgetRootTest {
 
     @Test
     public void testShouldHavePortVariableAvailable() throws Exception {
-        FitNesseContext context = new FitNesseContext();
+        FitNesseContext context = new FitNesseContext("RooT");
         context.port = 9876;
         new FitNesse(context, false);
         WidgetRoot root = new WidgetRoot("", rootPage);
@@ -148,7 +147,7 @@ public class WidgetRootTest {
 
     @Test
     public void testShouldHaveRootPathVariableAvailable() throws Exception {
-        FitNesseContext context = new FitNesseContext(null, "/home/fitnesse");
+        FitNesseContext context = new FitNesseContext(rootPage, "/home/fitnesse");
         new FitNesse(context, false);
         WidgetRoot root = new WidgetRoot("", rootPage);
         assertEquals("/home/fitnesse", root.getVariable("FITNESSE_ROOTPATH"));

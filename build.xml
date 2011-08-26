@@ -93,7 +93,6 @@
                 <include name="files/css/*.css"/>
                 <include name="files/javascript/**/*.js"/>
                 <include name="files/html/**"/>
-                <include name="files/templates/**"/>
                 <exclude name="files/juUnitTestLink.js"/>
                 <exclude name="files/**/unused/**"/>
                 <include name="FrontPage/**/content.txt"/>
@@ -119,7 +118,6 @@
             <arg value="FitNesseRoot/files/css"/>
             <arg value="FitNesseRoot/files/javascript"/>
             <arg value="FitNesseRoot/files/html"/>
-            <arg value="FitNesseRoot/files/templates"/>
             <arg value="FitNesseRoot/FrontPage"/>
             <arg value="FitNesseRoot/PageFooter"/>
             <arg value="FitNesseRoot/PageHeader"/>
@@ -184,7 +182,7 @@
     </target>
 
     <target name="integration-test" depends="jar, compile-tests, copy-integration-tests">
-        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true" output="${integration}/fitnesse-results.xml">
+        <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
                 <pathelement path="${test.resources}"/>
                 <fileset file="${fitnesse.jar}"/>
@@ -197,7 +195,7 @@
             <arg value="-r"/>
             <arg value="tests"/>
             <arg value="-c"/>
-            <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=xml"/>
+            <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
             <arg value="-p"/>
             <arg value="9234"/>
         </java>
@@ -211,7 +209,6 @@
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
                 <fileset dir="${lib.compile}" includes="*.jar"/>
             </classpath>
-            <arg value="tests"/>
             <arg value="-p"/>
             <arg value="9234"/>
         </java>

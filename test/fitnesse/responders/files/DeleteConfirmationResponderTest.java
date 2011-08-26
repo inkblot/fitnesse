@@ -16,7 +16,7 @@ public class DeleteConfirmationResponderTest extends TestCase {
 
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = new FitNesseContext();
+        context = new FitNesseContext("RooT");
     }
 
     public void testContentOfPage() throws Exception {

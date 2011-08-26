@@ -14,53 +14,53 @@ import org.apache.velocity.VelocityContext;
 import java.io.File;
 
 public class TestHistoryResponder implements SecureResponder {
-  private File resultsDirectory;
-  private boolean generateNullResponseForTest;
+    private File resultsDirectory;
+    private boolean generateNullResponseForTest;
 
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    if (resultsDirectory == null)
-      resultsDirectory = context.getTestHistoryDirectory();
-    SimpleResponse response = new SimpleResponse();
-    if (!generateNullResponseForTest) {
-      TestHistory history = new TestHistory();
-      String pageName = request.getResource();
-      history.readPageHistoryDirectory(resultsDirectory, pageName);
-      VelocityContext velocityContext = new VelocityContext();
-      velocityContext.put("pageTitle", new PageTitle(makePageTitle(pageName)));
-      velocityContext.put("testHistory", history);
-      String velocityTemplate = "testHistory.vm";
-      if (formatIsXML(request)) {
-        response.setContentType("text/xml");
-        velocityTemplate = "testHistoryXML.vm";
-      }
-      response.setContent(VelocityFactory.translateTemplate(velocityContext, velocityTemplate));
+    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+        if (resultsDirectory == null)
+            resultsDirectory = context.getTestHistoryDirectory();
+        SimpleResponse response = new SimpleResponse();
+        if (!generateNullResponseForTest) {
+            TestHistory history = new TestHistory();
+            String pageName = request.getResource();
+            history.readPageHistoryDirectory(resultsDirectory, pageName);
+            VelocityContext velocityContext = new VelocityContext();
+            velocityContext.put("pageTitle", new PageTitle(makePageTitle(pageName)));
+            velocityContext.put("testHistory", history);
+            String velocityTemplate = "fitnesse/templates/testHistory.vm";
+            if (formatIsXML(request)) {
+                response.setContentType("text/xml");
+                velocityTemplate = "fitnesse/templates/testHistoryXML.vm";
+            }
+            response.setContent(VelocityFactory.translateTemplate(velocityContext, velocityTemplate));
+        }
+        return response;
     }
-    return response;
-  }
 
-  private String makePageTitle(String pageName) {
-    return "".equals(pageName) ?
-      "Test History" :
-      "Test History for " + pageName;
-  }
+    private String makePageTitle(String pageName) {
+        return "".equals(pageName) ?
+                "Test History" :
+                "Test History for " + pageName;
+    }
 
-  private boolean formatIsXML(Request request) {
-    return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
-  }
+    private boolean formatIsXML(Request request) {
+        return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
+    }
 
-  public void setResultsDirectory(File resultsDirectory) {
-    this.resultsDirectory = resultsDirectory;
-  }
+    public void setResultsDirectory(File resultsDirectory) {
+        this.resultsDirectory = resultsDirectory;
+    }
 
-  public File getResultsDirectory() {
-    return resultsDirectory;
-  }
+    public File getResultsDirectory() {
+        return resultsDirectory;
+    }
 
-  public void generateNullResponseForTest() {
-    generateNullResponseForTest = true;
-  }
+    public void generateNullResponseForTest() {
+        generateNullResponseForTest = true;
+    }
 
-  public SecureOperation getSecureOperation() {
-    return new AlwaysSecureOperation();
-  }
+    public SecureOperation getSecureOperation() {
+        return new AlwaysSecureOperation();
+    }
 }

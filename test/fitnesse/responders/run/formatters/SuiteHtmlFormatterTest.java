@@ -19,7 +19,7 @@ public class SuiteHtmlFormatterTest extends TestCase {
     private StringBuffer pageBuffer = new StringBuffer();
 
     public void setUp() throws Exception {
-        FitNesseContext context = new FitNesseContext();
+        FitNesseContext context = new FitNesseContext("RooT");
         htmlPage = new HtmlPageFactory().newPage();
         formatter = new SuiteHtmlFormatter(context) {
             @Override

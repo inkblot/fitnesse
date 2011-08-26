@@ -2,6 +2,7 @@ package fitnesse;
 
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.updates.UpdaterImplementation;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
 
@@ -20,10 +21,14 @@ import static util.FileUtil.deleteFileSystemDirectory;
 public class FitnesseBaseTestCase {
 
     private FitNesseContext context;
-    private SampleFileUtility samples;
+    protected SampleFileUtility samples;
 
     protected final FitNesseContext makeContext() {
-        return makeContext(null);
+        return makeContext("RooT");
+    }
+
+    protected final FitNesseContext makeContext(String rootName) {
+        return makeContext(InMemoryPage.makeRoot(rootName));
     }
 
     protected final FitNesseContext makeContext(WikiPage root) {

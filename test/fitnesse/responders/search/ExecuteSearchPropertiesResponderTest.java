@@ -14,7 +14,6 @@ import junit.framework.TestCase;
 import org.junit.*;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -35,10 +34,9 @@ public class ExecuteSearchPropertiesResponderTest extends TestCase {
     @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
-        FitNesseUtil.makeTestContext(root);
         crawler = root.getPageCrawler();
         responder = new ExecuteSearchPropertiesResponder();
-        context = FitNesseUtil.makeTestContext(root);
+        context = new FitNesseContext(root);
     }
 
     @Test

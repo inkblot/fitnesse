@@ -8,6 +8,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,14 +24,14 @@ public class FitNesseContext {
     public static final int DEFAULT_COMMAND_PORT = 9123;
     public static final int DEFAULT_VERSION_DAYS = 14;
 
+    public final String rootPath;
+    public final WikiPage root;
+    public final String rootPagePath;
+    public final ResponderFactory responderFactory;
+
     public FitNesse fitnesse;
     public int port = DEFAULT_PORT;
-    public final String rootPath;
-    public String rootDirectoryName = DEFAULT_ROOT;
-    public String rootPagePath = "";
     public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
-    public WikiPage root;
-    public ResponderFactory responderFactory = new ResponderFactory(rootPagePath);
     public SocketDealer socketDealer = new SocketDealer();
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
     public Authenticator authenticator = new PromiscuousAuthenticator();
@@ -41,8 +42,8 @@ public class FitNesseContext {
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
-    public FitNesseContext() {
-        this(null);
+    public FitNesseContext(String rootName) {
+        this(InMemoryPage.makeRoot(rootName));
     }
 
     public FitNesseContext(WikiPage root) {
@@ -56,6 +57,8 @@ public class FitNesseContext {
         if (!absolutePath.equals(this.rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());
         }
+        rootPagePath = rootPath + File.separator + root.getName();
+        responderFactory = new ResponderFactory(rootPagePath);
     }
 
 
@@ -77,10 +80,6 @@ public class FitNesseContext {
 
     public File getTestHistoryDirectory() {
         return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
-    }
-
-    public void setRootPagePath() {
-        rootPagePath = rootPath + "/" + rootDirectoryName;
     }
 
 }

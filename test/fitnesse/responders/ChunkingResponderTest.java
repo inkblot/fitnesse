@@ -8,7 +8,6 @@ import org.junit.Test;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 
 import static org.junit.Assert.assertTrue;
@@ -19,17 +18,16 @@ public class ChunkingResponderTest {
     private Exception exception;
     private ChunkedResponse response;
     private FitNesseContext context;
-    private WikiPage root = new WikiPageDummy();
-    private ChunkingResponder responder = new ChunkingResponder() {
-        protected void doSending() throws Exception {
-            throw exception;
-        }
-    };
+    private ChunkingResponder responder;
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext();
-        context.root = root;
+        context = new FitNesseContext(new WikiPageDummy());
+        responder = new ChunkingResponder() {
+            protected void doSending() throws Exception {
+                throw exception;
+            }
+        };
     }
 
     @Test

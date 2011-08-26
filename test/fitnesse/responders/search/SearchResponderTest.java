@@ -4,7 +4,6 @@ package fitnesse.responders.search;
 
 import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -17,21 +16,19 @@ import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
 public class SearchResponderTest extends TestCase {
-    private WikiPage root;
-    private PageCrawler crawler;
     private SearchResponder responder;
     private MockRequest request;
     private FitNesseContext context;
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        crawler = root.getPageCrawler();
+        WikiPage root = InMemoryPage.makeRoot("RooT");
+        PageCrawler crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("SomePage"), "has something in it");
         responder = new SearchResponder();
         request = new MockRequest();
         request.addInput("searchString", "blah");
         request.addInput("searchType", "blah");
-        context = FitNesseUtil.makeTestContext(root);
+        context = new FitNesseContext(root);
     }
 
     public void tearDown() throws Exception {

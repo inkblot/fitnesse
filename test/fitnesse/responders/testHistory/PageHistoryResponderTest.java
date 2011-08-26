@@ -8,7 +8,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
@@ -54,7 +53,7 @@ public class PageHistoryResponderTest {
         responder = new PageHistoryResponder();
         responder.setResultsDirectory(resultsDirectory);
         WikiPage root = InMemoryPage.makeRoot("RooT");
-        context = FitNesseUtil.makeTestContext(root);
+        context = new FitNesseContext(root);
     }
 
     @After
@@ -66,7 +65,7 @@ public class PageHistoryResponderTest {
         request = new MockRequest();
         request.setResource("TestPage");
         WikiPage root = InMemoryPage.makeRoot("RooT");
-        response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+        response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
     }
 
     private void removeResultsDirectory() {
@@ -358,7 +357,7 @@ public class PageHistoryResponderTest {
     private void generateSuiteResultFile(SuiteExecutionReport report, File resultFile) throws Exception {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("suiteExecutionReport", report);
-        Template template = VelocityFactory.getVelocityEngine().getTemplate("suiteHistoryXML.vm");
+        Template template = VelocityFactory.getVelocityEngine().getTemplate("fitnesse/templates/suiteHistoryXML.vm");
         FileWriter fileWriter = new FileWriter(resultFile);
         template.merge(velocityContext, fileWriter);
         fileWriter.close();
@@ -383,7 +382,7 @@ public class PageHistoryResponderTest {
     private void generateTestResultFile(TestExecutionReport testResponse, File resultFile) throws Exception {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("response", testResponse);
-        Template template = VelocityFactory.getVelocityEngine().getTemplate("testResults.vm");
+        Template template = VelocityFactory.getVelocityEngine().getTemplate("fitnesse/templates/testResults.vm");
         FileWriter fileWriter = new FileWriter(resultFile);
         template.merge(velocityContext, fileWriter);
         fileWriter.close();
@@ -432,7 +431,7 @@ public class PageHistoryResponderTest {
         request.setResource("TestPage");
         request.addInput("format", "xml");
         WikiPage root = InMemoryPage.makeRoot("RooT");
-        response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+        response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
         assertEquals("text/xml", response.getContentType());
     }
 
@@ -442,7 +441,7 @@ public class PageHistoryResponderTest {
         request.setResource("TestPage");
         request.addInput("format", "XMl");
         WikiPage root = InMemoryPage.makeRoot("RooT");
-        response = (SimpleResponse) responder.makeResponse(FitNesseUtil.makeTestContext(root), request);
+        response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
         assertEquals("text/xml", response.getContentType());
     }
 

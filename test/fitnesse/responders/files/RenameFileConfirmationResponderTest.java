@@ -2,34 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import org.junit.Before;
+import org.junit.Test;
 
 import static util.RegexAssertions.assertSubString;
 
-public class RenameFileConfirmationResponderTest extends TestCase {
-    private SampleFileUtility sample = new SampleFileUtility();
-
+public class RenameFileConfirmationResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
     private FitNesseContext context;
     private String content;
-    private SimpleResponse response;
-    private Responder responder;
 
+    @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = new FitNesseContext();
-        context.rootPagePath = sample.base;
-        sample.makeSampleFiles();
+        context = makeContext();
+        makeSampleFiles();
     }
 
-    public void tearDown() throws Exception {
-        sample.deleteSampleFiles();
-    }
-
+    @Test
     public void testContentOfPage() throws Exception {
         getContentForSimpleRename();
 
@@ -38,6 +33,7 @@ public class RenameFileConfirmationResponderTest extends TestCase {
         assertSubString("Rename <b>MyFile.txt</b>", content);
     }
 
+    @Test
     public void testExistingFilenameIsInTextField() throws Exception {
         getContentForSimpleRename();
 
@@ -47,11 +43,12 @@ public class RenameFileConfirmationResponderTest extends TestCase {
     private void getContentForSimpleRename() throws Exception {
         request.setResource("files");
         request.addInput("filename", "MyFile.txt");
-        responder = new RenameFileConfirmationResponder();
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        Responder responder = new RenameFileConfirmationResponder();
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         content = response.getContent();
     }
 
+    @Test
     public void testFitnesseLook() throws Exception {
         Responder responder = new RenameFileConfirmationResponder();
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);

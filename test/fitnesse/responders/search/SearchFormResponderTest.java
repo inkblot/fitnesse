@@ -10,23 +10,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fitnesse.FitNesseContext;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 
 public class SearchFormResponderTest {
-    private SimpleResponse response;
     private String content;
-    private FitNesseContext context;
 
     @Before
     public void setUp() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RooT");
-        context = FitNesseUtil.makeTestContext(root);
+        FitNesseContext context = new FitNesseContext(root);
         SearchFormResponder responder = new SearchFormResponder();
-        response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
         content = response.getContent();
     }
 

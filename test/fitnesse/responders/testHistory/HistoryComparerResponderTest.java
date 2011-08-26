@@ -9,7 +9,7 @@ import static util.RegexAssertions.assertHasRegexp;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.junit.After;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,23 +17,26 @@ import util.FileUtil;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 
-public class HistoryComparerResponderTest {
+public class HistoryComparerResponderTest extends FitnesseBaseTestCase {
     public HistoryComparerResponder responder;
     public FitNesseContext context;
     public WikiPage root;
     public MockRequest request;
     public HistoryComparer mockedComparer;
-    private final String FIRST_FILE_PATH = "./TestDir/files/testResults/TestFolder/firstFakeFile"
-            .replace('/', File.separatorChar);
-    private final String SECOND_FILE_PATH = "./TestDir/files/testResults/TestFolder/secondFakeFile"
-            .replace('/', File.separatorChar);
+    private String FIRST_FILE_PATH;
+    private String SECOND_FILE_PATH;
 
     @Before
     public void setup() throws Exception {
+        root = InMemoryPage.makeRoot("RooT");
+        context = makeContext(root);
+        FIRST_FILE_PATH = context.rootPagePath + "/files/testResults/TestFolder/firstFakeFile"
+                .replace('/', File.separatorChar);
+        SECOND_FILE_PATH = context.rootPagePath + "/files/testResults/TestFolder/secondFakeFile"
+                .replace('/', File.separatorChar);
         request = new MockRequest();
         mockedComparer = mock(HistoryComparer.class);
 
@@ -55,12 +58,10 @@ public class HistoryComparerResponderTest {
         request.addInput("TestResult_firstFakeFile", "");
         request.addInput("TestResult_secondFakeFile", "");
         request.setResource("TestFolder");
-        FileUtil.createFile("TestDir/files/testResults/TestFolder/firstFakeFile",
+        FileUtil.createFile(context.rootPagePath + "/files/testResults/TestFolder/firstFakeFile",
                 "firstFile");
-        FileUtil.createFile("TestDir/files/testResults/TestFolder/secondFakeFile",
+        FileUtil.createFile(context.rootPagePath + "/files/testResults/TestFolder/secondFakeFile",
                 "secondFile");
-        context = FitNesseUtil.makeTestContext(root);
-        root = InMemoryPage.makeRoot("RooT");
     }
 
     @Test
@@ -135,8 +136,4 @@ public class HistoryComparerResponderTest {
         assertHasRegexp("This is the content", response.getContent());
     }
 
-    @After
-    public void tearDown() {
-        FileUtil.deleteFileSystemDirectory("testRoot");
-    }
 }

@@ -21,7 +21,6 @@
       <excludeFolder url="file://$MODULE_DIR$/FitNesseRoot/RecentChanges" />
       <excludeFolder url="file://$MODULE_DIR$/FitNesseRoot/files/testResults" />
       <excludeFolder url="file://$MODULE_DIR$/build" />
-      <excludeFolder url="file://$MODULE_DIR$/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

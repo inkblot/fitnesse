@@ -20,24 +20,23 @@ public class Today extends SymbolType implements Rule, Translation {
     }
 
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
-        List<Symbol> lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Text});
-        if (lookAhead.size() != 0 ) {
+        List<Symbol> lookAhead = parser.peek(new SymbolType[]{SymbolType.Whitespace, SymbolType.Text});
+        if (lookAhead.size() != 0) {
             String option = lookAhead.get(1).getContent();
             if (isDateFormatOption(option)) {
                 current.putProperty(Today.Format, option);
                 parser.moveNext(2);
             }
-        }
-        else {
-            lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.OpenParenthesis});
+        } else {
+            lookAhead = parser.peek(new SymbolType[]{SymbolType.Whitespace, SymbolType.OpenParenthesis});
             if (lookAhead.size() != 0) {
                 parser.moveNext(2);
                 String format = parser.parseToAsString(SymbolType.CloseParenthesis);
-                if (parser.atEnd())  return Symbol.nothing;
+                if (parser.atEnd()) return Symbol.nothing;
                 current.putProperty(Format, format);
             }
         }
-        lookAhead = parser.peek(new SymbolType[] {SymbolType.Whitespace, SymbolType.Delta});
+        lookAhead = parser.peek(new SymbolType[]{SymbolType.Whitespace, SymbolType.Delta});
         if (lookAhead.size() != 0) {
             String increment = lookAhead.get(1).getContent();
             current.putProperty(Increment, increment);
@@ -50,25 +49,26 @@ public class Today extends SymbolType implements Rule, Translation {
         return option.equals("-t")
                 || option.equals("-xml");
     }
+
     public String toTarget(Translator translator, Symbol symbol) {
         String increment = symbol.getProperty(Today.Increment);
         int incrementDays =
                 increment.startsWith("+") ? Integer.parseInt(increment.substring(1)) :
-                increment.startsWith("-") ? - Integer.parseInt(increment.substring(1)) :
-                0;
+                        increment.startsWith("-") ? -Integer.parseInt(increment.substring(1)) :
+                                0;
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(SystemTimeKeeper.now());
         calendar.add(Calendar.DAY_OF_MONTH, incrementDays);
         return new SimpleDateFormat(
                 makeFormat(symbol.getProperty(Today.Format)))
-                        .format(calendar.getTime());
+                .format(calendar.getTime());
     }
 
     private String makeFormat(String format) {
         return
-            format.equals("-t") ? "dd MMM, yyyy HH:mm" :
-            format.equals("-xml") ? "yyyy-MM-dd'T'HH:mm:ss" :
-            format.length() == 0 ? "dd MMM, yyyy" :
-                format;
+                format.equals("-t") ? "dd MMM, yyyy HH:mm" :
+                        format.equals("-xml") ? "yyyy-MM-dd'T'HH:mm:ss" :
+                                format.length() == 0 ? "dd MMM, yyyy" :
+                                        format;
     }
 }

@@ -2,16 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.util.regex.Pattern;
-
 import fitnesse.testutil.MockSocket;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;

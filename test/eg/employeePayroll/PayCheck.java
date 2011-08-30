@@ -5,9 +5,9 @@ package eg.employeePayroll;
 import java.util.Date;
 
 public class PayCheck {
-  public int id;
-  public double amount;
-  public int number;
-  public String name;
-  public Date date;
+    public int id;
+    public double amount;
+    public int number;
+    public String name;
+    public Date date;
 }

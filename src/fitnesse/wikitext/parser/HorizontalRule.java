@@ -8,7 +8,7 @@ public class HorizontalRule extends SymbolType implements Translation {
         wikiMatcher(new Matcher().string("---").repeat('-'));
         htmlTranslation(this);
     }
-    
+
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag html = new HtmlTag("hr");
         int size = symbol.getContent().length() - 3;

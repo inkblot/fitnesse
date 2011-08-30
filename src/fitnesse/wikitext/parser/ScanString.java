@@ -16,12 +16,29 @@ public class ScanString {
         this.markStartOffset = other.markStartOffset;
     }
 
-    public void setOffset(int offset) { this.offset = offset; }
-    public int getOffset() { return offset; }
-    public void moveNext() { offset++; }
-    public boolean isEnd() { return isEnd(0); }
-    public boolean isEnd(int startAt) { return offset + startAt >= input.length(); }
-    public void markStart(int markStartOffset) { this.markStartOffset = markStartOffset; }
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void moveNext() {
+        offset++;
+    }
+
+    public boolean isEnd() {
+        return isEnd(0);
+    }
+
+    public boolean isEnd(int startAt) {
+        return offset + startAt >= input.length();
+    }
+
+    public void markStart(int markStartOffset) {
+        this.markStartOffset = markStartOffset;
+    }
 
     public boolean matches(String match, int startsAt) {
         if (match.length() == 0) return false;
@@ -44,7 +61,7 @@ public class ScanString {
     public int find(char[] matches, int startAt) {
         int current = offset + startAt;
         while (current < input.length()) {
-            for (char match: matches) {
+            for (char match : matches) {
                 if (input.charAt(current) == match) return current - offset;
             }
             current++;
@@ -80,21 +97,21 @@ public class ScanString {
     }
 
     public static boolean isWord(String content) {
-        for (char c: content.toCharArray()) {
+        for (char c : content.toCharArray()) {
             if (!Character.isLetterOrDigit(c) && c != '_') return false;
         }
         return true;
     }
 
     public static boolean isDigits(String content) {
-        for (char c: content.toCharArray()) {
+        for (char c : content.toCharArray()) {
             if (!Character.isDigit(c)) return false;
         }
         return true;
     }
 
     public static boolean isVariableName(String content) {
-        for (char c: content.toCharArray()) {
+        for (char c : content.toCharArray()) {
             if (!Character.isLetterOrDigit(c) && c != '_' && c != '.') return false;
         }
         return true;

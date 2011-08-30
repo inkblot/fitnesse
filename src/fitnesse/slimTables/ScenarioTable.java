@@ -4,9 +4,7 @@ package fitnesse.slimTables;
 
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
-
 import fitnesse.slim.SlimError;
-
 import util.StringUtil;
 
 import java.util.*;
@@ -24,7 +22,7 @@ public class ScenarioTable extends SlimTable {
     private boolean parameterized = false;
 
     public ScenarioTable(Table table, String tableId,
-        SlimTestContext testContext) {
+                         SlimTestContext testContext) {
         super(table, tableId, testContext);
     }
 
@@ -60,7 +58,7 @@ public class ScenarioTable extends SlimTable {
 
             if (argName.endsWith("?")) {
                 String disgracedArgName = Disgracer.disgraceMethodName(argName.substring(
-                            0, argName.length()));
+                        0, argName.length()));
                 outputs.add(disgracedArgName);
             } else {
                 String disgracedArgName = Disgracer.disgraceMethodName(argName);
@@ -117,7 +115,7 @@ public class ScenarioTable extends SlimTable {
     }
 
     public void evaluateReturnValues(Map<String, Object> returnValues)
-        throws Exception {
+            throws Exception {
     }
 
     public String getName() {
@@ -133,7 +131,7 @@ public class ScenarioTable extends SlimTable {
     }
 
     public void call(Map<String, String> scenarioArguments,
-        SlimTable parentTable, int row) {
+                     SlimTable parentTable, int row) {
         String script = getTable().toHtml();
         script = replaceArgsInScriptTable(script, scenarioArguments);
         insertAndProcessScript(script, parentTable, row);
@@ -149,7 +147,7 @@ public class ScenarioTable extends SlimTable {
     }
 
     private void insertAndProcessScript(String script, SlimTable parentTable,
-        int row) {
+                                        int row) {
         try {
             TableScanner ts = new HtmlTableScanner(script);
             ScriptTable t = new ScriptTable(ts.getTable(0), id,
@@ -163,7 +161,7 @@ public class ScenarioTable extends SlimTable {
     }
 
     private String replaceArgsInScriptTable(String script,
-        Map<String, String> scenarioArguments) {
+                                            Map<String, String> scenarioArguments) {
         for (String arg : scenarioArguments.keySet()) {
             if (getInputs().contains(arg)) {
                 String argument = scenarioArguments.get(arg);
@@ -192,19 +190,19 @@ public class ScenarioTable extends SlimTable {
 
             for (int nameCol = 1; nameCol < colsInHeader; nameCol += 2)
                 nameBuffer.append(table.getCellContents(nameCol, 0))
-                          .append(" _ ");
+                        .append(" _ ");
 
             parameterizedName = nameBuffer.toString().trim();
         } else {
-          return null;
+            return null;
         }
 
         return getArgumentsMatchingParameterizedName(parameterizedName,
-            invokingString);
+                invokingString);
     }
 
     private String[] getArgumentsMatchingParameterizedName(
-        String parameterizedName, String invokingString) {
+            String parameterizedName, String invokingString) {
         Matcher matcher = makeParameterizedNameMatcher(parameterizedName,
                 invokingString);
 
@@ -216,7 +214,7 @@ public class ScenarioTable extends SlimTable {
     }
 
     private Matcher makeParameterizedNameMatcher(String parameterizedName,
-        String invokingString) {
+                                                 String invokingString) {
         String patternString = parameterizedName.replaceAll("_", "(.*)");
         Pattern pattern = Pattern.compile(patternString);
         Matcher matcher = pattern.matcher(invokingString);

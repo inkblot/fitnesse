@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import java.util.List;
-
 import util.ListUtility;
+
+import java.util.List;
 
 /**
  * Packs up a list into a serialized string using a special format.  The list items must be strings, or lists.
@@ -16,50 +16,50 @@ import util.ListUtility;
  * of the item followed by a :.
  */
 public class ListSerializer {
-  private StringBuffer result;
-  private List<Object> list;
+    private StringBuffer result;
+    private List<Object> list;
 
-  public ListSerializer(List<Object> list) {
-    this.list = list;
-    result = new StringBuffer();
-  }
-
-  public static String serialize(List<Object> list) {
-    return new ListSerializer(list).serialize();
-  }
-
-  public String serialize() {
-    result.append('[');
-    appendLength(list.size());
-
-    for (Object o : list) {
-      String s = marshalObjectToString(o);
-      appendLength(s.length());
-      appendString(s);
+    public ListSerializer(List<Object> list) {
+        this.list = list;
+        result = new StringBuffer();
     }
-    result.append(']');
-    return result.toString();
-  }
 
-  @SuppressWarnings("unchecked")
-  private String marshalObjectToString(Object o) {
-    String s;
-    if (o == null)
-      s = "null";
-    else if (o instanceof String)
-      s = (String) o;
-    else if (o instanceof List)
-      s = ListSerializer.serialize(ListUtility.uncheckedCast(Object.class, o));
-    else
-      s = o.toString();
-    return s;
-  }
+    public static String serialize(List<Object> list) {
+        return new ListSerializer(list).serialize();
+    }
 
-  private void appendString(String s) {
-    result.append(s).append(':');
-  }
+    public String serialize() {
+        result.append('[');
+        appendLength(list.size());
 
-  private void appendLength(int size) {
-    result.append(String.format("%06d:", size));
-  }
+        for (Object o : list) {
+            String s = marshalObjectToString(o);
+            appendLength(s.length());
+            appendString(s);
+        }
+        result.append(']');
+        return result.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    private String marshalObjectToString(Object o) {
+        String s;
+        if (o == null)
+            s = "null";
+        else if (o instanceof String)
+            s = (String) o;
+        else if (o instanceof List)
+            s = ListSerializer.serialize(ListUtility.uncheckedCast(Object.class, o));
+        else
+            s = o.toString();
+        return s;
+    }
+
+    private void appendString(String s) {
+        result.append(s).append(':');
+    }
+
+    private void appendLength(int size) {
+        result.append(String.format("%06d:", size));
+    }
 }

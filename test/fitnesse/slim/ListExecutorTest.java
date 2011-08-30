@@ -4,14 +4,14 @@ package fitnesse.slim;
 
 public class ListExecutorTest extends ListExecutorTestBase {
 
-  @Override
-  protected ListExecutor getListExecutor() throws Exception {
-    SlimFactory slimFactory = new JavaSlimFactory();
-    return slimFactory.getListExecutor(false);
-  }
+    @Override
+    protected ListExecutor getListExecutor() throws Exception {
+        SlimFactory slimFactory = new JavaSlimFactory();
+        return slimFactory.getListExecutor(false);
+    }
 
-  @Override
-  protected String getTestClassPath() {
-    return "fitnesse.slim.test";
-  }
+    @Override
+    protected String getTestClassPath() {
+        return "fitnesse.slim.test";
+    }
 }

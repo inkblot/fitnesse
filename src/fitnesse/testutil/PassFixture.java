@@ -6,7 +6,7 @@ import fit.Fixture;
 import fit.Parse;
 
 public class PassFixture extends Fixture {
-  public void doTable(Parse parse) {
-    right(parse);
-  }
+    public void doTable(Parse parse) {
+        right(parse);
+    }
 }

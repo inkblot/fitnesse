@@ -3,13 +3,13 @@
 package fitnesse.html;
 
 public class RawHtml extends HtmlElement {
-  private String html;
+    private String html;
 
-  public RawHtml(String html) {
-    this.html = html;
-  }
+    public RawHtml(String html) {
+        this.html = html;
+    }
 
-  public String html() {
-    return html;
-  }
+    public String html() {
+        return html;
+    }
 }

@@ -3,19 +3,19 @@
 package fitnesse.fixtures;
 
 public class PayCheckRecord {
-  public int employeeId;
-  public String date;
-  public String name;
-  private double salary;
+    public int employeeId;
+    public String date;
+    public String name;
+    private double salary;
 
-  public PayCheckRecord(int employeeId, String date, String name, double salary) {
-    this.employeeId = employeeId;
-    this.date = date;
-    this.name = name;
-    this.salary = salary;
-  }
+    public PayCheckRecord(int employeeId, String date, String name, double salary) {
+        this.employeeId = employeeId;
+        this.date = date;
+        this.name = name;
+        this.salary = salary;
+    }
 
-  public double pay() {
-    return salary;
-  }
+    public double pay() {
+        return salary;
+    }
 }

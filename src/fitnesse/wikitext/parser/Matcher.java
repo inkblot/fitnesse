@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import util.Maybe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class Matcher {
     }
 
     private static final ArrayList<Character> defaultList = new ArrayList<Character>();
+
     static {
         defaultList.add('\0');
     }
@@ -76,7 +78,7 @@ public class Matcher {
 
     private boolean isDigitInput(ScanString input, int offset) {
         for (char i = '1'; i <= '9'; i++) {
-           if (input.matches(new String(new char[] {i}), offset)) return true;
+            if (input.matches(new String(new char[]{i}), offset)) return true;
         }
         return false;
     }
@@ -138,16 +140,16 @@ public class Matcher {
             }
 
             private boolean contains(char[] terminators, char candidate) {
-                for (char terminator: terminators) if (candidate == terminator) return true;
+                for (char terminator : terminators) if (candidate == terminator) return true;
                 return false;
             }
         });
         return this;
     }
 
-    public Maybe<Integer> makeMatch(ScanString input)  {
+    public Maybe<Integer> makeMatch(ScanString input) {
         int totalLength = 0;
-        for (ScanMatch match: matches) {
+        for (ScanMatch match : matches) {
             Maybe<Integer> matchLength = match.match(input, totalLength);
             if (matchLength.isNothing()) return Maybe.noInteger;
             totalLength += matchLength.getValue();
@@ -155,5 +157,5 @@ public class Matcher {
 
         return new Maybe<Integer>(totalLength);
     }
-   
+
 }

@@ -4,21 +4,19 @@ package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.*;
-
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
-
-import static util.RegexAssertions.assertSubString;
-
 import util.TimeMeasurement;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
+import static util.RegexAssertions.assertSubString;
 
 public class MultipleTestsRunnerTest {
     private WikiPage root;

@@ -31,7 +31,7 @@ public class WikiBuilder implements Translation {
         builders.add(new WikiStringBuilder() {
             public void build(Translator translator, Symbol symbol, StringBuilder wikiString) {
                 int count = 0;
-                for (Symbol child: symbol.getChildren()) {
+                for (Symbol child : symbol.getChildren()) {
                     if (count > 0) wikiString.append(separator);
                     wikiString.append(translator.translate(child));
                     count++;
@@ -70,7 +70,7 @@ public class WikiBuilder implements Translation {
 
     public String toTarget(Translator translator, Symbol symbol) {
         StringBuilder result = new StringBuilder();
-        for (WikiStringBuilder builder: builders) {
+        for (WikiStringBuilder builder : builders) {
             builder.build(translator, symbol, result);
         }
         return result.toString();

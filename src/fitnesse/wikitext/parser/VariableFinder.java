@@ -32,7 +32,7 @@ public class VariableFinder implements VariableSource {
     }
 
     private Maybe<String> lookInParentPages(String name) {
-        for (SourcePage sourcePage: page.getPage().getAncestors()) {
+        for (SourcePage sourcePage : page.getPage().getAncestors()) {
             if (!page.inCache(sourcePage)) {
                 Parser.make(page.copyForPage(sourcePage), sourcePage.getContent()).parse();
                 // todo: make this a method on ParsingPage

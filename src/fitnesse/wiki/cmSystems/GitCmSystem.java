@@ -9,7 +9,7 @@ import fitnesse.components.CommandRunner;
  * The four functions: cmUpdate, cmEdit, cmPreDelete and cmDelete are called if:
  * 1. The name of this class is in the CM_SYSTEM variable accessible from the page and
  * 2. that page is being created, modified, or deleted.
- * 
+ *
  * Remember that each page is defined by a directory that bears it's name, and two files that contain it's content.
  * The first file is content.txt which holds the wiki text.  The second is properties.xml which holds all the metatdata
  * for the page.  The file operations cmEdit and cmUpdate are called for each file.  The file argument is the relative
@@ -30,52 +30,52 @@ import fitnesse.components.CommandRunner;
  * </pre>
  */
 public class GitCmSystem {
-  /**
-   * Called just after file has been written.
-   *
-   * @param payload Not needed for Git..
-   */
-  public static void cmUpdate(String file, String payload) throws Exception {
-    execute("cmUpdate", "/usr/local/bin/git add " + file);
-  }
-
-  /**
-   * Called just before file is about to be written
-   *
-   * @param payload Not needed for Git.
-   */
-  public static void cmEdit(String file, String payload) {
-    //git doesn't need this.
-  }
-
-  /**
-   * Called just after the directory defining a page has been deleted.
-   *
-   * @param file    The name of the directory that was deleted.
-   * @param payload Not needed for Git..
-   */
-  public static void cmDelete(String file, String payload) throws Exception {
-    execute("cmDelete", "/usr/local/bin/git rm -rf --cached " + file);
-  }
-
-  /**
-   * Called just before the directory defining a page is going to be deleted.
-   *
-   * @param file    The namem of the directory to be deleted.
-   * @param payload Not needed for Git..
-   */
-  public static void cmPreDelete(String file, String payload) throws Exception {
-    //git doesn't need this.
-  }
-
-  private static void execute(String method, String command) throws Exception {
-    CommandRunner runner = new CommandRunner(command, "");
-    runner.run();
-    if (runner.getOutput().length() + runner.getError().length() > 0) {
-      System.err.println(method + " command: " + command);
-      System.err.println(method + " exit code: " + runner.getExitCode());
-      System.err.println(method + " out:" + runner.getOutput());
-      System.err.println(method + " err:" + runner.getError());
+    /**
+     * Called just after file has been written.
+     *
+     * @param payload Not needed for Git..
+     */
+    public static void cmUpdate(String file, String payload) throws Exception {
+        execute("cmUpdate", "/usr/local/bin/git add " + file);
     }
-  }
+
+    /**
+     * Called just before file is about to be written
+     *
+     * @param payload Not needed for Git.
+     */
+    public static void cmEdit(String file, String payload) {
+        //git doesn't need this.
+    }
+
+    /**
+     * Called just after the directory defining a page has been deleted.
+     *
+     * @param file    The name of the directory that was deleted.
+     * @param payload Not needed for Git..
+     */
+    public static void cmDelete(String file, String payload) throws Exception {
+        execute("cmDelete", "/usr/local/bin/git rm -rf --cached " + file);
+    }
+
+    /**
+     * Called just before the directory defining a page is going to be deleted.
+     *
+     * @param file    The namem of the directory to be deleted.
+     * @param payload Not needed for Git..
+     */
+    public static void cmPreDelete(String file, String payload) throws Exception {
+        //git doesn't need this.
+    }
+
+    private static void execute(String method, String command) throws Exception {
+        CommandRunner runner = new CommandRunner(command, "");
+        runner.run();
+        if (runner.getOutput().length() + runner.getError().length() > 0) {
+            System.err.println(method + " command: " + command);
+            System.err.println(method + " exit code: " + runner.getExitCode());
+            System.err.println(method + " out:" + runner.getOutput());
+            System.err.println(method + " err:" + runner.getError());
+        }
+    }
 }

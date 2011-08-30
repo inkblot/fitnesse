@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import java.net.Socket;
-
 import junit.framework.TestCase;
+
+import java.net.Socket;
 
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;

@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class ContentsItemTest {
     @Test
     public void buildsPlain() throws Exception {
-        assertBuilds("PlainItem", new String[] {}, "", "", "<a href=\"PlainItem\">PlainItem</a>");
+        assertBuilds("PlainItem", new String[]{}, "", "", "<a href=\"PlainItem\">PlainItem</a>");
     }
 
     @Test
@@ -49,7 +49,7 @@ public class ContentsItemTest {
     private void assertBuilds(String page, String[] properties, String option, String variable, String result) throws Exception {
         Symbol contents = new Symbol(new Contents());
         contents.add(new Symbol(SymbolType.Text, option));
-        contents.evaluateVariables(new String[] {variable},new TestVariableSource(variable, "true"));
+        contents.evaluateVariables(new String[]{variable}, new TestVariableSource(variable, "true"));
         ContentsItemBuilder builder = new ContentsItemBuilder(contents, 1);
         assertEquals(result + HtmlElement.endl, builder.buildItem(new WikiSourcePage(withProperties(new TestRoot().makePage(page), properties))).html());
     }

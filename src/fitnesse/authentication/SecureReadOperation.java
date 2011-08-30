@@ -5,8 +5,8 @@ package fitnesse.authentication;
 import fitnesse.wiki.PageData;
 
 public class SecureReadOperation extends SecurePageOperation {
-  protected String getSecurityMode() {
-    return PageData.PropertySECURE_READ;
-  }
+    protected String getSecurityMode() {
+        return PageData.PropertySECURE_READ;
+    }
 
 }

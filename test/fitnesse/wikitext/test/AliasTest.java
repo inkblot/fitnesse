@@ -30,9 +30,10 @@ public class AliasTest {
         ParserTestHelper.assertTranslatesTo(page, "[[tag][http://files/myfile]]", link("tag", "/files/myfile"));
     }
 
-    @Test public void translatesLinkToNonExistent() {
+    @Test
+    public void translatesLinkToNonExistent() {
         ParserTestHelper.assertTranslatesTo(new TestSourcePage().withUrl("NonExistentPage"), "[[tag][NonExistentPage]]",
-          "tag<a title=\"create page\" href=\"NonExistentPage?edit&nonExistent=true\">[?]</a>");
+                "tag<a title=\"create page\" href=\"NonExistentPage?edit&nonExistent=true\">[?]</a>");
     }
 
     @Test

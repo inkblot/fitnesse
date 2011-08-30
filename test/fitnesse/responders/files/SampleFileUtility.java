@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import java.io.File;
-
 import util.FileUtil;
+
+import java.io.File;
 
 public class SampleFileUtility {
     public final String base;

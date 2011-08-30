@@ -3,7 +3,7 @@
 package fitnesse.schedule;
 
 public interface ScheduleItem {
-  public boolean shouldRun(long time) throws Exception;
+    public boolean shouldRun(long time) throws Exception;
 
-  public void run(long time) throws Exception;
+    public void run(long time) throws Exception;
 }

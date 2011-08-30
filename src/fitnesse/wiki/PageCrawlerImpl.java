@@ -4,8 +4,8 @@ package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PageCrawlerImpl implements PageCrawler {
     private PageCrawlerDeadEndStrategy deadEndStrategy;

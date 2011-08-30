@@ -5,7 +5,7 @@ package fitnesse.authentication;
 import fitnesse.wiki.PageData;
 
 public class SecureWriteOperation extends SecurePageOperation {
-  protected String getSecurityMode() {
-    return PageData.PropertySECURE_WRITE;
-  }
+    protected String getSecurityMode() {
+        return PageData.PropertySECURE_WRITE;
+    }
 }

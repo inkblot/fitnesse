@@ -8,28 +8,28 @@ import fitnesse.wikitext.WikiWidget;
 //created by Clare McLennan
 
 public class HelpWidget extends WikiWidget {
-  public static final String REGEXP = "!help *(-editable)?";
-  private final boolean editable;
+    public static final String REGEXP = "!help *(-editable)?";
+    private final boolean editable;
 
-  public HelpWidget(ParentWidget parent, String text) throws Exception {
-    super(parent);
-    editable = text.contains("-editable");
-  }
-
-  public String render() throws Exception {
-    String helpText = getWikiPage().getHelpText();
-    String editString = "edit";
-    if (helpText == null) {
-      helpText = "";
-      editString = "edit help text";
+    public HelpWidget(ParentWidget parent, String text) throws Exception {
+        super(parent);
+        editable = text.contains("-editable");
     }
 
+    public String render() throws Exception {
+        String helpText = getWikiPage().getHelpText();
+        String editString = "edit";
+        if (helpText == null) {
+            helpText = "";
+            editString = "edit help text";
+        }
 
-    WikiPagePath path = getWikiPage().getPageCrawler().getFullPath(getWikiPage());
-    if (editable) {
-      helpText += " <a href=\"" + path.toString() + "?properties\">(" + editString + ")</a>";
+
+        WikiPagePath path = getWikiPage().getPageCrawler().getFullPath(getWikiPage());
+        if (editable) {
+            helpText += " <a href=\"" + path.toString() + "?properties\">(" + editString + ")</a>";
+        }
+
+        return helpText;
     }
-
-    return helpText;
-  }
 }

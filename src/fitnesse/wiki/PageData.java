@@ -3,21 +3,21 @@
 package fitnesse.wiki;
 
 import fitnesse.responders.run.ExecutionLog;
-
-import static fitnesse.wiki.PageType.*;
-
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.parser.HtmlTranslator;
-import fitnesse.wikitext.parser.Paths;
-import fitnesse.wikitext.widgets.*;
+import fitnesse.wikitext.widgets.ParentWidget;
+import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
+import fitnesse.wikitext.widgets.WidgetWithTextArgument;
+import fitnesse.wikitext.widgets.XRefWidget;
 import util.Clock;
 import util.Maybe;
 import util.StringUtil;
 
 import java.io.Serializable;
 import java.util.*;
+
+import static fitnesse.wiki.PageType.*;
 
 @SuppressWarnings("unchecked")
 public class PageData implements Serializable {

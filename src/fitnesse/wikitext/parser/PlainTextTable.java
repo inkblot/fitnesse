@@ -9,7 +9,7 @@ public class PlainTextTable extends SymbolType implements Rule {
         wikiRule(this);
         htmlTranslation(new Table());
     }
-    
+
     private static final SymbolType[] terminators = new SymbolType[]
             {SymbolType.PlainTextCellSeparator, SymbolType.Newline, SymbolType.ClosePlainTextTable};
 
@@ -24,20 +24,19 @@ public class PlainTextTable extends SymbolType implements Rule {
         if (!parser.getCurrent().isType(SymbolType.Newline) && !parser.getCurrent().isType(SymbolType.Whitespace)) {
             Matchable columnSeparator = new ColumnSeparator(parser.getCurrent().getContent().substring(0, 1));
             plainTextTableTypes = new SymbolProvider(new SymbolType[]
-                {SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
+                    {SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
             plainTextTableTypes.addMatcher(columnSeparator);
             parser.moveNext(1);
             if (parser.atEnd()) return Symbol.nothing;
-        }
-        else {
+        } else {
             plainTextTableTypes = new SymbolProvider(new SymbolType[]
-                {SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
+                    {SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
         }
 
         if (parser.getCurrent().isType(SymbolType.Whitespace)) {
             table.putProperty("hideFirst", "");
         }
-        
+
         Symbol row = null;
         while (true) {
             Symbol line = parser.parseToWithSymbols(terminators, plainTextTableTypes, 0);
@@ -51,7 +50,7 @@ public class PlainTextTable extends SymbolType implements Rule {
             if (parser.getCurrent().isType(SymbolType.Newline)) row = null;
         }
     }
-    
+
     private class ColumnSeparator implements Matchable {
         private Matcher matcher;
 

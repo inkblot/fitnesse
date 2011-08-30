@@ -1,5 +1,5 @@
 package fitnesse;
 
 public interface Updater {
-  void update() throws Exception;
+    void update() throws Exception;
 }

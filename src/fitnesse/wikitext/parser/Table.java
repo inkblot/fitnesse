@@ -34,12 +34,12 @@ public class Table extends SymbolType implements Rule, Translation {
 
     private Symbol parseCell(Parser parser, String content) {
         return (content.indexOf("!") >= 0)
-           ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, 1)
-           : parser.parseTo(SymbolType.EndCell, 1);
+                ? parser.parseToWithSymbols(SymbolType.EndCell, SymbolProvider.literalTableProvider, 1)
+                : parser.parseTo(SymbolType.EndCell, 1);
     }
 
     private boolean containsNewLine(Symbol cell) {
-        for (Symbol child: cell.getChildren()) {
+        for (Symbol child : cell.getChildren()) {
             if (child.isType(SymbolType.Newline)) return true;
         }
         return false;
@@ -50,14 +50,13 @@ public class Table extends SymbolType implements Rule, Translation {
         writer.startTag("table");
         if (symbol.hasProperty("class")) {
             writer.putAttribute("class", symbol.getProperty("class"));
-        }
-        else {
+        } else {
             writer.putAttribute("border", "1");
             writer.putAttribute("cellspacing", "0");
         }
         int longestRow = longestRow(symbol);
         int rowCount = 0;
-        for (Symbol child: symbol.getChildren()) {
+        for (Symbol child : symbol.getChildren()) {
             rowCount++;
             writer.startTag("tr");
             if (rowCount == 1 && symbol.hasProperty("hideFirst")) {
@@ -65,7 +64,7 @@ public class Table extends SymbolType implements Rule, Translation {
             }
             int extraColumnSpan = longestRow - rowLength(child);
             int column = 1;
-            for (Symbol grandChild: child.getChildren()) {
+            for (Symbol grandChild : child.getChildren()) {
                 String body = translateCellBody(translator, grandChild);
                 writer.startTag("td");
                 if (extraColumnSpan > 0 && column == rowLength(child))
@@ -81,7 +80,7 @@ public class Table extends SymbolType implements Rule, Translation {
     }
 
     private String translateCellBody(Translator translator, Symbol cell) {
-        final String literalDelimiter = new String(new char[] {255, 1, 255});
+        final String literalDelimiter = new String(new char[]{255, 1, 255});
         cell.walkPreOrder(new SymbolTreeWalker() {
             public boolean visit(Symbol node) {
                 if (node.isType(Literal.symbolType)) {
@@ -99,7 +98,7 @@ public class Table extends SymbolType implements Rule, Translation {
 
     private int longestRow(Symbol table) {
         int longest = 0;
-        for (Symbol row: table.getChildren()) {
+        for (Symbol row : table.getChildren()) {
             int length = rowLength(row);
             if (length > longest) longest = length;
         }

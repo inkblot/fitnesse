@@ -2,23 +2,24 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
-import static util.ListUtility.list;
 import java.io.File;
 import java.util.List;
 
+import static util.ListUtility.list;
+
 public class TestsInProgress {
-  private String[] lines;
+    private String[] lines;
 
-  public List<Object> query() {
-    List<Object> table = list();
-	File folder = new File("FitNesseRoot/files/testProgress/");
-    File[] listOfFiles = folder.listFiles();
+    public List<Object> query() {
+        List<Object> table = list();
+        File folder = new File("FitNesseRoot/files/testProgress/");
+        File[] listOfFiles = folder.listFiles();
 
-    for (int i = 1; i < listOfFiles.length; i++) {
-		List<String> test = list("Test", listOfFiles[i].getName());
-		List<Object> row = list(test);
-        table.add(row);
+        for (int i = 1; i < listOfFiles.length; i++) {
+            List<String> test = list("Test", listOfFiles[i].getName());
+            List<Object> row = list(test);
+            table.add(row);
+        }
+        return table;
     }
-	return table;
-  }
 }

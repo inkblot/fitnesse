@@ -5,16 +5,16 @@ package fitnesse.fixtures;
 import fitnesse.responders.editing.EditResponder;
 
 public class SavePageRequester extends ResponseRequester {
-  public String saveContents;
+    public String saveContents;
 
-  protected void details() {
-    request.addInput("responder", "saveData");
-    request.addInput(EditResponder.TIME_STAMP, "9999999999999");
-    request.addInput(EditResponder.TICKET_ID, "321");
-    request.addInput("pageContent", saveContents);
-  }
+    protected void details() {
+        request.addInput("responder", "saveData");
+        request.addInput(EditResponder.TIME_STAMP, "9999999999999");
+        request.addInput(EditResponder.TICKET_ID, "321");
+        request.addInput("pageContent", saveContents);
+    }
 
-  public void setSaveContents(String saveContents) {
-    this.saveContents = saveContents;
-  }
+    public void setSaveContents(String saveContents) {
+        this.saveContents = saveContents;
+    }
 }

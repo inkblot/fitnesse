@@ -2,13 +2,10 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
+import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -21,6 +18,8 @@ import util.XmlUtil;
 import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class SuiteHistoryFormatterTest {
     private SuiteHistoryFormatter formatter;

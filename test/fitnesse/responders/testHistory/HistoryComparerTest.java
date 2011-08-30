@@ -6,18 +6,16 @@ import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.wiki.*;
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.After;
-
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
-import static util.RegexAssertions.assertSubString;
-
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+
+import static org.junit.Assert.*;
+import static util.RegexAssertions.assertSubString;
 
 public class HistoryComparerTest {
     private HistoryComparer comparer;

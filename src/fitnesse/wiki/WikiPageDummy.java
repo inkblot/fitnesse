@@ -3,10 +3,10 @@
 
 package fitnesse.wiki;
 
+import util.Clock;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import util.Clock;
 
 public class WikiPageDummy implements WikiPage {
     private static final long serialVersionUID = 1L;

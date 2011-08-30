@@ -4,12 +4,13 @@ package fitnesse.wiki;
 
 import junit.framework.TestCase;
 
-import static fitnesse.wiki.PageType.*;
+import java.util.List;
+
 import static fitnesse.wiki.PageData.*;
+import static fitnesse.wiki.PageType.SUITE;
+import static fitnesse.wiki.PageType.TEST;
 import static util.RegexAssertions.assertDoesNotHaveRegexp;
 import static util.RegexAssertions.assertHasRegexp;
-
-import java.util.List;
 
 public class PageDataTest extends TestCase {
     public WikiPage page;

@@ -26,6 +26,8 @@ public class Paths {
             return true;
         }
 
-        public boolean visitChildren(Symbol node) { return true; }
+        public boolean visitChildren(Symbol node) {
+            return true;
+        }
     }
 }

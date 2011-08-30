@@ -7,18 +7,16 @@ import fitnesse.slim.SlimClient;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import static util.ListUtility.list;
-import static util.RegexAssertions.assertSubString;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static util.ListUtility.list;
+import static util.RegexAssertions.assertSubString;
 
 public class ScenarioAndScriptTableTest extends MockSlimTestContext {
     private WikiPage root;

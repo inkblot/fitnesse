@@ -11,9 +11,13 @@ import java.util.Collection;
 public class WikiSourcePage implements SourcePage {
     private WikiPage page;
 
-    public WikiSourcePage(WikiPage page) { this.page = page; }
+    public WikiSourcePage(WikiPage page) {
+        this.page = page;
+    }
 
-    public String getName() { return page.getName(); }
+    public String getName() {
+        return page.getName();
+    }
 
     public String getFullName() {
         try {
@@ -56,8 +60,7 @@ public class WikiSourcePage implements SourcePage {
         try {
             WikiPage parentPage = page.getParent();
             return parentPage.getPageCrawler().getPage(parentPage, pathOfWikiWord) != null;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -69,8 +72,7 @@ public class WikiSourcePage implements SourcePage {
         try {
             WikiPage parentPage = page.getParent();
             return PathParser.render(parentPage.getPageCrawler().getFullPathOfChild(parentPage, pathOfWikiWord));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -107,21 +109,18 @@ public class WikiSourcePage implements SourcePage {
                     try {
                         ProxyPage remoteIncludedPage = new ProxyPage("RemoteIncludedPage", null, host, port, pagePath);
                         return new Maybe<SourcePage>(new WikiSourcePage(remoteIncludedPage));
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         return Maybe.nothingBecause("Remote page \" + host + \":\" + port + \"/\" + pageName + \" does not exist.\n");
                     }
                 } else {
                     return Maybe.nothingBecause("Page include failed because the page " + pageName + " does not exist.\n");
                 }
-            }
-            else if (isParentOf(includedPage))
-               return Maybe.nothingBecause( "Error! Cannot include parent page (" + pageName + ").\n");
+            } else if (isParentOf(includedPage))
+                return Maybe.nothingBecause("Error! Cannot include parent page (" + pageName + ").\n");
             else {
                 return new Maybe<SourcePage>(new WikiSourcePage(includedPage));
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -134,8 +133,7 @@ public class WikiSourcePage implements SourcePage {
                 ancestors.add(new WikiSourcePage(ancestor));
                 if (ancestor.getPageCrawler().isRoot(ancestor)) break;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -145,18 +143,17 @@ public class WikiSourcePage implements SourcePage {
     public Collection<SourcePage> getChildren() {
         ArrayList<SourcePage> children = new ArrayList<SourcePage>();
         try {
-            for (WikiPage child: page.getChildren()) {
+            for (WikiPage child : page.getChildren()) {
                 children.add(new WikiSourcePage(child));
             }
             if (page.hasExtension(VirtualCouplingExtension.NAME)) {
                 VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
                 WikiPage virtualCoupling = extension.getVirtualCoupling();
-                for (WikiPage child: virtualCoupling.getChildren()) {
+                for (WikiPage child : virtualCoupling.getChildren()) {
                     children.add(new WikiSourcePage(child));
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -166,8 +163,7 @@ public class WikiSourcePage implements SourcePage {
     public boolean hasProperty(String propertyKey) {
         try {
             return page.getData().getProperties().has(propertyKey);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -177,8 +173,7 @@ public class WikiSourcePage implements SourcePage {
         try {
             String propertyValue = page.getData().getAttribute(propertyKey);
             return propertyValue != null ? propertyValue.trim() : "";
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -186,7 +181,7 @@ public class WikiSourcePage implements SourcePage {
 
     public String makeUrl(String wikiWordPath) {
         if (!(page instanceof ProxyPage))
-            return makeFullPathOfTarget(wikiWordPath) ;
+            return makeFullPathOfTarget(wikiWordPath);
 
         ProxyPage proxy = (ProxyPage) page;
         String remoteURLOfPage = proxy.getThisPageUrl();
@@ -200,7 +195,7 @@ public class WikiSourcePage implements SourcePage {
         try {
             for (WikiPage candidate = page; candidate.getParent() != candidate; candidate = candidate.getParent()) {
                 if (possibleParent == candidate)
-                  return true;
+                    return true;
             }
             return false;
         } catch (Exception e) {

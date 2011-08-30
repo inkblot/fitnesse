@@ -10,114 +10,114 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GracefulNamer {
-  private static Pattern disgracefulNamePattern = Pattern
-    .compile("\\w(?:[.]|\\w)*[^.]");
+    private static Pattern disgracefulNamePattern = Pattern
+            .compile("\\w(?:[.]|\\w)*[^.]");
 
-  public static boolean isGracefulName(String fixtureName) {
-    Matcher matcher = disgracefulNamePattern.matcher(fixtureName);
-    return !matcher.matches();
-  }
-
-  public static String disgrace(String fixtureName) {
-    GracefulNamer namer = new GracefulNamer();
-
-    for (int i = 0; i < fixtureName.length(); i++) {
-      char c = fixtureName.charAt(i);
-      if (Character.isLetter(c))
-        namer.currentState.letter(c);
-      else if (Character.isDigit(c))
-        namer.currentState.digit(c);
-      else
-        namer.currentState.other(c);
+    public static boolean isGracefulName(String fixtureName) {
+        Matcher matcher = disgracefulNamePattern.matcher(fixtureName);
+        return !matcher.matches();
     }
 
-    return namer.finalName.toString();
-  }
+    public static String disgrace(String fixtureName) {
+        GracefulNamer namer = new GracefulNamer();
 
-  //todo OH FRATZ!  Graceful names was for java method and instance names, not wiki page names!  Get all this wiki page name stuff out of here.
-  public static String regrace(String disgracefulName) {
-    final char separator = '.';
-    char c = '?';
-    GracefulNamer namer = new GracefulNamer();
-    if (disgracefulName.length() > 0)
-      namer.finalName.append(c = disgracefulName.charAt(0));
+        for (int i = 0; i < fixtureName.length(); i++) {
+            char c = fixtureName.charAt(i);
+            if (Character.isLetter(c))
+                namer.currentState.letter(c);
+            else if (Character.isDigit(c))
+                namer.currentState.digit(c);
+            else
+                namer.currentState.other(c);
+        }
 
-    boolean isGrabbingDigits = false;
-    boolean wasSeparator = c == '.' || c == '<' || c == '>';
-    for (int i = 1; i < disgracefulName.length(); i++) {
-      c = disgracefulName.charAt(i);
-      if ((Character.isUpperCase(c))
-        || (Character.isDigit(c) && !isGrabbingDigits)
-        || (c == separator)
-        ) {
-        if (!wasSeparator) namer.finalName.append(" ");
-        wasSeparator = (c == separator);
-      }
-
-      isGrabbingDigits = (Character.isDigit(c));
-      namer.finalName.append(c);
+        return namer.finalName.toString();
     }
 
-    return namer.finalName.toString();
-  }
+    //todo OH FRATZ!  Graceful names was for java method and instance names, not wiki page names!  Get all this wiki page name stuff out of here.
+    public static String regrace(String disgracefulName) {
+        final char separator = '.';
+        char c = '?';
+        GracefulNamer namer = new GracefulNamer();
+        if (disgracefulName.length() > 0)
+            namer.finalName.append(c = disgracefulName.charAt(0));
 
-  private StringBuffer finalName = new StringBuffer();
+        boolean isGrabbingDigits = false;
+        boolean wasSeparator = c == '.' || c == '<' || c == '>';
+        for (int i = 1; i < disgracefulName.length(); i++) {
+            c = disgracefulName.charAt(i);
+            if ((Character.isUpperCase(c))
+                    || (Character.isDigit(c) && !isGrabbingDigits)
+                    || (c == separator)
+                    ) {
+                if (!wasSeparator) namer.finalName.append(" ");
+                wasSeparator = (c == separator);
+            }
 
-  private GracefulNameState currentState = new OutOfWordState();
+            isGrabbingDigits = (Character.isDigit(c));
+            namer.finalName.append(c);
+        }
 
-  private GracefulNamer() {
-  }
-
-  private interface GracefulNameState {
-    public void letter(char c);
-
-    public void digit(char c);
-
-    public void other(char c);
-  }
-
-  private class InWordState implements GracefulNameState {
-    public void letter(char c) {
-      finalName.append(c);
+        return namer.finalName.toString();
     }
 
-    public void digit(char c) {
-      finalName.append(c);
-      currentState = new InNumberState();
+    private StringBuffer finalName = new StringBuffer();
+
+    private GracefulNameState currentState = new OutOfWordState();
+
+    private GracefulNamer() {
     }
 
-    public void other(char c) {
-      currentState = new OutOfWordState();
-    }
-  }
+    private interface GracefulNameState {
+        public void letter(char c);
 
-  private class InNumberState implements GracefulNameState {
-    public void letter(char c) {
-      finalName.append(Character.toUpperCase(c));
-      currentState = new InWordState();
+        public void digit(char c);
+
+        public void other(char c);
     }
 
-    public void digit(char c) {
-      finalName.append(c);
+    private class InWordState implements GracefulNameState {
+        public void letter(char c) {
+            finalName.append(c);
+        }
+
+        public void digit(char c) {
+            finalName.append(c);
+            currentState = new InNumberState();
+        }
+
+        public void other(char c) {
+            currentState = new OutOfWordState();
+        }
     }
 
-    public void other(char c) {
-      currentState = new OutOfWordState();
-    }
-  }
+    private class InNumberState implements GracefulNameState {
+        public void letter(char c) {
+            finalName.append(Character.toUpperCase(c));
+            currentState = new InWordState();
+        }
 
-  private class OutOfWordState implements GracefulNameState {
-    public void letter(char c) {
-      finalName.append(Character.toUpperCase(c));
-      currentState = new InWordState();
+        public void digit(char c) {
+            finalName.append(c);
+        }
+
+        public void other(char c) {
+            currentState = new OutOfWordState();
+        }
     }
 
-    public void digit(char c) {
-      finalName.append(c);
-      currentState = new InNumberState();
-    }
+    private class OutOfWordState implements GracefulNameState {
+        public void letter(char c) {
+            finalName.append(Character.toUpperCase(c));
+            currentState = new InWordState();
+        }
 
-    public void other(char c) {
+        public void digit(char c) {
+            finalName.append(c);
+            currentState = new InNumberState();
+        }
+
+        public void other(char c) {
+        }
     }
-  }
 }

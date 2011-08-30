@@ -3,7 +3,7 @@ package util;
 import java.io.File;
 import java.io.IOException;
 
-public class DiskFileSystem implements FileSystem{
+public class DiskFileSystem implements FileSystem {
     public void makeFile(String path, String content) throws IOException {
         FileUtil.createFile(path, content);
     }

@@ -4,9 +4,7 @@ package fitnesse.html;
 
 import junit.framework.TestCase;
 
-import static util.RegexAssertions.assertHasRegexp;
-import static util.RegexAssertions.assertNotSubString;
-import static util.RegexAssertions.assertSubString;
+import static util.RegexAssertions.*;
 
 public class HtmlPageTest extends TestCase {
     private HtmlPage page;

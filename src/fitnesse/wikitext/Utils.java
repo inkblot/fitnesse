@@ -7,14 +7,14 @@ import java.io.StringWriter;
 
 public class Utils {
 
-  private static final String[] specialHtmlChars = new String[]{"&", "<", ">"};
-  private static final String[] specialHtmlEscapes = new String[]{"&amp;", "&lt;", "&gt;"};
-  private static final String[] specialWikiChars = new String[]{"!", "|", "$"};
-  private static final String[] specialWikiEscapes = new String[]{"&bang;", "&bar;", "&dollar;"};
+    private static final String[] specialHtmlChars = new String[]{"&", "<", ">"};
+    private static final String[] specialHtmlEscapes = new String[]{"&amp;", "&lt;", "&gt;"};
+    private static final String[] specialWikiChars = new String[]{"!", "|", "$"};
+    private static final String[] specialWikiEscapes = new String[]{"&bang;", "&bar;", "&dollar;"};
 
-  public static String escapeHTML(String value) {
-      return replaceStrings(value, specialHtmlChars, specialHtmlEscapes);
-  }
+    public static String escapeHTML(String value) {
+        return replaceStrings(value, specialHtmlChars, specialHtmlEscapes);
+    }
 
     private static String replaceStrings(String value, String[] originalStrings, String[] replacementStrings) {
         String result = value;
@@ -28,18 +28,18 @@ public class Utils {
         return replaceStrings(value, specialHtmlEscapes, specialHtmlChars);
     }
 
-  public static String unescapeWiki(String value) {
-      return replaceStrings(value, specialWikiEscapes, specialWikiChars);
-  }
+    public static String unescapeWiki(String value) {
+        return replaceStrings(value, specialWikiEscapes, specialWikiChars);
+    }
 
-  public static String escapeWiki(String value) {
-      return replaceStrings(value, specialWikiChars, specialWikiEscapes);
-  }
+    public static String escapeWiki(String value) {
+        return replaceStrings(value, specialWikiChars, specialWikiEscapes);
+    }
 
-  public static String getStackTrace(Throwable e) {
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter pw = new PrintWriter(stringWriter);
-    e.printStackTrace(pw);
-    return stringWriter.toString();
-  }
+    public static String getStackTrace(Throwable e) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter pw = new PrintWriter(stringWriter);
+        e.printStackTrace(pw);
+        return stringWriter.toString();
+    }
 }

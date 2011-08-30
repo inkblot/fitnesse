@@ -77,7 +77,7 @@ public class ParseSpecification {
     }
 
     private boolean contains(Iterable<SymbolType> terminators, Matchable currentType) {
-        for (SymbolType terminator: terminators)
+        for (SymbolType terminator : terminators)
             if (currentType.matchesFor(terminator)) return true;
         return false;
     }

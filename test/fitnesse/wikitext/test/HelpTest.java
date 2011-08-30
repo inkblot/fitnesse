@@ -5,13 +5,15 @@ import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
 public class HelpTest {
-    @Test public void parsesHelp() throws Exception {
+    @Test
+    public void parsesHelp() throws Exception {
         ParserTestHelper.assertParses("!help", "SymbolList[Help]");
         ParserTestHelper.assertParses("!help -editable", "SymbolList[Help]");
         ParserTestHelper.assertParses("!help -garbage", "SymbolList[Help, Whitespace, Text]");
     }
 
-    @Test public void translatesHelp() throws Exception {
+    @Test
+    public void translatesHelp() throws Exception {
         assertTranslates("help me", "!help", PageData.PropertyHELP);
         assertTranslates("", "!help", PageData.PropertySUITES);
         assertTranslates("help me <a href=\"TestHelp?properties\">(edit)</a>", "!help -editable", PageData.PropertyHELP);

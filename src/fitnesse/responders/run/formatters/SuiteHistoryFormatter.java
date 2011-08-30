@@ -6,7 +6,6 @@ import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-
 import util.TimeMeasurement;
 
 import java.io.Writer;

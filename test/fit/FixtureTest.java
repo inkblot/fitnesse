@@ -3,11 +3,11 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import junit.framework.TestCase;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
-
-import junit.framework.TestCase;
 
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;

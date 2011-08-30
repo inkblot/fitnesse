@@ -5,18 +5,18 @@ package eg;
 import fit.ColumnFixture;
 
 public class Division extends ColumnFixture {
-  public double numerator;
-  public double denominator;
+    public double numerator;
+    public double denominator;
 
-  public double quotient() {
-    return numerator / denominator;
-  }
+    public double quotient() {
+        return numerator / denominator;
+    }
 
-  public void setNumerator(double numerator) {
-    this.numerator = numerator;
-  }
+    public void setNumerator(double numerator) {
+        this.numerator = numerator;
+    }
 
-  public void setDenominator(double denominator) {
-    this.denominator = denominator;
-  }
+    public void setDenominator(double denominator) {
+        this.denominator = denominator;
+    }
 }

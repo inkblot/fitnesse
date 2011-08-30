@@ -7,18 +7,16 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
-
-import static junit.framework.Assert.assertEquals;
-
 import org.json.JSONArray;
 import org.junit.Before;
 import org.junit.Test;
 
-import static util.RegexAssertions.assertDoesNotHaveRegexp;
-import static util.RegexAssertions.assertHasRegexp;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import static junit.framework.Assert.assertEquals;
+import static util.RegexAssertions.assertDoesNotHaveRegexp;
+import static util.RegexAssertions.assertHasRegexp;
 
 public class NameWikiPageResponderTest {
     private WikiPage root;

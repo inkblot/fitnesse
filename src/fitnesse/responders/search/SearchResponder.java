@@ -2,12 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import static java.util.regex.Pattern.*;
+import fitnesse.components.RegularExpressionWikiPageFinder;
+import fitnesse.components.TitleWikiPageFinder;
 
 import java.util.regex.Pattern;
 
-import fitnesse.components.RegularExpressionWikiPageFinder;
-import fitnesse.components.TitleWikiPageFinder;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.LITERAL;
 
 public class SearchResponder extends ResultResponder {
 

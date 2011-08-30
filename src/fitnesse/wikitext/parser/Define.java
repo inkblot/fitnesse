@@ -2,7 +2,6 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import util.Maybe;
-import java.util.List;
 
 public class Define extends SymbolType implements Rule, Translation {
     public Define() {
@@ -11,7 +10,7 @@ public class Define extends SymbolType implements Rule, Translation {
         wikiRule(this);
         htmlTranslation(this);
     }
-    
+
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         if (!parser.isMoveNext(SymbolType.Whitespace)) return Symbol.nothing;
 

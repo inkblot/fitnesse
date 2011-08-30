@@ -7,47 +7,46 @@ import fitnesse.Responder;
 import fitnesse.http.Request;
 
 public abstract class Authenticator {
-  public Authenticator() {
-  }
-
-  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
-    request.getCredentials();
-    String username = request.getAuthorizationUsername();
-    String password = request.getAuthorizationPassword();
-
-    if (isAuthenticated(username, password))
-      return privilegedResponder;
-    else if (!isSecureResponder(privilegedResponder))
-      return privilegedResponder;
-    else
-      return verifyOperationIsSecure(privilegedResponder, context, request);
-  }
-
-  private Responder verifyOperationIsSecure(Responder privilegedResponder, FitNesseContext context, Request request) {
-    SecureOperation so = ((SecureResponder) privilegedResponder).getSecureOperation();
-    try {
-      if (so.shouldAuthenticate(context, request))
-        return unauthorizedResponder(context, request);
-      else
-        return privilegedResponder;
+    public Authenticator() {
     }
-    catch (Exception e) {
-      e.printStackTrace();
-      return unauthorizedResponder(context, request);
+
+    public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
+        request.getCredentials();
+        String username = request.getAuthorizationUsername();
+        String password = request.getAuthorizationPassword();
+
+        if (isAuthenticated(username, password))
+            return privilegedResponder;
+        else if (!isSecureResponder(privilegedResponder))
+            return privilegedResponder;
+        else
+            return verifyOperationIsSecure(privilegedResponder, context, request);
     }
-  }
 
-  protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
-    return new UnauthorizedResponder();
-  }
+    private Responder verifyOperationIsSecure(Responder privilegedResponder, FitNesseContext context, Request request) {
+        SecureOperation so = ((SecureResponder) privilegedResponder).getSecureOperation();
+        try {
+            if (so.shouldAuthenticate(context, request))
+                return unauthorizedResponder(context, request);
+            else
+                return privilegedResponder;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return unauthorizedResponder(context, request);
+        }
+    }
 
-  private boolean isSecureResponder(Responder privilegedResponder) {
-    return (privilegedResponder instanceof SecureResponder);
-  }
+    protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
+        return new UnauthorizedResponder();
+    }
 
-  public abstract boolean isAuthenticated(String username, String password) throws Exception;
+    private boolean isSecureResponder(Responder privilegedResponder) {
+        return (privilegedResponder instanceof SecureResponder);
+    }
 
-  public String toString() {
-    return getClass().getName();
-  }
+    public abstract boolean isAuthenticated(String username, String password) throws Exception;
+
+    public String toString() {
+        return getClass().getName();
+    }
 }

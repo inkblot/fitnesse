@@ -7,27 +7,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SocketDealer {
-  private Map<Integer, SocketSeeker> waitingList = new HashMap<Integer, SocketSeeker>(17);
-  private int ticketCounter = 1;
+    private Map<Integer, SocketSeeker> waitingList = new HashMap<Integer, SocketSeeker>(17);
+    private int ticketCounter = 1;
 
-  public int seekingSocket(SocketSeeker seeker) {
-    int ticket = ticketCounter++;
-    waitingList.put(new Integer(ticket), seeker);
-    return ticket;
-  }
+    public int seekingSocket(SocketSeeker seeker) {
+        int ticket = ticketCounter++;
+        waitingList.put(new Integer(ticket), seeker);
+        return ticket;
+    }
 
-  public Collection<SocketSeeker> getWaitingList() {
-    return waitingList.values();
-  }
+    public Collection<SocketSeeker> getWaitingList() {
+        return waitingList.values();
+    }
 
-  public void dealSocketTo(int ticket, SocketDoner doner) throws Exception {
-    Integer key = new Integer(ticket);
-    SocketSeeker seeker = waitingList.get(key);
-    seeker.acceptSocketFrom(doner);
-    waitingList.remove(key);
-  }
+    public void dealSocketTo(int ticket, SocketDoner doner) throws Exception {
+        Integer key = new Integer(ticket);
+        SocketSeeker seeker = waitingList.get(key);
+        seeker.acceptSocketFrom(doner);
+        waitingList.remove(key);
+    }
 
-  public boolean isWaiting(int ticket) {
-    return waitingList.containsKey(new Integer(ticket));
-  }
+    public boolean isWaiting(int ticket) {
+        return waitingList.containsKey(new Integer(ticket));
+    }
 }

@@ -2,16 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.tools;
 
-import static org.junit.Assert.assertEquals;
-import static util.RegexAssertions.assertMatches;
-
-import java.io.File;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import util.FileUtil;
+
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static util.RegexAssertions.assertMatches;
 
 public class LicenseManagerTest {
     private final String dir = "toolsTempTestDirectory";

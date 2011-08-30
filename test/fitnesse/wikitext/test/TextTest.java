@@ -3,11 +3,13 @@ package fitnesse.wikitext.test;
 import org.junit.Test;
 
 public class TextTest {
-    @Test public void scansTextAsWords() {
+    @Test
+    public void scansTextAsWords() {
         ParserTestHelper.assertScans("hi mom", "Text=hi,Whitespace= ,Text=mom");
     }
 
-    @Test public void translatesText() {
+    @Test
+    public void translatesText() {
         ParserTestHelper.assertTranslatesTo("hi mom", "hi mom");
         ParserTestHelper.assertTranslatesTo("Hi MOM", "Hi MOM");
         ParserTestHelper.assertTranslatesTo("Hi+Mom", "Hi+Mom");

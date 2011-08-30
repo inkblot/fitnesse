@@ -2,16 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import java.io.File;
-
-import fitnesse.FitnesseBaseTestCase;
-import org.junit.Before;
-import org.junit.Test;
-import util.FileUtil;
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.UploadedFile;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
+
+import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -11,77 +11,77 @@ import java.util.regex.Pattern;
 
 public class FileUpdate implements Update {
 
-  protected String destination;
-  protected String source;
-  protected File destinationDir;
-  protected String rootDir;
-  protected String filename;
+    protected String destination;
+    protected String source;
+    protected File destinationDir;
+    protected String rootDir;
+    protected String filename;
 
-  public FileUpdate(String rootDirectory, String source, String destination) throws Exception {
-    this.destination = destination;
-    this.source = source;
-    rootDir = rootDirectory;
-    destinationDir = new File(new File(rootDir), destination);
+    public FileUpdate(String rootDirectory, String source, String destination) throws Exception {
+        this.destination = destination;
+        this.source = source;
+        rootDir = rootDirectory;
+        destinationDir = new File(new File(rootDir), destination);
 
-    filename = new File(source).getName();
-  }
-
-  public void doUpdate() throws Exception {
-    makeSureDirectoriesExist();
-    copyResource();
-  }
-
-  private void makeSureDirectoriesExist() {
-    String[] subDirectories = destination.split(Pattern.quote(File.separator));
-    String currentDirPath = rootDir;
-
-    for (int i = 0; i < subDirectories.length; i++) {
-      String subDirectory = subDirectories[i];
-      currentDirPath = currentDirPath + File.separator + subDirectory;
-      File directory = new File(currentDirPath);
-      directory.mkdir();
+        filename = new File(source).getName();
     }
-  }
 
-  private void copyResource() throws Exception {
-    URL url = getResource(source);
-    if (url != null) {
-      InputStream input = null;
-      OutputStream output = null;
-      try {
-        input = url.openStream();
-        output = new FileOutputStream(destinationFile());
+    public void doUpdate() throws Exception {
+        makeSureDirectoriesExist();
+        copyResource();
+    }
 
-        int b;
-        while ((b = input.read()) != -1)
-          output.write(b);
-      } finally {
-        if (input != null)
-          input.close();
-        if (output != null)
-          output.close();
-      }
-    } else
-      throw new Exception("Could not load resource: " + source);
-  }
+    private void makeSureDirectoriesExist() {
+        String[] subDirectories = destination.split(Pattern.quote(File.separator));
+        String currentDirPath = rootDir;
 
-  protected URL getResource(String resource) {
-    return ClassLoader.getSystemResource(resource);
-  }
+        for (int i = 0; i < subDirectories.length; i++) {
+            String subDirectory = subDirectories[i];
+            currentDirPath = currentDirPath + File.separator + subDirectory;
+            File directory = new File(currentDirPath);
+            directory.mkdir();
+        }
+    }
 
-  public String getMessage() {
-    return ".";
-  }
+    private void copyResource() throws Exception {
+        URL url = getResource(source);
+        if (url != null) {
+            InputStream input = null;
+            OutputStream output = null;
+            try {
+                input = url.openStream();
+                output = new FileOutputStream(destinationFile());
 
-  protected File destinationFile() {
-    return new File(destinationDir, filename);
-  }
+                int b;
+                while ((b = input.read()) != -1)
+                    output.write(b);
+            } finally {
+                if (input != null)
+                    input.close();
+                if (output != null)
+                    output.close();
+            }
+        } else
+            throw new Exception("Could not load resource: " + source);
+    }
 
-  public String getName() {
-    return "FileUpdate(" + filename + ")";
-  }
+    protected URL getResource(String resource) {
+        return ClassLoader.getSystemResource(resource);
+    }
 
-  public boolean shouldBeApplied() throws Exception {
-    return !destinationFile().exists();
-  }
+    public String getMessage() {
+        return ".";
+    }
+
+    protected File destinationFile() {
+        return new File(destinationDir, filename);
+    }
+
+    public String getName() {
+        return "FileUpdate(" + filename + ")";
+    }
+
+    public boolean shouldBeApplied() throws Exception {
+        return !destinationFile().exists();
+    }
 }

@@ -2,22 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.*;
+import junit.framework.TestCase;
+import org.w3c.dom.Document;
+import util.Clock;
+import util.XmlUtil;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
-import junit.framework.TestCase;
-import org.w3c.dom.Document;
-
-import util.Clock;
-import util.XmlUtil;
-import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 import static util.RegexAssertions.assertSubString;
 

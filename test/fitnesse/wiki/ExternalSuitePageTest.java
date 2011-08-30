@@ -1,9 +1,10 @@
 package fitnesse.wiki;
 
-import util.FileSystem;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import util.FileSystem;
 import util.MemoryFileSystem;
+
+import static org.junit.Assert.assertEquals;
 
 public class ExternalSuitePageTest {
     @Test

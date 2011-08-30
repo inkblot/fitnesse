@@ -2,11 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import java.io.StringWriter;
-
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -17,6 +12,10 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+
+import java.io.StringWriter;
 
 public class RefactorPageResponder implements SecureResponder {
 

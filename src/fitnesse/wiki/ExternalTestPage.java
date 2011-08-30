@@ -12,7 +12,7 @@ public class ExternalTestPage extends CachingPage {
         this.path = path;
         this.fileSystem = fileSystem;
     }
-    
+
     @Override
     protected VersionInfo makeVersion() throws Exception {
         return null;
@@ -53,6 +53,6 @@ public class ExternalTestPage extends CachingPage {
     }
 
     public PageData getDataVersion(String versionName) throws Exception {
-        return null;  
+        return null;
     }
 }

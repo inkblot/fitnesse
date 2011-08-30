@@ -13,7 +13,9 @@ public class ExternalSuitePage extends CachingPage {
         this.fileSystem = fileSystem;
     }
 
-    public String getFileSystemPath() { return path; }
+    public String getFileSystemPath() {
+        return path;
+    }
 
     public boolean hasChildPage(String pageName) throws Exception {
         return false;
@@ -28,7 +30,7 @@ public class ExternalSuitePage extends CachingPage {
     }
 
     protected void loadChildren() throws Exception {
-        for (WikiPage child: new PageRepository(fileSystem).findChildren(this)) {
+        for (WikiPage child : new PageRepository(fileSystem).findChildren(this)) {
             if (!children.containsKey(child.getName())) {
                 children.put(child.getName(), child);
             }
@@ -51,6 +53,6 @@ public class ExternalSuitePage extends CachingPage {
     }
 
     protected void doCommit(PageData data) throws Exception {
-        
+
     }
 }

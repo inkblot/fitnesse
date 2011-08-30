@@ -1,29 +1,25 @@
 package fitnesse.responders.search;
 
-import static fitnesse.wiki.PageData.*;
-import static fitnesse.wiki.PageType.*;
-import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.*;
-import static util.RegexAssertions.assertHasRegexp;
-import static util.RegexAssertions.assertSubString;
+import fitnesse.FitNesseContext;
+import fitnesse.http.MockRequest;
+import fitnesse.http.MockResponseSender;
+import fitnesse.http.Response;
+import fitnesse.wiki.*;
+import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-import org.junit.*;
-
-import fitnesse.FitNesseContext;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.http.Response;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PageType;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.ACTION;
+import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.SPECIAL;
+import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
+import static fitnesse.wiki.PageData.PropertyPRUNE;
+import static fitnesse.wiki.PageType.*;
+import static util.RegexAssertions.assertHasRegexp;
+import static util.RegexAssertions.assertSubString;
 
 public class ExecuteSearchPropertiesResponderTest extends TestCase {
     private WikiPage root;

@@ -2,17 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.TestCase;
-import util.TimeMeasurement;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.testutil.MockSocket;
 import fitnesse.testutil.SimpleSocketDoner;
+import junit.framework.TestCase;
+import util.TimeMeasurement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static util.RegexAssertions.assertSubString;
 

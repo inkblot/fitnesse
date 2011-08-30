@@ -2,15 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import fitnesse.wiki.*;
 import junit.framework.TestCase;
 import util.FileUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.MockingPageCrawler;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
 
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;

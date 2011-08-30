@@ -3,8 +3,8 @@
 package fitnesse.wikitext.widgets;
 
 public class MockWidget extends TextWidget {
-  public MockWidget(ParentWidget parent, String text) {
-    super(parent, text);
-  }
+    public MockWidget(ParentWidget parent, String text) {
+        super(parent, text);
+    }
 }
 

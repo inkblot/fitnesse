@@ -6,9 +6,7 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WidgetBuilder;
 
-import static util.RegexAssertions.assertHasRegexp;
-import static util.RegexAssertions.assertNotSubString;
-import static util.RegexAssertions.assertSubString;
+import static util.RegexAssertions.*;
 
 public class IncludeWidgetTest extends WidgetTestCase {
 

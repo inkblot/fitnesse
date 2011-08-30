@@ -5,12 +5,12 @@ package fitnesse.html;
 import junit.framework.TestCase;
 
 public class ChunkedResultsListingUtilTest extends TestCase {
-  public void testOpeningTag() {
-    assertEquals("<table id=\"myTable\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" class=\"dirListing\">", ChunkedResultsListingUtil.getTableOpenHtml("myTable"));
-  }
+    public void testOpeningTag() {
+        assertEquals("<table id=\"myTable\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" class=\"dirListing\">", ChunkedResultsListingUtil.getTableOpenHtml("myTable"));
+    }
 
-  public void testClosingTag() {
-    assertEquals("</table>", ChunkedResultsListingUtil.getTableCloseHtml());
-  }
+    public void testClosingTag() {
+        assertEquals("</table>", ChunkedResultsListingUtil.getTableCloseHtml());
+    }
 
 }

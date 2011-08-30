@@ -21,7 +21,7 @@ public class WikiSourcePageTest {
         root.makePage(page, "PageThree");
         WikiSourcePage source = new WikiSourcePage(page);
         ArrayList<String> names = new ArrayList<String>();
-        for (SourcePage child: source.getChildren()) names.add(child.getName());
+        for (SourcePage child : source.getChildren()) names.add(child.getName());
 
         assertEquals(2, names.size());
         assertTrue(names.contains("PageTwo"));
@@ -40,7 +40,7 @@ public class WikiSourcePageTest {
 
         WikiSourcePage source = new WikiSourcePage(virtualPage);
         ArrayList<String> names = new ArrayList<String>();
-        for (SourcePage child: source.getChildren()) names.add(child.getName());
+        for (SourcePage child : source.getChildren()) names.add(child.getName());
 
         assertEquals(2, names.size());
         assertTrue(names.contains("PageTwo"));
@@ -49,13 +49,14 @@ public class WikiSourcePageTest {
 
     private class MockVirtualCouplingPage extends VirtualCouplingPage {
         private WikiPage mockVirtualPage;
+
         public MockVirtualCouplingPage(WikiPage mockVirtualPage) {
             super(mockVirtualPage);
             this.mockVirtualPage = mockVirtualPage;
         }
 
         public List<WikiPage> getChildren() throws Exception {
-          return mockVirtualPage.getChildren();
+            return mockVirtualPage.getChildren();
         }
     }
 

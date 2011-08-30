@@ -5,96 +5,96 @@ package fitnesse.http;
 import java.nio.ByteBuffer;
 
 public class ChunkedResponse extends Response {
-  private ResponseSender sender;
-  private int bytesSent = 0;
-  private boolean isReadyToSend = false;
-  private boolean dontChunk = false;
+    private ResponseSender sender;
+    private int bytesSent = 0;
+    private boolean isReadyToSend = false;
+    private boolean dontChunk = false;
 
-  public ChunkedResponse(String format) {
-    super(format);
-    if (isTextFormat())
-      dontChunk = true;
-  }
-
-  public void readyToSend(ResponseSender sender) throws Exception {
-    this.sender = sender;
-    addStandardHeaders();
-    sender.send(makeHttpHeaders().getBytes());
-    setReadyToSend(true);
-    synchronized (this) {
-      notifyAll();
-      Thread.yield();
+    public ChunkedResponse(String format) {
+        super(format);
+        if (isTextFormat())
+            dontChunk = true;
     }
-  }
 
-  public synchronized boolean isReadyToSend() {
-    return isReadyToSend;
-  }
-
-  protected void addSpecificHeaders() {
-    if (!dontChunk)
-      addHeader("Transfer-Encoding", "chunked");
-  }
-
-  public static String asHex(int value) {
-    return Integer.toHexString(value);
-  }
-
-  public void add(String text) throws Exception {
-    if (text != null)
-      add(getEncodedBytes(text));
-  }
-
-  public void add(byte[] bytes) throws Exception {
-    if (bytes == null || bytes.length == 0)
-      return;
-    if (dontChunk) {
-      sender.send(bytes);
-    } else {
-      String sizeLine = asHex(bytes.length) + CRLF;
-      ByteBuffer chunk = ByteBuffer.allocate(sizeLine.length() + bytes.length + 2);
-      chunk.put(sizeLine.getBytes()).put(bytes).put(CRLF.getBytes());
-      sender.send(chunk.array());
+    public void readyToSend(ResponseSender sender) throws Exception {
+        this.sender = sender;
+        addStandardHeaders();
+        sender.send(makeHttpHeaders().getBytes());
+        setReadyToSend(true);
+        synchronized (this) {
+            notifyAll();
+            Thread.yield();
+        }
     }
-    bytesSent += bytes.length;
-  }
 
-  public void addTrailingHeader(String key, String value) throws Exception {
-    String header = key + ": " + value + CRLF;
-    sender.send(header.getBytes());
-  }
+    public synchronized boolean isReadyToSend() {
+        return isReadyToSend;
+    }
 
-  public void closeChunks() throws Exception {
-    sender.send(("0" + CRLF).getBytes());
-  }
+    protected void addSpecificHeaders() {
+        if (!dontChunk)
+            addHeader("Transfer-Encoding", "chunked");
+    }
 
-  public void closeTrailer() throws Exception {
-    sender.send(CRLF.getBytes());
-  }
+    public static String asHex(int value) {
+        return Integer.toHexString(value);
+    }
 
-  public void close() throws Exception {
-    sender.close();
-  }
+    public void add(String text) throws Exception {
+        if (text != null)
+            add(getEncodedBytes(text));
+    }
 
-  public void closeAll() throws Exception {
-    closeChunks();
-    closeTrailer();
-    close();
-  }
+    public void add(byte[] bytes) throws Exception {
+        if (bytes == null || bytes.length == 0)
+            return;
+        if (dontChunk) {
+            sender.send(bytes);
+        } else {
+            String sizeLine = asHex(bytes.length) + CRLF;
+            ByteBuffer chunk = ByteBuffer.allocate(sizeLine.length() + bytes.length + 2);
+            chunk.put(sizeLine.getBytes()).put(bytes).put(CRLF.getBytes());
+            sender.send(chunk.array());
+        }
+        bytesSent += bytes.length;
+    }
 
-  public int getContentSize() {
-    return bytesSent;
-  }
+    public void addTrailingHeader(String key, String value) throws Exception {
+        String header = key + ": " + value + CRLF;
+        sender.send(header.getBytes());
+    }
 
-  private synchronized void setReadyToSend(boolean isReadyToSend) {
-    this.isReadyToSend = isReadyToSend;
-  }
+    public void closeChunks() throws Exception {
+        sender.send(("0" + CRLF).getBytes());
+    }
 
-  public void turnOffChunking() {
-    dontChunk = true;
-  }
+    public void closeTrailer() throws Exception {
+        sender.send(CRLF.getBytes());
+    }
 
-  public boolean isChunkingTurnedOff() {
-    return dontChunk;
-  }
+    public void close() throws Exception {
+        sender.close();
+    }
+
+    public void closeAll() throws Exception {
+        closeChunks();
+        closeTrailer();
+        close();
+    }
+
+    public int getContentSize() {
+        return bytesSent;
+    }
+
+    private synchronized void setReadyToSend(boolean isReadyToSend) {
+        this.isReadyToSend = isReadyToSend;
+    }
+
+    public void turnOffChunking() {
+        dontChunk = true;
+    }
+
+    public boolean isChunkingTurnedOff() {
+        return dontChunk;
+    }
 }

@@ -1,7 +1,7 @@
 package fit.decorator.util;
 
 public interface Timer {
-  long elapsed();
+    long elapsed();
 
-  void start();
+    void start();
 }

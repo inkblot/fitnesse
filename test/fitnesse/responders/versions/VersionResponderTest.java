@@ -2,20 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
-import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VersionInfo;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
+import junit.framework.TestCase;
 
-import static util.RegexAssertions.assertDoesNotHaveRegexp;
-import static util.RegexAssertions.assertHasRegexp;
-import static util.RegexAssertions.assertSubString;
+import static util.RegexAssertions.*;
 
 public class VersionResponderTest extends TestCase {
     private String oldVersion;

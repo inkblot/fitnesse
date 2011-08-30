@@ -10,12 +10,14 @@ public class SeeTest {
         ParserTestHelper.assertScansTokenType("!seeStuff", "See", false);
     }
 
-    @Test public void parsesSees() throws Exception {
+    @Test
+    public void parsesSees() throws Exception {
         ParserTestHelper.assertParses("!see SomeStuff", "SymbolList[See[WikiWord]]");
         ParserTestHelper.assertParses("!see ya", "SymbolList[Text, Whitespace, Text]");
     }
 
-    @Test public void translatesSees() throws Exception{
+    @Test
+    public void translatesSees() throws Exception {
         TestRoot root = new TestRoot();
         WikiPage page = root.makePage("PageOne", "!see PageTwo");
         root.makePage("PageTwo", "hi");

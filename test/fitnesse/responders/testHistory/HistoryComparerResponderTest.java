@@ -1,24 +1,21 @@
 package fitnesse.responders.testHistory;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static util.RegexAssertions.assertHasRegexp;
-
-import java.io.File;
-import java.util.ArrayList;
-
-import fitnesse.FitnesseBaseTestCase;
-import org.junit.Before;
-import org.junit.Test;
-
-import util.FileUtil;
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
+import org.junit.Before;
+import org.junit.Test;
+import util.FileUtil;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+import static util.RegexAssertions.assertHasRegexp;
 
 public class HistoryComparerResponderTest extends FitnesseBaseTestCase {
     public HistoryComparerResponder responder;

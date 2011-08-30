@@ -17,61 +17,61 @@ This responder is a test rig for SlimTestSystemTest, which makes sure that the S
 responders in general.
 */
 public abstract class SlimResponder extends WikiPageResponder implements TestSystemListener {
-  private boolean slimOpen = false;
-  ExecutionLog log;
-  private boolean fastTest = false;
-  SlimTestSystem testSystem;
+    private boolean slimOpen = false;
+    ExecutionLog log;
+    private boolean fastTest = false;
+    SlimTestSystem testSystem;
 
 
-  protected String generateHtml(PageData pageData) throws Exception {
-    testSystem = getTestSystem(pageData);
-    String classPath = new ClassPathBuilder().getClasspath(page);
-    TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), false);
-    descriptor.testRunner = "fitnesse.slim.SlimService";
-    log = testSystem.getExecutionLog(classPath, descriptor);
-    testSystem.start();
-    testSystem.setFastTest(fastTest);
-    String html = testSystem.runTestsAndGenerateHtml(pageData);
-    testSystem.bye();
-    Thread.sleep(20);
-    return html;
-  }
+    protected String generateHtml(PageData pageData) throws Exception {
+        testSystem = getTestSystem(pageData);
+        String classPath = new ClassPathBuilder().getClasspath(page);
+        TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), false);
+        descriptor.testRunner = "fitnesse.slim.SlimService";
+        log = testSystem.getExecutionLog(classPath, descriptor);
+        testSystem.start();
+        testSystem.setFastTest(fastTest);
+        String html = testSystem.runTestsAndGenerateHtml(pageData);
+        testSystem.bye();
+        Thread.sleep(20);
+        return html;
+    }
 
-  protected abstract SlimTestSystem getTestSystem(PageData pageData);
+    protected abstract SlimTestSystem getTestSystem(PageData pageData);
 
-  public SecureOperation getSecureOperation() {
-    return new SecureTestOperation();
-  }
+    public SecureOperation getSecureOperation() {
+        return new SecureTestOperation();
+    }
 
-  boolean slimOpen() {
-    return slimOpen;
-  }
+    boolean slimOpen() {
+        return slimOpen;
+    }
 
-  public PageData getTestResults() {
-    return testSystem.getTestResults();
-  }
+    public PageData getTestResults() {
+        return testSystem.getTestResults();
+    }
 
-  public TestSummary getTestSummary() {
-    return testSystem.getTestSummary();
-  }
+    public TestSummary getTestSummary() {
+        return testSystem.getTestSummary();
+    }
 
-  protected void setFastTest(boolean fastTest) {
-    this.fastTest = fastTest;
-  }
+    protected void setFastTest(boolean fastTest) {
+        this.fastTest = fastTest;
+    }
 
-  public void acceptOutputFirst(String output) throws Exception {
-  }
+    public void acceptOutputFirst(String output) throws Exception {
+    }
 
-  public void testComplete(TestSummary testSummary) throws Exception {
-  }
+    public void testComplete(TestSummary testSummary) throws Exception {
+    }
 
-  public void exceptionOccurred(Throwable e) {
-    //todo remove sout
-    System.err.println("SlimResponder.exceptionOcurred:" + e.getMessage());
-  }
+    public void exceptionOccurred(Throwable e) {
+        //todo remove sout
+        System.err.println("SlimResponder.exceptionOcurred:" + e.getMessage());
+    }
 
-  public String getCommandLine() {
-    return testSystem.getCommandLine();
-  }
+    public String getCommandLine() {
+        return testSystem.getCommandLine();
+    }
 }
 

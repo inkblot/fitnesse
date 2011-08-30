@@ -2,28 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim.test;
 
-import static util.ListUtility.list;
-
 import java.util.List;
 
+import static util.ListUtility.list;
+
 public class TestTable {
-  private String param = "";
+    private String param = "";
 
-  public TestTable(String x) {
-    param = x;
-  }
+    public TestTable(String x) {
+        param = x;
+    }
 
-  public TestTable() {
-  }
+    public TestTable() {
+    }
 
-  @SuppressWarnings("unchecked")
-  public List<?> doTable(List<?> l) {
-    List<String> row0 = (List<String>) l.get(0);
-    String firstCell = row0.get(0);
-    return list(
-      list("pass", "error:huh", param),
-      list("bill", "no change", "pass:jake"),
-      list("pass:<img src=http://localhost:8080/files/images/stop.gif/>", "pass:"+firstCell)
-    );
-  }
+    @SuppressWarnings("unchecked")
+    public List<?> doTable(List<?> l) {
+        List<String> row0 = (List<String>) l.get(0);
+        String firstCell = row0.get(0);
+        return list(
+                list("pass", "error:huh", param),
+                list("bill", "no change", "pass:jake"),
+                list("pass:<img src=http://localhost:8080/files/images/stop.gif/>", "pass:" + firstCell)
+        );
+    }
 }

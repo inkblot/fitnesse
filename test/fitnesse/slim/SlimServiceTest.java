@@ -4,20 +4,20 @@ package fitnesse.slim;
 
 public class SlimServiceTest extends SlimServiceTestBase {
 
-  protected String getImport() {
-    return "fitnesse.slim.test";
-  }
+    protected String getImport() {
+        return "fitnesse.slim.test";
+    }
 
-  protected void startSlimService() throws Exception {
-    SlimService.main(new String[] { "8099" });
-  }
+    protected void startSlimService() throws Exception {
+        SlimService.main(new String[]{"8099"});
+    }
 
-  protected String expectedExceptionMessage() {
-    return "java.lang.Exception: This is my exception";
-  }
+    protected String expectedExceptionMessage() {
+        return "java.lang.Exception: This is my exception";
+    }
 
-  protected String expectedStopTestExceptionMessage() {
-    return "ABORT_SLIM_TEST:fitnesse.slim.test.TestSlim$StopTestException: This is a stop test exception";
-  }
+    protected String expectedStopTestExceptionMessage() {
+        return "ABORT_SLIM_TEST:fitnesse.slim.test.TestSlim$StopTestException: This is a stop test exception";
+    }
 
 }

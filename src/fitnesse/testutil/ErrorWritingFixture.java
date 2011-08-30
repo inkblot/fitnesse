@@ -6,10 +6,10 @@ import fit.Fixture;
 import fit.Parse;
 
 public class ErrorWritingFixture extends Fixture {
-  public void doTable(Parse parse) {
-    Parse cell = parse.parts.more.parts;
-    String value = cell.text();
-    System.err.println(value);
-    right(cell);
-  }
+    public void doTable(Parse parse) {
+        Parse cell = parse.parts.more.parts;
+        String value = cell.text();
+        System.err.println(value);
+        right(cell);
+    }
 }

@@ -15,22 +15,22 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class RawContentResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    String resource = request.getResource();
-    WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
-    if (page == null)
-      return new NotFoundResponder().makeResponse(context, request);
-    PageData pageData = page.getData();
+    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+        String resource = request.getResource();
+        WikiPagePath path = PathParser.parse(resource);
+        WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+        if (page == null)
+            return new NotFoundResponder().makeResponse(context, request);
+        PageData pageData = page.getData();
 
-    SimpleResponse response = new SimpleResponse();
-    response.setMaxAge(0);
-    response.setContent(pageData.getContent());
+        SimpleResponse response = new SimpleResponse();
+        response.setMaxAge(0);
+        response.setContent(pageData.getContent());
 
-    return response;
-  }
+        return response;
+    }
 
-  public SecureOperation getSecureOperation() {
-    return new SecureReadOperation();
-  }
+    public SecureOperation getSecureOperation() {
+        return new SecureReadOperation();
+    }
 }

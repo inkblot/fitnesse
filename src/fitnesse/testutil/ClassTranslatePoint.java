@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import java.awt.Point;
-
 import fit.TypeAdapter;
 import fit.decorator.util.ClassDelegatePointParser;
 
+import java.awt.*;
+
 public class ClassTranslatePoint extends TranslatePoint {
-  static {
-    TypeAdapter.registerParseDelegate(Point.class, ClassDelegatePointParser.class);
-  }
+    static {
+        TypeAdapter.registerParseDelegate(Point.class, ClassDelegatePointParser.class);
+    }
 }

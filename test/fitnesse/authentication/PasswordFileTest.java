@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import java.io.File;
-
 import junit.framework.TestCase;
 import util.FileUtil;
+
+import java.io.File;
 
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;

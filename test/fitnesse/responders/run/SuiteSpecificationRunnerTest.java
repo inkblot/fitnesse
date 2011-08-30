@@ -4,11 +4,10 @@ import fitnesse.http.MockRequest;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.wiki.*;
-
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 //Proper table format:
 //|suite|

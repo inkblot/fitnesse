@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import java.io.InputStream;
-
-import junit.framework.TestCase;
-import util.StreamReader;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
+import junit.framework.TestCase;
+import util.StreamReader;
+
+import java.io.InputStream;
 
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;

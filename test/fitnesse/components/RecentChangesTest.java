@@ -2,12 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import java.util.List;
-
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import junit.framework.TestCase;
+
+import java.util.List;
 
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;

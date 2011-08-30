@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import java.awt.Point;
-
 import fit.decorator.util.ClassDelegatePointParser;
 
+import java.awt.*;
+
 public class ObjectDelegatePointParser {
-  public Point parse(String s) {
-    // format = (xxxx,yyyyy)
-    return ClassDelegatePointParser.parse(s);
-  }
+    public Point parse(String s) {
+        // format = (xxxx,yyyyy)
+        return ClassDelegatePointParser.parse(s);
+    }
 
 }

@@ -2,15 +2,14 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
-import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport;
+import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-
 import util.TimeMeasurement;
 
 import java.io.Writer;

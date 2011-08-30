@@ -6,45 +6,45 @@ import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.WikiWidget;
 
 public class TextWidget extends WikiWidget implements WidgetWithTextArgument {
-  private String text;
+    private String text;
 
-  public TextWidget(ParentWidget parent) {
-    super(parent);
-  }
+    public TextWidget(ParentWidget parent) {
+        super(parent);
+    }
 
-  public TextWidget(ParentWidget parent, String text) {
-    super(parent);
-    this.setText(text);
-  }
+    public TextWidget(ParentWidget parent, String text) {
+        super(parent);
+        this.setText(text);
+    }
 
-  public String getText() {
-    return Utils.unescapeWiki(text);
-  }
+    public String getText() {
+        return Utils.unescapeWiki(text);
+    }
 
-  public void setText(String newText) {
-    text = newText;
-  }
+    public void setText(String newText) {
+        text = newText;
+    }
 
-  public String render() throws Exception {
-    String html = getText();
-    if (parent.doEscaping())
-      html = Utils.escapeHTML(html);
-    html = html.replaceAll("\r\n", "\n");
-    html = html.replaceAll("\r", "\n");
-    html = html.replaceAll("\n", "<br/>");
+    public String render() throws Exception {
+        String html = getText();
+        if (parent.doEscaping())
+            html = Utils.escapeHTML(html);
+        html = html.replaceAll("\r\n", "\n");
+        html = html.replaceAll("\r", "\n");
+        html = html.replaceAll("\n", "<br/>");
 
-    return html;
-  }
+        return html;
+    }
 
-  public String toString() {
-    return super.toString() + " : " + getText();
-  }
+    public String toString() {
+        return super.toString() + " : " + getText();
+    }
 
-  public String asWikiText() throws Exception {
-    return text;
-  }
+    public String asWikiText() throws Exception {
+        return text;
+    }
 
-  public String getRawText() {
-    return text;
-  }
+    public String getRawText() {
+        return text;
+    }
 }

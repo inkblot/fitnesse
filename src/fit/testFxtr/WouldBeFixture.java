@@ -9,7 +9,7 @@ package fit.testFxtr;
  * @see HandleFixtureDoesNotExtendFixtureTest
  */
 public class WouldBeFixture {
-  public String go() {
-    return "OK!";
-  }
+    public String go() {
+        return "OK!";
+    }
 }

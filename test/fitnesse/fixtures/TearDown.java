@@ -3,20 +3,20 @@
 package fitnesse.fixtures;
 
 import fit.Fixture;
+import util.Clock;
+import util.FileUtil;
 
 import java.io.File;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.*;
-import util.Clock;
-import util.FileUtil;
 
 public class TearDown extends Fixture {
-  public TearDown() throws Exception {
-    fitnesse.stop();
-    root = null;
-    File historyDirectory = context.getTestHistoryDirectory();
-    if (historyDirectory.exists())
-      FileUtil.deleteFileSystemDirectory(historyDirectory);
-    Clock.restoreDefaultClock();
-  }
+    public TearDown() throws Exception {
+        fitnesse.stop();
+        root = null;
+        File historyDirectory = context.getTestHistoryDirectory();
+        if (historyDirectory.exists())
+            FileUtil.deleteFileSystemDirectory(historyDirectory);
+        Clock.restoreDefaultClock();
+    }
 }

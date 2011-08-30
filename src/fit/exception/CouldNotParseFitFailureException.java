@@ -4,9 +4,9 @@
 package fit.exception;
 
 public class CouldNotParseFitFailureException extends FitFailureException {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public CouldNotParseFitFailureException(String text, String type) {
-    super("Could not parse: " + text + ", expected type: " + type + ".");
-  }
+    public CouldNotParseFitFailureException(String text, String type) {
+        super("Could not parse: " + text + ", expected type: " + type + ".");
+    }
 }

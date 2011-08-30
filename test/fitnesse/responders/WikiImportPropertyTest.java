@@ -2,11 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import junit.framework.TestCase;
-import util.Clock;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
@@ -14,13 +9,12 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualCouplingExtensionTest;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperty;
+import fitnesse.wiki.*;
+import junit.framework.TestCase;
+import util.Clock;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;

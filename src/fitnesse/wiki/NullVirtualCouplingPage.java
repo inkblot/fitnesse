@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NullVirtualCouplingPage extends VirtualCouplingPage {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public NullVirtualCouplingPage(WikiPage hostPage) {
-    super(hostPage);
-  }
+    public NullVirtualCouplingPage(WikiPage hostPage) {
+        super(hostPage);
+    }
 
-  public List<WikiPage> getChildren() {
-    return new ArrayList<WikiPage>();
-  }
+    public List<WikiPage> getChildren() {
+        return new ArrayList<WikiPage>();
+    }
 }

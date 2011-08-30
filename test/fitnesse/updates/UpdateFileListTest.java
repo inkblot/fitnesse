@@ -1,24 +1,19 @@
 package fitnesse.updates;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
-
 import org.junit.After;
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.mockito.Mockito.*;
-
 import util.FileUtil;
-
-import static util.RegexAssertions.assertDoesNotHaveRegexp;
-import static util.RegexAssertions.assertSubString;
 
 import java.io.File;
 import java.io.IOException;
+
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+import static util.RegexAssertions.assertDoesNotHaveRegexp;
+import static util.RegexAssertions.assertSubString;
 
 public class UpdateFileListTest {
     private UpdateFileList updater;

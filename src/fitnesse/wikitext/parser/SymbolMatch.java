@@ -25,7 +25,15 @@ public class SymbolMatch {
         matchLength = -1;
     }
 
-    public Symbol getSymbol() { return symbol; }
-    public int getMatchLength() { return matchLength; }
-    public boolean isMatch() { return symbol != null; }
+    public Symbol getSymbol() {
+        return symbol;
+    }
+
+    public int getMatchLength() {
+        return matchLength;
+    }
+
+    public boolean isMatch() {
+        return symbol != null;
+    }
 }

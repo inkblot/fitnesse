@@ -23,7 +23,7 @@ public class WikiWord extends SymbolType implements Translation {
     }
 
     private String buildLink(SourcePage currentPage, String pagePath, String linkBody) {
-         return new WikiWordBuilder(currentPage, pagePath, linkBody).buildLink( "", pagePath);
+        return new WikiWordBuilder(currentPage, pagePath, linkBody).buildLink("", pagePath);
     }
 
     private String formatWikiWord(String originalName, Symbol symbol) {

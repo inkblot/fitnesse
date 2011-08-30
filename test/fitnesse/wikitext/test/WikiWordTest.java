@@ -31,11 +31,11 @@ public class WikiWordTest {
         ParserTestHelper.assertTranslatesTo(pageOne, ">PageOne2", wikiLink("PageOne.PageOne2", "&gt;PageOne2"));
         ParserTestHelper.assertTranslatesTo(pageOneTwoThree, "<PageOne", wikiLink("PageOne", "&lt;PageOne"));
     }
-    
+
     @Test
     public void translatesMissingWikiWords() throws Exception {
         ParserTestHelper.assertTranslatesTo(pageOne, "PageNine",
-          "PageNine<a title=\"create page\" href=\"PageNine?edit&nonExistent=true\">[?]</a>");
+                "PageNine<a title=\"create page\" href=\"PageNine?edit&nonExistent=true\">[?]</a>");
     }
 
     @Test

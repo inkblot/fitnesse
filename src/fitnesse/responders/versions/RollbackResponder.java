@@ -18,29 +18,29 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class RollbackResponder implements SecureResponder {
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    SimpleResponse response = new SimpleResponse();
+    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+        SimpleResponse response = new SimpleResponse();
 
-    String resource = request.getResource();
-    String version = (String) request.getInput("version");
-    if (version == null)
-      return new ErrorResponder("missing version").makeResponse(context, request);
+        String resource = request.getResource();
+        String version = (String) request.getInput("version");
+        if (version == null)
+            return new ErrorResponder("missing version").makeResponse(context, request);
 
-    WikiPagePath path = PathParser.parse(resource);
-    WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
-    if (page == null)
-      return new NotFoundResponder().makeResponse(context, request);
-    PageData data = page.getDataVersion(version);
+        WikiPagePath path = PathParser.parse(resource);
+        WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+        if (page == null)
+            return new NotFoundResponder().makeResponse(context, request);
+        PageData data = page.getDataVersion(version);
 
-    page.commit(data);
+        page.commit(data);
 
-    RecentChanges.updateRecentChanges(data);
-    response.redirect(resource);
+        RecentChanges.updateRecentChanges(data);
+        response.redirect(resource);
 
-    return response;
-  }
+        return response;
+    }
 
-  public SecureOperation getSecureOperation() {
-    return new SecureWriteOperation();
-  }
+    public SecureOperation getSecureOperation() {
+        return new SecureWriteOperation();
+    }
 }

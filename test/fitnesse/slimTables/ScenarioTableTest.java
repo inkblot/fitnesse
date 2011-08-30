@@ -3,18 +3,17 @@
 package fitnesse.slimTables;
 
 import fitnesse.responders.run.slimResponder.MockSlimTestContext;
-
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.Assert.*;
 
 
 public class ScenarioTableTest {
@@ -30,7 +29,7 @@ public class ScenarioTableTest {
     }
 
     private ScenarioTable makeScenarioTable(String pageContents)
-        throws Exception {
+            throws Exception {
         WikiPageUtil.setPageContents(root, pageContents);
 
         TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
@@ -78,7 +77,7 @@ public class ScenarioTableTest {
     @Test
     public void manyInputsNoTrailer() throws Exception {
         makeScenarioTable(
-            "|scenario|login user|user name|with password|password|\n");
+                "|scenario|login user|user name|with password|password|\n");
         assertEquals("LoginUserWithPassword", st.getName());
 
         Set<String> inputs = st.getInputs();
@@ -92,7 +91,7 @@ public class ScenarioTableTest {
     @Test
     public void manyInputsWithTrailer() throws Exception {
         makeScenarioTable(
-            "|scenario|login user|user name|with password|password|now|\n");
+                "|scenario|login user|user name|with password|password|now|\n");
         assertEquals("LoginUserWithPasswordNow", st.getName());
 
         Set<String> inputs = st.getInputs();
@@ -106,7 +105,7 @@ public class ScenarioTableTest {
     @Test
     public void manyInputsAndOutputs() throws Exception {
         makeScenarioTable(
-            "|scenario|login user|user name|with password|password|giving message|message?|and status|login status?|\n");
+                "|scenario|login user|user name|with password|password|giving message|message?|and status|login status?|\n");
         assertEquals("LoginUserWithPasswordGivingMessageAndStatus", st.getName());
 
         Set<String> inputs = st.getInputs();
@@ -169,7 +168,7 @@ public class ScenarioTableTest {
 
     @Test
     public void getArgumentsFromParameterizedInvocation()
-        throws Exception {
+            throws Exception {
         makeScenarioTable("|scenario|login user _ password _|name,password|\n");
 
         String[] arguments = st.matchParameters("login user Bob password xyzzy");
@@ -180,7 +179,7 @@ public class ScenarioTableTest {
 
     @Test
     public void parameterizedNameWithOneArgAtEndAndWordWithEmbeddedUnderscore()
-        throws Exception {
+            throws Exception {
         makeScenarioTable("|scenario|login user_name _|name|\n");
         assertEquals("LoginUser_name", st.getName());
 

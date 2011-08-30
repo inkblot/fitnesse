@@ -9,7 +9,10 @@ import fitnesse.responders.editing.*;
 import fitnesse.responders.files.*;
 import fitnesse.responders.refactoring.*;
 import fitnesse.responders.run.*;
-import fitnesse.responders.search.*;
+import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
+import fitnesse.responders.search.SearchFormResponder;
+import fitnesse.responders.search.SearchResponder;
+import fitnesse.responders.search.WhereUsedResponder;
 import fitnesse.responders.testHistory.HistoryComparerResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
 import fitnesse.responders.testHistory.PurgeHistoryResponder;
@@ -18,16 +21,18 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
 import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ResponderFactoryTest {
     private ResponderFactory factory;

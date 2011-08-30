@@ -4,21 +4,20 @@ package fitnesse.fixtures;
 
 import fitnesse.authentication.OneUserAuthenticator;
 
-public class AuthenticatorSetup
-{
-  private String username;
-  private String password;
+public class AuthenticatorSetup {
+    private String username;
+    private String password;
 
-  public String status() {
-    FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(username, password);
-    return "ok";
-  }
+    public String status() {
+        FitnesseFixtureContext.context.authenticator = new OneUserAuthenticator(username, password);
+        return "ok";
+    }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

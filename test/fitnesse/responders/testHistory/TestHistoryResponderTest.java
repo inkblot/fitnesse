@@ -4,21 +4,12 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
-
-import static fitnesse.responders.testHistory.PageHistory.BarGraph;
-
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
-
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
-
-import static util.RegexAssertions.assertDoesNotHaveRegexp;
-import static util.RegexAssertions.assertHasRegexp;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +17,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+
+import static fitnesse.responders.testHistory.PageHistory.BarGraph;
+import static org.junit.Assert.*;
+import static util.RegexAssertions.assertDoesNotHaveRegexp;
+import static util.RegexAssertions.assertHasRegexp;
 
 public class TestHistoryResponderTest {
     private File resultsDirectory;

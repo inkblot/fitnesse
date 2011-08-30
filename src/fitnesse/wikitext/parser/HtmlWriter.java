@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlElement;
+
 import java.util.Stack;
 
 public class HtmlWriter {
@@ -49,8 +50,7 @@ public class HtmlWriter {
         Tag tag = tags.pop();
         if (tag.open) {
             html.append(" />");
-        }
-        else {
+        } else {
             if (html.length() == lastEndLine) {
                 indentTag();
             }
@@ -85,7 +85,9 @@ public class HtmlWriter {
         html.append('"');
     }
 
-    public String toHtml() { return html.toString(); }
+    public String toHtml() {
+        return html.toString();
+    }
 
     private class Tags {
         private Stack<Tag> tags = new Stack<Tag>();
@@ -96,8 +98,7 @@ public class HtmlWriter {
             if (!isEmpty) {
                 tags.push(top);
                 top = new Tag(name, inline);
-            }
-            else {
+            } else {
                 top.name = name;
                 top.inline = inline;
                 isEmpty = false;
@@ -108,18 +109,23 @@ public class HtmlWriter {
             Tag result = top;
             if (tags.empty()) {
                 isEmpty = true;
-            }
-            else {
+            } else {
                 top = tags.pop();
             }
             return result;
         }
 
-        public int size() { return tags.size() + (isEmpty ? 0 : 1); }
+        public int size() {
+            return tags.size() + (isEmpty ? 0 : 1);
+        }
 
-        public boolean isOpen() { return top.open; }
+        public boolean isOpen() {
+            return top.open;
+        }
 
-        public void close() { top.open = false; }
+        public void close() {
+            top.open = false;
+        }
     }
 
     private class Tag {

@@ -10,35 +10,30 @@ import fitnesse.authentication.SecureTestOperation;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
-import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
-
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
-
-import static org.hamcrest.CoreMatchers.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import util.*;
-
-import static org.junit.Assert.*;
-import static util.RegexAssertions.*;
-
-import static util.XmlUtil.getElementByTagName;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
+import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.*;
+import static util.RegexAssertions.*;
+import static util.XmlUtil.getElementByTagName;
 
 public class TestResponderTest extends FitnesseBaseTestCase {
     private static final String TEST_TIME = "12/5/2008 01:19:00";

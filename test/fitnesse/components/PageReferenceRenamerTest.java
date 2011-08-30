@@ -2,12 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import fitnesse.wiki.*;
 import junit.framework.TestCase;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 
 public class PageReferenceRenamerTest extends TestCase {
     WikiPage root;

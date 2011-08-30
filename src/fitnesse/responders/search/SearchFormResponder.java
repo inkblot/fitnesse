@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import static fitnesse.wiki.PageData.*;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.VelocityFactory;
@@ -16,6 +14,8 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import java.io.StringWriter;
+
+import static fitnesse.wiki.PageData.*;
 
 public class SearchFormResponder implements Responder {
     public static final String[] SEARCH_ACTION_ATTRIBUTES = {PropertyEDIT, PropertyVERSIONS,

@@ -3,27 +3,18 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static util.RegexAssertions.assertSubString;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.net.ServerSocket;
-import java.net.Socket;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import util.FileUtil;
 import util.StreamReader;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import static org.junit.Assert.*;
+import static util.RegexAssertions.assertSubString;
 
 public class FitServerTest {
     private static final int PORT_NUMBER = 1634;

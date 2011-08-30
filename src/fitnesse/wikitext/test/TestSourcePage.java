@@ -39,23 +39,49 @@ public class TestSourcePage implements SourcePage {
         return this;
     }
 
-    public String getName() { return null; }
-    public String getFullName() { return null; }
-    public String getPath() { return null; }
+    public String getName() {
+        return null;
+    }
 
-    public String getFullPath() { return null; }
+    public String getFullName() {
+        return null;
+    }
 
-    public String getContent() { return content; }
-    public boolean targetExists(String wikiWordPath) { return targetPath != null; }
-    public String makeFullPathOfTarget(String wikiWordPath) { return targetPath; }
-    public String findParentPath(String targetName) { return null; }
+    public String getPath() {
+        return null;
+    }
+
+    public String getFullPath() {
+        return null;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public boolean targetExists(String wikiWordPath) {
+        return targetPath != null;
+    }
+
+    public String makeFullPathOfTarget(String wikiWordPath) {
+        return targetPath;
+    }
+
+    public String findParentPath(String targetName) {
+        return null;
+    }
 
     public Maybe<SourcePage> findIncludedPage(String pageName) {
         return includedPage != null ? new Maybe<SourcePage>(includedPage) : Maybe.<SourcePage>nothingBecause("missing");
     }
 
-    public Collection<SourcePage> getAncestors() { return new ArrayList<SourcePage>(); }
-    public Collection<SourcePage> getChildren() { return null; }
+    public Collection<SourcePage> getAncestors() {
+        return new ArrayList<SourcePage>();
+    }
+
+    public Collection<SourcePage> getChildren() {
+        return null;
+    }
 
     public boolean hasProperty(String propertyKey) {
         return properties.containsKey(propertyKey);

@@ -3,21 +3,21 @@
 package fitnesse.fixtures;
 
 public class EchoFixture {
-  private String name;
+    private String name;
 
-  public String name() {
-    return name;
-  }
+    public String name() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String echo(String s) {
-    return s;
-  }
-   
-  public int echoInt(int i) {
-    return i;
-  }
+    public String echo(String s) {
+        return s;
+    }
+
+    public int echoInt(int i) {
+        return i;
+    }
 }

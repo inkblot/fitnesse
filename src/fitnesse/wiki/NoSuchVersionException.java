@@ -3,9 +3,9 @@
 package fitnesse.wiki;
 
 public class NoSuchVersionException extends RuntimeException {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public NoSuchVersionException(String message) {
-    super(message);
-  }
+    public NoSuchVersionException(String message) {
+        super(message);
+    }
 }

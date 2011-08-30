@@ -5,5 +5,5 @@ package fitnesse.authentication;
 import fitnesse.Responder;
 
 public interface SecureResponder extends Responder {
-  SecureOperation getSecureOperation();
+    SecureOperation getSecureOperation();
 }

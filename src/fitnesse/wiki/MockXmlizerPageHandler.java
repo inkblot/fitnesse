@@ -7,16 +7,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MockXmlizerPageHandler implements XmlizerPageHandler {
-  public List<String> handledPages = new LinkedList<String>();
-  public List<Date> modDates = new LinkedList<Date>();
-  public int exits = 0;
+    public List<String> handledPages = new LinkedList<String>();
+    public List<Date> modDates = new LinkedList<Date>();
+    public int exits = 0;
 
-  public void enterChildPage(WikiPage newPage, Date lastModified) throws Exception {
-    handledPages.add(newPage.getName());
-    modDates.add(lastModified);
-  }
+    public void enterChildPage(WikiPage newPage, Date lastModified) throws Exception {
+        handledPages.add(newPage.getName());
+        modDates.add(lastModified);
+    }
 
-  public void exitPage() {
-    exits++;
-  }
+    public void exitPage() {
+        exits++;
+    }
 }

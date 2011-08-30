@@ -1,30 +1,30 @@
 package fitnesse.responders.run.formatters;
 
-import org.junit.Test;
-import org.junit.Before;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.Template;
-import org.apache.velocity.app.VelocityEngine;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
-import fitnesse.responders.run.TestSummary;
-import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
-import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.responders.run.TestExecutionReport;
+import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.testHistory.PageHistory;
+import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.junit.Before;
+import org.junit.Test;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
 
-import java.io.Writer;
 import java.io.File;
+import java.io.Writer;
 import java.util.Date;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.*;
 
 public class CachingSuiteXmlFormatterTest {
     private CachingSuiteXmlFormatter formatter;

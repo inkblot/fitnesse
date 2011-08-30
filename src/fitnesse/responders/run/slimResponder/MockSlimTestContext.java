@@ -11,36 +11,36 @@ import java.util.List;
 import java.util.Map;
 
 public class MockSlimTestContext implements SlimTestContext {
-  private Map<String, String> symbols = new HashMap<String, String>();
-  private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
-  private List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
+    private Map<String, String> symbols = new HashMap<String, String>();
+    private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
+    private List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();
 
-  public String getSymbol(String symbolName) {
-    return symbols.get(symbolName);
-  }
+    public String getSymbol(String symbolName) {
+        return symbols.get(symbolName);
+    }
 
-  public void setSymbol(String symbolName, String value) {
-    symbols.put(symbolName, value);
-  }
+    public void setSymbol(String symbolName, String value) {
+        symbols.put(symbolName, value);
+    }
 
-  public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
-    scenarios.put(scenarioName, scenarioTable);
-  }
+    public void addScenario(String scenarioName, ScenarioTable scenarioTable) {
+        scenarios.put(scenarioName, scenarioTable);
+    }
 
-  public ScenarioTable getScenario(String scenarioName) {
-    return scenarios.get(scenarioName);
-  }
+    public ScenarioTable getScenario(String scenarioName) {
+        return scenarios.get(scenarioName);
+    }
 
-  public void addExpectation(SlimTable.Expectation e) {
-    expectations.add(e);
-  }
+    public void addExpectation(SlimTable.Expectation e) {
+        expectations.add(e);
+    }
 
-  public Map<String, ScenarioTable> getScenarios() {
-    return scenarios;
-  }
+    public Map<String, ScenarioTable> getScenarios() {
+        return scenarios;
+    }
 
-  public void evaluateExpectations(Map<String, Object> results) {
-    for (SlimTable.Expectation e : expectations)
-      e.evaluateExpectation(results);
-  }
+    public void evaluateExpectations(Map<String, Object> results) {
+        for (SlimTable.Expectation e : expectations)
+            e.evaluateExpectation(results);
+    }
 }

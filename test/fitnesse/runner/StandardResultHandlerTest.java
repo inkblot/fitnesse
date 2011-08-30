@@ -2,11 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import fitnesse.responders.run.TestSummary;
+import junit.framework.TestCase;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-
-import junit.framework.TestCase;
-import fitnesse.responders.run.TestSummary;
 
 import static util.RegexAssertions.assertSubString;
 

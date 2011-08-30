@@ -13,36 +13,36 @@ import fitnesse.wikitext.parser.Collapsible;
 import fitnesse.wikitext.parser.Symbol;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
-  public HtmlSlimTestSystem(WikiPage page, TestSystemListener listener) {
-    super(page, listener);
-  }
-
-  protected TableScanner scanTheTables(PageData pageData) throws Exception {
-
-    Symbol syntaxTree = pageData.getSyntaxTree();
-    Symbol preparsedScenarioLibrary = getPreparsedScenarioLibrary();
-    syntaxTree.addToFront(findCollapsibleSymbol(preparsedScenarioLibrary));
-    String html = pageData.translateToHtml(syntaxTree);
-    return new HtmlTableScanner(html);
-  }
-
-  private Symbol findCollapsibleSymbol(Symbol syntaxTree) throws Exception {
-    for (Symbol symbol : syntaxTree.getChildren()) {
-      if (symbol.getType() instanceof Collapsible)
-        return symbol;
+    public HtmlSlimTestSystem(WikiPage page, TestSystemListener listener) {
+        super(page, listener);
     }
-    throw new Exception("There must be a collapsible widget in here.");
-  }
 
-  @Override
-  protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) throws Exception {
-    replaceExceptionsWithLinks();
-    evaluateTables();
-    String exceptionsString = exceptions.toHtml();
-    
-    Table start = (startWithTable != null) ? startWithTable.getTable() : null;
-    Table end = (stopBeforeTable != null) ? stopBeforeTable.getTable() : null;
-    String testResultHtml = tableScanner.toHtml(start, end);
-    return exceptionsString + testResultHtml;
-  }
+    protected TableScanner scanTheTables(PageData pageData) throws Exception {
+
+        Symbol syntaxTree = pageData.getSyntaxTree();
+        Symbol preparsedScenarioLibrary = getPreparsedScenarioLibrary();
+        syntaxTree.addToFront(findCollapsibleSymbol(preparsedScenarioLibrary));
+        String html = pageData.translateToHtml(syntaxTree);
+        return new HtmlTableScanner(html);
+    }
+
+    private Symbol findCollapsibleSymbol(Symbol syntaxTree) throws Exception {
+        for (Symbol symbol : syntaxTree.getChildren()) {
+            if (symbol.getType() instanceof Collapsible)
+                return symbol;
+        }
+        throw new Exception("There must be a collapsible widget in here.");
+    }
+
+    @Override
+    protected String createHtmlResults(SlimTable startWithTable, SlimTable stopBeforeTable) throws Exception {
+        replaceExceptionsWithLinks();
+        evaluateTables();
+        String exceptionsString = exceptions.toHtml();
+
+        Table start = (startWithTable != null) ? startWithTable.getTable() : null;
+        Table end = (stopBeforeTable != null) ? stopBeforeTable.getTable() : null;
+        String testResultHtml = tableScanner.toHtml(start, end);
+        return exceptionsString + testResultHtml;
+    }
 }

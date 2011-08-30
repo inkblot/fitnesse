@@ -3,7 +3,7 @@
 package fitnesse.fixtures;
 
 public class Sleep {
-  public Sleep(int milliseconds) throws InterruptedException {
-      Thread.sleep(milliseconds);
-  }
+    public Sleep(int milliseconds) throws InterruptedException {
+        Thread.sleep(milliseconds);
+    }
 }

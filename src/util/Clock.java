@@ -5,43 +5,44 @@ package util;
 import java.util.Date;
 
 public abstract class Clock {
-  protected static final SystemClock SYSTEM_CLOCK = new SystemClock();
-  protected static Clock instance;
-  static {
-    restoreDefaultClock();
-  }
-  
-  protected Clock() {
-    this(false);
-  }
-  
-  protected Clock(boolean setAsInstance) {
-    if (setAsInstance) instance = this;
-  }
+    protected static final SystemClock SYSTEM_CLOCK = new SystemClock();
+    protected static Clock instance;
 
-  abstract long currentClockTimeInMillis() ;
+    static {
+        restoreDefaultClock();
+    }
 
-  Date currentClockDate() {
-    return new Date(currentClockTimeInMillis());
-  }
-  
-  public static long currentTimeInMillis() {
-      return instance.currentClockTimeInMillis();
-  }
+    protected Clock() {
+        this(false);
+    }
 
-  public static Date currentDate() {
-    return instance.currentClockDate();
-  }
-  
-  public static void restoreDefaultClock() {
-    Clock.instance = SYSTEM_CLOCK;
-}
+    protected Clock(boolean setAsInstance) {
+        if (setAsInstance) instance = this;
+    }
+
+    abstract long currentClockTimeInMillis();
+
+    Date currentClockDate() {
+        return new Date(currentClockTimeInMillis());
+    }
+
+    public static long currentTimeInMillis() {
+        return instance.currentClockTimeInMillis();
+    }
+
+    public static Date currentDate() {
+        return instance.currentClockDate();
+    }
+
+    public static void restoreDefaultClock() {
+        Clock.instance = SYSTEM_CLOCK;
+    }
 
 }
 
 class SystemClock extends Clock {
-  @Override
-  long currentClockTimeInMillis() {
-    return System.currentTimeMillis();
-  }  
+    @Override
+    long currentClockTimeInMillis() {
+        return System.currentTimeMillis();
+    }
 }

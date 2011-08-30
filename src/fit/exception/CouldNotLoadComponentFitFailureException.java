@@ -4,9 +4,9 @@
 package fit.exception;
 
 public class CouldNotLoadComponentFitFailureException extends FitFailureException {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public CouldNotLoadComponentFitFailureException(String component, String fixtureName) {
-    super("Could not load " + component + " which is a component of " + fixtureName);
-  }
+    public CouldNotLoadComponentFitFailureException(String component, String fixtureName) {
+        super("Could not load " + component + " which is a component of " + fixtureName);
+    }
 }

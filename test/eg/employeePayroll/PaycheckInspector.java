@@ -5,13 +5,13 @@ package eg.employeePayroll;
 import fit.RowFixture;
 
 public class PaycheckInspector extends RowFixture {
-  public Object[] query() throws Exception  // get rows to be compared
-  {
-    return new Object[0];
-  }
+    public Object[] query() throws Exception  // get rows to be compared
+    {
+        return new Object[0];
+    }
 
-  public Class<?> getTargetClass()             // get expected type of row
-  {
-    return PayCheck.class;
-  }
+    public Class<?> getTargetClass()             // get expected type of row
+    {
+        return PayCheck.class;
+    }
 }

@@ -10,12 +10,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.VirtualCouplingExtensionTest;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import junit.framework.TestCase;
 
 import static util.RegexAssertions.*;

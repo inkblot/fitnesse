@@ -8,21 +8,21 @@ import fitnesse.wikitext.WidgetBuilder;
 import java.util.List;
 
 public class TextIgnoringWidgetRoot extends WidgetRoot {
-  //Refactored for isGathering parameter.
-  public TextIgnoringWidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws Exception {
-    super(value, page, builder, /*isGatheringInfo=*/ true);
-  }
+    //Refactored for isGathering parameter.
+    public TextIgnoringWidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws Exception {
+        super(value, page, builder, /*isGatheringInfo=*/ true);
+    }
 
-  //Parent Literals: T'I'W'Root ctor with parent's literals
-  public TextIgnoringWidgetRoot(String value, WikiPage page, List<String> literals, WidgetBuilder builder) throws Exception {
-    super(null, page, builder, /*isGatheringInfo=*/ true);
-    if (literals != null) this.setLiterals(literals);
-    this.buildWidgets(value);
-  }
+    //Parent Literals: T'I'W'Root ctor with parent's literals
+    public TextIgnoringWidgetRoot(String value, WikiPage page, List<String> literals, WidgetBuilder builder) throws Exception {
+        super(null, page, builder, /*isGatheringInfo=*/ true);
+        if (literals != null) this.setLiterals(literals);
+        this.buildWidgets(value);
+    }
 
 
-  public void addChildWidgets(String value) throws Exception {
-    getBuilder().addChildWidgets(value, this, false);
-  }
+    public void addChildWidgets(String value) throws Exception {
+        getBuilder().addChildWidgets(value, this, false);
+    }
 }
 

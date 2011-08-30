@@ -10,8 +10,8 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import org.ietf.jgss.*;
 
-import java.util.Properties;
 import java.io.UnsupportedEncodingException;
+import java.util.Properties;
 
 /**
  * HTTP SPNEGO (GSSAPI Negotiate) authenticator.
@@ -53,140 +53,140 @@ import java.io.UnsupportedEncodingException;
  */
 public class NegotiateAuthenticator extends Authenticator {
 
-  public static final String NEGOTIATE = "Negotiate";
+    public static final String NEGOTIATE = "Negotiate";
 
-  protected String serviceName;         /* Server's GSSAPI name, or null for default */
-  protected Oid serviceNameType;        /* Name type of serviceName */
-  protected Oid mechanism;              /* Restricted authentication mechanism, unless null */
-  protected boolean stripRealm = true;  /* Strip the realm off the authenticated user's name */
+    protected String serviceName;         /* Server's GSSAPI name, or null for default */
+    protected Oid serviceNameType;        /* Name type of serviceName */
+    protected Oid mechanism;              /* Restricted authentication mechanism, unless null */
+    protected boolean stripRealm = true;  /* Strip the realm off the authenticated user's name */
 
-  protected GSSManager manager;
-  protected GSSCredential serverCreds;
+    protected GSSManager manager;
+    protected GSSCredential serverCreds;
 
-  public NegotiateAuthenticator(GSSManager manager, Properties properties) throws Exception {
-    super();
-    this.manager = manager;
-    configure(properties);
-    initServiceCredentials();
-  }
-
-  public NegotiateAuthenticator(Properties properties) throws Exception {
-    this(GSSManager.getInstance(), properties);
-  }
-
-  protected void initServiceCredentials() throws Exception {
-    if (serviceName == null)
-      serverCreds = null;
-    else {
-      GSSName name = manager.createName(serviceName, serviceNameType, mechanism);
-      serverCreds = manager.createCredential(name,
-        GSSCredential.INDEFINITE_LIFETIME, mechanism,
-        GSSCredential.ACCEPT_ONLY);
-    }
-  }
-
-  protected void configure(Properties properties) throws Exception {
-    serviceName = properties.getProperty("NegotiateAuthenticator.serviceName", null);
-    serviceNameType = new Oid(properties.getProperty("NegotiateAuthenticator.serviceNameType",
-      GSSName.NT_HOSTBASED_SERVICE.toString()));
-    String mechanismProperty = properties.getProperty("NegotiateAuthenticator.mechanism", null);
-    mechanism = mechanismProperty == null ? null : new Oid(mechanismProperty);
-    stripRealm = Boolean.parseBoolean(properties.getProperty("NegotiateAuthenticator.stripRealm", "true"));
-  }
-
-  public GSSCredential getServerCredentials() {
-    return serverCreds;
-  }
-
-  public Oid getServiceNameType() {
-    return serviceNameType;
-  }
-
-  public Oid getMechanism() {
-    return mechanism;
-  }
-
-  // Responder used when negotiation has not started or completed
-  static protected class UnauthenticatedNegotiateResponder implements Responder {
-    private String token;
-
-    public UnauthenticatedNegotiateResponder(final String token) {
-      this.token = token;
+    public NegotiateAuthenticator(GSSManager manager, Properties properties) throws Exception {
+        super();
+        this.manager = manager;
+        configure(properties);
+        initServiceCredentials();
     }
 
-    public Response makeResponse(FitNesseContext context, Request request)
-      throws Exception {
-      SimpleResponse response = new SimpleResponse(401);
-      response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
-      HtmlPage html = context.htmlPageFactory.newPage();
-      HtmlUtil.addTitles(html, "Negotiated authentication required");
-      if (request == null)
-        html.main.add("This request requires authentication");
-      else
-        html.main.add("Your client failed to complete required authentication");
-      response.setContent(html.html());
-      return response;
+    public NegotiateAuthenticator(Properties properties) throws Exception {
+        this(GSSManager.getInstance(), properties);
     }
-  }
 
-  @Override
-  protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
-    return new UnauthenticatedNegotiateResponder(request.getAuthorizationPassword());
-  }
-
-  /* 
-  * If negotiation succeeds, sets the username field in the request.
-  * Otherwise, stores the next token to send in the password field and sets request username to null.
-  * XXX It would be better to allow associating generic authenticator data to each request.
-  */
-  protected void negotiateCredentials(Request request)
-    throws Exception {
-    String authHeader = (String) request.getHeader("Authorization");
-    if (authHeader == null || !authHeader.toLowerCase().startsWith(NEGOTIATE.toLowerCase()))
-      request.setCredentials(null, null);
-    else {
-      setCredentials(request, getToken(authHeader));
+    protected void initServiceCredentials() throws Exception {
+        if (serviceName == null)
+            serverCreds = null;
+        else {
+            GSSName name = manager.createName(serviceName, serviceNameType, mechanism);
+            serverCreds = manager.createCredential(name,
+                    GSSCredential.INDEFINITE_LIFETIME, mechanism,
+                    GSSCredential.ACCEPT_ONLY);
+        }
     }
-  }
 
-  static byte[] getToken(String authHeader) throws UnsupportedEncodingException {
-    byte[] inputTokenEncoded = authHeader.substring(NEGOTIATE.length()).trim().getBytes("UTF-8");
-    byte[] inputToken = Base64.decode(inputTokenEncoded);
-    return inputToken;
-  }
+    protected void configure(Properties properties) throws Exception {
+        serviceName = properties.getProperty("NegotiateAuthenticator.serviceName", null);
+        serviceNameType = new Oid(properties.getProperty("NegotiateAuthenticator.serviceNameType",
+                GSSName.NT_HOSTBASED_SERVICE.toString()));
+        String mechanismProperty = properties.getProperty("NegotiateAuthenticator.mechanism", null);
+        mechanism = mechanismProperty == null ? null : new Oid(mechanismProperty);
+        stripRealm = Boolean.parseBoolean(properties.getProperty("NegotiateAuthenticator.stripRealm", "true"));
+    }
 
-  private void setCredentials(Request request, byte[] inputToken) throws GSSException, UnsupportedEncodingException {
+    public GSSCredential getServerCredentials() {
+        return serverCreds;
+    }
+
+    public Oid getServiceNameType() {
+        return serviceNameType;
+    }
+
+    public Oid getMechanism() {
+        return mechanism;
+    }
+
+    // Responder used when negotiation has not started or completed
+    static protected class UnauthenticatedNegotiateResponder implements Responder {
+        private String token;
+
+        public UnauthenticatedNegotiateResponder(final String token) {
+            this.token = token;
+        }
+
+        public Response makeResponse(FitNesseContext context, Request request)
+                throws Exception {
+            SimpleResponse response = new SimpleResponse(401);
+            response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
+            HtmlPage html = context.htmlPageFactory.newPage();
+            HtmlUtil.addTitles(html, "Negotiated authentication required");
+            if (request == null)
+                html.main.add("This request requires authentication");
+            else
+                html.main.add("Your client failed to complete required authentication");
+            response.setContent(html.html());
+            return response;
+        }
+    }
+
+    @Override
+    protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
+        return new UnauthenticatedNegotiateResponder(request.getAuthorizationPassword());
+    }
+
     /*
-    * XXX Nowhere to attach a partial context to a TCP connection, so we are limited to
-  * single-round auth mechanisms.
-  */
-    GSSContext gssContext = manager.createContext(serverCreds);
-    byte[] replyTokenBytes = gssContext.acceptSecContext(inputToken, 0, inputToken.length);
-    String replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), "UTF-8");
-    if (!gssContext.isEstablished())
-      request.setCredentials(null, replyToken);
-    else {
-      String authenticatedUser = gssContext.getSrcName().toString();
-
-      if (stripRealm) {
-        int at = authenticatedUser.indexOf('@');
-        if (at != -1)
-          authenticatedUser = authenticatedUser.substring(0, at);
-      }
-
-      request.setCredentials(authenticatedUser, replyToken);
+    * If negotiation succeeds, sets the username field in the request.
+    * Otherwise, stores the next token to send in the password field and sets request username to null.
+    * XXX It would be better to allow associating generic authenticator data to each request.
+    */
+    protected void negotiateCredentials(Request request)
+            throws Exception {
+        String authHeader = (String) request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.toLowerCase().startsWith(NEGOTIATE.toLowerCase()))
+            request.setCredentials(null, null);
+        else {
+            setCredentials(request, getToken(authHeader));
+        }
     }
-  }
 
-  @Override
-  public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
-    negotiateCredentials(request);
-    return super.authenticate(context, request, privilegedResponder);
-  }
+    static byte[] getToken(String authHeader) throws UnsupportedEncodingException {
+        byte[] inputTokenEncoded = authHeader.substring(NEGOTIATE.length()).trim().getBytes("UTF-8");
+        byte[] inputToken = Base64.decode(inputTokenEncoded);
+        return inputToken;
+    }
 
-  public boolean isAuthenticated(String username, String password)
-    throws Exception {
-    return username != null;
-  }
+    private void setCredentials(Request request, byte[] inputToken) throws GSSException, UnsupportedEncodingException {
+        /*
+          * XXX Nowhere to attach a partial context to a TCP connection, so we are limited to
+        * single-round auth mechanisms.
+        */
+        GSSContext gssContext = manager.createContext(serverCreds);
+        byte[] replyTokenBytes = gssContext.acceptSecContext(inputToken, 0, inputToken.length);
+        String replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), "UTF-8");
+        if (!gssContext.isEstablished())
+            request.setCredentials(null, replyToken);
+        else {
+            String authenticatedUser = gssContext.getSrcName().toString();
+
+            if (stripRealm) {
+                int at = authenticatedUser.indexOf('@');
+                if (at != -1)
+                    authenticatedUser = authenticatedUser.substring(0, at);
+            }
+
+            request.setCredentials(authenticatedUser, replyToken);
+        }
+    }
+
+    @Override
+    public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
+        negotiateCredentials(request);
+        return super.authenticate(context, request, privilegedResponder);
+    }
+
+    public boolean isAuthenticated(String username, String password)
+            throws Exception {
+        return username != null;
+    }
 
 }

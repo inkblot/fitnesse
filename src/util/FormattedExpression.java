@@ -14,7 +14,9 @@ public class FormattedExpression {
     private char conversion = '?';
     private String expression;
 
-    public FormattedExpression(String input) { this.input = input; }
+    public FormattedExpression(String input) {
+        this.input = input;
+    }
 
     public Maybe<String> evaluate() {
         parseFormat();

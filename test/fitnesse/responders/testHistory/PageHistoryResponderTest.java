@@ -12,10 +12,6 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.assertEquals;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +20,6 @@ import util.FileUtil;
 import util.RegexAssertions;
 import util.TimeMeasurement;
 
-import static util.RegexAssertions.*;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,6 +27,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SortedSet;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static util.RegexAssertions.assertHasRegexp;
+import static util.RegexAssertions.assertSubString;
 
 public class PageHistoryResponderTest {
     private File resultsDirectory;

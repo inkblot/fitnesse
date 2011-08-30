@@ -1,11 +1,12 @@
 package fitnesse.junit;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.junit.runners.model.InitializationError;
 
-import static org.junit.Assert.*;
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class FitNesseSuiteArgumentsTest {
 

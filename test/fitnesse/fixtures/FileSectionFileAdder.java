@@ -5,26 +5,26 @@ package fitnesse.fixtures;
 import java.io.File;
 
 public class FileSectionFileAdder {
-  private String path;
-  private String type;
+    private String path;
+    private String type;
 
-  public boolean valid() throws Exception {
-    File file = null;
-    if ("dir".equals(type)) {
-      file = new File(FileSection.getFileSection().getPath() + "/" + path);
-      file.mkdir();
-    } else {
-      file = new File(FileSection.getFileSection().getPath() + "/" + path);
-      file.createNewFile();
+    public boolean valid() throws Exception {
+        File file = null;
+        if ("dir".equals(type)) {
+            file = new File(FileSection.getFileSection().getPath() + "/" + path);
+            file.mkdir();
+        } else {
+            file = new File(FileSection.getFileSection().getPath() + "/" + path);
+            file.createNewFile();
+        }
+        return file.exists();
     }
-    return file.exists();
-  }
 
-  public void setPath(String path) {
-    this.path = path;
-  }
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-  public void setType(String type) {
-    this.type = type;
-  }
+    public void setType(String type) {
+        this.type = type;
+    }
 }

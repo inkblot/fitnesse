@@ -12,36 +12,36 @@ import fitnesse.responders.BasicResponder;
 
 public class StopTestResponder extends BasicResponder {
 
-  String testId = null;
-  
-  public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-    SimpleResponse response = new SimpleResponse();
-    
-    if (request.hasInput("id")) {
-      testId = request.getInput("id").toString();
+    String testId = null;
+
+    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+        SimpleResponse response = new SimpleResponse();
+
+        if (request.hasInput("id")) {
+            testId = request.getInput("id").toString();
+        }
+
+        response.setContent(html(context));
+
+        return response;
     }
-    
-    response.setContent(html(context));
 
-    return response;
-  }
+    private String html(FitNesseContext context) throws Exception {
+        HtmlPage page = context.htmlPageFactory.newPage();
+        HtmlUtil.addTitles(page, "Stopping tests");
+        page.main.use(getDetails(context));
+        return page.html();
+    }
 
-  private String html(FitNesseContext context) throws Exception {
-    HtmlPage page = context.htmlPageFactory.newPage();
-    HtmlUtil.addTitles(page, "Stopping tests");
-    page.main.use(getDetails(context));
-    return page.html();
-  }
-  
-   public String getDetails(FitNesseContext context) {
-     String details = "";
-     if (testId != null) {
-       details = "Attempting to stop single test or suite..." + HtmlUtil.BRtag;
-       details += context.runningTestingTracker.stopProcess(testId);
-     } else {
-       details = "Attempting to stop all running test processes..." + HtmlUtil.BRtag;
-       details += context.runningTestingTracker.stopAllProcesses();
-     }
-     return details;
-  }
+    public String getDetails(FitNesseContext context) {
+        String details = "";
+        if (testId != null) {
+            details = "Attempting to stop single test or suite..." + HtmlUtil.BRtag;
+            details += context.runningTestingTracker.stopProcess(testId);
+        } else {
+            details = "Attempting to stop all running test processes..." + HtmlUtil.BRtag;
+            details += context.runningTestingTracker.stopAllProcesses();
+        }
+        return details;
+    }
 }

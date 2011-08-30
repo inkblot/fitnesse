@@ -1,15 +1,14 @@
 package fitnesse.junit;
 
+import fitnesse.responders.run.TestSummary;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import fitnesse.responders.run.TestSummary;
 
 public class JUnitXmlTestListenerIntegrationTest {
     String htmlOutputDir = new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath();

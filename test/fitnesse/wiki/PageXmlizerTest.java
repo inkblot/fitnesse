@@ -2,15 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import junit.framework.TestCase;
+import org.w3c.dom.Document;
+import util.XmlUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import junit.framework.TestCase;
-import org.w3c.dom.Document;
-
-import util.XmlUtil;
 
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;

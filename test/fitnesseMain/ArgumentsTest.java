@@ -3,11 +3,10 @@
 package fitnesseMain;
 
 import fitnesse.Arguments;
-
-import static org.junit.Assert.*;
-
 import fitnesse.FitNesseContext;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class ArgumentsTest {
     private Arguments args;

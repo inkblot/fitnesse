@@ -2,16 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import java.io.InputStream;
-
+import fitnesse.responders.run.TestSummary;
 import junit.framework.TestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import util.StreamReader;
 import util.XmlUtil;
-import fitnesse.responders.run.TestSummary;
+
+import java.io.InputStream;
 
 public class XmlResultFormatterTest extends TestCase {
     private XmlResultFormatter formatter;

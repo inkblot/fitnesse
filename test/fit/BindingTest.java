@@ -3,9 +3,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import junit.framework.TestCase;
 import fit.exception.NoSuchFieldFitFailureException;
 import fit.exception.NoSuchMethodFitFailureException;
+import junit.framework.TestCase;
 
 import static util.RegexAssertions.assertSubString;
 

@@ -3,9 +3,9 @@
 package fitnesse.fixtures;
 
 public class PrimeData {
-  public PrimeData(int prime) {
-    this.prime = prime;
-  }
+    public PrimeData(int prime) {
+        this.prime = prime;
+    }
 
-  public int prime;
+    public int prime;
 }

@@ -3,14 +3,12 @@
 package fitnesse.slimTables;
 
 import org.htmlparser.util.ParserException;
-
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
-import static util.RegexAssertions.assertHasRegexp;
-
 import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static util.RegexAssertions.assertHasRegexp;
 
 public class HtmlTableScannerTest {
     private HtmlTableScanner ts;

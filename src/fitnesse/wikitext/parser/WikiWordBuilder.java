@@ -19,8 +19,7 @@ public class WikiWordBuilder {
         String qualifiedName = currentPage.makeFullPathOfTarget(wikiWordPath);
         if (currentPage.targetExists(wikiWordPath)) {
             return makeLinkToExistingWikiPage(qualifiedName + pageSuffix, linkBody);
-        }
-        else
+        } else
             return makeLinkToNonExistentWikiPage(originalName, currentPage.makeUrl(wikiWordPath));
     }
 
@@ -33,6 +32,7 @@ public class WikiWordBuilder {
         }
         return content;
     }
+
     private String makeLinkToExistingWikiPage(String qualifiedName, String linkBody) {
         HtmlTag link = new HtmlTag("a", linkBody);
         link.addAttribute("href", qualifiedName);
@@ -42,7 +42,7 @@ public class WikiWordBuilder {
     private String makeLinkToNonExistentWikiPage(String text, String url) {
         HtmlTag link = new HtmlTag("a", "[?]");
         link.addAttribute("title", "create page");
-        link.addAttribute("href", url+ "?edit&nonExistent=true");
+        link.addAttribute("href", url + "?edit&nonExistent=true");
         return new HtmlText(text).html() + link.htmlInline();
     }
 

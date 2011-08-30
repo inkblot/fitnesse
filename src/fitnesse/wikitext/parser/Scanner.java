@@ -22,7 +22,7 @@ public class Scanner {
                 return Maybe.noString;
             }
         },
-        sourcePage);
+                sourcePage);
     }
 
     public Scanner(TextMaker textMaker, String input) {
@@ -35,12 +35,25 @@ public class Scanner {
         copy(other);
     }
 
-    public int getOffset() { return next; }
-    public void markStart() { input.markStart(next); }
+    public int getOffset() {
+        return next;
+    }
 
-    public boolean isEnd() { return currentToken == endToken; }
-    public boolean isLast() { return input.isEnd(1); }
-    public Symbol getCurrent() { return currentToken; }
+    public void markStart() {
+        input.markStart(next);
+    }
+
+    public boolean isEnd() {
+        return currentToken == endToken;
+    }
+
+    public boolean isLast() {
+        return input.isEnd(1);
+    }
+
+    public Symbol getCurrent() {
+        return currentToken;
+    }
 
     public String stringFromStart(int start) {
         return input.rawSubstring(start, getOffset() - getCurrent().getContent().length());
@@ -123,6 +136,7 @@ public class Scanner {
     private class Step {
         public Symbol token;
         public int nextPosition;
+
         public Step(Symbol token, int nextPosition) {
             this.token = token;
             this.nextPosition = nextPosition;

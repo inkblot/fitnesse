@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MethodExecutionResults {
-  
-  private List<MethodExecutionResult> results = new ArrayList<MethodExecutionResult>();
-  
-  public MethodExecutionResults add(MethodExecutionResult result) {
-    results.add(result);
-    return this;
-  }
-  
-  public MethodExecutionResult getFirstResult() {
-    return results.get(0);
-  }
+
+    private List<MethodExecutionResult> results = new ArrayList<MethodExecutionResult>();
+
+    public MethodExecutionResults add(MethodExecutionResult result) {
+        results.add(result);
+        return this;
+    }
+
+    public MethodExecutionResult getFirstResult() {
+        return results.get(0);
+    }
 
 }

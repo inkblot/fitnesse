@@ -9,19 +9,17 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.ietf.jgss.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
-
-import static org.mockito.Mockito.*;
-import static util.RegexAssertions.assertSubString;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.*;
+import static util.RegexAssertions.assertSubString;
 
 public class NegotiateAuthenticatorTest {
     private GSSManager manager;

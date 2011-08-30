@@ -4,7 +4,7 @@ import util.Maybe;
 
 public class Comment extends SymbolType implements Rule, Translation {
     public static final Comment symbolType = new Comment();
-    
+
     public Comment() {
         super("Comment");
         wikiMatcher(new Matcher().startLine().string("#"));
@@ -17,6 +17,7 @@ public class Comment extends SymbolType implements Rule, Translation {
         if (!parser.atEnd()) literal += "\n";
         return new Maybe<Symbol>(current.add(literal));
     }
+
     public String toTarget(Translator translator, Symbol symbol) {
         return "";
     }

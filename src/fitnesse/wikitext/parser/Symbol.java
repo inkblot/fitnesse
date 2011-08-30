@@ -1,6 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import util.Maybe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,22 +15,43 @@ public class Symbol {
     private HashMap<String, String> variables;
     private HashMap<String, String> properties;
 
-    public Symbol(SymbolType type) { this.type = type; }
+    public Symbol(SymbolType type) {
+        this.type = type;
+    }
 
     public Symbol(SymbolType type, String content) {
         this.content = content;
         this.type = type;
     }
 
-    public SymbolType getType() { return type; }
-    public boolean isType(SymbolType type) { return this.type.matchesFor(type); }
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public SymbolType getType() {
+        return type;
+    }
 
-    public Symbol childAt(int index) { return getChildren().get(index); }
-    public Symbol lastChild() { return childAt(getChildren().size() - 1); }
-    public List<Symbol> getChildren() { return children; }
-    
+    public boolean isType(SymbolType type) {
+        return this.type.matchesFor(type);
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Symbol childAt(int index) {
+        return getChildren().get(index);
+    }
+
+    public Symbol lastChild() {
+        return childAt(getChildren().size() - 1);
+    }
+
+    public List<Symbol> getChildren() {
+        return children;
+    }
+
     public Symbol addToFront(Symbol child) {
         ArrayList<Symbol> newChildren = new ArrayList<Symbol>();
         newChildren.add(child);
@@ -56,7 +78,7 @@ public class Symbol {
 
     public boolean walkPostOrder(SymbolTreeWalker walker) {
         if (walker.visitChildren(this)) {
-            for (Symbol child: children) {
+            for (Symbol child : children) {
                 if (!child.walkPostOrder(walker)) return false;
             }
         }
@@ -66,7 +88,7 @@ public class Symbol {
     public boolean walkPreOrder(SymbolTreeWalker walker) {
         if (!walker.visit(this)) return false;
         if (walker.visitChildren(this)) {
-            for (Symbol child: children) {
+            for (Symbol child : children) {
                 if (!child.walkPreOrder(walker)) return false;
             }
         }
@@ -75,7 +97,7 @@ public class Symbol {
 
     public void evaluateVariables(String[] names, VariableSource source) {
         if (variables == null) variables = new HashMap<String, String>();
-        for (String name: names) {
+        for (String name : names) {
             Maybe<String> value = source.findVariable(name);
             if (!value.isNothing()) variables.put(name, value.getValue());
         }
@@ -86,7 +108,7 @@ public class Symbol {
     }
 
     public Symbol putProperty(String key, String value) {
-        if (properties == null) properties = new HashMap<String, String> ();
+        if (properties == null) properties = new HashMap<String, String>();
         properties.put(key, value);
         return this;
     }

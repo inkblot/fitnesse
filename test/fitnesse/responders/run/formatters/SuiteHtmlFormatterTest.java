@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import junit.framework.TestCase;
-import util.TimeMeasurement;
+import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPageDummy;
+import junit.framework.TestCase;
+import util.TimeMeasurement;
 
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;

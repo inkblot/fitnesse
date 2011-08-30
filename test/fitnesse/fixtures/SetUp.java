@@ -6,14 +6,13 @@ import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.components.SaveRecorder;
-
-import static fitnesse.fixtures.FitnesseFixtureContext.*;
-
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
 import util.FileUtil;
 
 import java.io.File;
+
+import static fitnesse.fixtures.FitnesseFixtureContext.*;
 
 public class SetUp extends Fixture {
     public SetUp() throws Exception {

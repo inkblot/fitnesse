@@ -5,70 +5,70 @@ package fitnesse.responders.run;
 import fitnesse.responders.run.formatters.*;
 
 public class SuiteResponder extends TestResponder {
-  private boolean includeHtml;
+    private boolean includeHtml;
 
-  String getTitle() {
-    return "Suite Results";
-  }
-
-  protected void checkArguments() {
-    super.checkArguments();
-    includeHtml |= request.hasInput("includehtml");
-  }
-
-  void addXmlFormatter() throws Exception {
-    CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, makeResponseWriter());
-    if (includeHtml)
-      xmlFormatter.includeHtml();
-    formatters.add(xmlFormatter);
-  }
-
-  void addHtmlFormatter() throws Exception {
-    BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.htmlPageFactory) {
-      protected void writeData(String output) throws Exception {
-        addToResponse(output);
-      }
-    };
-    formatters.add(formatter);
-  }
-
-  protected void addTestHistoryFormatter() throws Exception {
-    HistoryWriterFactory source = new HistoryWriterFactory();
-    formatters.add(new PageHistoryFormatter(context, page, source));
-    formatters.add(new SuiteHistoryFormatter(context, page, source));
-  }
-
-  protected void performExecution() throws Exception {
-    SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
-    SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
-    MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
-    runner.setDebug(isRemoteDebug());
-    runner.setFastTest(isFastTest());
-    runner.executeTestPages();
-  }
-
-  private String getSuiteTagFilter() {
-    return request != null ? (String) request.getInput("suiteFilter") : null;
-  }
-
-  private String getNotSuiteFilter() {
-    return request != null ? (String) request.getInput("excludeSuiteFilter") : null;
-  }
-
-
-  private String getSuiteFirstTest() throws Exception {
-    String startTest = null;
-    if (request != null) {
-      startTest = (String) request.getInput("firstTest");
+    String getTitle() {
+        return "Suite Results";
     }
 
-    if (startTest != null) {
-      String suiteName = page.getPageCrawler().getFullPath(page).toString();
-      if (startTest.indexOf(suiteName) != 0) {
-        startTest = suiteName + "." + startTest;
-      }
+    protected void checkArguments() {
+        super.checkArguments();
+        includeHtml |= request.hasInput("includehtml");
     }
 
-    return startTest;
-  }
+    void addXmlFormatter() throws Exception {
+        CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, makeResponseWriter());
+        if (includeHtml)
+            xmlFormatter.includeHtml();
+        formatters.add(xmlFormatter);
+    }
+
+    void addHtmlFormatter() throws Exception {
+        BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.htmlPageFactory) {
+            protected void writeData(String output) throws Exception {
+                addToResponse(output);
+            }
+        };
+        formatters.add(formatter);
+    }
+
+    protected void addTestHistoryFormatter() throws Exception {
+        HistoryWriterFactory source = new HistoryWriterFactory();
+        formatters.add(new PageHistoryFormatter(context, page, source));
+        formatters.add(new SuiteHistoryFormatter(context, page, source));
+    }
+
+    protected void performExecution() throws Exception {
+        SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
+        SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
+        MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
+        runner.setDebug(isRemoteDebug());
+        runner.setFastTest(isFastTest());
+        runner.executeTestPages();
+    }
+
+    private String getSuiteTagFilter() {
+        return request != null ? (String) request.getInput("suiteFilter") : null;
+    }
+
+    private String getNotSuiteFilter() {
+        return request != null ? (String) request.getInput("excludeSuiteFilter") : null;
+    }
+
+
+    private String getSuiteFirstTest() throws Exception {
+        String startTest = null;
+        if (request != null) {
+            startTest = (String) request.getInput("firstTest");
+        }
+
+        if (startTest != null) {
+            String suiteName = page.getPageCrawler().getFullPath(page).toString();
+            if (startTest.indexOf(suiteName) != 0) {
+                startTest = suiteName + "." + startTest;
+            }
+        }
+
+        return startTest;
+    }
 }

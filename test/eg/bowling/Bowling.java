@@ -3,19 +3,19 @@
 package eg.bowling;
 
 public interface Bowling {
-  int currentFrame();
+    int currentFrame();
 
-  int currentBall();
+    int currentBall();
 
-  int scoreableFrame();
+    int scoreableFrame();
 
-  boolean validGame();
+    boolean validGame();
 
-  boolean gameOver();
+    boolean gameOver();
 
-  boolean isGameOver();
+    boolean isGameOver();
 
-  void roll(int pins);
+    void roll(int pins);
 
-  int score(int frame);
+    int score(int frame);
 }

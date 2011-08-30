@@ -3,5 +3,5 @@
 package fitnesse.wikitext;
 
 public interface WidgetInterceptor {
-  void intercept(WikiWidget widget) throws Exception;
+    void intercept(WikiWidget widget) throws Exception;
 }

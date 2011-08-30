@@ -4,10 +4,10 @@
 
 package fitnesse;
 
-import util.CommandLine;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseParser;
+import util.CommandLine;
 
 public class Shutdown {
     public String hostname = "localhost";

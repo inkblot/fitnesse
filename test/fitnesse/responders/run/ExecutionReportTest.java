@@ -1,22 +1,20 @@
 package fitnesse.responders.run;
 
 import fitnesse.VelocityFactory;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
 import util.DateTimeUtil;
 import util.TimeMeasurement;
 
 import java.io.StringWriter;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ExecutionReportTest {
 

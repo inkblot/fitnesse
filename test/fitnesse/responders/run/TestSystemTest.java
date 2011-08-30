@@ -1,9 +1,5 @@
 package fitnesse.responders.run;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSystem.Descriptor;
@@ -11,6 +7,9 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestSystemTest {
 

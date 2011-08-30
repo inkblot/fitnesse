@@ -8,13 +8,13 @@ import static org.junit.Assert.assertTrue;
 
 public class ParserTestHelper {
     public static final String newLineRendered = "<br/>";
-    
-    public static  void assertScans(String input, String expected) {
+
+    public static void assertScans(String input, String expected) {
         Scanner scanner = new Scanner(new TestSourcePage(), input);
         assertScans(expected, scanner);
     }
 
-    public static  void assertScansTokenType(String input, String expected, boolean found) {
+    public static void assertScansTokenType(String input, String expected, boolean found) {
         Scanner scanner = new Scanner(new TestSourcePage(), input);
         while (true) {
             scanner.moveNext();
@@ -46,7 +46,7 @@ public class ParserTestHelper {
         assertTranslatesTo(new TestSourcePage(), input, expected);
     }
 
-    public static void assertTranslatesTo(WikiPage page, VariableSource variableSource, String expected) throws Exception{
+    public static void assertTranslatesTo(WikiPage page, VariableSource variableSource, String expected) throws Exception {
         assertEquals(expected, translateToHtml(page, page.getData().getContent(), variableSource));
     }
 

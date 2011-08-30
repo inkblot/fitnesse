@@ -21,15 +21,20 @@ public class ParsingPage {
     public ParsingPage copyForNamedPage(SourcePage namedPage) {
         return new ParsingPage(this.page, namedPage, this.cache);
     }
-    
+
     private ParsingPage(SourcePage page, SourcePage namedPage, HashMap<String, HashMap<String, Maybe<String>>> cache) {
         this.page = page;
         this.namedPage = namedPage;
         this.cache = cache;
     }
 
-    public SourcePage getPage() { return page; }
-    public SourcePage getNamedPage() { return namedPage; }
+    public SourcePage getPage() {
+        return page;
+    }
+
+    public SourcePage getNamedPage() {
+        return namedPage;
+    }
 
     public Maybe<String> getSpecialVariableValue(String key) {
         String value;

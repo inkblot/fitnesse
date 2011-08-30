@@ -9,7 +9,9 @@ public class HtmlTranslator extends Translator {
         return symbolType.getHtmlTranslation();
     }
 
-    public ParsingPage getParsingPage() { return parsingPage; }
+    public ParsingPage getParsingPage() {
+        return parsingPage;
+    }
 
     public HtmlTranslator(SourcePage currentPage, ParsingPage parsingPage) {
         super(currentPage);

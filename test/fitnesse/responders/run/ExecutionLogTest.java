@@ -2,21 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
-import static util.RegexAssertions.assertNotSubString;
-import static util.RegexAssertions.assertSubString;
-
+import fitnesse.testutil.MockCommandRunner;
+import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import fitnesse.testutil.MockCommandRunner;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
+import static junit.framework.Assert.*;
+import static util.RegexAssertions.assertNotSubString;
+import static util.RegexAssertions.assertSubString;
 
 public class ExecutionLogTest {
     private static String ErrorLogName = ExecutionLog.ErrorLogName;

@@ -2,16 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
-
-import static util.RegexAssertions.*;
 
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexAssertions.*;
 
 public class FileUtilTest {
     @Test

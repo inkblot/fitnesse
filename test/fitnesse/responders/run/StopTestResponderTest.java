@@ -1,12 +1,5 @@
 package fitnesse.responders.run;
 
-import static util.RegexAssertions.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -14,6 +7,12 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.InMemoryPage;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static util.RegexAssertions.assertSubString;
 
 
 public class StopTestResponderTest {

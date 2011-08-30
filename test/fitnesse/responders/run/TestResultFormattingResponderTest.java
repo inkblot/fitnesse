@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
@@ -17,6 +13,10 @@ import fitnesse.runner.MockResultFormatter;
 import fitnesse.runner.PageResult;
 import fitnesse.runner.XmlResultFormatter;
 import junit.framework.TestCase;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 
 import static util.RegexAssertions.assertSubString;
 

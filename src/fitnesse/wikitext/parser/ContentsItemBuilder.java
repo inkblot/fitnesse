@@ -25,7 +25,7 @@ public class ContentsItemBuilder {
         HtmlTag div = HtmlUtil.makeDivTag("toc" + level);
         HtmlTag list = new HtmlTag("ul");
         try {
-            for (SourcePage child: getSortedChildren(page)) {
+            for (SourcePage child : getSortedChildren(page)) {
                 list.add(buildListItem(child));
             }
         } catch (Exception e) {
@@ -43,10 +43,9 @@ public class ContentsItemBuilder {
         listItem.add(childItem);
         if (child.getChildren().size() > 0) {
             if (level < getRecursionLimit()) {
-                HtmlTag nestedDiv =  HtmlUtil.makeDivTag("nested-contents");
+                HtmlTag nestedDiv = HtmlUtil.makeDivTag("nested-contents");
                 listItem.add(new ContentsItemBuilder(contents, level + 1).buildLevel(child, nestedDiv));
-            }
-            else if (getRecursionLimit() > 0){
+            } else if (getRecursionLimit() > 0) {
                 childItem.add(contents.getVariable(TOCWidget.MORE_SUFFIX_TOC, TOCWidget.MORE_SUFFIX_DEFAULT));
             }
         }
@@ -66,8 +65,7 @@ public class ContentsItemBuilder {
         if (help.length() > 0) {
             if (hasOption("-h", TOCWidget.HELP_TOC)) {
                 result.tail = HtmlUtil.makeSpanTag("pageHelp", ": " + help).htmlInline();
-            }
-            else {
+            } else {
                 result.addAttribute("title", help);
             }
         }
@@ -91,7 +89,7 @@ public class ContentsItemBuilder {
             String filters = page.getProperty(PageData.PropertySUITES);
             if (filters.length() > 0) itemText += " (" + filters + ")";
         }
-        
+
         return itemText;
     }
 
@@ -100,14 +98,13 @@ public class ContentsItemBuilder {
     }
 
     private int getRecursionLimit() {
-        for (Symbol child: contents.getChildren()) {
+        for (Symbol child : contents.getChildren()) {
             if (!child.getContent().startsWith("-R")) continue;
             String level = child.getContent().substring(2);
             if (level.length() == 0) return Integer.MAX_VALUE;
             try {
-              return Integer.parseInt(level);
-            }
-            catch (NumberFormatException e) {
+                return Integer.parseInt(level);
+            } catch (NumberFormatException e) {
                 return 0;
             }
         }
@@ -115,8 +112,8 @@ public class ContentsItemBuilder {
     }
 
     private boolean hasOption(String option, String variableName) {
-        for (Symbol child: contents.getChildren()) {
-           if (child.getContent().equals(option)) return true;
+        for (Symbol child : contents.getChildren()) {
+            if (child.getContent().equals(option)) return true;
         }
         return variableName.length() > 0
                 && contents.getVariable(variableName, "").equals("true");

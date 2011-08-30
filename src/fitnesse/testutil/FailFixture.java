@@ -6,7 +6,7 @@ import fit.Fixture;
 import fit.Parse;
 
 public class FailFixture extends Fixture {
-  public void doTable(Parse parse) {
-    wrong(parse);
-  }
+    public void doTable(Parse parse) {
+        wrong(parse);
+    }
 }

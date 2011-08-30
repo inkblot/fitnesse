@@ -8,7 +8,8 @@ public class EMailTest {
         ParserTestHelper.assertParses("bob@bl.org", "SymbolList[EMail]");
     }
 
-    @Test public void translatesEMail() {
+    @Test
+    public void translatesEMail() {
         ParserTestHelper.assertTranslatesTo("bob@bl.org", "<a href=\"mailto:bob@bl.org\">bob@bl.org</a>");
     }
 }

@@ -2,18 +2,22 @@ package fitnesse.wikitext.test;
 
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.parser.*;
+import fitnesse.wikitext.parser.Parser;
+import fitnesse.wikitext.parser.ParsingPage;
+import fitnesse.wikitext.parser.WikiSourcePage;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class DefineTest {
-    @Test public void scansDefine() {
+    @Test
+    public void scansDefine() {
         ParserTestHelper.assertScansTokenType("!define x {y}", "Define", true);
         ParserTestHelper.assertScansTokenType("|!define x {y}|/n", "Define", true);
     }
 
-    @Test public void translatesDefines() throws Exception {
+    @Test
+    public void translatesDefines() throws Exception {
         assertTranslatesDefine("!define x {y}", "x=y");
         assertTranslatesDefine("!define BoBo {y}", "BoBo=y");
         assertTranslatesDefine("!define BoBo  {y}", "BoBo=y");
@@ -25,7 +29,8 @@ public class DefineTest {
         assertTranslatesDefine("!define x {''y''}", "x=''y''");
     }
 
-    @Test public void definesValues() throws Exception {
+    @Test
+    public void definesValues() throws Exception {
         assertDefinesValue("!define x {y}", "x", "y");
         assertDefinesValue("|!define x {y}|\n", "x", "y");
         //todo: move to variableTest?
@@ -46,7 +51,7 @@ public class DefineTest {
     private void assertTranslatesDefine(String input, String definition) throws Exception {
         WikiPage pageOne = new TestRoot().makePage("PageOne");
         ParserTestHelper.assertTranslatesTo(pageOne, input,
-          "<span class=\"meta\">variable defined: " + definition + "</span>" + HtmlElement.endl);
+                "<span class=\"meta\">variable defined: " + definition + "</span>" + HtmlElement.endl);
     }
 
 }

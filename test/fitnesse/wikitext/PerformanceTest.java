@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class PerformanceTest {
     private String tablePageContent = "";
     private String definePageContent = "";
+
     public PerformanceTest() {
         StringBuilder table = new StringBuilder();
         StringBuilder define = new StringBuilder();
@@ -38,7 +39,8 @@ public class PerformanceTest {
         Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
         System.out.println(System.currentTimeMillis() - start);
         start = System.currentTimeMillis();
-        /*String result =*/ new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
+        /*String result =*/
+        new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
         System.out.println(System.currentTimeMillis() - start);
         //System.out.println(result);
         assertEquals("done", "done");

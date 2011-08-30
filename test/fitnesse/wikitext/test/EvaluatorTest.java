@@ -3,11 +3,13 @@ package fitnesse.wikitext.test;
 import org.junit.Test;
 
 public class EvaluatorTest {
-    @Test public void scansEvaluators() {
+    @Test
+    public void scansEvaluators() {
         ParserTestHelper.assertScansTokenType("${=3+4=}", "Evaluator", true);
     }
 
-    @Test public void translatesEvaluators() {
+    @Test
+    public void translatesEvaluators() {
         ParserTestHelper.assertTranslatesTo("${= 8 =}", "8");
         ParserTestHelper.assertTranslatesTo("${=42.24=}", "42.24");
         ParserTestHelper.assertTranslatesTo("${=1.2E+3=}", "1200");

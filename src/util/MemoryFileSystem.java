@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class MemoryFileSystem implements FileSystem{
+public class MemoryFileSystem implements FileSystem {
     private final Hashtable<String, String> files = new Hashtable<String, String>();
 
     public void makeFile(String path, String content) throws IOException {
@@ -16,7 +16,7 @@ public class MemoryFileSystem implements FileSystem{
     }
 
     public boolean exists(String path) {
-        for (String filePath: files.keySet()) {
+        for (String filePath : files.keySet()) {
             if (filePath.startsWith(path)) return true;
         }
         return false;
@@ -24,7 +24,7 @@ public class MemoryFileSystem implements FileSystem{
 
     public String[] list(String path) {
         ArrayList<String> result = new ArrayList<String>();
-        for (String filePath: files.keySet()) {
+        for (String filePath : files.keySet()) {
             if (!filePath.startsWith(path)) continue;
             if (filePath.equals(path)) continue;
             String rest = filePath.substring(path.length() + 1);

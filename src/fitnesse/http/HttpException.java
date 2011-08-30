@@ -3,10 +3,10 @@
 package fitnesse.http;
 
 public class HttpException extends Exception {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public HttpException(String message) {
-    super(message);
-  }
+    public HttpException(String message) {
+        super(message);
+    }
 
 }

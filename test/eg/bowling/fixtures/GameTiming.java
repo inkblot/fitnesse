@@ -7,45 +7,45 @@ import eg.bowling.BowlingGame;
 import fit.ColumnFixture;
 
 public class GameTiming extends ColumnFixture {
-  private Bowling game;
-  public String pins;
+    private Bowling game;
+    public String pins;
 
-  public GameTiming() {
-    super();
-    game = new BowlingGame();
-  }
-
-  public boolean roll() {
-    if (pins.equals("-"))
-      return false;
-    else {
-      game.roll(Integer.parseInt(pins));
-      return true;
+    public GameTiming() {
+        super();
+        game = new BowlingGame();
     }
-  }
 
-  public int currentFrame() {
-    return game.currentFrame();
-  }
+    public boolean roll() {
+        if (pins.equals("-"))
+            return false;
+        else {
+            game.roll(Integer.parseInt(pins));
+            return true;
+        }
+    }
 
-  public int currentBall() {
-    return game.currentBall();
-  }
+    public int currentFrame() {
+        return game.currentFrame();
+    }
 
-  public int scorableFrame() {
-    return game.scoreableFrame();
-  }
+    public int currentBall() {
+        return game.currentBall();
+    }
 
-  public int currentScore() {
-    return game.score(game.scoreableFrame());
-  }
+    public int scorableFrame() {
+        return game.scoreableFrame();
+    }
 
-  public boolean validGame() {
-    return game.validGame();
-  }
+    public int currentScore() {
+        return game.score(game.scoreableFrame());
+    }
 
-  public boolean gameOver() {
-    return game.gameOver();
-  }
+    public boolean validGame() {
+        return game.validGame();
+    }
+
+    public boolean gameOver() {
+        return game.gameOver();
+    }
 
 }

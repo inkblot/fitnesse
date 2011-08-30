@@ -8,10 +8,8 @@ import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static util.RegexAssertions.*;
+import static org.junit.Assert.*;
+import static util.RegexAssertions.assertSubString;
 
 public class AddChildPageResponderTest {
     private WikiPage root;

@@ -4,16 +4,16 @@ import fitnesse.slim.SystemUnderTest;
 
 public class MySystemUnderTestDriver {
 
-  @SystemUnderTest
-  public MySystemUnderTest systemUnderTest = new MySystemUnderTest();
+    @SystemUnderTest
+    public MySystemUnderTest systemUnderTest = new MySystemUnderTest();
 
-  private boolean called;
+    private boolean called;
 
-  public void foo() {
-    called = true;
-  }
+    public void foo() {
+        called = true;
+    }
 
-  public boolean driverCalled() {
-    return called;
-  }
+    public boolean driverCalled() {
+        return called;
+    }
 }

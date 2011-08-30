@@ -8,15 +8,15 @@ import fitnesse.slimTables.SlimTable;
 import java.util.Map;
 
 public interface SlimTestContext {
-  String getSymbol(String symbolName);
+    String getSymbol(String symbolName);
 
-  void setSymbol(String symbolName, String value);
+    void setSymbol(String symbolName, String value);
 
-  void addScenario(String scenarioName, ScenarioTable scenarioTable);
+    void addScenario(String scenarioName, ScenarioTable scenarioTable);
 
-  ScenarioTable getScenario(String scenarioName);
+    ScenarioTable getScenario(String scenarioName);
 
-  void addExpectation(SlimTable.Expectation e);
+    void addExpectation(SlimTable.Expectation e);
 
-  Map<String, ScenarioTable> getScenarios();
+    Map<String, ScenarioTable> getScenarios();
 }

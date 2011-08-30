@@ -2,26 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import fitnesse.wikitext.Utils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import util.Clock;
 import util.XmlUtil;
 import util.XmlWriter;
-import fitnesse.wikitext.Utils;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.util.*;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
     private static final long serialVersionUID = 1L;

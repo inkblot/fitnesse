@@ -26,9 +26,8 @@ public class WikiWordPath {
             if (isCharacter(candidate, '_', i)) return 0;
             if (isUpperCaseLetter(candidate, i)) {
                 if (i == lastUpperCaseLetter + 1) return 0;
-                lastUpperCaseLetter =  i;
-            }
-            else if (!isDigit(candidate, i) && !isLetter(candidate, i) && !isCharacter(candidate, '.', i)) break;
+                lastUpperCaseLetter = i;
+            } else if (!isDigit(candidate, i) && !isLetter(candidate, i) && !isCharacter(candidate, '.', i)) break;
         }
         if (lastUpperCaseLetter > 0 && i > 2) return i;
         return 0;

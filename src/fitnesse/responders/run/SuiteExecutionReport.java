@@ -34,8 +34,8 @@ public class SuiteExecutionReport extends ExecutionReport {
             SuiteExecutionReport report = (SuiteExecutionReport) o;
             return
                     super.equals(report) &&
-                    pageHistoryReferences.size() == report.pageHistoryReferences.size() &&
-                    allReferencesEqual(pageHistoryReferences, report.pageHistoryReferences);
+                            pageHistoryReferences.size() == report.pageHistoryReferences.size() &&
+                            allReferencesEqual(pageHistoryReferences, report.pageHistoryReferences);
         }
         return false;
     }

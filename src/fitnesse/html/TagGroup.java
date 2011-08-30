@@ -3,18 +3,18 @@
 package fitnesse.html;
 
 public class TagGroup extends HtmlTag {
-  public TagGroup() {
-    super("group");
-  }
-
-  public String html(int depth) {
-    StringBuffer buffer = new StringBuffer();
-    for (HtmlElement element : childTags) {
-      if (element instanceof HtmlTag)
-        buffer.append(((HtmlTag) element).html(depth));
-      else
-        buffer.append(element.html());
+    public TagGroup() {
+        super("group");
     }
-    return buffer.toString();
-  }
+
+    public String html(int depth) {
+        StringBuffer buffer = new StringBuffer();
+        for (HtmlElement element : childTags) {
+            if (element instanceof HtmlTag)
+                buffer.append(((HtmlTag) element).html(depth));
+            else
+                buffer.append(element.html());
+        }
+        return buffer.toString();
+    }
 }

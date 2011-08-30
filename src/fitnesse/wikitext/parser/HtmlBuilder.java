@@ -33,8 +33,10 @@ public class HtmlBuilder implements Translation {
         return this;
     }
 
-    public HtmlBuilder attribute(String name, int index) { return attribute(name, index, ""); }
-    
+    public HtmlBuilder attribute(String name, int index) {
+        return attribute(name, index, "");
+    }
+
     public HtmlBuilder attribute(final String name, final int index, final String prefix) {
         builders.add(new TagBuilder() {
             public void build(Translator translator, Symbol symbol, HtmlTag tag) {
@@ -45,7 +47,9 @@ public class HtmlBuilder implements Translation {
         return this;
     }
 
-    public HtmlBuilder body(int index) { return body(index, ""); }
+    public HtmlBuilder body(int index) {
+        return body(index, "");
+    }
 
     public HtmlBuilder body(final int index, final String prefix) {
         builders.add(new TagBuilder() {
@@ -71,7 +75,7 @@ public class HtmlBuilder implements Translation {
 
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag result = new HtmlTag(tagName);
-        for (TagBuilder builder: builders) {
+        for (TagBuilder builder : builders) {
             builder.build(translator, symbol, result);
         }
         return inline ? result.htmlInline() : result.html();

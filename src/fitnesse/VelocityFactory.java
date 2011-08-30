@@ -1,8 +1,8 @@
 package fitnesse;
 
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
 import java.io.StringWriter;
 

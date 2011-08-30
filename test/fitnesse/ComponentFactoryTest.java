@@ -2,12 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
-import fitnesse.wikitext.parser.*;
-import junit.framework.TestCase;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
@@ -16,15 +10,17 @@ import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.wiki.VersionsController;
-import fitnesse.wiki.NullVersionsController;
-import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
+import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.WidgetInterceptor;
 import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.parser.*;
+import junit.framework.TestCase;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 import static util.RegexAssertions.assertSubString;
 
@@ -67,7 +63,7 @@ public class ComponentFactoryTest extends TestCase {
         factory.loadWikiPage(wikiPageFactory);
         assertEquals(FileSystemPage.class, wikiPageFactory.getWikiPageClass());
 
-    WikiPage page = wikiPageFactory.makeRootPage("testPath", "TestRoot", factory);
+        WikiPage page = wikiPageFactory.makeRootPage("testPath", "TestRoot", factory);
         assertNotNull(page);
         assertEquals(FileSystemPage.class, page.getClass());
         assertEquals("TestRoot", page.getName());

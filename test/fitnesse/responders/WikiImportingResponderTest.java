@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import junit.framework.TestCase;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
@@ -10,15 +9,10 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wiki.WikiPagePath;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.*;
+import junit.framework.TestCase;
 
-import static util.RegexAssertions.assertHasRegexp;
-import static util.RegexAssertions.assertNotSubString;
-import static util.RegexAssertions.assertSubString;
+import static util.RegexAssertions.*;
 
 public class WikiImportingResponderTest extends TestCase {
     private WikiImportingResponder responder;

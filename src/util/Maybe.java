@@ -9,9 +9,13 @@ public class Maybe<T> {
     private final T value;
     private final String nothingReason;
 
-    public Maybe(T value) { this(value, null); }
+    public Maybe(T value) {
+        this(value, null);
+    }
 
-    public Maybe() { this(null, ""); }
+    public Maybe() {
+        this(null, "");
+    }
 
     public static <T> Maybe<T> nothingBecause(String nothingReason) {
         return new Maybe<T>(null, nothingReason);
@@ -22,7 +26,15 @@ public class Maybe<T> {
         this.nothingReason = nothingReason;
     }
 
-    public T getValue() { return value; }
-    public boolean isNothing() { return nothingReason != null; }
-    public String because() { return nothingReason; }
+    public T getValue() {
+        return value;
+    }
+
+    public boolean isNothing() {
+        return nothingReason != null;
+    }
+
+    public String because() {
+        return nothingReason;
+    }
 }

@@ -2,28 +2,21 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static util.RegexAssertions.assertHasRegexp;
-import static util.RegexAssertions.assertMatches;
-import static util.RegexAssertions.assertSubString;
+import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
+import fitnesse.Responder;
+import fitnesse.http.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import fitnesse.FitnesseBaseTestCase;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import fitnesse.FitNesseContext;
-import fitnesse.Responder;
-import fitnesse.http.InputStreamResponse;
-import fitnesse.http.MockRequest;
-import fitnesse.http.MockResponseSender;
-import fitnesse.http.Response;
-import fitnesse.http.SimpleResponse;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static util.RegexAssertions.*;
 
 public class FileResponderTest extends FitnesseBaseTestCase {
     MockRequest request;

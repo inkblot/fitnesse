@@ -6,7 +6,7 @@ import fit.Fixture;
 import fit.Parse;
 
 public class IgnoreFixture extends Fixture {
-  public void doTable(Parse table) {
-    ignore(table.parts.parts);
-  }
+    public void doTable(Parse table) {
+        ignore(table.parts.parts);
+    }
 }

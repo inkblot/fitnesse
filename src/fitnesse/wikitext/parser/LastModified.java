@@ -14,14 +14,14 @@ public class LastModified extends SymbolType implements Translation {
         wikiMatcher(new Matcher().string("!lastmodified"));
         htmlTranslation(this);
     }
-    
+
     public String toTarget(Translator translator, Symbol symbol) {
         String user = translator.getPage().getProperty(PageData.LAST_MODIFYING_USER);
         String date = translator.getPage().getProperty(PageData.PropertyLAST_MODIFIED);
         return translator.formatMessage(
                 "Last modified " +
-                (user.length() > 0 ? "by " + user : "anonymously") +
-                " on " + formatDate(date));
+                        (user.length() > 0 ? "by " + user : "anonymously") +
+                        " on " + formatDate(date));
     }
 
     private String formatDate(String dateString) {
@@ -30,8 +30,7 @@ public class LastModified extends SymbolType implements Translation {
         else {
             try {
                 date = WikiPageProperties.getTimeFormat().parse(dateString);
-            }
-            catch (ParseException e) {
+            } catch (ParseException e) {
                 return dateString;
             }
         }

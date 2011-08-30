@@ -2,15 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-
 import junit.framework.TestCase;
 import util.FileUtil;
+
+import java.io.*;
+import java.net.Socket;
 
 import static util.RegexAssertions.assertSubString;
 

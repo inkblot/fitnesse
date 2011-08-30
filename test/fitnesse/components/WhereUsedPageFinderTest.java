@@ -1,14 +1,14 @@
 package fitnesse.components;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import junit.framework.TestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import junit.framework.TestCase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class WhereUsedPageFinderTest extends TestCase implements SearchObserver {

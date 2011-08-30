@@ -3,7 +3,7 @@
 package fitnesse.html;
 
 public abstract class HtmlElement {
-  public static final String endl = System.getProperty("line.separator");
+    public static final String endl = System.getProperty("line.separator");
 
-  public abstract String html();
+    public abstract String html();
 }

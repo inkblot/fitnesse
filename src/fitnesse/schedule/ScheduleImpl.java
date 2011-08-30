@@ -2,67 +2,65 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.schedule;
 
+import util.Clock;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import util.Clock;
-
 public class ScheduleImpl implements Schedule, Runnable {
-  private long delay;
-  private Thread thread;
-  private boolean running;
-  private List<ScheduleItem> scheduleItems = Collections.synchronizedList(new LinkedList<ScheduleItem>());
+    private long delay;
+    private Thread thread;
+    private boolean running;
+    private List<ScheduleItem> scheduleItems = Collections.synchronizedList(new LinkedList<ScheduleItem>());
 
-  public ScheduleImpl(long delay) {
-    this.delay = delay;
-  }
-
-  public void add(ScheduleItem item) {
-    scheduleItems.add(item);
-  }
-
-  public void start() {
-    running = true;
-    thread = new Thread(this);
-    thread.start();
-  }
-
-  public void stop() throws Exception {
-    running = false;
-    if (thread != null) {
-      thread.join();
+    public ScheduleImpl(long delay) {
+        this.delay = delay;
     }
-    thread = null;
-  }
 
-  public void run() {
-    try {
-      while (running) {
-        runScheduledItems();
-        Thread.sleep(delay);
-      }
+    public void add(ScheduleItem item) {
+        scheduleItems.add(item);
     }
-    catch (Exception e) {
-    }
-  }
 
-  public void runScheduledItems() throws Exception {
-    long time = Clock.currentTimeInMillis();
-    synchronized (scheduleItems) {
-      for (ScheduleItem item : scheduleItems) {
-        runItem(item, time);
-      }
+    public void start() {
+        running = true;
+        thread = new Thread(this);
+        thread.start();
     }
-  }
 
-  private void runItem(ScheduleItem item, long time) throws Exception {
-    try {
-      if (item.shouldRun(time))
-        item.run(time);
+    public void stop() throws Exception {
+        running = false;
+        if (thread != null) {
+            thread.join();
+        }
+        thread = null;
     }
-    catch (Exception e) {
-      e.printStackTrace();
+
+    public void run() {
+        try {
+            while (running) {
+                runScheduledItems();
+                Thread.sleep(delay);
+            }
+        } catch (Exception e) {
+        }
     }
-  }
+
+    public void runScheduledItems() throws Exception {
+        long time = Clock.currentTimeInMillis();
+        synchronized (scheduleItems) {
+            for (ScheduleItem item : scheduleItems) {
+                runItem(item, time);
+            }
+        }
+    }
+
+    private void runItem(ScheduleItem item, long time) throws Exception {
+        try {
+            if (item.shouldRun(time))
+                item.run(time);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -5,39 +5,39 @@ package fitnesse.slimTables;
 import java.util.List;
 
 public interface Table {
-  String getCellContents(int columnIndex, int rowIndex);
+    String getCellContents(int columnIndex, int rowIndex);
 
-  void appendToCell(int col, int row, String message);
+    void appendToCell(int col, int row, String message);
 
-  int getRowCount();
+    int getRowCount();
 
-  int getColumnCountInRow(int rowIndex);
+    int getColumnCountInRow(int rowIndex);
 
-  String toString();
+    String toString();
 
-  String toHtml();
+    String toHtml();
 
-  void setCell(int col, int row, String contents);
+    void setCell(int col, int row, String contents);
 
-  int addRow(List<String> list) throws Exception;
+    int addRow(List<String> list) throws Exception;
 
-  void appendCellToRow(int row, String contents) throws Exception;
+    void appendCellToRow(int row, String contents) throws Exception;
 
-  String error(String s);
+    String error(String s);
 
-  String pass(String s);
+    String pass(String s);
 
-  String fail(String s);
+    String fail(String s);
 
-  String ignore(String s);
+    String ignore(String s);
 
-  String getUnescapedCellContents(int col, int row);
+    String getUnescapedCellContents(int col, int row);
 
-  String getCellResult(int col,int row);
+    String getCellResult(int col, int row);
 
-  void appendCellToRow(int row, Table table);
+    void appendCellToRow(int row, Table table);
 
-  void setTestStatusOnRow(int row, boolean testStatus);
+    void setTestStatusOnRow(int row, boolean testStatus);
 
-  void setName(String tableName);
+    void setName(String tableName);
 }

@@ -5,7 +5,7 @@ package fit.testFxtr;
 import fit.Fixture;
 
 public class NoDefaultConstructorFixture extends Fixture {
-  public NoDefaultConstructorFixture(String itDoesntReallyMatter) {
-  }
+    public NoDefaultConstructorFixture(String itDoesntReallyMatter) {
+    }
 }
 

@@ -6,8 +6,8 @@ import fit.Fixture;
 import fit.Parse;
 
 public class EchoFixture extends Fixture {
-  public void doTable(Parse table) {
-    String text = getArgs()[0];
-    table.parts.parts = new Parse("tr", "", new Parse("td", text, null, null), null);
-  }
+    public void doTable(Parse table) {
+        String text = getArgs()[0];
+        table.parts.parts = new Parse("tr", "", new Parse("td", text, null, null), null);
+    }
 }

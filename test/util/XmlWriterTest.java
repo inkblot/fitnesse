@@ -2,15 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintWriter;
+import junit.framework.TestCase;
+import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import junit.framework.TestCase;
-import org.w3c.dom.Document;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 
 public class XmlWriterTest extends TestCase {
     private ByteArrayOutputStream output;

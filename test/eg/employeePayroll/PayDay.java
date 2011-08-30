@@ -2,15 +2,15 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package eg.employeePayroll;
 
-import java.util.Date;
-
 import fitnesse.fixtures.RowEntryFixture;
 
+import java.util.Date;
+
 public class PayDay extends RowEntryFixture {
-  public Date payDate;
-  public int checkNumber;
+    public Date payDate;
+    public int checkNumber;
 
-  public void enterRow() throws Exception {
+    public void enterRow() throws Exception {
 
-  }
+    }
 }

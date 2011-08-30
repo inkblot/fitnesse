@@ -1,13 +1,8 @@
 package fitnesse.junit;
 
+import fitnesse.junit.FitNesseSuite.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import fitnesse.junit.FitNesseSuite.DebugMode;
-import fitnesse.junit.FitNesseSuite.FitnesseDir;
-import fitnesse.junit.FitNesseSuite.Name;
-import fitnesse.junit.FitNesseSuite.OutputDir;
-import fitnesse.junit.FitNesseSuite.SuiteFilter;
 
 
 @RunWith(FitNesseSuite.class)

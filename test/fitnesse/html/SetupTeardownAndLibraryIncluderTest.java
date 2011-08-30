@@ -8,7 +8,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static util.RegexAssertions.*;
+import static util.RegexAssertions.assertNotSubString;
+import static util.RegexAssertions.assertSubString;
 
 public class SetupTeardownAndLibraryIncluderTest {
     private PageData pageData;

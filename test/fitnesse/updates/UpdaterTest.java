@@ -3,25 +3,27 @@
 package fitnesse.updates;
 
 import fitnesse.wiki.PathParser;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.io.File;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class UpdaterTest extends UpdateTestCase {
 
-  public void setUp() throws Exception {
-    super.setUp();
-    UpdaterImplementation.testing = true;
-    crawler.addPage(root, PathParser.parse("PageOne"));
-  }
+    public void setUp() throws Exception {
+        super.setUp();
+        UpdaterImplementation.testing = true;
+        crawler.addPage(root, PathParser.parse("PageOne"));
+    }
 
-  @Test
-  public void testProperties() throws Exception {
-    File file = new File("testDir/RooT/properties");
-    assertFalse(file.exists());
-    updater.updates = new Update[]{};
-    updater.update();
-    assertTrue(file.exists());
-  }
+    @Test
+    public void testProperties() throws Exception {
+        File file = new File("testDir/RooT/properties");
+        assertFalse(file.exists());
+        updater.updates = new Update[]{};
+        updater.update();
+        assertTrue(file.exists());
+    }
 }

@@ -4,31 +4,31 @@ import org.fitnesse.triviaGameExample.Game;
 import org.fitnesse.triviaGameExample.Player;
 
 public class AddRemovePlayerFixture {
-  private String playerName;
-  private Game theGame;
+    private String playerName;
+    private Game theGame;
 
-  public void setPlayerName(String playerName) {
-    this.playerName = playerName;
-  }
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
 
-  public boolean addPlayer() {
-    theGame = StaticGame.theGame;
-    Player thePlayer = theGame.addPlayer(playerName);
-    return theGame.playerIsPlaying(thePlayer);
-  }
+    public boolean addPlayer() {
+        theGame = StaticGame.theGame;
+        Player thePlayer = theGame.addPlayer(playerName);
+        return theGame.playerIsPlaying(thePlayer);
+    }
 
-  public boolean removePlayer() {
-    theGame = StaticGame.theGame;
-    Player thePlayer = theGame.getPlayerNamed(playerName);
-    theGame.removePlayer(thePlayer);
-    return playerWasRemoved(thePlayer);
-  }
+    public boolean removePlayer() {
+        theGame = StaticGame.theGame;
+        Player thePlayer = theGame.getPlayerNamed(playerName);
+        theGame.removePlayer(thePlayer);
+        return playerWasRemoved(thePlayer);
+    }
 
-  private boolean playerWasRemoved(Player aPlayer) {
-    return !theGame.playerIsPlaying(aPlayer);
-  }
+    private boolean playerWasRemoved(Player aPlayer) {
+        return !theGame.playerIsPlaying(aPlayer);
+    }
 
-  public int countPlayers() {
-    return theGame.getNumberOfPlayers();
-  }
+    public int countPlayers() {
+        return theGame.getNumberOfPlayers();
+    }
 }

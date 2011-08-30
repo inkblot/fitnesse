@@ -4,9 +4,9 @@
 package fit.exception;
 
 public class NoDefaultConstructorFixtureException extends FixtureException {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public NoDefaultConstructorFixtureException(String fixtureName) {
-    super("Class {0} has no default constructor.", fixtureName);
-  }
+    public NoDefaultConstructorFixtureException(String fixtureName) {
+        super("Class {0} has no default constructor.", fixtureName);
+    }
 }

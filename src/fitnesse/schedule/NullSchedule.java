@@ -3,12 +3,12 @@
 package fitnesse.schedule;
 
 public class NullSchedule implements Schedule {
-  public void add(ScheduleItem item) throws Exception {
-  }
+    public void add(ScheduleItem item) throws Exception {
+    }
 
-  public void start() throws Exception {
-  }
+    public void start() throws Exception {
+    }
 
-  public void stop() throws Exception {
-  }
+    public void stop() throws Exception {
+    }
 }

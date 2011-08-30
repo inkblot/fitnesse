@@ -24,8 +24,7 @@ public class Collapsible extends SymbolType implements Rule, Translation {
         if (next.getContent().equals(">")) {
             state = Closed;
             next = parser.moveNext(1);
-        }
-        else if (next.getContent().equals("<")) {
+        } else if (next.getContent().equals("<")) {
             state = Invisible;
             next = parser.moveNext(1);
         }
@@ -42,9 +41,12 @@ public class Collapsible extends SymbolType implements Rule, Translation {
                 .add(titleText)
                 .add(bodyText));
     }
+
     private static long nextId = 1;
 
-    public static void resetId() { nextId = 1; }
+    public static void resetId() {
+        nextId = 1;
+    }
 
     public String toTarget(Translator translator, Symbol symbol) {
         String option = symbol.getProperty(Collapsible.State);
@@ -96,7 +98,7 @@ public class Collapsible extends SymbolType implements Rule, Translation {
 
     private static String bodyClass(String state) {
         return state.equals(Collapsible.Open) ? "collapsable"
-               : state.equals(Collapsible.Closed) ? "hidden"
-               : "invisible";
+                : state.equals(Collapsible.Closed) ? "hidden"
+                : "invisible";
     }
 }

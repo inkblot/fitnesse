@@ -2,17 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.NotSerializableException;
-import java.io.ObjectOutputStream;
+import junit.framework.TestCase;
+import util.Clock;
+
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
-
-import junit.framework.TestCase;
-import util.Clock;
 
 public class WikiPagePropertiesTest extends TestCase {
     private WikiPageProperties properties;

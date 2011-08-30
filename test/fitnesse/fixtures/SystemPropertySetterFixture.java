@@ -5,18 +5,18 @@ package fitnesse.fixtures;
 import fit.ColumnFixture;
 
 public class SystemPropertySetterFixture extends ColumnFixture {
-  public String key;
-  public String value;
+    public String key;
+    public String value;
 
-  public void execute() {
-    System.getProperties().setProperty(key, value);
-  }
+    public void execute() {
+        System.getProperties().setProperty(key, value);
+    }
 
-  public void setKey(String key) {
-    this.key = key;
-  }
+    public void setKey(String key) {
+        this.key = key;
+    }
 
-  public void setValue(String value) {
-    this.value = value;
-  }
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

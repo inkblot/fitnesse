@@ -4,136 +4,136 @@ import org.junit.Before;
 
 public class StatementExecutorTest extends StatementExecutorTestBase {
 
-  public static class MySystemUnderTestJava extends MySystemUnderTestBase {
-    private boolean echoCalled = false;
-    private boolean speakCalled;
+    public static class MySystemUnderTestJava extends MySystemUnderTestBase {
+        private boolean echoCalled = false;
+        private boolean speakCalled;
 
-    public void speak() {
-      speakCalled = true;
+        public void speak() {
+            speakCalled = true;
+        }
+
+        public boolean speakCalled() {
+            return speakCalled;
+        }
+
+        public void echo() {
+            echoCalled = true;
+        }
+
+        public boolean echoCalled() {
+            return echoCalled;
+        }
     }
 
-    public boolean speakCalled() {
-      return speakCalled;
+    public static class MyAnnotatedSystemUnderTestFixtureJava extends
+            MyAnnotatedSystemUnderTestFixture {
+        @SystemUnderTest
+        public MySystemUnderTestBase sut = new MySystemUnderTestJava();
+        private boolean echoCalled = false;
+
+        public void echo() {
+            echoCalled = true;
+        }
+
+        public boolean echoCalled() {
+            return echoCalled;
+        }
+
+        public MySystemUnderTestBase getSystemUnderTest() {
+            return sut;
+        }
     }
 
-    public void echo() {
-      echoCalled = true;
+    public static class FixtureWithNamedSystemUnderTestJava extends FixtureWithNamedSystemUnderTestBase {
+        public MySystemUnderTestBase systemUnderTest = new MySystemUnderTestJava();
+        private boolean echoCalled;
+
+        public void echo() {
+            echoCalled = true;
+        }
+
+        public boolean echoCalled() {
+            return echoCalled;
+        }
+
+        public MySystemUnderTestBase getSystemUnderTest() {
+            return systemUnderTest;
+        }
     }
 
-    public boolean echoCalled() {
-      return echoCalled;
-    }
-  }
+    public static class SimpleFixtureJava extends SimpleFixture {
+        private boolean echoCalled;
 
-  public static class MyAnnotatedSystemUnderTestFixtureJava extends
-      MyAnnotatedSystemUnderTestFixture {
-    @SystemUnderTest
-    public MySystemUnderTestBase sut = new MySystemUnderTestJava();
-    private boolean echoCalled = false;
+        public void echo() {
+            echoCalled = true;
+        }
 
-    public void echo() {
-      echoCalled = true;
+        public boolean echoCalled() {
+            return echoCalled;
+        }
     }
 
-    public boolean echoCalled() {
-      return echoCalled;
+    public static class EchoSupportJava extends EchoSupport {
+        private boolean echoCalled;
+        private boolean speakCalled;
+
+        public void echo() {
+            echoCalled = true;
+        }
+
+        public void speak() {
+            speakCalled = true;
+        }
+
+        public boolean speakCalled() {
+            return speakCalled;
+        }
+
+        public boolean echoCalled() {
+            return echoCalled;
+        }
     }
 
-    public MySystemUnderTestBase getSystemUnderTest() {
-      return sut;
-    }
-  }
+    public static class FileSupportJava extends FileSupport {
+        private boolean deleteCalled;
 
-  public static class FixtureWithNamedSystemUnderTestJava extends FixtureWithNamedSystemUnderTestBase {
-    public MySystemUnderTestBase systemUnderTest = new MySystemUnderTestJava();
-    private boolean echoCalled;
+        public void delete(String fileName) {
+            deleteCalled = true;
+        }
 
-    public void echo() {
-      echoCalled = true;
-    }
-
-    public boolean echoCalled() {
-      return echoCalled;
+        public boolean deleteCalled() {
+            return deleteCalled;
+        }
     }
 
-    public MySystemUnderTestBase getSystemUnderTest() {
-      return systemUnderTest;
-    }
-  }
-
-  public static class SimpleFixtureJava extends SimpleFixture {
-    private boolean echoCalled;
-
-    public void echo() {
-      echoCalled = true;
+    @Override
+    @Before
+    public final void init() {
+        statementExecutor = new StatementExecutor();
     }
 
-    public boolean echoCalled() {
-      return echoCalled;
-    }
-  }
-
-  public static class EchoSupportJava extends EchoSupport {
-    private boolean echoCalled;
-    private boolean speakCalled;
-
-    public void echo() {
-      echoCalled = true;
+    @Override
+    protected String annotatedFixtureName() {
+        return MyAnnotatedSystemUnderTestFixtureJava.class.getName();
     }
 
-    public void speak() {
-      speakCalled = true;
+    @Override
+    protected String namedFixtureName() {
+        return FixtureWithNamedSystemUnderTestJava.class.getName();
     }
 
-    public boolean speakCalled() {
-      return speakCalled;
+    @Override
+    protected String simpleFixtureName() {
+        return SimpleFixtureJava.class.getName();
     }
 
-    public boolean echoCalled() {
-      return echoCalled;
-    }
-  }
-
-  public static class FileSupportJava extends FileSupport {
-    private boolean deleteCalled;
-
-    public void delete(String fileName) {
-      deleteCalled = true;
+    @Override
+    protected String echoLibraryName() {
+        return EchoSupportJava.class.getName();
     }
 
-    public boolean deleteCalled() {
-      return deleteCalled;
+    @Override
+    protected String fileSupportName() {
+        return FileSupportJava.class.getName();
     }
-  }
-
-  @Override
-  @Before
-  public final void init() {
-    statementExecutor = new StatementExecutor();
-  }
-
-  @Override
-  protected String annotatedFixtureName() {
-    return MyAnnotatedSystemUnderTestFixtureJava.class.getName();
-  }
-
-  @Override
-  protected String namedFixtureName() {
-    return FixtureWithNamedSystemUnderTestJava.class.getName();
-  }
-
-  @Override
-  protected String simpleFixtureName() {
-    return SimpleFixtureJava.class.getName();
-  }
-
-  @Override
-  protected String echoLibraryName() {
-    return EchoSupportJava.class.getName();
-  }
-
-  @Override
-  protected String fileSupportName() {
-    return FileSupportJava.class.getName();
-  }
 }

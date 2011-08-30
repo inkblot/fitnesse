@@ -2,10 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static util.RegexAssertions.*;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
@@ -13,14 +9,15 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import org.junit.Before;
+import fitnesse.wiki.*;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static util.RegexAssertions.assertHasRegexp;
+import static util.RegexAssertions.assertSubString;
 
 public class SaveResponderTest {
     private WikiPage root;

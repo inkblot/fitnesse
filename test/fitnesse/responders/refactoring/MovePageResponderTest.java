@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import java.util.List;
-
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;
@@ -12,6 +10,8 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+
+import java.util.List;
 
 import static util.RegexAssertions.assertSubString;
 

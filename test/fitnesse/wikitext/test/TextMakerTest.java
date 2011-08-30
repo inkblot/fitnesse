@@ -1,8 +1,8 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.parser.VariableSource;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

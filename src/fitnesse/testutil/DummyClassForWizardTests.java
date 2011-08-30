@@ -5,11 +5,11 @@ package fitnesse.testutil;
 import fit.ColumnFixture;
 
 public class DummyClassForWizardTests extends ColumnFixture {
-  public int v1;
+    public int v1;
 
-  public int f1() {
-    return 0;
-  }
+    public int f1() {
+        return 0;
+    }
 
-  ;
+    ;
 }

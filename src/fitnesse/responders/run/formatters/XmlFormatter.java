@@ -17,7 +17,6 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-
 import util.TimeMeasurement;
 
 import java.io.Writer;

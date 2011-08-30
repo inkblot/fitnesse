@@ -3,15 +3,15 @@
 package fitnesse.fixtures;
 
 public class EmployeePayRecord {
-  public int id;
-  private double salary;
+    public int id;
+    private double salary;
 
-  public EmployeePayRecord(int id, double salary) {
-    this.id = id;
-    this.salary = salary;
-  }
+    public EmployeePayRecord(int id, double salary) {
+        this.id = id;
+        this.salary = salary;
+    }
 
-  public double pay() {
-    return salary;
-  }
+    public double pay() {
+        return salary;
+    }
 }

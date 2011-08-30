@@ -5,7 +5,7 @@ package fitnesse.runner;
 import fitnesse.responders.run.TestSummary;
 
 public interface ResultHandler {
-  void acceptResult(PageResult result) throws Exception;
+    void acceptResult(PageResult result) throws Exception;
 
-  void acceptFinalCount(TestSummary testSummary) throws Exception;
+    void acceptFinalCount(TestSummary testSummary) throws Exception;
 }

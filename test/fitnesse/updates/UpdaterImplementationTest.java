@@ -5,19 +5,17 @@ import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
-
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
-
-import static util.RegexAssertions.assertSubString;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import static org.junit.Assert.*;
+import static util.RegexAssertions.assertSubString;
 
 public class UpdaterImplementationTest {
     private File updateList;

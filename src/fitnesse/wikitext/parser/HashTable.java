@@ -4,14 +4,15 @@ import fitnesse.html.HtmlTag;
 import util.Maybe;
 
 public class HashTable extends SymbolType implements Rule, Translation {
-    private static final SymbolType[] terminators = new SymbolType[] {SymbolType.Colon, SymbolType.Comma, SymbolType.CloseBrace};
+    private static final SymbolType[] terminators = new SymbolType[]{SymbolType.Colon, SymbolType.Comma, SymbolType.CloseBrace};
 
     public HashTable() {
         super("HashTable");
         wikiMatcher(new Matcher().string("!{"));
         wikiRule(this);
-        htmlTranslation(this);        
+        htmlTranslation(this);
     }
+
     public Maybe<Symbol> parse(Symbol current, Parser parser) {
         while (true) {
             Symbol row = new Symbol(SymbolType.SymbolList);
@@ -31,7 +32,7 @@ public class HashTable extends SymbolType implements Rule, Translation {
     public String toTarget(Translator translator, Symbol symbol) {
         HtmlTag table = new HtmlTag("table");
         table.addAttribute("class", "hash_table");
-        for (Symbol child: symbol.getChildren()) {
+        for (Symbol child : symbol.getChildren()) {
             HtmlTag row = new HtmlTag("tr");
             row.addAttribute("class", "hash_row");
             table.add(row);
@@ -43,5 +44,5 @@ public class HashTable extends SymbolType implements Rule, Translation {
             }
         }
         return table.html();
-   }
+    }
 }

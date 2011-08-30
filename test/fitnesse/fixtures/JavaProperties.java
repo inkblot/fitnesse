@@ -5,13 +5,13 @@ package fitnesse.fixtures;
 import java.util.regex.Pattern;
 
 public class JavaProperties {
-  public boolean propertyShouldMatch(String property, String pattern) {
-    String value = System.getProperty(property);
-    return Pattern.matches(pattern, value);
-  }
+    public boolean propertyShouldMatch(String property, String pattern) {
+        String value = System.getProperty(property);
+        return Pattern.matches(pattern, value);
+    }
 
 
-  public String property(String property) {
-    return System.getProperty(property);
-  }
+    public String property(String property) {
+        return System.getProperty(property);
+    }
 }

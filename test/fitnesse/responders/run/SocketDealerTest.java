@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.testutil.MockSocket;
+import fitnesse.http.MockSocket;
 import fitnesse.testutil.SimpleSocketSeeker;
 import junit.framework.TestCase;
 
@@ -12,7 +12,6 @@ import java.util.Collection;
 public class SocketDealerTest extends TestCase {
     private SocketDealer dealer;
     private SimpleSocketSeeker seeker;
-    private int ticket;
     private SimpleDoner doner;
 
     public void setUp() throws Exception {
@@ -57,7 +56,7 @@ public class SocketDealerTest extends TestCase {
 
     private void doSimpleDealing() throws Exception {
         seeker = new SimpleSocketSeeker();
-        ticket = dealer.seekingSocket(seeker);
+        int ticket = dealer.seekingSocket(seeker);
         doner = new SimpleDoner();
         dealer.dealSocketTo(ticket, doner);
     }

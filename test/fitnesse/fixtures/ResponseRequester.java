@@ -6,7 +6,7 @@ import fit.ColumnFixture;
 import fitnesse.FitNesseExpediter;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
-import fitnesse.testutil.MockSocket;
+import fitnesse.http.MockSocket;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
@@ -40,8 +40,7 @@ public class ResponseRequester extends ColumnFixture {
     }
 
     public int status() throws Exception {
-        int status = FitnesseFixtureContext.response.getStatus();
-        return status;
+        return FitnesseFixtureContext.response.getStatus();
     }
 
     public String contents() throws Exception {

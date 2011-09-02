@@ -3,11 +3,11 @@
 package fitnesse.components;
 
 import fit.FitServer;
+import fitnesse.http.MockCommandRunner;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.SocketDoner;
 import fitnesse.responders.run.SocketSeeker;
 import fitnesse.responders.run.TestSystemListener;
-import fitnesse.testutil.MockCommandRunner;
 
 import java.util.Map;
 

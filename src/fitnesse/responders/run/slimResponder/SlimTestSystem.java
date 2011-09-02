@@ -3,6 +3,7 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.components.CommandRunner;
+import fitnesse.http.MockCommandRunner;
 import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
@@ -12,7 +13,6 @@ import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
 import fitnesse.slimTables.*;
-import fitnesse.testutil.MockCommandRunner;
 import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
@@ -151,8 +151,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         try {
             String slimPort = page.getData().getVariable("SLIM_PORT");
             if (slimPort != null) {
-                int slimPortInt = Integer.parseInt(slimPort);
-                base = slimPortInt;
+                base = Integer.parseInt(slimPort);
             }
         } catch (Exception e) {
         }
@@ -249,8 +248,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         String pageSpecificSlimVersion = pageData.getVariable("SLIM_VERSION");
         if (pageSpecificSlimVersion != null) {
             try {
-                double pageSpecificSlimVersionDouble = Double.parseDouble(pageSpecificSlimVersion);
-                expectedVersionNumber = pageSpecificSlimVersionDouble;
+                expectedVersionNumber = Double.parseDouble(pageSpecificSlimVersion);
             } catch (NumberFormatException e) {
             }
         }
@@ -264,9 +262,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         allTables = createSlimTables(tableScanner);
         testResults = pageData;
 
-        boolean runAllTablesAtOnce = false;
         String htmlResults = "";
-        if (runAllTablesAtOnce || (allTables.size() == 0)) {
+        if (allTables.size() == 0) {
             htmlResults = processTablesAndGetHtml(allTables, START_OF_TEST, END_OF_TEST);
         } else {
             List<SlimTable> oneTableList = new ArrayList<SlimTable>(1);
@@ -399,7 +396,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
 
     private void replaceIfUnignoredException(String resultKey, String resultString) {
-        if (resultString.indexOf(SlimServer.EXCEPTION_TAG) != -1) {
+        if (resultString.contains(SlimServer.EXCEPTION_TAG)) {
             if (shouldReportException(resultKey, resultString))
                 processException(resultKey, resultString);
         }

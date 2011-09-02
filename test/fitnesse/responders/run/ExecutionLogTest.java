@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.testutil.MockCommandRunner;
+import fitnesse.http.MockCommandRunner;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;

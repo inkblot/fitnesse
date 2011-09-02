@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.testutil.MockCommandRunner;
+import fitnesse.http.MockCommandRunner;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
@@ -12,7 +12,6 @@ import static org.junit.Assert.assertNotNull;
 import static util.RegexAssertions.assertSubString;
 
 public class CompositeExecutionLogTest {
-    private static String ErrorLogName = ExecutionLog.ErrorLogName;
     private WikiPage testPage;
     private MockCommandRunner runner;
     private CompositeExecutionLog log;
@@ -31,7 +30,8 @@ public class CompositeExecutionLogTest {
         log.add("testSystem1", new ExecutionLog(testPage, runner));
         log.add("testSystem2", new ExecutionLog(testPage, runner));
         log.publish();
-        WikiPage errorLogPage = root.getChildPage(ErrorLogName);
+        String errorLogName = ExecutionLog.ErrorLogName;
+        WikiPage errorLogPage = root.getChildPage(errorLogName);
         assertNotNull(errorLogPage);
         WikiPage testErrorLog = errorLogPage.getChildPage("TestPage");
         assertNotNull(testErrorLog);

@@ -4,11 +4,8 @@ package fitnesse;
 
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.UnauthorizedResponder;
-import fitnesse.http.MockRequest;
-import fitnesse.http.Request;
-import fitnesse.http.Response;
-import fitnesse.http.ResponseParser;
-import fitnesse.testutil.MockSocket;
+import fitnesse.http.*;
+import fitnesse.http.MockSocket;
 import fitnesse.wiki.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;

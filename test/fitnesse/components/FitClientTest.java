@@ -3,11 +3,11 @@
 package fitnesse.components;
 
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.http.MockSocket;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.testutil.MockSocket;
 import fitnesse.testutil.SimpleSocketDoner;
 import org.junit.After;
 import org.junit.Before;

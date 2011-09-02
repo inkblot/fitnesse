@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import fitnesse.http.MockSocket;
 import fitnesse.responders.run.SocketDoner;
 
 import java.net.Socket;

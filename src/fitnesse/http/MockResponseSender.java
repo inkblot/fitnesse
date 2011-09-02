@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import fitnesse.testutil.MockSocket;
-
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.net.Socket;

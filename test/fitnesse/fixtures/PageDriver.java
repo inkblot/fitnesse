@@ -6,9 +6,9 @@ import fitnesse.FitNesseExpediter;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
+import fitnesse.http.MockSocket;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.testutil.MockSocket;
 import fitnesse.wiki.*;
 import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
@@ -104,7 +104,7 @@ public class PageDriver {
     public boolean contentContains(String subString) throws Exception {
         examiner.type = "contents";
         examiner.extractValueFromResponse();
-        return examiner.getValue().indexOf(subString) != -1;
+        return examiner.getValue().contains(subString);
     }
 
     public boolean htmlContains(String subString) throws Exception {
@@ -114,7 +114,7 @@ public class PageDriver {
         html = html.replaceAll("\\s+", " ");
         System.out.println("html = " + html);
         System.out.println("subString = " + subString);
-        return (html.indexOf(subString) != -1);
+        return (html.contains(subString));
     }
 
     public boolean containsJsonPacket(String packet) throws Exception {
@@ -163,8 +163,7 @@ public class PageDriver {
         String html = examiner.html();
         Parser parser = new Parser(new Lexer(new Page(html)));
         NodeList list = parser.parse(null);
-        NodeList matches = list.extractAllNodesThatMatch(filter, true);
-        return matches;
+        return list.extractAllNodesThatMatch(filter, true);
     }
 
     public String pageHistoryDateSignatureOf(Date date) {
@@ -207,7 +206,7 @@ public class PageDriver {
 
     public boolean contentOfTagWithIdContains(String id, String contents) throws Exception {
         String html = getValueOfTagWithAttributeValue("id", id);
-        return (html.indexOf(contents) != -1);
+        return html.contains(contents);
     }
 
     public String contentOfTagWithId(String id) throws Exception {
@@ -232,11 +231,8 @@ public class PageDriver {
             }
 
             Tag tag = (Tag) node;
-            if (tag.getAttributeEx(mAttribute) == null) {
-                return false;
-            }
+            return tag.getAttributeEx(mAttribute) != null && tag.getAttributeEx(mAttribute).getValue().startsWith(mValue);
 
-            return tag.getAttributeEx(mAttribute).getValue().startsWith(mValue);
         }
     }
 

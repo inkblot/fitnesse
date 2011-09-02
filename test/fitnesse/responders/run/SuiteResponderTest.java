@@ -18,22 +18,21 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import util.Clock;
-import util.DateAlteringClock;
-import util.DateTimeUtil;
-import util.XmlUtil;
+import util.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.Date;
 
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.getXmlDocumentFromResults;
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.*;
 
 public class SuiteResponderTest extends FitnesseBaseTestCase {
-    private static final String TEST_TIME = "12/5/2008 01:19:00";
+    private static final Date TEST_TIME = DateTimeUtil.getDateFromString("12/5/2008 01:19:00");
     private MockRequest request;
     private SuiteResponder responder;
     private WikiPage root;
@@ -53,13 +52,15 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         return new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Clock.class).toInstance(new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME), false).freeze());
+                bind(Clock.class).toInstance(new DateAlteringClock(TEST_TIME, false).freeze());
             }
         };
     }
 
     @Before
     public void setUp() throws Exception {
+        assertEquals(TEST_TIME, ClockUtil.currentDate());
+
         String suitePageName = "SuitePage";
         root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
@@ -96,6 +97,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     public void tearDown() throws Exception {
         receiver.close();
         FitNesseUtil.destroyTestContext();
+        assertEquals(TEST_TIME, ClockUtil.currentDate());
     }
 
     private String runSuite() throws Exception {

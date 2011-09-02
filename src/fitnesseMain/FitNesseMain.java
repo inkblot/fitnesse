@@ -1,6 +1,8 @@
 package fitnesseMain;
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -21,6 +23,10 @@ public class FitNesseMain {
     private static String extraOutput;
     public static boolean dontExitAfterSingleCommand;
 
+    @Inject
+    @Named("inject")
+    public static boolean inject = true;
+
     public static void main(String[] args) throws Exception {
         Arguments arguments = parseCommandLine(args);
         if (arguments != null) {
@@ -32,7 +38,8 @@ public class FitNesseMain {
     }
 
     public static void launchFitNesse(Arguments arguments) throws Exception {
-        Guice.createInjector(new FitNesseModule());
+        if (inject)
+            Guice.createInjector(new FitNesseModule());
         loadPlugins();
         FitNesseContext context = loadContext(arguments);
         Updater updater = null;

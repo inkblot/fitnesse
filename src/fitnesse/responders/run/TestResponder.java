@@ -13,10 +13,11 @@ import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
 import java.util.LinkedList;
 import java.util.List;
@@ -100,10 +101,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
                 }
             }
 
-            public void flush() throws IOException {
+            public void flush() {
             }
 
-            public void close() throws IOException {
+            public void close() {
             }
         };
     }
@@ -215,11 +216,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
 
     public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
+        private transient final Logger logger = LoggerFactory.getLogger(getClass());
+
         public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
             File resultPath = new File(PageHistory.makePageHistoryFileName(context, page, counts, time));
             File resultDirectory = new File(resultPath.getParent());
             resultDirectory.mkdirs();
             File resultFile = new File(resultDirectory, resultPath.getName());
+            logger.info("Creating test result file: resultFile=" + resultFile.getAbsolutePath());
             return new FileWriter(resultFile);
         }
     }

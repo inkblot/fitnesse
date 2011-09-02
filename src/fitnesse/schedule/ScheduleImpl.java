@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.schedule;
 
-import util.Clock;
+import util.ClockUtil;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -47,7 +47,7 @@ public class ScheduleImpl implements Schedule, Runnable {
     }
 
     public void runScheduledItems() throws Exception {
-        long time = Clock.currentTimeInMillis();
+        long time = ClockUtil.currentTimeInMillis();
         synchronized (scheduleItems) {
             for (ScheduleItem item : scheduleItems) {
                 runItem(item, time);

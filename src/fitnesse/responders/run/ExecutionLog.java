@@ -7,7 +7,7 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.*;
-import util.Clock;
+import util.ClockUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -62,7 +62,7 @@ public class ExecutionLog {
 
     String buildLogContent() throws Exception {
         StringBuffer buffer = new StringBuffer();
-        addLiteralEntry(buffer, "Date", makeDateFormat().format(Clock.currentDate()));
+        addLiteralEntry(buffer, "Date", makeDateFormat().format(ClockUtil.currentDate()));
         addEntry(buffer, "Test Page", "." + PathParser.render(crawler.getFullPath(testPage)));
         addLiteralEntry(buffer, "Command", runner.getCommand());
         addLiteralEntry(buffer, "Exit code", String.valueOf(runner.getExitCode()));

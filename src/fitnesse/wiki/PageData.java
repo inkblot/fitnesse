@@ -10,7 +10,7 @@ import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
 import fitnesse.wikitext.widgets.WidgetWithTextArgument;
 import fitnesse.wikitext.widgets.XRefWidget;
-import util.Clock;
+import util.ClockUtil;
 import util.Maybe;
 import util.StringUtil;
 
@@ -113,7 +113,7 @@ public class PageData implements Serializable {
         properties.set(PropertyFILES, Boolean.toString(true));
         properties.set(PropertyRECENT_CHANGES, Boolean.toString(true));
         properties.set(PropertySEARCH, Boolean.toString(true));
-        properties.setLastModificationTime(Clock.currentDate());
+        properties.setLastModificationTime(ClockUtil.currentDate());
 
         initTestOrSuiteProperty();
     }

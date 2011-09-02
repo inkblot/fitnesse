@@ -7,7 +7,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
-import util.Clock;
+import util.ClockUtil;
 import util.StringUtil;
 
 import java.io.IOException;
@@ -112,7 +112,7 @@ public class FitNesseExpediter implements ResponseSender {
     }
 
     private void waitForRequest(Request request) throws InterruptedException {
-        long now = Clock.currentTimeInMillis();
+        long now = ClockUtil.currentTimeInMillis();
         requestParsingDeadline = now + requestParsingTimeLimit;
         requestProgress = 0;
         while (!hasError && !request.hasBeenParsed()) {
@@ -132,7 +132,7 @@ public class FitNesseExpediter implements ResponseSender {
     }
 
     private boolean timeIsUp(long now) {
-        now = Clock.currentTimeInMillis();
+        now = ClockUtil.currentTimeInMillis();
         if (now > requestParsingDeadline) {
             requestParsingDeadline = now + requestParsingTimeLimit;
             return true;

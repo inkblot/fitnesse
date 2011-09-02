@@ -3,7 +3,6 @@
 package fitnesse.fixtures;
 
 import fit.Fixture;
-import util.Clock;
 import util.FileUtil;
 
 import java.io.File;
@@ -17,6 +16,5 @@ public class TearDown extends Fixture {
         File historyDirectory = context.getTestHistoryDirectory();
         if (historyDirectory.exists())
             FileUtil.deleteFileSystemDirectory(historyDirectory);
-        Clock.restoreDefaultClock();
     }
 }

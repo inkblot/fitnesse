@@ -4,13 +4,12 @@ package fitnesse.components;
 
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.*;
-import util.Clock;
+import util.ClockUtil;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -31,7 +30,7 @@ public class RecentChanges {
         String content = recentChangesdata.getContent();
         BufferedReader reader = new BufferedReader(new StringReader(content));
         List<String> lines = new ArrayList<String>();
-        String line = null;
+        String line;
         while ((line = reader.readLine()) != null)
             lines.add(line);
         return lines;
@@ -52,8 +51,7 @@ public class RecentChanges {
 
     private static String resource(PageData data) throws Exception {
         WikiPagePath fullPath = data.getWikiPage().getPageCrawler().getFullPath(data.getWikiPage());
-        String resource = PathParser.render(fullPath);
-        return resource;
+        return PathParser.render(fullPath);
     }
 
     private static void createRecentChangesIfNecessary(PageData data) throws Exception {
@@ -67,7 +65,7 @@ public class RecentChanges {
         String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
         if (user == null)
             user = "";
-        return "|" + resource(data) + "|" + user + "|" + makeDateFormat().format(Clock.currentDate()) + "|";
+        return "|" + resource(data) + "|" + user + "|" + makeDateFormat().format(ClockUtil.currentDate()) + "|";
     }
 
     private static void removeDuplicate(List<String> lines, String resource) {
@@ -79,9 +77,8 @@ public class RecentChanges {
     }
 
     private static String convertLinesToWikiText(List<String> lines) {
-        StringBuffer buffer = new StringBuffer();
-        for (Iterator<String> iterator = lines.iterator(); iterator.hasNext(); ) {
-            String s = iterator.next();
+        StringBuilder buffer = new StringBuilder();
+        for (String s : lines) {
             buffer.append(s).append("\n");
         }
         return buffer.toString();

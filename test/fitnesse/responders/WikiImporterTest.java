@@ -6,7 +6,7 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import junit.framework.TestCase;
 import org.w3c.dom.Document;
-import util.Clock;
+import util.ClockUtil;
 import util.XmlUtil;
 
 import java.util.Date;
@@ -60,22 +60,22 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
     }
 
     public void testEnterChildPage() throws Exception {
-        importer.enterChildPage(pageOne, Clock.currentDate());
+        importer.enterChildPage(pageOne, ClockUtil.currentDate());
 
         PageData data = pageOne.getData();
         assertEquals("page one", data.getContent());
     }
 
     public void testChildPageAdded() throws Exception {
-        importer.enterChildPage(pageOne, Clock.currentDate());
-        importer.enterChildPage(childPageOne, Clock.currentDate());
+        importer.enterChildPage(pageOne, ClockUtil.currentDate());
+        importer.enterChildPage(childPageOne, ClockUtil.currentDate());
 
         PageData data = childPageOne.getData();
         assertEquals("child one", data.getContent());
     }
 
     public void testEnterChildPageWhenRemotePageNotModified() throws Exception {
-        importer.enterChildPage(pageOne, Clock.currentDate());
+        importer.enterChildPage(pageOne, ClockUtil.currentDate());
         importer.exitPage();
 
         PageData data = pageOne.getData();
@@ -88,11 +88,11 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
     }
 
     public void testExiting() throws Exception {
-        importer.enterChildPage(pageOne, Clock.currentDate());
-        importer.enterChildPage(childPageOne, Clock.currentDate());
+        importer.enterChildPage(pageOne, ClockUtil.currentDate());
+        importer.enterChildPage(childPageOne, ClockUtil.currentDate());
         importer.exitPage();
         importer.exitPage();
-        importer.enterChildPage(pageTwo, Clock.currentDate());
+        importer.enterChildPage(pageTwo, ClockUtil.currentDate());
 
         PageData data = pageTwo.getData();
         assertEquals("page two", data.getContent());
@@ -222,14 +222,14 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
 
     public void testAutoUpdate_NewPage() throws Exception {
         importer.setAutoUpdateSetting(true);
-        importer.enterChildPage(pageOne, Clock.currentDate());
+        importer.enterChildPage(pageOne, ClockUtil.currentDate());
 
         WikiImportProperty importProps = WikiImportProperty.createFrom(pageOne.getData().getProperties());
         assertTrue(importProps.isAutoUpdate());
     }
 
     public void testAutoUpdateWhenRemotePageNotModified() throws Exception {
-        importer.enterChildPage(pageOne, Clock.currentDate());
+        importer.enterChildPage(pageOne, ClockUtil.currentDate());
         importer.exitPage();
 
         PageData data = pageOne.getData();

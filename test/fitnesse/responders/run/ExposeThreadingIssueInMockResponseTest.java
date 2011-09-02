@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -19,7 +20,7 @@ import org.junit.Test;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExposeThreadingIssueInMockResponseTest {
+public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private MockRequest request;
     private TestResponder responder;

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.FitnesseBaseTestCase;
@@ -51,6 +53,16 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     private File xmlResultsFile;
     private XmlChecker xmlChecker = new XmlChecker();
 
+    @Override
+    protected Module getTestModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Clock.class).toInstance(new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME), false).advanceMillisOnEachQuery());
+            }
+        };
+    }
+
     @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
@@ -66,14 +78,12 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         // holy side-effects, batman!  you wouldn't think from reading this line
         // that it has an effect on anything, but it tweaks some static context
         // data in order to "set the time" for the running system
-        new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery();
     }
 
     @After
     public void tearDown() throws Exception {
         receiver.close();
         FitNesseUtil.destroyTestContext();
-        Clock.restoreDefaultClock();
     }
 
     @Test

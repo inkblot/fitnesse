@@ -2,7 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import org.junit.After;
+import com.google.inject.AbstractModule;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,17 +12,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TimeMeasurementTest {
+public class TimeMeasurementTest extends FitnesseBaseTestCase {
     private Clock mockedClock;
 
     @Before
     public void mockClock() {
         mockedClock = mock(SystemClock.class);
-    }
-
-    @After
-    public void restoreDefaultClock() {
-        Clock.restoreDefaultClock();
     }
 
     @Test
@@ -172,7 +168,13 @@ public class TimeMeasurementTest {
     @Test
     public void alteringGlobalClockShouldNotAffectExistingTimeMeasurement() throws Exception {
         TimeMeasurement timeMeasurement = new TimeMeasurement();
-        DateAlteringClock globalClock = new DateAlteringClock(Clock.currentDate()).freeze();
+        inject(new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Clock.class).toInstance(new DateAlteringClock(ClockUtil.currentDate(), false).freeze());
+            }
+        });
+
         TimeMeasurement frozentTimeMeasurement = new TimeMeasurement().start();
         timeMeasurement.start();
         SystemClock systemClock = new SystemClock();

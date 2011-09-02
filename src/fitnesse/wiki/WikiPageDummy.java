@@ -3,7 +3,7 @@
 
 package fitnesse.wiki;
 
-import util.Clock;
+import util.ClockUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class WikiPageDummy implements WikiPage {
 
     public VersionInfo commit(PageData data) throws Exception {
         pageData = data;
-        return new VersionInfo("mockVersionName", "mockAuthor", Clock.currentDate());
+        return new VersionInfo("mockVersionName", "mockAuthor", ClockUtil.currentDate());
     }
 
     public List<WikiPage> getChildren() {

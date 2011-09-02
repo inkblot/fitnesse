@@ -3,13 +3,12 @@
 package fitnesse.wiki;
 
 import fitnesse.http.ResponseParser;
-import util.Clock;
+import util.ClockUtil;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 public class ProxyPage extends CachingPage implements Serializable {
@@ -27,9 +26,9 @@ public class ProxyPage extends CachingPage implements Serializable {
         super(original.getName(), null);
         realPath = original.getPageCrawler().getFullPath(original);
 
-        List<?> children = original.getChildren();
-        for (Iterator<?> iterator = children.iterator(); iterator.hasNext(); ) {
-            ProxyPage child = new ProxyPage((WikiPage) iterator.next());
+        List<WikiPage> children = original.getChildren();
+        for (WikiPage page : children) {
+            ProxyPage child = new ProxyPage(page);
             child.parent = this;
             this.children.put(child.getName(), child);
         }
@@ -50,10 +49,10 @@ public class ProxyPage extends CachingPage implements Serializable {
         retrievalCount++;
         URL url = new URL(urlString + "?responder=proxy&type=bones");
         ProxyPage page = (ProxyPage) getObjectFromUrl(url);
-        page.setTransientValues(url.getHost(), Clock.currentTimeInMillis());
+        page.setTransientValues(url.getHost(), ClockUtil.currentTimeInMillis());
         int port = url.getPort();
         page.setHostPort((port == -1) ? 80 : port);
-        page.lastLoadChildrenTime = Clock.currentTimeInMillis();
+        page.lastLoadChildrenTime = ClockUtil.currentTimeInMillis();
         return page;
     }
 
@@ -63,20 +62,20 @@ public class ProxyPage extends CachingPage implements Serializable {
     }
 
     protected void loadChildren() throws Exception {
-        if (cacheTime <= (Clock.currentTimeInMillis() - lastLoadChildrenTime)) {
+        if (cacheTime <= (ClockUtil.currentTimeInMillis() - lastLoadChildrenTime)) {
             ProxyPage page = retrievePage(getThisPageUrl());
             children.clear();
-            for (Iterator<?> iterator = page.children.values().iterator(); iterator.hasNext(); ) {
-                ProxyPage child = (ProxyPage) iterator.next();
+            for (WikiPage wikiPage : page.children.values()) {
+                ProxyPage child = (ProxyPage) wikiPage;
                 child.parent = this;
                 children.put(child.getName(), child);
             }
-            lastLoadChildrenTime = Clock.currentTimeInMillis();
+            lastLoadChildrenTime = ClockUtil.currentTimeInMillis();
         }
     }
 
     public String getThisPageUrl() {
-        StringBuffer url = new StringBuffer("http://");
+        StringBuilder url = new StringBuilder("http://");
         url.append(host);
         url.append(":").append(getHostPort());
         url.append("/").append(PathParser.render(realPath));
@@ -95,8 +94,8 @@ public class ProxyPage extends CachingPage implements Serializable {
     public void setTransientValues(String host, long lastLoadTime) {
         this.host = host;
         lastLoadChildrenTime = lastLoadTime;
-        for (Iterator<WikiPage> i = children.values().iterator(); i.hasNext(); ) {
-            ProxyPage page = (ProxyPage) i.next();
+        for (WikiPage wikiPage : children.values()) {
+            ProxyPage page = (ProxyPage) wikiPage;
             page.setTransientValues(host, lastLoadTime);
         }
     }
@@ -107,8 +106,8 @@ public class ProxyPage extends CachingPage implements Serializable {
 
     public void setHostPort(int port) {
         hostPort = port;
-        for (Iterator<WikiPage> i = children.values().iterator(); i.hasNext(); ) {
-            ProxyPage page = (ProxyPage) i.next();
+        for (WikiPage wikiPage : children.values()) {
+            ProxyPage page = (ProxyPage) wikiPage;
             page.setHostPort(port);
         }
     }
@@ -122,7 +121,7 @@ public class ProxyPage extends CachingPage implements Serializable {
     }
 
     public PageData getMeat(String versionName) throws Exception {
-        StringBuffer urlString = new StringBuffer(getThisPageUrl());
+        StringBuilder urlString = new StringBuilder(getThisPageUrl());
         urlString.append("?responder=proxy&type=meat");
         if (versionName != null)
             urlString.append("&version=").append(versionName);

@@ -1,5 +1,6 @@
 package fitnesseMain;
 
+import com.google.inject.Guice;
 import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -31,6 +32,7 @@ public class FitNesseMain {
     }
 
     public static void launchFitNesse(Arguments arguments) throws Exception {
+        Guice.createInjector(new FitNesseModule());
         loadPlugins();
         FitNesseContext context = loadContext(arguments);
         Updater updater = null;

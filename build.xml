@@ -81,7 +81,7 @@
         <javac srcdir="${src}" destdir="${build.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
             <classpath>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <fileset dir="${lib.compile}" includes="*.jar"/>
+                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
             </classpath>
         </javac>
     </target>
@@ -150,7 +150,7 @@
                 <pathelement path="${build.classes}"/>
                 <fileset dir="${lib.test}" includes="*.jar"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <fileset dir="${lib.compile}" includes="*.jar"/>
+                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
             </classpath>
         </javac>
     </target>
@@ -164,7 +164,7 @@
                 <pathelement path="${build.classes}"/>
                 <fileset dir="${lib.test}" includes="*.jar"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <fileset dir="${lib.compile}" includes="*.jar"/>
+                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <formatter type="xml" usefile="true"/>
@@ -187,7 +187,7 @@
                 <pathelement path="${test.resources}"/>
                 <fileset file="${fitnesse.jar}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <fileset dir="${lib.compile}" includes="*.jar"/>
+                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-d"/>
@@ -207,7 +207,7 @@
                 <pathelement path="${test.resources}"/>
                 <fileset file="${fitnesse.jar}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <fileset dir="${lib.compile}" includes="*.jar"/>
+                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
             </classpath>
             <arg value="-p"/>
             <arg value="9234"/>
@@ -220,7 +220,7 @@
                 <pathelement path="${test.resources}"/>
                 <fileset file="${fitnesse.jar}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <fileset dir="${lib.compile}" includes="*.jar"/>
+                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
             </classpath>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xnoagent"/>

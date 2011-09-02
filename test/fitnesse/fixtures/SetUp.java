@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
+import com.google.inject.Guice;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
@@ -16,7 +18,9 @@ import static fitnesse.fixtures.FitnesseFixtureContext.*;
 
 public class SetUp extends Fixture {
     public SetUp() throws Exception {
-        //TODO - MdM - There's got to be a better way.
+        Guice.createInjector(new FitNesseModule());
+
+        //TODO - Inject the test listeners
         WikiImportTestEventListener.register();
 
         root = InMemoryPage.makeRoot("RooT");

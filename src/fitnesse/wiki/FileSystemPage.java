@@ -5,10 +5,7 @@ package fitnesse.wiki;
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-import util.Clock;
-import util.DiskFileSystem;
-import util.FileSystem;
-import util.FileUtil;
+import util.*;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -211,13 +208,13 @@ public class FileSystemPage extends CachingPage {
     }
 
     private long getLastModifiedTime() throws Exception {
-        long lastModifiedTime = 0;
+        long lastModifiedTime;
 
         final File file = new File(getFileSystemPath() + contentFilename);
         if (file.exists()) {
             lastModifiedTime = file.lastModified();
         } else {
-            lastModifiedTime = Clock.currentTimeInMillis();
+            lastModifiedTime = ClockUtil.currentTimeInMillis();
         }
         return lastModifiedTime;
     }

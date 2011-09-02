@@ -3,7 +3,7 @@
 package fitnesse.wiki;
 
 import junit.framework.TestCase;
-import util.Clock;
+import util.ClockUtil;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -103,7 +103,7 @@ public class WikiPagePropertiesTest extends TestCase {
     public void testLastModificationTime() throws Exception {
         SimpleDateFormat format = WikiPageProperty.getTimeFormat();
         WikiPageProperties props = new WikiPageProperties();
-        assertEquals(format.format(Clock.currentDate()), format.format(props.getLastModificationTime()));
+        assertEquals(format.format(ClockUtil.currentDate()), format.format(props.getLastModificationTime()));
         Date date = format.parse("20040101000001");
         props.setLastModificationTime(date);
         assertEquals("20040101000001", props.get(PageData.PropertyLAST_MODIFIED));

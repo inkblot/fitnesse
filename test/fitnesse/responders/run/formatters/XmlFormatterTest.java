@@ -1,6 +1,9 @@
 package fitnesse.responders.run.formatters;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestExecutionReport.TestResult;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.formatters.XmlFormatter.WriterFactory;
@@ -8,15 +11,13 @@ import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
 import util.DateAlteringClock;
 import util.DateTimeUtil;
 import util.TimeMeasurement;
 
-import java.text.ParseException;
+import javax.inject.Inject;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -25,18 +26,20 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class XmlFormatterTest {
+public class XmlFormatterTest extends FitnesseBaseTestCase {
     private static final String TEST_TIME = "4/13/2009 15:21:43";
-    private DateAlteringClock clock;
 
-    @Before
-    public void setUp() throws ParseException {
-        clock = new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
-    }
+    @Inject
+    public Clock clock;
 
-    @After
-    public void tearDown() {
-        Clock.restoreDefaultClock();
+    @Override
+    protected Module getTestModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Clock.class).toInstance(new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME), false).freeze());
+            }
+        };
     }
 
     @Test

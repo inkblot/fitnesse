@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
@@ -46,6 +48,16 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
             "|string|get string arg?|\n" +
             "|wow|wow|\n";
 
+    @Override
+    protected Module getTestModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Clock.class).toInstance(new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME), false).freeze());
+            }
+        };
+    }
+
     @Before
     public void setUp() throws Exception {
         String suitePageName = "SuitePage";
@@ -66,16 +78,6 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         context = makeContext(root);
 
         receiver = new FitSocketReceiver(0, context.socketDealer);
-
-        // holy side-effects, batman!  you wouldn't think from reading this line
-        // that it has an effect on anything, but it tweaks some static context
-        // data in order to "set the time" for the running system
-        new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze();
-    }
-
-    @After
-    public void restoreDefaultClock() {
-        Clock.restoreDefaultClock();
     }
 
     private WikiPage addTestToSuite(String name, String content) throws Exception {

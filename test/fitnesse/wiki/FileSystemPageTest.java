@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import util.Clock;
+import util.ClockUtil;
 import util.FileUtil;
 
 import java.io.File;
@@ -77,7 +77,7 @@ public class FileSystemPageTest {
 
     @Test
     public void testBigContent() throws Exception {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < 1000; i++)
             buffer.append("abcdefghijklmnopqrstuvwxyz");
         crawler.addPage(root, PathParser.parse("BigPage"), buffer.toString());
@@ -177,7 +177,7 @@ public class FileSystemPageTest {
     public void testLastModifiedTime() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "some text");
         page.commit(page.getData());
-        long now = Clock.currentTimeInMillis();
+        long now = ClockUtil.currentTimeInMillis();
         Date lastModified = page.getData().getProperties().getLastModificationTime();
         assertTrue(now - lastModified.getTime() <= 5000);
     }

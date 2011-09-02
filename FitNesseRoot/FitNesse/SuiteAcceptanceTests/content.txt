@@ -16,6 +16,7 @@
 !path build/dist/fitnesse.jar
 !path lib/runtime/*.jar
 !path build/test/classes
+!path integration-resources
 ----
 !2 ''Port''
 FitNesse is running on port: ${FITNESSE_PORT}

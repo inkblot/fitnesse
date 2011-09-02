@@ -5,14 +5,13 @@ package fitnesse.responders.run;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 
 public abstract class TestSystem implements TestSystemListener {
     public static final String DEFAULT_COMMAND_PATTERN =
-            "java -cp fitnesse.jar" +
-                    System.getProperties().get("path.separator") +
-                    "%p %m";
+            "java -cp " + System.getProperty("java.class.path") + File.pathSeparator + "%p %m";
     public static final String DEFAULT_JAVA_DEBUG_COMMAND = "java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -cp %p %m";
     public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
     public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
@@ -197,6 +196,7 @@ public abstract class TestSystem implements TestSystemListener {
         }
 
         public boolean equals(Object obj) {
+            if (!(obj instanceof Descriptor)) return false;
             Descriptor d = (Descriptor) obj;
             return d.testSystemName.equals(testSystemName) &&
                     d.testRunner.equals(testRunner) &&

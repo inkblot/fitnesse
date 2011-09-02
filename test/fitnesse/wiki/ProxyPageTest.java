@@ -4,25 +4,21 @@ package fitnesse.wiki;
 
 import fitnesse.testutil.FitNesseUtil;
 import junit.framework.TestCase;
-import util.Clock;
+import util.ClockUtil;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class ProxyPageTest extends TestCase {
-    private WikiPage root;
-    private WikiPage original;
     private ProxyPage proxy;
     public WikiPage child1;
     private PageCrawler crawler;
-    private WikiPagePath page1Path;
 
     public void setUp() throws Exception {
         CachingPage.cacheTime = 0;
-        root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
-        page1Path = PathParser.parse("PageOne");
-        original = crawler.addPage(root, page1Path, "page one content");
+        WikiPagePath page1Path = PathParser.parse("PageOne");
+        WikiPage original = crawler.addPage(root, page1Path, "page one content");
         child1 = crawler.addPage(original, PathParser.parse("ChildOne"), "child one");
         crawler.addPage(original, PathParser.parse("ChildTwo"), "child two");
         PageData data = original.getData();
@@ -32,7 +28,7 @@ public class ProxyPageTest extends TestCase {
         FitNesseUtil.startFitnesse(root);
 
         proxy = new ProxyPage(original);
-        proxy.setTransientValues("localhost", Clock.currentTimeInMillis());
+        proxy.setTransientValues("localhost", ClockUtil.currentTimeInMillis());
         proxy.setHostPort(FitNesseUtil.port);
     }
 
@@ -69,15 +65,15 @@ public class ProxyPageTest extends TestCase {
     }
 
     public void testSetHostAndPort() throws Exception {
-        List<?> children = proxy.getChildren();
-        proxy.setTransientValues("a.new.host", Clock.currentTimeInMillis());
+        List<WikiPage> children = proxy.getChildren();
+        proxy.setTransientValues("a.new.host", ClockUtil.currentTimeInMillis());
         proxy.setHostPort(123);
 
         assertEquals("a.new.host", proxy.getHost());
         assertEquals(123, proxy.getHostPort());
 
-        for (Iterator<?> iterator = children.iterator(); iterator.hasNext(); ) {
-            ProxyPage page = (ProxyPage) iterator.next();
+        for (WikiPage child : children) {
+            ProxyPage page = (ProxyPage) child;
             assertEquals("a.new.host", page.getHost());
             assertEquals(123, page.getHostPort());
         }

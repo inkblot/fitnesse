@@ -7,7 +7,7 @@ import java.text.ParseException;
 
 public class ClockFixture {
     public void freezeClockAt(String dateTime) throws ParseException {
-        new DateAlteringClock(DateTimeUtil.getDateFromString(dateTime)).freeze();
+        new DateAlteringClock(DateTimeUtil.getDateFromString(dateTime), true).freeze();
     }
 
 }

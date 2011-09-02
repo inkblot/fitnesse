@@ -8,7 +8,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
-import util.Clock;
+import util.ClockUtil;
 import util.FileUtil;
 
 import java.io.File;
@@ -34,7 +34,7 @@ public class PurgeHistoryResponder implements SecureResponder {
     private void initializeResponder(FitNesseContext context) {
         if (resultsDirectory == null)
             resultsDirectory = context.getTestHistoryDirectory();
-        todaysDate = Clock.currentDate();
+        todaysDate = ClockUtil.currentDate();
     }
 
     private SimpleResponse makeValidResponse() throws Exception {
@@ -92,8 +92,7 @@ public class PurgeHistoryResponder implements SecureResponder {
     public Date getDateDaysAgo(int days) {
         long now = todaysDate.getTime();
         long millisecondsPerDay = 1000L * 60L * 60L * 24L;
-        Date daysEarlier = new Date(now - (millisecondsPerDay * days));
-        return daysEarlier;
+        return new Date(now - (millisecondsPerDay * days));
     }
 
     private void deleteIfExpired(File file, Date expirationDate) {

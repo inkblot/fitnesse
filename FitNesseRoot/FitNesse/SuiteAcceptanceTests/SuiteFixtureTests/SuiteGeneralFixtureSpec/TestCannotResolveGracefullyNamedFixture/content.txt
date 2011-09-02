@@ -7,8 +7,10 @@
 |Action fixture|
 |start|Page builder|
 |enter|attributes|Test=true|
-|enter|line|!-!path ./build/classes-!|
-|enter|line|!-!path ./fitnesse.jar-!|
+|enter|line|!-!path ./build/dist/fitnesse.jar-!|
+|enter|line|!-!path ./lib/runtime/*.jar-!|
+|enter|line|!-!path ./build/test/classes-!|
+|enter|line|!-!path ./integration-resources-!|
 |enter|line|!-|Import|-!|
 |enter|line|!-|fit.testFxtr|-!|
 |enter|line||

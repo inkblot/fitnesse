@@ -4,6 +4,7 @@
 !path build/dist/fitnesse.jar
 !path lib/runtime/*.jar
 !path build/test/classes
+!path integration-resources
 
 
 

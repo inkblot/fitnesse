@@ -10,6 +10,7 @@
 !define SUITE_ONE {!path build/dist/fitnesse.jar
 !path lib/runtime/*.jar
 !path build/test/classes
+!path integration-resources
 !define TEST_SYSTEM (slim)
 !define SLIM_PORT (9000)
 }

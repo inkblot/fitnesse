@@ -11,7 +11,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import junit.framework.TestCase;
-import util.Clock;
+import util.ClockUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,7 +55,7 @@ public class WikiImportPropertyTest extends TestCase {
 
     public void testLastUpdated() throws Exception {
         SimpleDateFormat format = WikiPageProperty.getTimeFormat();
-        Date date = Clock.currentDate();
+        Date date = ClockUtil.currentDate();
         property.setLastRemoteModificationTime(date);
 
         assertEquals(format.format(date), format.format(property.getLastRemoteModificationTime()));
@@ -72,7 +72,7 @@ public class WikiImportPropertyTest extends TestCase {
         rawImportProperty.set("IsRoot");
         rawImportProperty.set("AutoUpdate");
         rawImportProperty.set("Source", "some source");
-        Date date = Clock.currentDate();
+        Date date = ClockUtil.currentDate();
         rawImportProperty.set("LastRemoteModification", WikiPageProperty.getTimeFormat().format(date));
 
         WikiImportProperty importProperty = WikiImportProperty.createFrom(property);

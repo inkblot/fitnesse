@@ -20,6 +20,7 @@
     </publications>
 
     <dependencies>
+        <dependency org="com.google.inject" name="guice" rev="3.0" conf="runtime->default"/>
         <dependency org="ant" name="ant" rev="1.7.0" conf="runtime->default"/>
         <dependency org="org.htmlparser" name="htmlparser" rev="1.6" conf="runtime->default"/>
         <dependency org="org.json" name="json" rev="20090211" conf="runtime->default"/>
@@ -29,8 +30,7 @@
         <dependency org="commons-lang" name="commons-lang" rev="2.6" conf="runtime->default"/>
         <dependency org="org.slf4j" name="slf4j-api" rev="1.6.2" conf="runtime->default"/>
 
-        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.2" conf="compile->default"/>
-        <dependency org="log4j" name="log4j" rev="1.2.16" conf="compile->default"/>
+        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.2" conf="runtime->default"/>
 
         <dependency org="junit" name="junit" rev="4.6" conf="test->default"/>
         <dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default"/>

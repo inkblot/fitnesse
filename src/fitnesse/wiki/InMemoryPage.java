@@ -3,7 +3,7 @@
 package fitnesse.wiki;
 
 import fitnesse.ComponentFactory;
-import util.Clock;
+import util.ClockUtil;
 import util.FileSystem;
 
 import java.util.*;
@@ -78,7 +78,7 @@ public class InMemoryPage extends CommitingPage {
 
     public void doCommit(PageData newData) throws Exception {
         newData.setWikiPage(this);
-        newData.getProperties().setLastModificationTime(Clock.currentDate());
+        newData.getProperties().setLastModificationTime(ClockUtil.currentDate());
         versions.put(currentVersionName, newData);
     }
 

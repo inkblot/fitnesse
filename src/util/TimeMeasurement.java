@@ -11,7 +11,7 @@ public class TimeMeasurement {
     private Long stoppedAt;
 
     public TimeMeasurement() {
-        this(Clock.instance);
+        this(ClockUtil.instance.get());
     }
 
     TimeMeasurement(Clock measuringClock) {

@@ -1,7 +1,7 @@
 package fitnesse.wiki.zip;
 
 import fitnesse.wiki.*;
-import util.Clock;
+import util.ClockUtil;
 import util.StreamReader;
 
 import java.io.*;
@@ -89,7 +89,7 @@ public class ZipFileVersionsController extends NullVersionsController {
         final VersionInfo version = makeVersionInfo(data);
 
         if (filesToZip.size() == 0) {
-            return new VersionInfo("first_commit", "", Clock.currentDate());
+            return new VersionInfo("first_commit", "", ClockUtil.currentDate());
         }
         ZipOutputStream zos = null;
         try {

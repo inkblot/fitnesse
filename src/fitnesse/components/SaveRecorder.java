@@ -4,7 +4,7 @@ package fitnesse.components;
 
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import util.Clock;
+import util.ClockUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class SaveRecorder {
     }
 
     public static long timeStamp() {
-        return Clock.currentTimeInMillis();
+        return ClockUtil.currentTimeInMillis();
     }
 
     public static long newTicket() {

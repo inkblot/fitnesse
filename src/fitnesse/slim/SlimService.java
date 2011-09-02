@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.socketservice.SocketService;
 import util.CommandLine;
 
@@ -11,6 +15,10 @@ public class SlimService extends SocketService {
     public static SlimService instance = null;
     public static boolean verbose;
     public static int port;
+
+    @Inject
+    @Named("inject")
+    public static boolean inject = true;
 
     public static void main(String[] args) throws Exception {
         if (parseCommandLine(args)) {
@@ -25,6 +33,8 @@ public class SlimService extends SocketService {
     }
 
     protected static void startWithFactory(String[] args, SlimFactory slimFactory) throws Exception {
+        if (inject)
+            Guice.createInjector(new FitNesseModule());
         new SlimService(port, slimFactory.getSlimServer(verbose));
     }
 

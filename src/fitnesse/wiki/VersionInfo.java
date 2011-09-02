@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import util.Clock;
+import util.ClockUtil;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -37,7 +37,7 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
     }
 
     public VersionInfo(String complexName) {
-        this(complexName, "", Clock.currentDate());
+        this(complexName, "", ClockUtil.currentDate());
         Matcher match = COMPEX_NAME_PATTERN.matcher(complexName);
         if (match.find()) {
             author = match.group(1);
@@ -71,8 +71,8 @@ public class VersionInfo implements Comparable<VersionInfo>, Serializable {
 
     public int compareTo(VersionInfo o) {
         VersionInfo otherVersion;
-        if (o instanceof VersionInfo) {
-            otherVersion = ((VersionInfo) o);
+        if (o != null) {
+            otherVersion = o;
             return getCreationTime().compareTo(otherVersion.getCreationTime());
         } else
             return 0;

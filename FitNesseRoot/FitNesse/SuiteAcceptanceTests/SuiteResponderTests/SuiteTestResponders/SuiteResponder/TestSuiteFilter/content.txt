@@ -5,8 +5,10 @@ When you execute a suite page with a filter, !-FitNesse-! should only run tests 
 Create a Suite page
 
 |script|Page Builder|
-|line|!-!path build/classes-!|
-|line|!-!path fitnesse.jar-!|
+|line|!-!path build/dist/fitnesse.jar-!|
+|line|!-!path lib/runtime/*.jar-!|
+|line|!-!path build/test/classes-!|
+|line|!-!path integration-resources-!|
 |page|!-SuitePage-!|
 
 Create two sub pages

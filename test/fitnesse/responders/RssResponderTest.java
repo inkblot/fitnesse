@@ -11,7 +11,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import util.Clock;
+import util.ClockUtil;
 import util.XmlUtil;
 
 import java.text.SimpleDateFormat;
@@ -33,9 +33,9 @@ public class RssResponderTest extends ResponderTestCase {
     public void setUp() throws Exception {
         super.setUp();
         SimpleDateFormat dateFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
-        date = dateFormat.format(Clock.currentDate());
+        date = dateFormat.format(ClockUtil.currentDate());
         SimpleDateFormat rfcDateFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
-        rfcDate = rfcDateFormat.format(Clock.currentDate());
+        rfcDate = rfcDateFormat.format(ClockUtil.currentDate());
         hostName = java.net.InetAddress.getLocalHost().getHostName();
         Locale.setDefault(Locale.US);
     }
@@ -102,8 +102,8 @@ public class RssResponderTest extends ResponderTestCase {
     public void testConvertDateFormat() throws Exception {
         SimpleDateFormat oldFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
         SimpleDateFormat newFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
-        String inDate = oldFormat.format(Clock.currentDate());
-        String outDate = newFormat.format(Clock.currentDate());
+        String inDate = oldFormat.format(ClockUtil.currentDate());
+        String outDate = newFormat.format(ClockUtil.currentDate());
         RssResponder responder = new RssResponder();
         String convertedDate = responder.convertDateFormat(inDate);
         assertEquals(convertedDate, outDate);
@@ -111,7 +111,7 @@ public class RssResponderTest extends ResponderTestCase {
 
     public void testBadDateFormat() throws Exception {
         SimpleDateFormat oldFormat = new SimpleDateFormat("h:mm:ss a EEE MMM dd, yyyy");
-        String inDate = oldFormat.format(Clock.currentDate());
+        String inDate = oldFormat.format(ClockUtil.currentDate());
         RssResponder responder = new RssResponder();
         String convertedDate = responder.convertDateFormat(inDate);
         assertEquals(convertedDate, inDate);
@@ -137,7 +137,6 @@ public class RssResponderTest extends ResponderTestCase {
     private NodeList getReportedItems(String recentChangesContent) throws Exception {
         crawler.addPage(root, PathParser.parse("RecentChanges"), recentChangesContent);
         buildRssChannel();
-        NodeList items = channelElement.getElementsByTagName("item");
-        return items;
+        return channelElement.getElementsByTagName("item");
     }
 }

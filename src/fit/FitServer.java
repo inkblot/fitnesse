@@ -3,7 +3,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import com.google.inject.Guice;
 import fit.exception.FitParseException;
+import fitnesse.FitNesseModule;
 import util.CommandLine;
 import util.FileUtil;
 import util.StreamReader;
@@ -37,6 +39,7 @@ public class FitServer {
     }
 
     public static void main(String argv[]) throws Exception {
+        Guice.createInjector(new FitNesseModule());
         FitServer fitServer = new FitServer();
         fitServer.run(argv);
         if (!fitServer.noExit)
@@ -71,7 +74,7 @@ public class FitServer {
     public void process() {
         fixture.listener = fixtureListener;
         try {
-            int size = 1;
+            int size;
             while ((size = FitProtocol.readSize(socketReader)) != 0) {
                 try {
                     print("processing document of size: " + size + "\n");

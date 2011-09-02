@@ -10,12 +10,6 @@ import java.util.Date;
 public abstract class Clock {
 
     protected Clock() {
-        this(false);
-    }
-
-    protected Clock(boolean setAsInstance) {
-        if (setAsInstance)
-            throw new IllegalArgumentException("AAAAAIEEEEEEEEEEEEEEEEEEEEEEEEEEEE!");
     }
 
     public abstract long currentClockTimeInMillis();

@@ -37,7 +37,7 @@ public class XmlFormatterTest extends FitnesseBaseTestCase {
         return new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Clock.class).toInstance(new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME), false).freeze());
+                bind(Clock.class).toInstance(new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).freeze());
             }
         };
     }

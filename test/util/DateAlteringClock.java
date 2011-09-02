@@ -14,8 +14,8 @@ public class DateAlteringClock extends Clock {
     private final long baseSystemTime;
     private boolean frozen, advanceOnEachQuery;
 
-    public DateAlteringClock(Date rebaseToDate, boolean dumb) {
-        super(dumb);
+    public DateAlteringClock(Date rebaseToDate) {
+        super();
         this.rebaseToTime = rebaseToDate.getTime();
         this.baseSystemTime = ClockUtil.SYSTEM_CLOCK.currentClockTimeInMillis();
     }

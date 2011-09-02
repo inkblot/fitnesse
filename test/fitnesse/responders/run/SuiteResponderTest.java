@@ -52,7 +52,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         return new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Clock.class).toInstance(new DateAlteringClock(TEST_TIME, false).freeze());
+                bind(Clock.class).toInstance(new DateAlteringClock(TEST_TIME).freeze());
             }
         };
     }

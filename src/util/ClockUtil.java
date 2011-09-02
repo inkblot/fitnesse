@@ -43,4 +43,13 @@ public class ClockUtil {
     public static void inject(Provider<Clock> clockProvider) {
         instance = clockProvider;
     }
+
+    public static void inject(final Clock clock) {
+        inject(new Provider<Clock>() {
+            @Override
+            public Clock get() {
+                return clock;
+            }
+        });
+    }
 }

@@ -171,7 +171,7 @@ public class TimeMeasurementTest extends FitnesseBaseTestCase {
         inject(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Clock.class).toInstance(new DateAlteringClock(ClockUtil.currentDate(), false).freeze());
+                bind(Clock.class).toInstance(new DateAlteringClock(ClockUtil.currentDate()).freeze());
             }
         });
 

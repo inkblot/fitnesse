@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import com.google.inject.Provider;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 
@@ -30,27 +29,18 @@ public class ClockUtilTest extends FitnesseBaseTestCase {
         assertThat(ClockUtil.currentTimeInMillis(), is(1L));
     }
 
-    private Provider<Clock> newConstantTimeClock(final long theConstantTime) {
-        return
-                new com.google.inject.Provider<Clock>() {
-                    private Clock clock =
-                            new Clock(false) {
-                                @Override
-                                public long currentClockTimeInMillis() {
-                                    return theConstantTime;
-                                }
-                            };
-
-                    @Override
-                    public Clock get() {
-                        return clock;
-                    }
-                };
+    private Clock newConstantTimeClock(final long theConstantTime) {
+        return new Clock() {
+            @Override
+            public long currentClockTimeInMillis() {
+                return theConstantTime;
+            }
+        };
     }
 
     @Test
     public void dateMethodShouldDelegateToCurrentTimeInMillis() throws Exception {
-        Clock constantTimeClock = newConstantTimeClock(2).get();
+        Clock constantTimeClock = newConstantTimeClock(2);
         assertThat(constantTimeClock.currentClockDate().getTime(), is(2L));
     }
 
@@ -62,11 +52,11 @@ public class ClockUtilTest extends FitnesseBaseTestCase {
 
     @Test
     public void booleanConstructorArgShouldDetermineWhetherToReplaceGlobalInstance() throws Exception {
-        Clock constantTimeClock = newConstantTimeClock(4).get();
+        Clock constantTimeClock = newConstantTimeClock(4);
         assertThat(ClockUtil.instance.get(), is(not(constantTimeClock)));
-        Provider<Clock> clockProvider = newConstantTimeClock(5);
-        ClockUtil.inject(clockProvider);
-        assertThat(ClockUtil.instance.get(), is(clockProvider.get()));
+        constantTimeClock = newConstantTimeClock(5);
+        ClockUtil.inject(constantTimeClock);
+        assertThat(ClockUtil.instance.get(), is(constantTimeClock));
     }
 
     @Test

@@ -58,7 +58,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         return new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Clock.class).toInstance(new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME), false).advanceMillisOnEachQuery());
+                bind(Clock.class).toInstance(new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery());
             }
         };
     }

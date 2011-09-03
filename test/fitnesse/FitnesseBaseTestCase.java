@@ -8,6 +8,7 @@ import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 
@@ -100,33 +101,43 @@ public class FitnesseBaseTestCase {
     protected String classPath() {
         StringBuilder cp = new StringBuilder();
 
-        File classes = new File("classes");
-        assertTrue(classes.exists());
-        cp.append(classes.getAbsolutePath());
-
-        File testResources = new File("../test-resources");
-        assertTrue(testResources.exists());
-        cp.append(File.pathSeparator).append(testResources.getAbsolutePath());
-
-        File resources = new File("../resources");
-        assertTrue(resources.exists());
-        cp.append(File.pathSeparator).append(resources.getAbsolutePath());
-
-        final File libRuntime = new File("../lib/runtime");
-        assertTrue(libRuntime.exists());
-        String[] jarList = libRuntime.list(
-                new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return dir.equals(libRuntime) && name.endsWith(".jar");
-                    }
-                });
-        for (String jar : jarList) {
-            File runtimeJar = new File(libRuntime, jar);
-            assertTrue(runtimeJar.exists());
-            cp.append(File.pathSeparator).append(runtimeJar.getAbsolutePath());
-        }
+        cp.append(classPathDir("test/classes"));
+        cp.append(File.pathSeparator);
+        cp.append(classPathDir("../test-resources"));
+        cp.append(File.pathSeparator);
+        cp.append(classPathDir("classes"));
+        cp.append(File.pathSeparator);
+        cp.append(classPathDir("../resources"));
+        cp.append(File.pathSeparator);
+        cp.append(classPathJarDir("../lib/runtime"));
+//        cp.append(File.pathSeparator);
+//        cp.append(classPathJarDir("../lib/compile"));
+        cp.append(File.pathSeparator);
+        cp.append(classPathJarDir("../lib/test"));
 
         return cp.toString();
+    }
+
+    private String classPathDir(String dir) {
+        File dirFile = new File(dir);
+        assertTrue(dirFile.exists());
+        return dirFile.getAbsolutePath();
+    }
+
+    private String classPathJarDir(String jarDir) {
+        final File jarDirFile = new File(jarDir);
+        assertTrue(jarDirFile.exists());
+        File[] jarList = jarDirFile.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return dir.equals(jarDirFile) && name.endsWith(".jar");
+                    }
+                });
+        String[] jarPaths = new String[jarList.length];
+        for (int index = 0; index < jarPaths.length; index++) {
+            assertTrue(jarList[index].exists());
+            jarPaths[index] = jarList[index].getAbsolutePath();
+        }
+        return StringUtils.join(jarPaths, File.pathSeparator);
     }
 }

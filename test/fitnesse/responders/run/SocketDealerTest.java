@@ -12,7 +12,7 @@ import java.util.Collection;
 public class SocketDealerTest extends TestCase {
     private SocketDealer dealer;
     private SimpleSocketSeeker seeker;
-    private SimpleDoner doner;
+    private SimpleDonor doner;
 
     public void setUp() throws Exception {
         dealer = new SocketDealer();
@@ -21,7 +21,7 @@ public class SocketDealerTest extends TestCase {
     public void tearDown() throws Exception {
     }
 
-    public static class SimpleDoner implements SocketDoner {
+    public static class SimpleDonor implements SocketDonor {
         public MockSocket socket = new MockSocket("");
         boolean finished = false;
 
@@ -57,7 +57,7 @@ public class SocketDealerTest extends TestCase {
     private void doSimpleDealing() throws Exception {
         seeker = new SimpleSocketSeeker();
         int ticket = dealer.seekingSocket(seeker);
-        doner = new SimpleDoner();
+        doner = new SimpleDonor();
         dealer.dealSocketTo(ticket, doner);
     }
 
@@ -66,8 +66,8 @@ public class SocketDealerTest extends TestCase {
         SimpleSocketSeeker seeker2 = new SimpleSocketSeeker();
         int ticket1 = dealer.seekingSocket(seeker1);
         int ticket2 = dealer.seekingSocket(seeker2);
-        SimpleDoner doner1 = new SimpleDoner();
-        SimpleDoner doner2 = new SimpleDoner();
+        SimpleDonor doner1 = new SimpleDonor();
+        SimpleDonor doner2 = new SimpleDonor();
         dealer.dealSocketTo(ticket1, doner1);
         dealer.dealSocketTo(ticket2, doner2);
 

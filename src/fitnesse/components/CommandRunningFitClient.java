@@ -5,10 +5,11 @@ package fitnesse.components;
 import fit.FitServer;
 import fitnesse.http.MockCommandRunner;
 import fitnesse.responders.run.SocketDealer;
-import fitnesse.responders.run.SocketDoner;
+import fitnesse.responders.run.SocketDonor;
 import fitnesse.responders.run.SocketSeeker;
 import fitnesse.responders.run.TestSystemListener;
 
+import java.io.IOException;
 import java.util.Map;
 
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
@@ -17,7 +18,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
     private int ticketNumber;
     public CommandRunner commandRunner;
-    private SocketDoner donor;
+    private SocketDonor donor;
     private boolean connectionEstablished = false;
 
     private Thread timeoutThread;
@@ -61,8 +62,8 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
                 try {
                     while (!tryCreateFitServer(fitArgs))
                         Thread.sleep(10);
-                } catch (Exception e) {
-
+                } catch (InterruptedException e) {
+                    // ok
                 }
             }
         };
@@ -70,7 +71,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         fastFitServer.start();
     }
 
-    private boolean tryCreateFitServer(String args) throws Exception {
+    private boolean tryCreateFitServer(String args) {
         try {
             FitServer.main(args.trim().split(" "));
             return true;
@@ -94,7 +95,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         }
     }
 
-    public void acceptSocketFrom(SocketDoner donor) throws Exception {
+    public void acceptSocketFrom(SocketDonor donor) throws Exception {
         this.donor = donor;
         acceptSocket(donor.donateSocket());
         connectionEstablished = true;
@@ -131,6 +132,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
                 donor.finishedWithSocket();
             killVigilantThreads();
         } catch (InterruptedException e) {
+            // ok
         }
     }
 
@@ -153,7 +155,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     }
 
     private class TimeoutRunnable implements Runnable {
-        long timeSlept = 0;
 
         public void run() {
             try {

@@ -8,7 +8,7 @@ import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.testutil.SimpleSocketDoner;
+import fitnesse.testutil.SimpleSocketDonor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class FitClientTest extends FitnesseBaseTestCase implements TestSystemLis
     private boolean exceptionOccurred = false;
     private int port = 9080;
     private FitSocketReceiver receiver;
-    private SimpleSocketDoner doner;
+    private SimpleSocketDonor doner;
 
     @Before
     public void setUp() throws Exception {
@@ -44,7 +44,7 @@ public class FitClientTest extends FitnesseBaseTestCase implements TestSystemLis
         }
 
         protected void dealSocket(int ticket) throws Exception {
-            doner = new SimpleSocketDoner(socket);
+            doner = new SimpleSocketDonor(socket);
             client.acceptSocketFrom(doner);
         }
     }
@@ -173,7 +173,7 @@ public class FitClientTest extends FitnesseBaseTestCase implements TestSystemLis
         Thread.sleep(100);
         assertFalse(client.isSuccessfullyStarted());
 
-        client.acceptSocketFrom(new SimpleSocketDoner(new MockSocket("")));
+        client.acceptSocketFrom(new SimpleSocketDonor(new MockSocket("")));
         Thread.sleep(100);
         assertTrue(client.isSuccessfullyStarted());
 

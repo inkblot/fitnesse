@@ -3,19 +3,19 @@
 package fitnesse.testutil;
 
 import fitnesse.http.MockSocket;
-import fitnesse.responders.run.SocketDoner;
+import fitnesse.responders.run.SocketDonor;
 
 import java.net.Socket;
 
-public class SimpleSocketDoner implements SocketDoner {
+public class SimpleSocketDonor implements SocketDonor {
     public Socket socket;
     public boolean finished = false;
 
-    public SimpleSocketDoner() {
-        socket = new MockSocket("SimpleSocketDoner");
+    public SimpleSocketDonor() {
+        socket = new MockSocket("SimpleSocketDonor");
     }
 
-    public SimpleSocketDoner(Socket socket) {
+    public SimpleSocketDonor(Socket socket) {
         this.socket = socket;
     }
 

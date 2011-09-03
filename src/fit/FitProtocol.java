@@ -38,15 +38,15 @@ public class FitProtocol {
         writeSize(count.exceptions, output);
     }
 
-    public static int readSize(StreamReader reader) throws Exception {
+    public static int readSize(StreamReader reader) throws IOException {
         String sizeString = reader.read(10);
         if (sizeString.length() < 10)
-            throw new Exception("A size value could not be read. Fragment=|" + sizeString + "|");
+            throw new FitProtocolException("A size value could not be read. Fragment=|" + sizeString + "|");
         else
-            return Integer.valueOf(sizeString).intValue();
+            return Integer.valueOf(sizeString);
     }
 
-    public static String readDocument(StreamReader reader, int size) throws Exception {
+    public static String readDocument(StreamReader reader, int size) throws IOException {
         return reader.read(size);
     }
 

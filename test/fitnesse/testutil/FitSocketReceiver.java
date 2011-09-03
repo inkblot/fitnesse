@@ -45,7 +45,7 @@ public class FitSocketReceiver {
     }
 
     protected void dealSocket(int ticket) throws Exception {
-        dealer.dealSocketTo(ticket, new SimpleSocketDoner(socket));
+        dealer.dealSocketTo(ticket, new SimpleSocketDonor(socket));
     }
 
     public void close() throws Exception {

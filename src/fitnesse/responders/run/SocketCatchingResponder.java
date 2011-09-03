@@ -11,7 +11,7 @@ import fitnesse.http.ResponseSender;
 
 import java.net.Socket;
 
-public class SocketCatchingResponder implements Responder, SocketDoner, ResponsePuppeteer {
+public class SocketCatchingResponder implements Responder, SocketDonor, ResponsePuppeteer {
     private int ticketNumber;
     private SocketDealer dealer;
     private Socket socket;

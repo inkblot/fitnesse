@@ -44,7 +44,7 @@ public class FitServer {
     public FitServer() {
     }
 
-    public static void main(String argv[]) throws Exception {
+    public static void main(String argv[]) throws IOException {
         if (inject)
             Guice.createInjector(new FitNesseModule());
         FitServer fitServer = new FitServer();
@@ -53,7 +53,7 @@ public class FitServer {
             System.exit(fitServer.exitCode());
     }
 
-    public void run(String argv[]) throws Exception {
+    public void run(String argv[]) throws IOException {
         args(argv);
         File sentinelFile = null;
         if (sentinel) {
@@ -141,7 +141,7 @@ public class FitServer {
         fixture.listener.tablesFinished(counts); //TODO shouldn't this be fixture.counts
     }
 
-    public void exit() throws Exception {
+    public void exit() {
         print("exiting" + "\n");
         print("\tend results: " + counts.toString() + "\n");
     }
@@ -150,11 +150,11 @@ public class FitServer {
         return counts.wrong + counts.exceptions;
     }
 
-    public void establishConnection() throws Exception {
+    public void establishConnection() throws IOException {
         establishConnection(makeHttpRequest());
     }
 
-    public void establishConnection(String httpRequest) throws Exception {
+    public void establishConnection(String httpRequest) throws IOException {
         socket = new Socket(host, port);
         socketOutput = socket.getOutputStream();
         socketReader = new StreamReader(socket.getInputStream());
@@ -168,7 +168,7 @@ public class FitServer {
         return "GET /?responder=socketCatcher&ticket=" + socketToken + " HTTP/1.1\r\n\r\n";
     }
 
-    public void validateConnection() throws Exception {
+    public void validateConnection() throws IOException {
         print("validating connection...");
         int statusSize = FitProtocol.readSize(socketReader);
         if (statusSize == 0)

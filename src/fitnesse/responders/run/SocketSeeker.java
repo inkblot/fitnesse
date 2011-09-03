@@ -3,5 +3,5 @@
 package fitnesse.responders.run;
 
 public interface SocketSeeker {
-    public void acceptSocketFrom(SocketDoner doner) throws Exception;
+    public void acceptSocketFrom(SocketDonor donor) throws Exception;
 }

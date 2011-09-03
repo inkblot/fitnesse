@@ -12,7 +12,7 @@ public class SocketDealer {
 
     public int seekingSocket(SocketSeeker seeker) {
         int ticket = ticketCounter++;
-        waitingList.put(new Integer(ticket), seeker);
+        waitingList.put(ticket, seeker);
         return ticket;
     }
 
@@ -20,14 +20,13 @@ public class SocketDealer {
         return waitingList.values();
     }
 
-    public void dealSocketTo(int ticket, SocketDoner doner) throws Exception {
-        Integer key = new Integer(ticket);
-        SocketSeeker seeker = waitingList.get(key);
-        seeker.acceptSocketFrom(doner);
-        waitingList.remove(key);
+    public void dealSocketTo(int ticket, SocketDonor donor) throws Exception {
+        SocketSeeker seeker = waitingList.get(ticket);
+        seeker.acceptSocketFrom(donor);
+        waitingList.remove(ticket);
     }
 
     public boolean isWaiting(int ticket) {
-        return waitingList.containsKey(new Integer(ticket));
+        return waitingList.containsKey(ticket);
     }
 }

@@ -7,10 +7,11 @@ When you execute a test page, !-FitNesse-! gathers up the classpaths prior to ru
 !define PROPERTY_DISPLAY (
 &bang;define TEST_SYSTEM {SLIM}
 &bang;define SLIM_PORT {9900}
+!path integration-resources
+!path lib/runtime/*.jar
+!path lib/test/*.jar
 !path build/dist/fitnesse.jar
 !path build/test/classes
-!path lib/runtime/*.jar
-!path integration-resources
 
 !|Import|
 |fitnesse.fixtures|

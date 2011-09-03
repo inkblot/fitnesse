@@ -10,14 +10,19 @@ public interface SocketServer {
 
     static class StreamUtility {
         public static PrintStream GetPrintStream(Socket s) throws IOException {
-            OutputStream os = s.getOutputStream();
-            return new PrintStream(os);
+            return GetPrintStream(s.getOutputStream());
+        }
+
+        public static PrintStream GetPrintStream(OutputStream output) {
+            return new PrintStream(output);
         }
 
         public static BufferedReader GetBufferedReader(Socket s) throws IOException {
-            InputStream is = s.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            return new BufferedReader(isr);
+            return GetBufferedReader(s.getInputStream());
+        }
+
+        public static BufferedReader GetBufferedReader(InputStream input) {
+            return new BufferedReader(new InputStreamReader(input));
         }
     }
 }

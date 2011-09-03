@@ -3,15 +3,17 @@
 package fitnesse.slim;
 
 import fitnesse.socketservice.SocketServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.StreamReader;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.List;
 
 public class SlimServer implements SocketServer {
+    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+
     public static final String EXCEPTION_TAG = "__EXCEPTION__:";
     public static final String EXCEPTION_STOP_TEST_TAG = "__EXCEPTION__:ABORT_SLIM_TEST:";
     private StreamReader reader;
@@ -25,10 +27,12 @@ public class SlimServer implements SocketServer {
         this.slimFactory = slimFactory;
     }
 
+    @Override
     public void serve(Socket s) {
         try {
-            tryProcessInstructions(s);
-        } catch (Throwable e) {
+            tryProcessInstructions(s.getInputStream(), s.getOutputStream());
+        } catch (IOException e) {
+            logger.error("Could not process slim instructions", e);
         } finally {
             slimFactory.stop();
             close();
@@ -36,34 +40,30 @@ public class SlimServer implements SocketServer {
         }
     }
 
-    private void tryProcessInstructions(Socket s) throws Exception {
-        initialize(s);
+    private void tryProcessInstructions(InputStream input, OutputStream output) throws IOException {
+        initialize(input, output);
         boolean more = true;
         while (more)
             more = processOneSetOfInstructions();
     }
 
-    private void initialize(Socket s) throws Exception {
+    private void initialize(InputStream input, OutputStream output) throws IOException {
         executor = slimFactory.getListExecutor(verbose);
-        reader = new StreamReader(s.getInputStream());
-        writer = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"));
+        reader = new StreamReader(input);
+        writer = new BufferedWriter(new OutputStreamWriter(output, "UTF-8"));
         writer.write(String.format("Slim -- V%s\n", SlimVersion.VERSION));
         writer.flush();
     }
 
-    private boolean processOneSetOfInstructions() throws Exception {
+    private boolean processOneSetOfInstructions() throws IOException {
         String instructions = getInstructionsFromClient();
-        if (instructions != null) {
-            return processTheInstructions(instructions);
-        }
-        return true;
+        return instructions == null || processTheInstructions(instructions);
     }
 
-    private String getInstructionsFromClient() throws Exception {
+    private String getInstructionsFromClient() throws IOException {
         int instructionLength = Integer.parseInt(reader.read(6));
         reader.read(1);
-        String instructions = reader.read(instructionLength);
-        return instructions;
+        return reader.read(instructionLength);
     }
 
     private boolean processTheInstructions(String instructions) throws IOException {
@@ -78,8 +78,7 @@ public class SlimServer implements SocketServer {
 
     private List<Object> executeInstructions(String instructions) {
         List<Object> statements = ListDeserializer.deserialize(instructions);
-        List<Object> results = executor.execute(statements);
-        return results;
+        return executor.execute(statements);
     }
 
     private void sendResultsToClient(List<Object> results) throws IOException {

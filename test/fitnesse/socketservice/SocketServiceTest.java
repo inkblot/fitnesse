@@ -21,6 +21,7 @@ public class SocketServiceTest extends TestCase {
 
     public SocketServiceTest() {
         connectionCounter = new SocketServer() {
+            @Override
             public void serve(Socket s) {
                 connections++;
             }
@@ -115,9 +116,10 @@ public class SocketServiceTest extends TestCase {
 }
 
 class HelloService implements SocketServer {
+    @Override
     public void serve(Socket s) {
         try {
-            PrintStream ps = GetPrintStream(s);
+            PrintStream ps = GetPrintStream(s.getOutputStream());
             ps.println("Hello");
         } catch (IOException e) {
         }
@@ -125,10 +127,11 @@ class HelloService implements SocketServer {
 }
 
 class EchoService implements SocketServer {
+    @Override
     public void serve(Socket s) {
         try {
-            PrintStream ps = GetPrintStream(s);
-            BufferedReader br = GetBufferedReader(s);
+            PrintStream ps = GetPrintStream(s.getOutputStream());
+            BufferedReader br = GetBufferedReader(s.getInputStream());
             String token = br.readLine();
             ps.println(token);
         } catch (IOException e) {

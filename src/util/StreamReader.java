@@ -2,9 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public class StreamReader {
     private InputStream input;
@@ -42,11 +40,11 @@ public class StreamReader {
         return preformRead();
     }
 
-    public String read(int count) throws Exception {
+    public String read(int count) throws IOException {
         return bytesToString(readBytes(count));
     }
 
-    public byte[] readBytes(int count) throws Exception {
+    public byte[] readBytes(int count) throws IOException {
         readGoal = count;
         readStatus = 0;
         state = READCOUNT_STATE;
@@ -89,7 +87,7 @@ public class StreamReader {
         return byteBuffer.toByteArray();
     }
 
-    private byte[] preformRead() throws Exception {
+    private byte[] preformRead() throws IOException {
         setReadMode();
         clearBuffer();
         readUntilFinished();
@@ -101,7 +99,7 @@ public class StreamReader {
         readUntilFinished();
     }
 
-    private void readUntilFinished() throws Exception {
+    private void readUntilFinished() throws IOException {
         while (!state.finished())
             state.read(input);
     }
@@ -118,8 +116,13 @@ public class StreamReader {
         output = byteBuffer;
     }
 
-    private String bytesToString(byte[] bytes) throws Exception {
-        return new String(bytes, "UTF-8");
+    private String bytesToString(byte[] bytes) {
+        try {
+            return new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            assert false : "UTF-8 is a supported encoding";
+            return null;
+        }
     }
 
     private void changeState(State state) {
@@ -139,7 +142,7 @@ public class StreamReader {
     }
 
     private static abstract class State {
-        public void read(InputStream input) throws Exception {
+        public void read(InputStream input) throws IOException {
         }
 
         public boolean finished() {
@@ -148,7 +151,7 @@ public class StreamReader {
     }
 
     private final State READLINE_STATE = new State() {
-        public void read(InputStream input) throws Exception {
+        public void read(InputStream input) throws IOException {
             int b = input.read();
             if (b == -1) {
                 changeState(FINAL_STATE);
@@ -164,7 +167,7 @@ public class StreamReader {
     };
 
     private final State READCOUNT_STATE = new State() {
-        public void read(InputStream input) throws Exception {
+        public void read(InputStream input) throws IOException {
             byte[] bytes = new byte[readGoal - readStatus];
             int bytesRead = input.read(bytes);
 
@@ -184,7 +187,7 @@ public class StreamReader {
     };
 
     private final State READUPTO_STATE = new State() {
-        public void read(InputStream input) throws Exception {
+        public void read(InputStream input) throws IOException {
             int b = input.read();
             if (b == -1) {
                 changeState(FINAL_STATE);

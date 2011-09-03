@@ -8,12 +8,11 @@ public abstract class SlimFactory {
         return new SlimServer(verbose, this);
     }
 
-    public ListExecutor getListExecutor(boolean verbose) throws Exception {
+    public ListExecutor getListExecutor(boolean verbose) {
         return new ListExecutor(verbose, this);
     }
 
-    public abstract StatementExecutorInterface getStatementExecutor()
-            throws Exception;
+    public abstract StatementExecutorInterface getStatementExecutor();
 
     public void stop() {
     }

@@ -4,7 +4,11 @@ package fitnesse.testutil;
 
 import fitnesse.http.MockSocket;
 import fitnesse.responders.run.SocketDonor;
+import org.apache.commons.io.IOUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 public class SimpleSocketDonor implements SocketDonor {
@@ -19,12 +23,18 @@ public class SimpleSocketDonor implements SocketDonor {
         this.socket = socket;
     }
 
-    public Socket donateSocket() {
-        return socket;
+    @Override
+    public InputStream donateInputStream() throws IOException {
+        return socket.getInputStream();
     }
 
-    public void finishedWithSocket() throws Exception {
+    @Override
+    public OutputStream donateOutputStream() throws IOException {
+        return socket.getOutputStream();
+    }
+
+    public void finishedWithSocket() {
         finished = true;
-        socket.close();
+        IOUtils.closeQuietly(socket);
     }
 }

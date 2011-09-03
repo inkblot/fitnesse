@@ -9,14 +9,17 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class SocketCatchingResponder implements Responder, SocketDonor, ResponsePuppeteer {
     private int ticketNumber;
     private SocketDealer dealer;
-    private Socket socket;
     private ResponseSender sender;
     private PuppetResponse response;
+    private InputStream input;
+    private OutputStream output;
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         dealer = context.socketDealer;
@@ -26,23 +29,30 @@ public class SocketCatchingResponder implements Responder, SocketDonor, Response
     }
 
     public void readyToSend(ResponseSender sender) throws Exception {
-        socket = sender.getSocket();
+        input = sender.getInputStream();
+        output = sender.getOutputStream();
         this.sender = sender;
         if (dealer.isWaiting(ticketNumber))
             dealer.dealSocketTo(ticketNumber, this);
         else {
             String errorMessage = "There are no clients waiting for a socket with ticketNumber " + ticketNumber;
-            FitProtocol.writeData(errorMessage, socket.getOutputStream());
+            FitProtocol.writeData(errorMessage, output);
             response.setStatus(404);
             sender.close();
         }
     }
 
-    public Socket donateSocket() {
-        return socket;
+    @Override
+    public InputStream donateInputStream() throws IOException {
+        return input;
     }
 
-    public void finishedWithSocket() throws Exception {
+    @Override
+    public OutputStream donateOutputStream() throws IOException {
+        return output;
+    }
+
+    public void finishedWithSocket() {
         sender.close();
     }
 }

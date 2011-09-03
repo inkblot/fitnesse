@@ -172,7 +172,7 @@ public class PageCrawlerImpl implements PageCrawler {
         }
     }
 
-    public WikiPage findAncestorWithName(WikiPage page, String name) throws Exception {
+    public WikiPage findAncestorWithName(WikiPage page, String name) {
         for (WikiPage current = page.getParent(); !isRoot(current); current = current.getParent()) {
             if (current.getName().equals(name)) return current;
         }

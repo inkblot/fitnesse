@@ -6,6 +6,9 @@ import fitnesse.http.MockSocket;
 import fitnesse.testutil.SimpleSocketSeeker;
 import junit.framework.TestCase;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Collection;
 
@@ -23,10 +26,18 @@ public class SocketDealerTest extends TestCase {
 
     public static class SimpleDonor implements SocketDonor {
         public MockSocket socket = new MockSocket("");
+        public InputStream input = socket.getInputStream();
+        public OutputStream output = socket.getOutputStream();
         boolean finished = false;
 
-        public Socket donateSocket() {
-            return socket;
+        @Override
+        public InputStream donateInputStream() throws IOException {
+            return input;
+        }
+
+        @Override
+        public OutputStream donateOutputStream() throws IOException {
+            return output;
         }
 
         public void finishedWithSocket() {
@@ -51,7 +62,8 @@ public class SocketDealerTest extends TestCase {
 
     public void testDealSocketTo() throws Exception {
         doSimpleDealing();
-        assertSame(doner.socket, seeker.socket);
+        assertSame(doner.input, seeker.input);
+        assertSame(doner.output, seeker.output);
     }
 
     private void doSimpleDealing() throws Exception {
@@ -71,8 +83,10 @@ public class SocketDealerTest extends TestCase {
         dealer.dealSocketTo(ticket1, doner1);
         dealer.dealSocketTo(ticket2, doner2);
 
-        assertSame(doner1.socket, seeker1.socket);
-        assertSame(doner2.socket, seeker2.socket);
+        assertSame(doner1.input, seeker1.input);
+        assertSame(doner1.output, seeker1.output);
+        assertSame(doner2.input, seeker2.input);
+        assertSame(doner2.output, seeker2.output);
     }
 
     public void testSeekerRemovedAfterDeltTo() throws Exception {

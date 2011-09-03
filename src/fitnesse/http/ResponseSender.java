@@ -2,12 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public interface ResponseSender {
-    public void send(byte[] bytes) throws Exception;
+    public void send(byte[] bytes);
 
-    public void close() throws Exception;
+    public void close();
 
-    public Socket getSocket() throws Exception; //TODO-MdM maybe get rid of this method.
+    public InputStream getInputStream() throws IOException;
+
+    public OutputStream getOutputStream() throws IOException;
 }

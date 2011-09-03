@@ -22,7 +22,7 @@ public class SocketServiceTest extends TestCase {
     public SocketServiceTest() {
         connectionCounter = new SocketServer() {
             @Override
-            public void serve(Socket s) {
+            public synchronized void serve(Socket s) {
                 connections++;
             }
         };

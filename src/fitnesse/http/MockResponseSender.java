@@ -2,9 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
-import java.net.Socket;
 
 public class MockResponseSender implements ResponseSender {
     public MockSocket socket;
@@ -15,19 +16,29 @@ public class MockResponseSender implements ResponseSender {
         closed = false;
     }
 
-    public void send(byte[] bytes) throws Exception {
+    public void send(byte[] bytes) {
         //Todo Timing Problem -- Figure out why this is necessary.
         for (int i = 0; i < 1000; i++) Thread.yield();
-        socket.getOutputStream().write(bytes);
+        try {
+            socket.getOutputStream().write(bytes);
+        } catch (IOException e) {
+            // output stream closed prematurely, probably due to user action
+        }
     }
 
-    public synchronized void close() throws Exception {
+    public synchronized void close() {
         closed = true;
         notifyAll();
     }
 
-    public Socket getSocket() throws Exception {
-        return socket;
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return socket.getInputStream();
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+        return socket.getOutputStream();
     }
 
     public String sentData() throws Exception {

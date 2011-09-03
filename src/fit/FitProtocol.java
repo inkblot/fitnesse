@@ -6,14 +6,20 @@ import util.StreamReader;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 
 public class FitProtocol {
     public static final DecimalFormat format = new DecimalFormat("0000000000");
 
-    public static void writeData(String data, OutputStream output) throws Exception {
-        byte[] bytes = data.getBytes("UTF-8");
-        writeData(bytes, output);
+    public static void writeData(String data, OutputStream output) throws IOException {
+        byte[] bytes = new byte[0];
+        try {
+            bytes = data.getBytes("UTF-8");
+            writeData(bytes, output);
+        } catch (UnsupportedEncodingException e) {
+            assert false : "UTF-8 is a supported encoding";
+        }
     }
 
     public static void writeData(byte[] bytes, OutputStream output) throws IOException {

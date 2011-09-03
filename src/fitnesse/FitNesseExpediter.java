@@ -7,6 +7,8 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.ClockUtil;
 import util.StringUtil;
 
@@ -17,6 +19,8 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class FitNesseExpediter implements ResponseSender {
+    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+
     private Socket socket;
     private InputStream input;
     private OutputStream output;
@@ -53,25 +57,31 @@ public class FitNesseExpediter implements ResponseSender {
         requestParsingTimeLimit = t;
     }
 
-    public void send(byte[] bytes) throws Exception {
+    public void send(byte[] bytes) {
         try {
             output.write(bytes);
             output.flush();
-        } catch (IOException stopButtonPressed_probably) {
-            // TODO: When does this exception occur and what is the appropriate corrective action?
+        } catch (IOException e) {
+            // output stream closed prematurely, probably by user action
         }
     }
 
-    public void close() throws Exception {
+    public void close() {
         try {
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Could not close socket", e);
         }
     }
 
-    public Socket getSocket() throws Exception {
-        return socket;
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return socket.getInputStream();
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+        return socket.getOutputStream();
     }
 
     public Request makeRequest() throws Exception {

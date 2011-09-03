@@ -2,10 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public interface SocketDonor {
-    public Socket donateSocket();
+    public InputStream donateInputStream() throws IOException;
 
-    public void finishedWithSocket() throws Exception;
+    public OutputStream donateOutputStream() throws IOException;
+
+    public void finishedWithSocket();
 }

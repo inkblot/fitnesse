@@ -6,7 +6,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 import static junit.framework.Assert.*;
 import static org.junit.Assert.assertTrue;
@@ -19,20 +22,30 @@ public class ChunkedResponseTest implements ResponseSender {
 
     public StringBuffer buffer;
 
-    public void send(byte[] bytes) throws Exception {
-        buffer.append(new String(bytes, "UTF-8"));
+    public void send(byte[] bytes) {
+        try {
+            buffer.append(new String(bytes, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            assert false : "UTF-8 is a supported encoding";
+        }
     }
 
     public void close() {
         closed = true;
     }
 
-    public Socket getSocket() throws Exception {
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return null;
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws IOException {
         return null;
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         buffer = new StringBuffer();
 
         response = new ChunkedResponse("html");
@@ -40,12 +53,12 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         response.closeAll();
     }
 
     @Test
-    public void testHeaders() throws Exception {
+    public void testHeaders() {
         assertTrue(response.isReadyToSend());
         String text = buffer.toString();
         assertHasRegexp("Transfer-Encoding: chunked", text);
@@ -54,7 +67,7 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @Test
-    public void xmlHeaders() throws Exception {
+    public void xmlHeaders() {
         response = new ChunkedResponse("xml");
         response.readyToSend(this);
         assertTrue(response.isReadyToSend());
@@ -66,7 +79,7 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @Test
-    public void testOneChunk() throws Exception {
+    public void testOneChunk() {
         buffer = new StringBuffer();
         response.add("some more text");
 
@@ -75,7 +88,7 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @Test
-    public void testTwoChunks() throws Exception {
+    public void testTwoChunks() {
         buffer = new StringBuffer();
         response.add("one");
         response.add("two");
@@ -85,7 +98,7 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @Test
-    public void testSimpleClosing() throws Exception {
+    public void testSimpleClosing() {
         assertFalse(closed);
         buffer = new StringBuffer();
         response.closeAll();
@@ -95,7 +108,7 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @Test
-    public void testClosingInSteps() throws Exception {
+    public void testClosingInSteps() {
         assertFalse(closed);
         buffer = new StringBuffer();
         response.closeChunks();
@@ -110,14 +123,14 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @Test
-    public void testContentSize() throws Exception {
+    public void testContentSize() {
         response.add("12345");
         response.closeAll();
         assertEquals(5, response.getContentSize());
     }
 
     @Test
-    public void testNoNullPointerException() throws Exception {
+    public void testNoNullPointerException() {
         String s = null;
         try {
             response.add(s);
@@ -127,7 +140,7 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @Test
-    public void testTrailingHeaders() throws Exception {
+    public void testTrailingHeaders() {
         response.closeChunks();
         buffer = new StringBuffer();
         response.addTrailingHeader("Some-Header", "someValue");
@@ -138,7 +151,7 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @Test
-    public void testCantAddZeroLengthBytes() throws Exception {
+    public void testCantAddZeroLengthBytes() {
         int originalLength = buffer.length();
         response.add("");
         assertEquals(originalLength, buffer.length());
@@ -146,7 +159,7 @@ public class ChunkedResponseTest implements ResponseSender {
     }
 
     @Test
-    public void testUnicodeCharacters() throws Exception {
+    public void testUnicodeCharacters() {
         response.add("\uba80\uba81\uba82\uba83");
         response.closeAll();
 

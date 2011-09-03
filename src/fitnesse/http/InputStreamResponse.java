@@ -6,6 +6,7 @@ import util.StreamReader;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class InputStreamResponse extends Response {
@@ -16,7 +17,7 @@ public class InputStreamResponse extends Response {
         super("html");
     }
 
-    public void readyToSend(ResponseSender sender) throws Exception {
+    public void readyToSend(ResponseSender sender) throws IOException {
         try {
             addStandardHeaders();
             sender.send(makeHttpHeaders().getBytes());

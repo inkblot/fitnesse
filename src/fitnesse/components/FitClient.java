@@ -8,13 +8,14 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
 import util.StreamReader;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Socket;
 
 public class FitClient {
 
     protected TestSystemListener listener;
-    protected Socket fitSocket;
+    private boolean initialized = false;
     private OutputStream fitInput;
     private StreamReader fitOutput;
 
@@ -24,16 +25,16 @@ public class FitClient {
     protected volatile boolean killed = false;
     protected Thread fitListeningThread;
 
-    public FitClient(TestSystemListener listener) throws Exception {
+    public FitClient(TestSystemListener listener) {
         this.listener = listener;
     }
 
-    public void acceptSocket(Socket socket) throws Exception {
+    public void acceptSocket(InputStream input, OutputStream output) throws IOException {
         checkForPulse();
-        fitSocket = socket;
-        fitInput = fitSocket.getOutputStream();
+        fitInput = output;
         FitProtocol.writeData("", fitInput);
-        fitOutput = new StreamReader(fitSocket.getInputStream());
+        fitOutput = new StreamReader(input);
+        initialized = true;
 
         fitListeningThread = new Thread(new FitListeningRunnable(), "FitClient fitOutput");
         fitListeningThread.start();
@@ -51,12 +52,12 @@ public class FitClient {
         isDoneSending = true;
     }
 
-    public void join() throws Exception {
+    public void join() throws InterruptedException {
         if (fitListeningThread != null)
             fitListeningThread.join();
     }
 
-    public void kill() throws Exception {
+    public void kill() {
         killed = true;
         if (fitListeningThread != null)
             fitListeningThread.interrupt();
@@ -66,9 +67,11 @@ public class FitClient {
         listener.exceptionOccurred(e);
     }
 
-    protected void checkForPulse() throws InterruptedException {
-        if (killed)
-            throw new InterruptedException("FitClient was killed");
+    protected void checkForPulse() {
+        if (killed) {
+            // TODO: Bad flow control.  Use something other than an exception
+            throw new RuntimeException("FitClient was killed");
+        }
     }
 
     private void listenToFit() {
@@ -124,6 +127,10 @@ public class FitClient {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isSuccessfullyStarted() {
+        return initialized;
     }
 
     private class FitListeningRunnable implements Runnable {

@@ -13,7 +13,9 @@ import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.wiki.*;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public class FitClientResponder implements Responder, ResponsePuppeteer, TestSystemListener {
@@ -35,26 +37,27 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     }
 
     public void readyToSend(ResponseSender sender) throws Exception {
-        Socket socket = sender.getSocket();
         WikiPagePath pagePath = PathParser.parse(resource);
+        OutputStream output = sender.getOutputStream();
         if (!crawler.pageExists(context.root, pagePath))
-            FitProtocol.writeData(notFoundMessage(), socket.getOutputStream());
+            FitProtocol.writeData(notFoundMessage(), output);
         else {
             page = crawler.getPage(context.root, pagePath);
             PageData data = page.getData();
 
+            InputStream input = sender.getInputStream();
             if (data.hasAttribute("Suite"))
-                handleSuitePage(socket, page, context.root);
+                handleSuitePage(input, output, page, context.root);
             else if (data.hasAttribute("Test"))
-                handleTestPage(socket, data);
+                handleTestPage(input, output, data);
             else
-                FitProtocol.writeData(notATestMessage(), socket.getOutputStream());
+                FitProtocol.writeData(notATestMessage(), output);
         }
         sender.close();
     }
 
-    private void handleTestPage(Socket socket, PageData data) throws Exception {
-        FitClient client = startClient(socket);
+    private void handleTestPage(InputStream input, OutputStream output, PageData data) throws Exception {
+        FitClient client = startClient(input, output);
 
         if (shouldIncludePaths) {
             String classpath = new ClassPathBuilder().getClasspath(page);
@@ -65,8 +68,8 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         closeClient(client);
     }
 
-    private void handleSuitePage(Socket socket, WikiPage page, WikiPage root) throws Exception {
-        FitClient client = startClient(socket);
+    private void handleSuitePage(InputStream input, OutputStream output, WikiPage page, WikiPage root) throws Exception {
+        FitClient client = startClient(input, output);
         SuiteFilter filter = new SuiteFilter(suiteFilter, null, null);
         SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
         List<WikiPage> testPages = suiteTestFinder.makePageList();
@@ -97,9 +100,9 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         client.join();
     }
 
-    private FitClient startClient(Socket socket) throws Exception {
+    private FitClient startClient(InputStream input, OutputStream output) throws IOException {
         FitClient client = new FitClient(this);
-        client.acceptSocket(socket);
+        client.acceptSocket(input, output);
         return client;
     }
 

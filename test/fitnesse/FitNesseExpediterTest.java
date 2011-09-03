@@ -55,6 +55,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
             socket.close();
             response.readyToSend(expediter);
         } catch (IOException e) {
+            e.printStackTrace(System.err);
             fail("no IOException should be thrown");
         }
     }

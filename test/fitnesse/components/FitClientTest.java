@@ -162,8 +162,6 @@ public class FitClientTest extends FitnesseBaseTestCase implements TestSystemLis
             public void run() {
                 try {
                     client.start();
-                } catch (InterruptedException ie) {
-                    // yep, we're ignoring it
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

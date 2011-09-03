@@ -14,16 +14,16 @@ public class MockCommandRunner extends CommandRunner {
         this.exitCode = exitCode;
     }
 
-    public void run() throws Exception {
+    public void run() {
     }
 
-    public void join() throws Exception {
+    public void join() {
     }
 
-    public void kill() throws Exception {
+    public void kill() {
     }
 
-    public void asynchronousStart() throws Exception {
+    public void asynchronousStart() {
     }
 
     public void setOutput(String output) {

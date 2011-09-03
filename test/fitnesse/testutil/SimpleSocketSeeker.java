@@ -5,14 +5,18 @@ package fitnesse.testutil;
 import fitnesse.responders.run.SocketDonor;
 import fitnesse.responders.run.SocketSeeker;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class SimpleSocketSeeker implements SocketSeeker {
     public SocketDonor donor;
-    public Socket socket;
+    public InputStream input;
+    public OutputStream output;
 
-    public void acceptSocketFrom(SocketDonor donor) throws Exception {
+    public void acceptSocketFrom(SocketDonor donor) throws IOException {
         this.donor = donor;
-        this.socket = donor.donateSocket();
+        this.input = donor.donateInputStream();
+        this.output = donor.donateOutputStream();
     }
 }

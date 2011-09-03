@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.*;
 
 public class StreamReader {
@@ -27,8 +29,8 @@ public class StreamReader {
         this.input = input;
     }
 
-    public void close() throws Exception {
-        input.close();
+    public void close() {
+        IOUtils.closeQuietly(input);
     }
 
     public String readLine() throws Exception {

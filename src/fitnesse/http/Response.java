@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -129,8 +130,13 @@ public abstract class Response {
         return headers.get(key);
     }
 
-    public byte[] getEncodedBytes(String value) throws Exception {
-        return value.getBytes("UTF-8");
+    public byte[] getEncodedBytes(String value) {
+        try {
+            return value.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            assert false : "UTF-8 is a supported encoding";
+            return null;
+        }
     }
 
     void makeHeaders(StringBuffer text) {

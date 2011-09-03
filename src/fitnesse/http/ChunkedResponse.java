@@ -16,7 +16,7 @@ public class ChunkedResponse extends Response {
             dontChunk = true;
     }
 
-    public void readyToSend(ResponseSender sender) throws Exception {
+    public void readyToSend(ResponseSender sender) {
         this.sender = sender;
         addStandardHeaders();
         sender.send(makeHttpHeaders().getBytes());
@@ -40,12 +40,12 @@ public class ChunkedResponse extends Response {
         return Integer.toHexString(value);
     }
 
-    public void add(String text) throws Exception {
+    public void add(String text) {
         if (text != null)
             add(getEncodedBytes(text));
     }
 
-    public void add(byte[] bytes) throws Exception {
+    public void add(byte[] bytes) {
         if (bytes == null || bytes.length == 0)
             return;
         if (dontChunk) {
@@ -59,24 +59,24 @@ public class ChunkedResponse extends Response {
         bytesSent += bytes.length;
     }
 
-    public void addTrailingHeader(String key, String value) throws Exception {
+    public void addTrailingHeader(String key, String value) {
         String header = key + ": " + value + CRLF;
         sender.send(header.getBytes());
     }
 
-    public void closeChunks() throws Exception {
+    public void closeChunks() {
         sender.send(("0" + CRLF).getBytes());
     }
 
-    public void closeTrailer() throws Exception {
+    public void closeTrailer() {
         sender.send(CRLF.getBytes());
     }
 
-    public void close() throws Exception {
+    public void close() {
         sender.close();
     }
 
-    public void closeAll() throws Exception {
+    public void closeAll() {
         closeChunks();
         closeTrailer();
         close();

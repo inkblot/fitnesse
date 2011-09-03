@@ -26,13 +26,11 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     private boolean fastTest = false;
     private Thread fastFitServer;
 
-    public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer, boolean fastTest)
-            throws Exception {
+    public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer, boolean fastTest) throws IOException {
         this(listener, command, port, null, dealer, fastTest);
     }
 
-    public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest)
-            throws Exception {
+    public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest) throws IOException {
         super(listener);
         this.fastTest = fastTest;
         ticketNumber = dealer.seekingSocket(this);
@@ -46,16 +44,16 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
             commandRunner = new CommandRunner(commandLine, "", environmentVariables);
     }
 
-    public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer) throws Exception {
+    public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer) throws IOException {
         this(listener, command, port, null, dealer);
     }
 
-    public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer) throws Exception {
+    public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer) throws IOException {
         this(listener, command, port, environmentVariables, dealer, false);
     }
 
     //For testing only.  Makes responder faster.
-    void createFitServer(String args) throws Exception {
+    void createFitServer(String args) {
         final String fitArgs = args;
         Runnable fastFitServerRunnable = new Runnable() {
             public void run() {
@@ -80,7 +78,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         }
     }
 
-    public void start() throws Exception {
+    public void start() {
         try {
             commandRunner.asynchronousStart();
             if (!fastTest) {
@@ -95,9 +93,9 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         }
     }
 
-    public void acceptSocketFrom(SocketDonor donor) throws Exception {
+    public void acceptSocketFrom(SocketDonor donor) throws IOException {
         this.donor = donor;
-        acceptSocket(donor.donateSocket());
+        acceptSocket(donor.donateInputStream(), donor.donateOutputStream());
         connectionEstablished = true;
 
         synchronized (this) {
@@ -109,18 +107,14 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         this.ticketNumber = ticketNumber;
     }
 
-    public boolean isSuccessfullyStarted() {
-        return fitSocket != null;
-    }
-
     private void waitForConnection() throws InterruptedException {
-        while (fitSocket == null) {
+        while (!isSuccessfullyStarted()) {
             Thread.sleep(100);
             checkForPulse();
         }
     }
 
-    public void join() throws Exception {
+    public void join() {
         try {
             if (fastTest) {
                 fastFitServer.join();
@@ -136,7 +130,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         }
     }
 
-    public void kill() throws Exception {
+    public void kill() {
         super.kill();
         killVigilantThreads();
         commandRunner.kill();
@@ -160,7 +154,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
             try {
                 Thread.sleep(TIMEOUT);
                 synchronized (CommandRunningFitClient.this) {
-                    if (fitSocket == null) {
+                    if (!isSuccessfullyStarted()) {
                         CommandRunningFitClient.this.notify();
                         listener.exceptionOccurred(new Exception(
                                 "FitClient: communication socket was not received on time."));

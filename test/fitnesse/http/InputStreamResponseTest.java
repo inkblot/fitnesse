@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 import util.FileUtil;
 
 import java.io.*;
-import java.net.Socket;
 
 import static util.RegexAssertions.assertSubString;
 
@@ -90,18 +89,28 @@ public class InputStreamResponseTest extends TestCase implements ResponseSender 
         testFileOutput.close();
     }
 
-    public void send(byte[] bytes) throws Exception {
-        if (bytesSent < 500)
-            output.write(bytes);
-        bytesSent += bytes.length;
+    public void send(byte[] bytes) {
+        try {
+            if (bytesSent < 500)
+                output.write(bytes);
+            bytesSent += bytes.length;
+        } catch (IOException e) {
+            e.printStackTrace(System.err);
+            fail("No IOException should occur here");
+        }
     }
 
-    public void close() throws Exception {
+    public void close() {
         closed = true;
     }
 
-    public Socket getSocket() throws Exception //TODO-MdM maybe get rid of this method.
-    {
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return null;
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws IOException {
         return null;
     }
 }

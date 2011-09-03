@@ -73,16 +73,20 @@ public class CommandRunner {
         join();
     }
 
-    public void join() throws Exception {
+    public void join() throws InterruptedException {
         process.waitFor();
         timeMeasurement.stop();
         exitCode = process.exitValue();
     }
 
-    public void kill() throws Exception {
+    public void kill() {
         if (process != null) {
             process.destroy();
-            join();
+            try {
+                join();
+            } catch (InterruptedException e) {
+                // ok
+            }
         }
     }
 

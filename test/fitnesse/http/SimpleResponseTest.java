@@ -4,7 +4,10 @@ package fitnesse.http;
 
 import junit.framework.TestCase;
 
-import java.net.Socket;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
@@ -13,15 +16,25 @@ public class SimpleResponseTest extends TestCase implements ResponseSender {
     private String text;
     private boolean closed = false;
 
-    public void send(byte[] bytes) throws Exception {
-        text = new String(bytes, "UTF-8");
+    public void send(byte[] bytes) {
+        try {
+            text = new String(bytes, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            assert false : "UTF-8 is a supported encoding";
+        }
     }
 
     public void close() {
         closed = true;
     }
 
-    public Socket getSocket() throws Exception {
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return null;
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws IOException {
         return null;
     }
 

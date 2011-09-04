@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fit.exception.FitParseException;
 import fitnesse.FitNesseModule;
+import org.apache.commons.io.IOUtils;
 import util.CommandLine;
 import util.FileUtil;
 import util.StreamReader;
@@ -16,45 +17,41 @@ import java.io.*;
 import java.net.Socket;
 
 public class FitServer {
-    public String input;
-    public Fixture fixture = new Fixture();
-    public FixtureListener fixtureListener = new TablePrintingFixtureListener();
-    private Counts counts = new Counts();
-    private OutputStream socketOutput;
-    private StreamReader socketReader;
-    private boolean verbose = false;
-    private String host;
-    private int port;
-    private int socketToken;
+    private final Counts counts = new Counts();
+    private OutputStream output;
+    private StreamReader input;
+    private final boolean verbose;
+    private final String host;
+    private final int port;
+    private final int socketToken;
 
     private Socket socket;
-    private boolean noExit;
-    private boolean sentinel;
+    private final boolean noExit;
+    private final boolean sentinel;
 
     @Inject
     @Named("inject")
     public static boolean inject = true;
 
-    public FitServer(String host, int port, boolean verbose) {
+    public FitServer(String host, int port, int socketToken, boolean verbose, boolean noExit, boolean sentinel) {
         this.host = host;
         this.port = port;
+        this.socketToken = socketToken;
         this.verbose = verbose;
-    }
-
-    public FitServer() {
+        this.noExit = noExit;
+        this.sentinel = sentinel;
     }
 
     public static void main(String argv[]) throws IOException {
         if (inject)
             Guice.createInjector(new FitNesseModule());
-        FitServer fitServer = new FitServer();
-        fitServer.run(argv);
+        FitServer fitServer = FitServer.create(argv);
+        fitServer.run();
         if (!fitServer.noExit)
-            System.exit(fitServer.exitCode());
+            System.exit(exitCode(fitServer.counts));
     }
 
-    public void run(String argv[]) throws IOException {
-        args(argv);
+    private void run() throws IOException {
         File sentinelFile = null;
         if (sentinel) {
             String sentinelName = sentinelName(port);
@@ -64,7 +61,7 @@ public class FitServer {
         establishConnection();
         validateConnection();
         process();
-        closeConnection();
+        IOUtils.closeQuietly(socket);
         if (sentinel)
             FileUtil.deleteFile(sentinelFile);
         exit();
@@ -74,64 +71,61 @@ public class FitServer {
         return String.format("fitserverSentinel%d", thePort);
     }
 
-    public void closeConnection() throws IOException {
-        socket.close();
-    }
-
-    public void process() {
-        fixture.listener = fixtureListener;
+    private void process() {
+        FixtureListener fixtureListener = new TablePrintingFixtureListener();
+        Fixture fixture = newFixture(fixtureListener);
         try {
             int size;
-            while ((size = FitProtocol.readSize(socketReader)) != 0) {
+            while ((size = FitProtocol.readSize(input)) != 0) {
                 try {
                     print("processing document of size: " + size + "\n");
-                    String document = FitProtocol.readDocument(socketReader, size);
+                    String document = FitProtocol.readDocument(input, size);
                     //TODO MDM if the page name was always the first line of the body, it could be printed here.
                     Parse tables = new Parse(document);
-                    newFixture().doTables(tables);
+                    fixture.doTables(tables);
                     print("\tresults: " + fixture.counts() + "\n");
                     counts.tally(fixture.counts);
                 } catch (FitParseException e) {
-                    exception(e);
+                    exception(fixture, e);
                 }
+                fixture = newFixture(fixtureListener);
             }
             print("completion signal recieved" + "\n");
         } catch (Exception e) {
-            exception(e);
+            exception(fixture, e);
         }
     }
 
-    public String readDocument() throws Exception {
-        int size = FitProtocol.readSize(socketReader);
-        return FitProtocol.readDocument(socketReader, size);
-    }
-
-    protected Fixture newFixture() {
-        fixture = new Fixture();
+    private static Fixture newFixture(FixtureListener fixtureListener) {
+        Fixture fixture = new Fixture();
         fixture.listener = fixtureListener;
         return fixture;
     }
 
-    public void args(String[] argv) {
+    private static FitServer create(String[] argv) {
         CommandLine commandLine = new CommandLine("[-v][-x][-s] host port socketToken");
         if (commandLine.parse(argv)) {
-            host = commandLine.getArgument("host");
-            port = Integer.parseInt(commandLine.getArgument("port"));
-            socketToken = Integer.parseInt(commandLine.getArgument("socketToken"));
-            verbose = commandLine.hasOption("v");
-            noExit = commandLine.hasOption("x");
-            sentinel = commandLine.hasOption("s");
-        } else
+            return new FitServer(
+                    commandLine.getArgument("host"),
+                    Integer.parseInt(commandLine.getArgument("port")),
+                    Integer.parseInt(commandLine.getArgument("socketToken")),
+                    commandLine.hasOption("v"),
+                    commandLine.hasOption("x"),
+                    commandLine.hasOption("s"));
+        } else {
             usage();
+            assert false : "Usage exits";
+            return null;
+        }
     }
 
-    private void usage() {
+    private static void usage() {
         System.out.println("usage: java fit.FitServer [-v] host port socketTicket");
         System.out.println("\t-v\tverbose");
         System.exit(-1);
     }
 
-    protected void exception(Exception e) {
+    private void exception(Fixture fixture, Exception e) {
         print("Exception occurred!" + "\n");
         print("\t" + e.getMessage() + "\n");
         Parse tables = new Parse("span", "Exception occurred: ", null, null);
@@ -146,21 +140,21 @@ public class FitServer {
         print("\tend results: " + counts.toString() + "\n");
     }
 
-    public int exitCode() {
+    private static int exitCode(Counts counts) {
         return counts.wrong + counts.exceptions;
     }
 
-    public void establishConnection() throws IOException {
+    private void establishConnection() throws IOException {
         establishConnection(makeHttpRequest());
     }
 
-    public void establishConnection(String httpRequest) throws IOException {
+    private void establishConnection(String httpRequest) throws IOException {
         socket = new Socket(host, port);
-        socketOutput = socket.getOutputStream();
-        socketReader = new StreamReader(socket.getInputStream());
+        output = socket.getOutputStream();
+        input = new StreamReader(socket.getInputStream());
         byte[] bytes = httpRequest.getBytes("UTF-8");
-        socketOutput.write(bytes);
-        socketOutput.flush();
+        output.write(bytes);
+        output.flush();
         print("http request sent" + "\n");
     }
 
@@ -168,13 +162,13 @@ public class FitServer {
         return "GET /?responder=socketCatcher&ticket=" + socketToken + " HTTP/1.1\r\n\r\n";
     }
 
-    public void validateConnection() throws IOException {
+    private void validateConnection() throws IOException {
         print("validating connection...");
-        int statusSize = FitProtocol.readSize(socketReader);
+        int statusSize = FitProtocol.readSize(input);
         if (statusSize == 0)
             print("...ok" + "\n");
         else {
-            String errorMessage = FitProtocol.readDocument(socketReader, statusSize);
+            String errorMessage = FitProtocol.readDocument(input, statusSize);
             print("...failed because: " + errorMessage + "\n");
             System.out.println("An error occurred while connecting to client.");
             System.out.println(errorMessage);
@@ -182,16 +176,12 @@ public class FitServer {
         }
     }
 
-    public Counts getCounts() {
-        return counts;
-    }
-
     private void print(String message) {
         if (verbose)
             System.out.print(message);
     }
 
-    public static byte[] readTable(Parse table) throws Exception {
+    private static byte[] readTable(Parse table) throws Exception {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
         OutputStreamWriter streamWriter = new OutputStreamWriter(byteBuffer, "UTF-8");
         PrintWriter writer = new PrintWriter(streamWriter);
@@ -205,17 +195,12 @@ public class FitServer {
         return byteBuffer.toByteArray();
     }
 
-    public void writeCounts(Counts count) throws IOException {
-        //TODO This can't be right.... which counts should be used?
-        FitProtocol.writeCounts(counts, socketOutput);
-    }
-
     class TablePrintingFixtureListener implements FixtureListener {
         public void tableFinished(Parse table) {
             try {
                 byte[] bytes = readTable(table);
                 if (bytes.length > 0)
-                    FitProtocol.writeData(bytes, socketOutput);
+                    FitProtocol.writeData(bytes, output);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -223,7 +208,7 @@ public class FitServer {
 
         public void tablesFinished(Counts count) {
             try {
-                FitProtocol.writeCounts(count, socketOutput);
+                FitProtocol.writeCounts(count, output);
             } catch (IOException e) {
                 e.printStackTrace();
             }

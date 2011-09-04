@@ -57,10 +57,8 @@ public class CommandLine extends Option {
 
     public boolean hasOption(String optionName) {
         Option option = possibleOptions.get(optionName);
-        if (option == null)
-            return false;
+        return option != null && option.active;
 
-        return option.active;
     }
 
     public String getOptionArgument(String optionName, String argName) {
@@ -79,8 +77,7 @@ class Option {
     protected int argumentIndex = 0;
 
     protected void parseArgumentDescriptor(String arguments) {
-        String[] tokens = split(arguments);
-        argumentNames = tokens;
+        argumentNames = split(arguments);
         argumentValues = new String[argumentNames.length];
     }
 
@@ -104,11 +101,10 @@ class Option {
     protected String[] split(String value) {
         String[] tokens = value.split(" ");
         List<String> usableTokens = new LinkedList<String>();
-        for (int i = 0; i < tokens.length; i++) {
-            String token = tokens[i];
+        for (String token : tokens) {
             if (token.length() > 0)
                 usableTokens.add(token);
         }
-        return usableTokens.toArray(new String[]{});
+        return usableTokens.toArray(new String[usableTokens.size()]);
     }
 }

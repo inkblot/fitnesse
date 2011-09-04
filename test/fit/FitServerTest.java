@@ -25,7 +25,6 @@ public class FitServerTest extends FitnesseBaseTestCase {
     private InputStream socketInput;
     private OutputStream socketOutput;
     private byte[] httpRequest;
-    private ByteArrayOutputStream stdoutBytes;
     private String connectionStatusSize = "0000000000";
 
     @Before
@@ -63,12 +62,8 @@ public class FitServerTest extends FitnesseBaseTestCase {
         socketOutput.write(errorMessage.getBytes());
 
         int exitValue = process.waitFor();
-        String stdoutString = new String(stdoutBytes.toByteArray());
 
         assertTrue(exitValue != 0);
-        // TODO This started to fail with Java 5.0... why does -1 turn into 255?
-        // assertEquals("stdout: " + stdoutString, -1, exitValue);
-        assertTrue(stdoutString.contains(errorMessage));
     }
 
     @Test
@@ -179,13 +174,10 @@ public class FitServerTest extends FitnesseBaseTestCase {
 
     private void prepareSessionProcess() throws Exception {
         checkSentinelToMakeSureThatFitServerIsNotRunning();
-        String commandWithArguments = command() + " -s -v localhost " + PORT_NUMBER
+        String commandWithArguments = command() + " -s localhost " + PORT_NUMBER
                 + " 23";
         process = Runtime.getRuntime().exec(commandWithArguments);
 
-        stdoutBytes = new ByteArrayOutputStream();
-
-        watchForOutput(process.getInputStream(), new PrintStream(stdoutBytes));
         watchForOutput(process.getErrorStream(), System.err);
 
         establishConnection();
@@ -218,7 +210,7 @@ public class FitServerTest extends FitnesseBaseTestCase {
     private void waitForConnectionSocket() throws InterruptedException {
         synchronized (serverSocket) {
             if (socket == null)
-                serverSocket.wait();
+                serverSocket.wait(10000);
         }
     }
 

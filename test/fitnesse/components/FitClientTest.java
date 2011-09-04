@@ -34,7 +34,7 @@ public class FitClientTest extends FitnesseBaseTestCase implements TestSystemLis
     @Before
     public void setUp() throws Exception {
         CommandRunningFitClient.TIMEOUT = 5000;
-        client = new CommandRunningFitClient(this, "java -cp " + classPath() + " fit.FitServer -v", port, new SocketDealer());
+        client = new CommandRunningFitClient(this, "java -cp " + classPath() + " fit.FitServer ", port, new SocketDealer());
         receiver = new CustomFitSocketReceiver(port);
     }
 

@@ -1,11 +1,15 @@
 package fit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
-import java.util.Iterator;
 import java.util.Vector;
 
 public class SemaphoreFixture extends Fixture {
-    private static String SEMAPHORE_SUFFIX = ".semaphore";
+    private static final Logger logger = LoggerFactory.getLogger(SemaphoreFixture.class);
+
+    private static final String SEMAPHORE_SUFFIX = ".semaphore";
     private static Vector<String> semaphores = new Vector<String>();
 
     @Override
@@ -61,7 +65,7 @@ public class SemaphoreFixture extends Fixture {
     }
 
     private static boolean createSemaphore(String name) {
-        boolean isLocked = false;
+        boolean isLocked;
 
         //---create the directory if need be
         File semDiry = new File(makeSemaphoreName(""));
@@ -81,13 +85,14 @@ public class SemaphoreFixture extends Fixture {
     private static boolean deleteSemaphore(String name) {
         boolean isOk = (new File(makeSemaphoreName(name))).delete();
         if (!isOk)
-            System.out.print("Unable to remove semaphore '" + name + "'");
+            logger.warn("Unable to remove semaphore '" + name + "'");
 
         return isOk;
     }
 
     public static void ClearSemaphores() {
-        for (Iterator<String> iter = semaphores.iterator(); iter.hasNext(); )
-            unlockSemaphore(iter.next());
+        for (String semaphore : semaphores) {
+            unlockSemaphore(semaphore);
+        }
     }
 }

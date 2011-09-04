@@ -5,7 +5,7 @@ FitServer is invoked by a simple console command.
 ''!-java fit.FitServer-!''
 
 '''Command Line Arguments:'''
-Java usage: !-java fit.FitServer [-v]-! ''host port socketTicket''
+Java usage: !-java fit.FitServer -! ''host port socketTicket''
 
 '''Execution:'''
  * '''Connecting'''

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import util.ImpossibleException;
+
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -55,9 +57,13 @@ public class MockSocket extends Socket {
         return closed;
     }
 
-    public String getOutput() throws Exception {
+    public String getOutput() {
         if (output instanceof ByteArrayOutputStream)
-            return ((ByteArrayOutputStream) output).toString("UTF-8");
+            try {
+                return ((ByteArrayOutputStream) output).toString("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ImpossibleException("UTF-8 is a supported encoding", e);
+            }
         else
             return "";
     }

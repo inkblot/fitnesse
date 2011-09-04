@@ -2,10 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
+import util.ImpossibleException;
+
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -134,15 +135,12 @@ public abstract class Response {
         try {
             return value.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
-            assert false : "UTF-8 is a supported encoding";
-            return null;
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
         }
     }
 
     void makeHeaders(StringBuffer text) {
-        for (Iterator<String> iterator = headers.keySet().iterator(); iterator
-                .hasNext(); ) {
-            String key = iterator.next();
+        for (String key : headers.keySet()) {
             String value = headers.get(key);
             text.append(key).append(": ").append(value).append(CRLF);
         }

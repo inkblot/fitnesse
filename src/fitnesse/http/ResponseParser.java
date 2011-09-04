@@ -4,11 +4,11 @@ package fitnesse.http;
 
 import util.StreamReader;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +21,7 @@ public class ResponseParser {
     private static final Pattern statusLinePattern = Pattern.compile("HTTP/\\d.\\d (\\d\\d\\d) ");
     private static final Pattern headerPattern = Pattern.compile("([^:]*): (.*)");
 
-    public ResponseParser(InputStream input) throws Exception {
+    public ResponseParser(InputStream input) throws IOException {
         this.input = new StreamReader(input);
         parseStatusLine();
         parseHeaders();
@@ -37,17 +37,17 @@ public class ResponseParser {
         return encoding != null && "chunked".equals(encoding.toLowerCase());
     }
 
-    private void parseStatusLine() throws Exception {
+    private void parseStatusLine() throws IOException {
         String statusLine = input.readLine();
         Matcher match = statusLinePattern.matcher(statusLine);
         if (match.find()) {
             String status = match.group(1);
             this.status = Integer.parseInt(status);
         } else
-            throw new Exception("Could not parse Response");
+            throw new HttpException("Could not parse Response");
     }
 
-    private void parseHeaders() throws Exception {
+    private void parseHeaders() throws IOException {
         String line = input.readLine();
         while (!"".equals(line)) {
             Matcher match = headerPattern.matcher(line);
@@ -60,7 +60,7 @@ public class ResponseParser {
         }
     }
 
-    private void parseBody() throws Exception {
+    private void parseBody() throws IOException {
         String lengthHeader = "Content-Length";
         if (hasHeader(lengthHeader)) {
             int bytesToRead = Integer.parseInt(getHeader(lengthHeader));
@@ -68,8 +68,8 @@ public class ResponseParser {
         }
     }
 
-    private void parseChunks() throws Exception {
-        StringBuffer bodyBuffer = new StringBuffer();
+    private void parseChunks() throws IOException {
+        StringBuilder bodyBuffer = new StringBuilder();
         int chunkSize = readChunkSize();
         while (chunkSize != 0) {
             bodyBuffer.append(input.read(chunkSize));
@@ -80,12 +80,12 @@ public class ResponseParser {
 
     }
 
-    private int readChunkSize() throws Exception {
+    private int readChunkSize() throws IOException {
         String sizeLine = input.readLine();
         return Integer.parseInt(sizeLine, 16);
     }
 
-    private void readCRLF() throws Exception {
+    private void readCRLF() throws IOException {
         input.read(2);
     }
 
@@ -98,7 +98,7 @@ public class ResponseParser {
     }
 
     public String getHeader(String key) {
-        return (String) headers.get(key);
+        return headers.get(key);
     }
 
     public boolean hasHeader(String key) {
@@ -106,11 +106,10 @@ public class ResponseParser {
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("Status: ").append(status).append("\n");
         buffer.append("Headers: ").append("\n");
-        for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext(); ) {
-            String key = (String) iterator.next();
+        for (String key : headers.keySet()) {
             buffer.append("\t").append(key).append(": ").append(headers.get(key)).append("\n");
 
         }
@@ -119,7 +118,7 @@ public class ResponseParser {
         return buffer.toString();
     }
 
-    public static ResponseParser performHttpRequest(String hostname, int hostPort, RequestBuilder builder) throws Exception {
+    public static ResponseParser performHttpRequest(String hostname, int hostPort, RequestBuilder builder) throws IOException {
         Socket socket = new Socket(hostname, hostPort);
         OutputStream socketOut = socket.getOutputStream();
         InputStream socketIn = socket.getInputStream();

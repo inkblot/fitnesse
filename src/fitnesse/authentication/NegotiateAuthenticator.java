@@ -9,6 +9,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import org.ietf.jgss.*;
+import util.ImpossibleException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
@@ -149,20 +150,29 @@ public class NegotiateAuthenticator extends Authenticator {
         }
     }
 
-    static byte[] getToken(String authHeader) throws UnsupportedEncodingException {
-        byte[] inputTokenEncoded = authHeader.substring(NEGOTIATE.length()).trim().getBytes("UTF-8");
-        byte[] inputToken = Base64.decode(inputTokenEncoded);
-        return inputToken;
+    static byte[] getToken(String authHeader) {
+        byte[] inputTokenEncoded;
+        try {
+            inputTokenEncoded = authHeader.substring(NEGOTIATE.length()).trim().getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
+        return Base64.decode(inputTokenEncoded);
     }
 
-    private void setCredentials(Request request, byte[] inputToken) throws GSSException, UnsupportedEncodingException {
+    private void setCredentials(Request request, byte[] inputToken) throws GSSException {
         /*
           * XXX Nowhere to attach a partial context to a TCP connection, so we are limited to
         * single-round auth mechanisms.
         */
         GSSContext gssContext = manager.createContext(serverCreds);
         byte[] replyTokenBytes = gssContext.acceptSecContext(inputToken, 0, inputToken.length);
-        String replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), "UTF-8");
+        String replyToken;
+        try {
+            replyToken = replyTokenBytes == null ? null : new String(Base64.encode(replyTokenBytes), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         if (!gssContext.isEstablished())
             request.setCredentials(null, replyToken);
         else {

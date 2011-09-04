@@ -10,10 +10,12 @@ import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.runner.*;
+import util.ImpossibleException;
 import util.StreamReader;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 public class TestResultFormattingResponder implements Responder {
     public ResultFormatter formatter = new MockResultFormatter();
@@ -26,7 +28,12 @@ public class TestResultFormattingResponder implements Responder {
         init(context, request);
 
         String results = (String) request.getInput("results");
-        byte[] bytes = results.getBytes("UTF-8");
+        byte[] bytes;
+        try {
+            bytes = results.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         processResults(new ByteArrayInputStream(bytes));
 
         InputStreamResponse response = new InputStreamResponse();
@@ -38,7 +45,7 @@ public class TestResultFormattingResponder implements Responder {
     public void init(FitNesseContext context, Request request) throws Exception {
         this.context = context;
         baseUrl = (String) request.getHeader("Host");
-        rootPath = (String) request.getResource();
+        rootPath = request.getResource();
         formatter = makeFormatter(request);
     }
 

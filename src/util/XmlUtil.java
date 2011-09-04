@@ -8,12 +8,13 @@ import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
 public class XmlUtil {
     private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-    public static DocumentBuilder getDocumentBuilder() throws Exception {
+    public static DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
         return documentBuilderFactory.newDocumentBuilder();
     }
 
@@ -32,13 +33,20 @@ public class XmlUtil {
     public static Document newDocument(File input) throws Exception {
         try {
             return getDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(input), "UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
         } catch (SAXParseException e) {
             throw new Exception(String.format("SAXParseException at line:%d, col:%d, %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage()));
         }
     }
 
     public static Document newDocument(String input) throws Exception {
-        ByteArrayInputStream is = new ByteArrayInputStream(input.getBytes("UTF-8"));
+        ByteArrayInputStream is;
+        try {
+            is = new ByteArrayInputStream(input.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         return newDocument(is);
     }
 
@@ -107,7 +115,6 @@ public class XmlUtil {
         writer.write(doc);
         writer.flush();
         writer.close();
-        String value = outputStream.toString();
-        return value;
+        return outputStream.toString();
     }
 }

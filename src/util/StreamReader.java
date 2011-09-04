@@ -33,11 +33,11 @@ public class StreamReader {
         IOUtils.closeQuietly(input);
     }
 
-    public String readLine() throws Exception {
+    public String readLine() throws IOException {
         return bytesToString(readLineBytes());
     }
 
-    public byte[] readLineBytes() throws Exception {
+    public byte[] readLineBytes() throws IOException {
         state = READLINE_STATE;
         return preformRead();
     }
@@ -51,12 +51,6 @@ public class StreamReader {
         readStatus = 0;
         state = READCOUNT_STATE;
         return preformRead();
-    }
-
-    public void copyBytes(int count, OutputStream output) throws Exception {
-        readGoal = count;
-        state = READCOUNT_STATE;
-        performCopy(output);
     }
 
     public String readUpTo(String boundary) throws Exception {
@@ -122,8 +116,7 @@ public class StreamReader {
         try {
             return new String(bytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            assert false : "UTF-8 is a supported encoding";
-            return null;
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
         }
     }
 

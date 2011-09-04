@@ -12,6 +12,7 @@ import org.ietf.jgss.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import util.ImpossibleException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
@@ -157,14 +158,23 @@ public class NegotiateAuthenticatorTest {
         assertEquals(encodedPassword, request.getAuthorizationPassword());
     }
 
-    private String base64Encode(String s) throws UnsupportedEncodingException {
-        return new String(Base64.encode(s.getBytes("UTF-8")));
+    private String base64Encode(String s) {
+        try {
+            return new String(Base64.encode(s.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
     }
 
     @Test
-    public void getTokenShouldReturnDecodedToken() throws Exception {
+    public void getTokenShouldReturnDecodedToken() {
         byte[] actual = NegotiateAuthenticator.getToken(NegotiateAuthenticator.NEGOTIATE + " " + TOKEN);
-        byte[] expected = Base64.decode(TOKEN.getBytes("UTF-8"));
+        byte[] expected;
+        try {
+            expected = Base64.decode(TOKEN.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         Assert.assertArrayEquals(expected, actual);
     }
 

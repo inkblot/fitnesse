@@ -6,6 +6,7 @@ import org.w3c.dom.*;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 public class XmlWriter {
@@ -14,8 +15,12 @@ public class XmlWriter {
     private Writer writer;
     private boolean isNewLine;
 
-    public XmlWriter(OutputStream os) throws Exception {
-        writer = new OutputStreamWriter(os, "UTF-8");
+    public XmlWriter(OutputStream os) {
+        try {
+            writer = new OutputStreamWriter(os, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
     }
 
     public void write(Document doc) throws Exception {
@@ -46,7 +51,7 @@ public class XmlWriter {
     }
 
     private String writeAttributes(Element element) {
-        StringBuffer attributeString = new StringBuffer();
+        StringBuilder attributeString = new StringBuilder();
         NamedNodeMap attributeMap = element.getAttributes();
         int length = attributeMap.getLength();
         for (int i = 0; i < length; i++) {

@@ -9,7 +9,6 @@ import java.net.URLClassLoader;
 import java.util.*;
 
 public class FileUtil {
-    public static final String ENDL = System.getProperty("line.separator");
 
     public static File createFile(String path, String content) {
         String names[] = path.split("/");
@@ -98,6 +97,7 @@ public class FileUtil {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
+            // stop waiting
         }
     }
 
@@ -110,13 +110,12 @@ public class FileUtil {
         return new String(getFileBytes(input));
     }
 
-    public static byte[] getFileBytes(File input) throws Exception {
+    public static byte[] getFileBytes(File input) throws IOException {
         long size = input.length();
         FileInputStream stream = null;
         try {
             stream = new FileInputStream(input);
-            byte[] bytes = new StreamReader(stream).readBytes((int) size);
-            return bytes;
+            return new StreamReader(stream).readBytes((int) size);
         } finally {
             if (stream != null)
                 stream.close();
@@ -138,20 +137,16 @@ public class FileUtil {
         return lines;
     }
 
-    public static void writeLinesToFile(String filename, List<?> lines) throws Exception {
-        writeLinesToFile(new File(filename), lines);
-    }
-
-    public static void writeLinesToFile(File file, List<?> lines) throws Exception {
+    public static void writeLinesToFile(File file, List<?> lines) throws FileNotFoundException {
         PrintStream output = new PrintStream(new FileOutputStream(file));
-        for (Iterator<?> iterator = lines.iterator(); iterator.hasNext(); ) {
-            String line = (String) iterator.next();
+        for (Object line1 : lines) {
+            String line = (String) line1;
             output.println(line);
         }
         output.close();
     }
 
-    public static void copyBytes(InputStream input, OutputStream output) throws Exception {
+    public static void copyBytes(InputStream input, OutputStream output) throws IOException {
         StreamReader reader = new StreamReader(input);
         while (!reader.isEof())
             output.write(reader.readBytes(1000));
@@ -168,16 +163,16 @@ public class FileUtil {
         File[] files = dir.listFiles();
         if (files == null)
             return new File[0];
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory())
-                dirSet.add(files[i]);
+        for (File file : files) {
+            if (file.isDirectory())
+                dirSet.add(file);
             else
-                fileSet.add(files[i]);
+                fileSet.add(file);
         }
         List<File> fileList = new LinkedList<File>();
         fileList.addAll(dirSet);
         fileList.addAll(fileSet);
-        return fileList.toArray(new File[]{});
+        return fileList.toArray(new File[fileList.size()]);
     }
 
     public static String buildPath(String[] parts) {
@@ -185,8 +180,7 @@ public class FileUtil {
     }
 
     public static List<String> breakFilenameIntoParts(String fileName) {
-        List<String> parts = new ArrayList<String>(Arrays.asList(fileName.split("/")));
-        return parts;
+        return new ArrayList<String>(Arrays.asList(fileName.split("/")));
     }
 
     public static String getPathOfFile(String fileName) {
@@ -214,6 +208,6 @@ public class FileUtil {
         Class<URLClassLoader> sysclass = URLClassLoader.class;
         Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
         method.setAccessible(true);
-        method.invoke(sysloader, new Object[]{u});
+        method.invoke(sysloader, u);
     }
 }

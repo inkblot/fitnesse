@@ -5,6 +5,7 @@ package fitnesse.slim;
 import fitnesse.socketservice.SocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.ImpossibleException;
 import util.StreamReader;
 
 import java.io.*;
@@ -50,7 +51,11 @@ public class SlimServer implements SocketServer {
     private void initialize(InputStream input, OutputStream output) throws IOException {
         executor = slimFactory.getListExecutor(verbose);
         reader = new StreamReader(input);
-        writer = new BufferedWriter(new OutputStreamWriter(output, "UTF-8"));
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(output, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         writer.write(String.format("Slim -- V%s\n", SlimVersion.VERSION));
         writer.flush();
     }
@@ -83,7 +88,11 @@ public class SlimServer implements SocketServer {
 
     private void sendResultsToClient(List<Object> results) throws IOException {
         String resultString = ListSerializer.serialize(results);
-        writer.write(String.format("%06d:%s", resultString.getBytes("UTF-8").length, resultString));
+        try {
+            writer.write(String.format("%06d:%s", resultString.getBytes("UTF-8").length, resultString));
+        } catch (IOException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         writer.flush();
     }
 
@@ -91,8 +100,8 @@ public class SlimServer implements SocketServer {
         try {
             reader.close();
             writer.close();
-        } catch (Exception e) {
-
+        } catch (IOException e) {
+            // ignore
         }
     }
 
@@ -101,7 +110,8 @@ public class SlimServer implements SocketServer {
             public void run() {
                 try {
                     SlimService.instance.close();
-                } catch (Exception e) {
+                } catch (IOException e) {
+                    // ignore
                 }
             }
         }

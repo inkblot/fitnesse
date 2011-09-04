@@ -2,12 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
+import util.ImpossibleException;
 import util.ListUtility;
 import util.StreamReader;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
@@ -34,14 +36,22 @@ public class SlimClient {
         this.hostName = hostName;
     }
 
-    public void connect() throws Exception {
-        for (int tries = 0; tryConnect() == false; tries++) {
-            if (tries > 100)
-                throw new SlimError("Could not start Slim.");
-            Thread.sleep(50);
+    public void connect() throws IOException {
+        try {
+            for (int tries = 0; !tryConnect(); tries++) {
+                if (tries > 100)
+                    throw new SlimError("Could not start Slim.");
+                Thread.sleep(50);
+            }
+        } catch (InterruptedException e) {
+            throw new SlimError("Interrupted while attempting to connect", e);
         }
         reader = new StreamReader(client.getInputStream());
-        writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         slimServerVersionMessage = reader.readLine();
         slimServerVersion = isConnected() ? Double.parseDouble(slimServerVersionMessage.replace("Slim -- V", "")) : -1;
     }
@@ -70,14 +80,19 @@ public class SlimClient {
         writeString(instructions);
         String resultLength = reader.read(6);
         reader.read(1);
-        String results = null;
+        String results;
         results = reader.read(Integer.parseInt(resultLength));
         List<Object> resultList = ListDeserializer.deserialize(results);
         return resultToMap(resultList);
     }
 
     private void writeString(String string) throws IOException {
-        String packet = String.format("%06d:%s", string.getBytes("UTF-8").length, string);
+        String packet;
+        try {
+            packet = String.format("%06d:%s", string.getBytes("UTF-8").length, string);
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         writer.write(packet);
         writer.flush();
     }

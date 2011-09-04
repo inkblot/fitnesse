@@ -3,12 +3,10 @@
 package fitnesse.http;
 
 import fitnesse.components.Base64;
+import util.ImpossibleException;
 import util.StreamReader;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.util.*;
@@ -46,8 +44,8 @@ public class RequestBuilder {
         return output.toString();
     }
 
-    private String buildRequestLine() throws Exception {
-        StringBuffer text = new StringBuffer();
+    private String buildRequestLine() {
+        StringBuilder text = new StringBuilder();
         text.append(method).append(" ").append(resource);
         if (isGet()) {
             String inputString = inputString();
@@ -62,8 +60,12 @@ public class RequestBuilder {
         return method.equals("GET");
     }
 
-    public void send(OutputStream output) throws Exception {
-        output.write(buildRequestLine().getBytes("UTF-8"));
+    public void send(OutputStream output) throws IOException {
+        try {
+            output.write(buildRequestLine().getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         output.write(ENDL);
         buildBody();
         sendHeaders(output);
@@ -71,25 +73,32 @@ public class RequestBuilder {
         sendBody(output);
     }
 
-    private void sendHeaders(OutputStream output) throws Exception {
+    private void sendHeaders(OutputStream output) throws IOException {
         addHostHeader();
-        for (Iterator<String> iterator = headers.keySet().iterator(); iterator.hasNext(); ) {
-            String key = iterator.next();
-            output.write((key + ": " + headers.get(key)).getBytes("UTF-8"));
+        for (String key : headers.keySet()) {
+            try {
+                output.write((key + ": " + headers.get(key)).getBytes("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new ImpossibleException("UTF-8 is a supported encoding", e);
+            }
             output.write(ENDL);
         }
     }
 
-    private void buildBody() throws Exception {
+    private void buildBody() {
         if (!isMultipart) {
-            byte[] bytes = inputString().getBytes("UTF-8");
+            byte[] bytes;
+            try {
+                bytes = inputString().getBytes("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ImpossibleException("UTF-8 is a supported encoding", e);
+            }
             bodyParts.add(new ByteArrayInputStream(bytes));
             bodyLength += bytes.length;
         } else {
-            for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext(); ) {
-                String name = iterator.next();
+            for (String name : inputs.keySet()) {
                 Object value = inputs.get(name);
-                StringBuffer partBuffer = new StringBuffer();
+                StringBuilder partBuffer = new StringBuilder();
                 partBuffer.append("--").append(getBoundary()).append("\r\n");
                 partBuffer.append("Content-Disposition: form-data; name=\"").append(name).append("\"").append("\r\n");
                 if (value instanceof InputStreamPart) {
@@ -108,23 +117,26 @@ public class RequestBuilder {
                     addBodyPart(partBuffer.toString());
                 }
             }
-            StringBuffer tail = new StringBuffer();
+            StringBuilder tail = new StringBuilder();
             tail.append("--").append(getBoundary()).append("--").append("\r\n");
             addBodyPart(tail.toString());
         }
         addHeader("Content-Length", bodyLength + "");
     }
 
-    private void addBodyPart(String input) throws Exception {
-        byte[] bytes = input.toString().getBytes("UTF-8");
+    private void addBodyPart(String input) {
+        byte[] bytes;
+        try {
+            bytes = input.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         bodyParts.add(new ByteArrayInputStream(bytes));
         bodyLength += bytes.length;
     }
 
-    private void sendBody(OutputStream output) throws Exception {
-        for (Iterator<InputStream> iterator = bodyParts.iterator(); iterator.hasNext(); ) {
-            InputStream input = iterator.next();
-
+    private void sendBody(OutputStream output) throws IOException {
+        for (InputStream input : bodyParts) {
             StreamReader reader = new StreamReader(input);
             while (!reader.isEof()) {
                 byte[] bytes = reader.readBytes(1000);
@@ -140,25 +152,28 @@ public class RequestBuilder {
             addHeader("Host", "");
     }
 
-    public void addInput(String key, Object value) throws Exception {
+    public void addInput(String key, Object value) {
         inputs.put(key, value);
     }
 
-    public String inputString() throws Exception {
-        StringBuffer buffer = new StringBuffer();
+    public String inputString() {
+        StringBuilder buffer = new StringBuilder();
         boolean first = true;
-        for (Iterator<String> iterator = inputs.keySet().iterator(); iterator.hasNext(); ) {
-            String key = iterator.next();
+        for (String key : inputs.keySet()) {
             String value = (String) inputs.get(key);
             if (!first)
                 buffer.append("&");
+            try {
             buffer.append(key).append("=").append(URLEncoder.encode(value, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new ImpossibleException("UTF-8 is a supported encoding", e);
+            }
             first = false;
         }
         return buffer.toString();
     }
 
-    public void addCredentials(String username, String password) throws Exception {
+    public void addCredentials(String username, String password) {
         String rawUserpass = username + ":" + password;
         String userpass = Base64.encode(rawUserpass);
         addHeader("Authorization", "Basic " + userpass);
@@ -176,12 +191,12 @@ public class RequestBuilder {
         return boundary;
     }
 
-    public void addInputAsPart(String name, Object content) throws Exception {
+    public void addInputAsPart(String name, Object content) {
         multipart();
         addInput(name, content);
     }
 
-    public void addInputAsPart(String name, InputStream input, int size, String contentType) throws Exception {
+    public void addInputAsPart(String name, InputStream input, int size, String contentType) {
         addInputAsPart(name, new InputStreamPart(input, size, contentType));
     }
 

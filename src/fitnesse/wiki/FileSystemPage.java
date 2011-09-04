@@ -5,6 +5,7 @@ package fitnesse.wiki;
 import fitnesse.ComponentFactory;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.widgets.WikiWordWidget;
+import org.apache.commons.io.IOUtils;
 import util.*;
 
 import java.io.*;
@@ -90,9 +91,11 @@ public class FileSystemPage extends CachingPage {
                 cmSystem.edit(contentPath);
             writer = new OutputStreamWriter(new FileOutputStream(output), "UTF-8");
             writer.write(content);
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
         } finally {
             if (writer != null) {
-                writer.close();
+                IOUtils.closeQuietly(writer);
                 cmSystem.update(contentPath);
             }
         }
@@ -134,13 +137,17 @@ public class FileSystemPage extends CachingPage {
         return new PageRepository().makeChildPage(name, this);
     }
 
-    private void loadContent(final PageData data) throws Exception {
+    private void loadContent(final PageData data) throws IOException {
         String content = "";
         final String name = getFileSystemPath() + contentFilename;
         final File input = new File(name);
         if (input.exists()) {
             final byte[] bytes = readContentBytes(input);
-            content = new String(bytes, "UTF-8");
+            try {
+                content = new String(bytes, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ImpossibleException("UTF-8 is a supported encoding", e);
+            }
         }
         data.setContent(content);
     }
@@ -166,9 +173,7 @@ public class FileSystemPage extends CachingPage {
             inputStream.read(bytes);
             return bytes;
         } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
+            IOUtils.closeQuietly(inputStream);
         }
     }
 

@@ -10,8 +10,10 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
 import util.ClockUtil;
+import util.ImpossibleException;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -64,8 +66,12 @@ public class FileResponder implements Responder {
         return resource.indexOf("%20") != 0;
     }
 
-    public static String restoreRealSpacesInFileName(String resource) throws Exception {
-        return URLDecoder.decode(resource, "UTF-8");
+    public static String restoreRealSpacesInFileName(String resource) {
+        try {
+            return URLDecoder.decode(resource, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
     }
 
     String getResource() {

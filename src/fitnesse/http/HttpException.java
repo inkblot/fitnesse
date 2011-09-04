@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-public class HttpException extends Exception {
+import java.io.IOException;
+
+public class HttpException extends IOException {
     private static final long serialVersionUID = 1L;
 
     public HttpException(String message) {

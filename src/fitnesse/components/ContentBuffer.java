@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import org.apache.commons.io.IOUtils;
 import util.FileUtil;
+import util.ImpossibleException;
 
 import java.io.*;
 
@@ -27,8 +29,13 @@ public class ContentBuffer {
         }
     }
 
-    public ContentBuffer append(String value) throws Exception {
-        byte[] bytes = value.getBytes("UTF-8");
+    public ContentBuffer append(String value) throws IOException {
+        byte[] bytes;
+        try {
+            bytes = value.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         return append(bytes);
     }
 
@@ -39,9 +46,9 @@ public class ContentBuffer {
         return this;
     }
 
-    private void close() throws Exception {
+    private void close() {
         if (opened) {
-            outputStream.close();
+            IOUtils.closeQuietly(outputStream);
             opened = false;
         }
     }
@@ -56,7 +63,7 @@ public class ContentBuffer {
         return size;
     }
 
-    public InputStream getInputStream() throws Exception {
+    public InputStream getInputStream() throws IOException {
         close();
         return new FileInputStream(tempFile) {
             public void close() throws IOException {
@@ -69,7 +76,7 @@ public class ContentBuffer {
         };
     }
 
-    public InputStream getNonDeleteingInputStream() throws Exception {
+    public InputStream getNonDeleteingInputStream() throws IOException {
         close();
         return new FileInputStream(tempFile);
     }

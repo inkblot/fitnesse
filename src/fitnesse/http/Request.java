@@ -3,6 +3,7 @@
 package fitnesse.http;
 
 import fitnesse.components.Base64;
+import util.ImpossibleException;
 import util.StreamReader;
 
 import java.io.*;
@@ -183,7 +184,7 @@ public class Request {
     }
 
     private String concatenateItems(String existingItem, String value) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append(existingItem);
         buffer.append(',');
         buffer.append(value);
@@ -248,9 +249,9 @@ public class Request {
         buffer.append("Request URI:  ").append(requestURI).append('\n');
         buffer.append("Resource:     ").append(resource).append('\n');
         buffer.append("Query String: ").append(queryString).append('\n');
-        buffer.append("Hearders: (" + headers.size() + ")\n");
+        buffer.append("Hearders: (").append(headers.size()).append(")\n");
         addMap(headers, buffer);
-        buffer.append("Form Inputs: (" + inputs.size() + ")\n");
+        buffer.append("Form Inputs: (").append(inputs.size()).append(")\n");
         addMap(inputs, buffer);
         buffer.append("Entity Body: \n");
         buffer.append(entityBody).append('\n');
@@ -265,7 +266,7 @@ public class Request {
         }
         for (Entry<String, Object> entry : map.entrySet()) {
             String value = entry.getValue() == null ? null : escape(entry.getValue().toString());
-            buffer.append("\t" + escape(entry.getKey()) + " \t-->\t " + value + "\n");
+            buffer.append("\t").append(escape(entry.getKey())).append(" \t-->\t ").append(value).append("\n");
         }
     }
 
@@ -277,7 +278,7 @@ public class Request {
         try {
             return URLDecoder.decode(content, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            return "URLDecoder Error";
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
         }
     }
 
@@ -285,12 +286,12 @@ public class Request {
         return hasBeenParsed;
     }
 
-    public String getUserpass(String headerValue) throws Exception {
+    public String getUserpass(String headerValue) {
         String encodedUserpass = headerValue.substring(6);
         return Base64.decode(encodedUserpass);
     }
 
-    public void getCredentials() throws Exception {
+    public void getCredentials() {
         if (authorizationUsername != null)
             return;
         if (hasHeader("Authorization")) {

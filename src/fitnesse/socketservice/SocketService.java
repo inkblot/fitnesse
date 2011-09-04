@@ -29,17 +29,21 @@ public class SocketService {
         serviceThread.start();
     }
 
-    public void close() throws Exception {
+    public void close() throws IOException {
         waitForServiceThreadToStart();
         running = false;
         serverSocket.close();
-        serviceThread.join();
-        waitForServerThreads();
+        try {
+            serviceThread.join();
+            waitForServerThreads();
+        } catch (InterruptedException e) {
+            // ignore
+        }
     }
 
     private void waitForServiceThreadToStart() {
         if (everRan) return;
-        while (running == false) Thread.yield();
+        while (!running) Thread.yield();
     }
 
     private void serviceThread() {
@@ -95,6 +99,7 @@ public class SocketService {
                     threads.remove(Thread.currentThread());
                 }
             } catch (Exception e) {
+                // kablooie!
             }
         }
     }

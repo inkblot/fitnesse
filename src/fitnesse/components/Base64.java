@@ -2,6 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import util.ImpossibleException;
+
+import java.io.UnsupportedEncodingException;
+
 public class Base64 {
     private static final byte[] base64Alphabet =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes();
@@ -19,8 +23,12 @@ public class Base64 {
         }
     }
 
-    public static String decode(String value) throws Exception {
-        return new String(decode(value.getBytes("UTF-8")));
+    public static String decode(String value) {
+        try {
+            return new String(decode(value.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
     }
 
     public static byte[] decode(byte[] bytes) {
@@ -47,7 +55,7 @@ public class Base64 {
         return decoding;
     }
 
-    public static String encode(String value) throws Exception {
+    public static String encode(String value) {
         return new String(encode(value.getBytes()));
     }
 

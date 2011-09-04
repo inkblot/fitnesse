@@ -4,8 +4,10 @@ package fitnesse.runner;
 
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
+import org.apache.commons.io.IOUtils;
 import util.CommandLine;
 import util.FileUtil;
+import util.ImpossibleException;
 
 import java.io.*;
 
@@ -73,7 +75,7 @@ public class FormattingOption {
             this.output = new FileOutputStream(filename);
     }
 
-    public void process(InputStream inputStream, int size) throws Exception {
+    public void process(InputStream inputStream, int size) throws IOException {
         try {
             if ("raw".equals(format))
                 FileUtil.copyBytes(inputStream, output);
@@ -81,11 +83,15 @@ public class FormattingOption {
                 RequestBuilder request = buildRequest(inputStream, size);
                 ResponseParser response = ResponseParser.performHttpRequest(host, port, request);
                 status = response.getStatus();
-                output.write(response.getBody().getBytes("UTF-8"));
+                try {
+                    output.write(response.getBody().getBytes("UTF-8"));
+                } catch (IOException e) {
+                    throw new ImpossibleException("UTF-8 is a supported encoding", e);
+                }
             }
         } finally {
             if (!usingStdout)
-                output.close();
+                IOUtils.closeQuietly(output);
         }
     }
 
@@ -93,7 +99,7 @@ public class FormattingOption {
         return status == 200;
     }
 
-    public RequestBuilder buildRequest(InputStream inputStream, int size) throws Exception {
+    public RequestBuilder buildRequest(InputStream inputStream, int size) {
         RequestBuilder request = new RequestBuilder("/" + rootPath);
         request.setMethod("POST");
         request.setHostAndPort(host, port);

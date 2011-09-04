@@ -3,11 +3,13 @@
 
 package fitnesse.components;
 
+import util.ImpossibleException;
 import util.TimeMeasurement;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -134,12 +136,14 @@ public class CommandRunner {
         return timeMeasurement.elapsed();
     }
 
-    protected void sendInput() throws Exception {
+    protected void sendInput() throws InterruptedException {
         Thread thread = new Thread() {
             public void run() {
                 try {
                     stdin.write(input.getBytes("UTF-8"));
                     stdin.flush();
+                } catch (UnsupportedEncodingException e) {
+                    throw new ImpossibleException("UTF-8 is a supported encoding", e);
                 } catch (Exception e) {
                     exceptionOccurred(e);
                 } finally {

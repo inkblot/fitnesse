@@ -3,6 +3,7 @@
 package fitnesse.http;
 
 import junit.framework.TestCase;
+import util.ImpossibleException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,7 @@ public class SimpleResponseTest extends TestCase implements ResponseSender {
         try {
             text = new String(bytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            assert false : "UTF-8 is a supported encoding";
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
         }
     }
 

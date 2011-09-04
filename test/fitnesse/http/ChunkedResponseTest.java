@@ -5,6 +5,7 @@ package fitnesse.http;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import util.ImpossibleException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +27,7 @@ public class ChunkedResponseTest implements ResponseSender {
         try {
             buffer.append(new String(bytes, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            assert false : "UTF-8 is a supported encoding";
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
         }
     }
 

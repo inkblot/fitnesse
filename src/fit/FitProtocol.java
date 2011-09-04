@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fit;
 
+import util.ImpossibleException;
 import util.StreamReader;
 
 import java.io.IOException;
@@ -13,12 +14,12 @@ public class FitProtocol {
     public static final DecimalFormat format = new DecimalFormat("0000000000");
 
     public static void writeData(String data, OutputStream output) throws IOException {
-        byte[] bytes = new byte[0];
+        byte[] bytes;
         try {
             bytes = data.getBytes("UTF-8");
             writeData(bytes, output);
         } catch (UnsupportedEncodingException e) {
-            assert false : "UTF-8 is a supported encoding";
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
         }
     }
 

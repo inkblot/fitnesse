@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.CommandLine;
 import util.FileUtil;
+import util.ImpossibleException;
 import util.StreamReader;
 
 import java.io.*;
@@ -152,7 +153,12 @@ public class FitServer {
         socket = new Socket(host, port);
         output = socket.getOutputStream();
         input = new StreamReader(socket.getInputStream());
-        byte[] bytes = httpRequest.getBytes("UTF-8");
+        byte[] bytes;
+        try {
+            bytes = httpRequest.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         output.write(bytes);
         output.flush();
         logger.debug("http request sent");
@@ -173,9 +179,14 @@ public class FitServer {
         }
     }
 
-    private static byte[] readTable(Parse table) throws Exception {
+    private static byte[] readTable(Parse table) {
         ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        OutputStreamWriter streamWriter = new OutputStreamWriter(byteBuffer, "UTF-8");
+        OutputStreamWriter streamWriter;
+        try {
+            streamWriter = new OutputStreamWriter(byteBuffer, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
         PrintWriter writer = new PrintWriter(streamWriter);
         Parse more = table.more;
         table.more = null;

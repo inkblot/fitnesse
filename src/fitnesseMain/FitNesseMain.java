@@ -15,11 +15,15 @@ import fitnesse.responders.run.formatters.TestTextFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
 import fitnesse.wiki.WikiPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.CommandLine;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class FitNesseMain {
+    private static final Logger logger = LoggerFactory.getLogger(FitNesseMain.class);
     private static String extraOutput;
     public static boolean dontExitAfterSingleCommand;
 
@@ -121,10 +125,9 @@ public class FitNesseMain {
     }
 
     public static Arguments parseCommandLine(String[] args) {
-        CommandLine commandLine = new CommandLine(
-                "[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]");
         Arguments arguments = null;
-        if (commandLine.parse(args)) {
+        try {
+            CommandLine commandLine = new CommandLine("[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]", args);
             arguments = new Arguments();
             if (commandLine.hasOption("p"))
                 arguments.setPort(commandLine.getOptionArgument("p", "port"));
@@ -142,6 +145,8 @@ public class FitNesseMain {
                 arguments.setCommand(commandLine.getOptionArgument("c", "command"));
             arguments.setOmitUpdates(commandLine.hasOption("o"));
             arguments.setInstallOnly(commandLine.hasOption("i"));
+        } catch (CommandLine.CommandLineParseException e) {
+            logger.error("Invalid command line: ", Arrays.asList(args));
         }
         return arguments;
     }

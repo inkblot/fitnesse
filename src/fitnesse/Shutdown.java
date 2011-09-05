@@ -14,7 +14,6 @@ public class Shutdown {
     public int port = FitNesseContext.DEFAULT_PORT;
     public String username;
     public String password;
-    private CommandLine commandLine = new CommandLine("[-h hostname] [-p port] [-c username password]");
 
     public static void main(String[] args) throws Exception {
         Shutdown shutdown = new Shutdown();
@@ -59,18 +58,21 @@ public class Shutdown {
     }
 
     public boolean parseArgs(String[] args) {
-        if (!commandLine.parse(args))
-            return false;
+        try {
+            CommandLine commandLine = new CommandLine("[-h hostname] [-p port] [-c username password]", args);
 
-        if (commandLine.hasOption("h"))
-            hostname = commandLine.getOptionArgument("h", "hostname");
-        if (commandLine.hasOption("p"))
-            port = Integer.parseInt(commandLine.getOptionArgument("p", "port"));
-        if (commandLine.hasOption("c")) {
-            username = commandLine.getOptionArgument("c", "username");
-            password = commandLine.getOptionArgument("c", "password");
+            if (commandLine.hasOption("h"))
+                hostname = commandLine.getOptionArgument("h", "hostname");
+            if (commandLine.hasOption("p"))
+                port = Integer.parseInt(commandLine.getOptionArgument("p", "port"));
+            if (commandLine.hasOption("c")) {
+                username = commandLine.getOptionArgument("c", "username");
+                password = commandLine.getOptionArgument("c", "password");
+            }
+            return true;
+        } catch (CommandLine.CommandLineParseException e) {
+            return false;
         }
-        return true;
     }
 
     public void usage() {

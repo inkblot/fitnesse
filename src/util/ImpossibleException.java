@@ -7,6 +7,10 @@ package util;
  * Time: 3:23 PM
  */
 public class ImpossibleException extends RuntimeException {
+    public ImpossibleException(String message) {
+        super(message);
+    }
+
     public ImpossibleException(String message, Throwable cause) {
         super(message, cause);
     }

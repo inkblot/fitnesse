@@ -106,18 +106,17 @@ public class FitServer {
     }
 
     private static FitServer create(String[] argv) {
-        CommandLine commandLine = new CommandLine("[-x][-s] host port socketToken");
-        if (commandLine.parse(argv)) {
+        try {
+            CommandLine commandLine = new CommandLine("[-x][-s] host port socketToken", argv);
             return new FitServer(
                     commandLine.getArgument("host"),
                     Integer.parseInt(commandLine.getArgument("port")),
                     Integer.parseInt(commandLine.getArgument("socketToken")),
                     commandLine.hasOption("x"),
                     commandLine.hasOption("s"));
-        } else {
+        } catch (CommandLine.CommandLineParseException e) {
             usage();
-            assert false : "Usage exits";
-            return null;
+            throw new ImpossibleException("usage exits");
         }
     }
 

@@ -34,17 +34,19 @@ public class FormattingOption {
     private FormattingOption() {
     }
 
-    private void args(String[] args) throws Exception {
-        CommandLine commandLine = new CommandLine("resultFilename format outputFilename host port rootPath");
-        if (!commandLine.parse(args))
+    private void args(String[] args) throws FileNotFoundException {
+        try {
+            CommandLine commandLine = new CommandLine("resultFilename format outputFilename host port rootPath", args);
+            resultFilename = commandLine.getArgument("resultFilename");
+            format = commandLine.getArgument("format");
+            filename = commandLine.getArgument("outputFilename");
+            host = commandLine.getArgument("host");
+            port = Integer.parseInt(commandLine.getArgument("port"));
+            rootPath = commandLine.getArgument("rootPath");
+            setOutput(System.out);
+        } catch (CommandLine.CommandLineParseException e) {
             usage();
-        resultFilename = commandLine.getArgument("resultFilename");
-        format = commandLine.getArgument("format");
-        filename = commandLine.getArgument("outputFilename");
-        host = commandLine.getArgument("host");
-        port = Integer.parseInt(commandLine.getArgument("port"));
-        rootPath = commandLine.getArgument("rootPath");
-        setOutput(System.out);
+        }
     }
 
     private void usage() {

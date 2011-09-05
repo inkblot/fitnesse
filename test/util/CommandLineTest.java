@@ -77,8 +77,12 @@ public class CommandLineTest extends TestCase {
     }
 
     private boolean createOptionsAndParse(String validOptions, String enteredOptions) {
-        options = new CommandLine(validOptions);
         String[] args = new Option().split(enteredOptions);
-        return options.parse(args);
+        try {
+            options = new CommandLine(validOptions, args);
+            return true;
+        } catch (CommandLine.CommandLineParseException e) {
+            return false;
+        }
     }
 }

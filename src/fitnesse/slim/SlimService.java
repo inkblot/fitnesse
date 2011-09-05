@@ -22,7 +22,7 @@ public class SlimService extends SocketService {
 
     public static void main(String[] args) throws Exception {
         if (parseCommandLine(args)) {
-            startWithFactory(args, new JavaSlimFactory());
+            startWithFactory(new JavaSlimFactory());
         } else {
             parseCommandLineFailed(args);
         }
@@ -32,21 +32,21 @@ public class SlimService extends SocketService {
         System.err.println("Invalid command line arguments:" + Arrays.asList(args));
     }
 
-    protected static void startWithFactory(String[] args, SlimFactory slimFactory) throws Exception {
+    protected static void startWithFactory(SlimFactory slimFactory) throws Exception {
         if (inject)
             Guice.createInjector(new FitNesseModule());
         new SlimService(port, slimFactory.getSlimServer(verbose));
     }
 
     protected static boolean parseCommandLine(String[] args) {
-        CommandLine commandLine = new CommandLine("[-v] port");
-        if (commandLine.parse(args)) {
+        try {
+            CommandLine commandLine = new CommandLine("[-v] port", args);
             verbose = commandLine.hasOption("v");
-            String portString = commandLine.getArgument("port");
-            port = Integer.parseInt(portString);
+            port = Integer.parseInt(commandLine.getArgument("port"));
             return true;
+        } catch (CommandLine.CommandLineParseException e) {
+            return false;
         }
-        return false;
     }
 
     public SlimService(int port, SlimServer slimServer) throws Exception {

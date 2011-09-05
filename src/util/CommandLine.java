@@ -11,7 +11,7 @@ public class CommandLine extends Option {
     private static Pattern optionPattern = Pattern.compile("\\[-(\\w+)((?: \\w+)*)\\]");
     private Map<String, Option> possibleOptions = new ConcurrentHashMap<String, Option>();
 
-    public CommandLine(String optionDescriptor) {
+    public CommandLine(String optionDescriptor, String[] argv) throws CommandLineParseException {
         int optionEndIndex = 0;
         Matcher matcher = optionPattern.matcher(optionDescriptor);
         while (matcher.find()) {
@@ -23,9 +23,12 @@ public class CommandLine extends Option {
 
         String remainder = optionDescriptor.substring(optionEndIndex);
         parseArgumentDescriptor(remainder);
+        if (!parse(argv)) {
+            throw new CommandLineParseException();
+        }
     }
 
-    public boolean parse(String[] args) {
+    private boolean parse(String[] args) {
         boolean successfulParse = true;
         Option currentOption = this;
         for (int i = 0; successfulParse && i < args.length; i++) {
@@ -67,6 +70,10 @@ public class CommandLine extends Option {
             return null;
         else
             return option.getArgument(argName);
+    }
+
+    public class CommandLineParseException extends Exception {
+
     }
 }
 

@@ -8,6 +8,7 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.socketservice.SocketService;
 import util.CommandLine;
+import util.CommandLineParseException;
 
 import java.util.Arrays;
 
@@ -44,7 +45,7 @@ public class SlimService extends SocketService {
             verbose = commandLine.hasOption("v");
             port = Integer.parseInt(commandLine.getArgument("port"));
             return true;
-        } catch (CommandLine.CommandLineParseException e) {
+        } catch (CommandLineParseException e) {
             return false;
         }
     }

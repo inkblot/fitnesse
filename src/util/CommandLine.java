@@ -1,19 +1,19 @@
 package util;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommandLine extends Option {
-    private static Pattern optionPattern = Pattern.compile("\\[-(\\w+)((?: \\w+)*)\\]");
-    private Map<String, Option> possibleOptions = new ConcurrentHashMap<String, Option>();
+    private static final Pattern optionPattern = Pattern.compile("\\[-(\\w+)((?: \\w+)*)\\]");
+    private final Map<String, Option> possibleOptions;
 
     public CommandLine(String optionDescriptor, String[] argv) throws CommandLineParseException {
         int optionEndIndex = 0;
         Matcher matcher = optionPattern.matcher(optionDescriptor);
+        Map <String, Option> possibleOptions = new ConcurrentHashMap<String, Option>();
         while (matcher.find()) {
             Option option = new Option();
             option.parseArgumentDescriptor(matcher.group(2));
@@ -23,39 +23,32 @@ public class CommandLine extends Option {
 
         String remainder = optionDescriptor.substring(optionEndIndex);
         parseArgumentDescriptor(remainder);
-        if (!parse(argv)) {
-            throw new CommandLineParseException();
-        }
-    }
-
-    private boolean parse(String[] args) {
-        boolean successfulParse = true;
         Option currentOption = this;
-        for (int i = 0; successfulParse && i < args.length; i++) {
-            String arg = args[i];
-
+        for (String arg : argv) {
             if (currentOption != this && !currentOption.needsMoreArguments())
                 currentOption = this;
-
             if (arg.startsWith("-")) {
-                if (currentOption.needsMoreArguments() && currentOption != this)
-                    successfulParse = false;
-                else {
+                if (currentOption.needsMoreArguments() && currentOption != this) {
+                    throw new CommandLineParseException(currentOption + " requires an argument");
+                } else {
                     String argName = arg.substring(1);
                     currentOption = possibleOptions.get(argName);
-                    if (currentOption != null)
+                    if (currentOption != null) {
                         currentOption.active = true;
-                    else
-                        successfulParse = false;
+                    } else {
+                        throw new CommandLineParseException("Invalid argument: " + arg);
+                    }
                 }
-            } else if (currentOption.needsMoreArguments())
+            } else if (currentOption.needsMoreArguments()) {
                 currentOption.addArgument(arg);
-            else // too many args
-                successfulParse = false;
+            } else {
+                throw new CommandLineParseException("Too many arguments");
+            }
         }
-        if (successfulParse && currentOption.needsMoreArguments())
-            successfulParse = false;
-        return successfulParse;
+        if (currentOption.needsMoreArguments())
+            throw new CommandLineParseException(currentOption + " requires an argument");
+
+        this.possibleOptions = Collections.synchronizedMap(possibleOptions);
     }
 
     public boolean hasOption(String optionName) {
@@ -72,46 +65,5 @@ public class CommandLine extends Option {
             return option.getArgument(argName);
     }
 
-    public class CommandLineParseException extends Exception {
-
-    }
 }
 
-class Option {
-    public boolean active = false;
-    protected String[] argumentNames;
-    protected String[] argumentValues;
-    protected int argumentIndex = 0;
-
-    protected void parseArgumentDescriptor(String arguments) {
-        argumentNames = split(arguments);
-        argumentValues = new String[argumentNames.length];
-    }
-
-    public String getArgument(String argName) {
-        for (int i = 0; i < argumentNames.length; i++) {
-            String requiredArgumentName = argumentNames[i];
-            if (requiredArgumentName.equals(argName))
-                return argumentValues[i];
-        }
-        return null;
-    }
-
-    public boolean needsMoreArguments() {
-        return argumentIndex < argumentNames.length;
-    }
-
-    public void addArgument(String value) {
-        argumentValues[argumentIndex++] = value;
-    }
-
-    protected String[] split(String value) {
-        String[] tokens = value.split(" ");
-        List<String> usableTokens = new LinkedList<String>();
-        for (String token : tokens) {
-            if (token.length() > 0)
-                usableTokens.add(token);
-        }
-        return usableTokens.toArray(new String[usableTokens.size()]);
-    }
-}

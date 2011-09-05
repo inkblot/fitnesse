@@ -18,6 +18,7 @@ import fitnesse.wiki.WikiPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.CommandLine;
+import util.CommandLineParseException;
 
 import java.io.File;
 import java.util.Arrays;
@@ -145,7 +146,7 @@ public class FitNesseMain {
                 arguments.setCommand(commandLine.getOptionArgument("c", "command"));
             arguments.setOmitUpdates(commandLine.hasOption("o"));
             arguments.setInstallOnly(commandLine.hasOption("i"));
-        } catch (CommandLine.CommandLineParseException e) {
+        } catch (CommandLineParseException e) {
             logger.error("Invalid command line: ", Arrays.asList(args));
         }
         return arguments;

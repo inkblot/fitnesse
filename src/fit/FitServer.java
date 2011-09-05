@@ -11,10 +11,7 @@ import fitnesse.FitNesseModule;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.CommandLine;
-import util.FileUtil;
-import util.ImpossibleException;
-import util.StreamReader;
+import util.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -114,7 +111,7 @@ public class FitServer {
                     Integer.parseInt(commandLine.getArgument("socketToken")),
                     commandLine.hasOption("x"),
                     commandLine.hasOption("s"));
-        } catch (CommandLine.CommandLineParseException e) {
+        } catch (CommandLineParseException e) {
             usage();
             throw new ImpossibleException("usage exits");
         }

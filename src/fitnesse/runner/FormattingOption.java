@@ -6,6 +6,7 @@ import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
 import org.apache.commons.io.IOUtils;
 import util.CommandLine;
+import util.CommandLineParseException;
 import util.FileUtil;
 import util.ImpossibleException;
 
@@ -44,7 +45,7 @@ public class FormattingOption {
             port = Integer.parseInt(commandLine.getArgument("port"));
             rootPath = commandLine.getArgument("rootPath");
             setOutput(System.out);
-        } catch (CommandLine.CommandLineParseException e) {
+        } catch (CommandLineParseException e) {
             usage();
         }
     }

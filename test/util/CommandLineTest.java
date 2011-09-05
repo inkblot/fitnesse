@@ -81,7 +81,7 @@ public class CommandLineTest extends TestCase {
         try {
             options = new CommandLine(validOptions, args);
             return true;
-        } catch (CommandLine.CommandLineParseException e) {
+        } catch (CommandLineParseException e) {
             return false;
         }
     }

@@ -8,6 +8,7 @@ import fitnesse.http.RequestBuilder;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseParser;
 import util.CommandLine;
+import util.CommandLineParseException;
 
 public class Shutdown {
     public String hostname = "localhost";
@@ -70,7 +71,7 @@ public class Shutdown {
                 password = commandLine.getOptionArgument("c", "password");
             }
             return true;
-        } catch (CommandLine.CommandLineParseException e) {
+        } catch (CommandLineParseException e) {
             return false;
         }
     }

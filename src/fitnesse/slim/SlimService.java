@@ -52,6 +52,7 @@ public class SlimService extends SocketService {
 
     public SlimService(int port, SlimServer slimServer) throws Exception {
         super(port, slimServer);
+        start();
         instance = this;
     }
 }

@@ -37,12 +37,14 @@ public class SocketServiceTest extends TestCase {
 
     public void testNoConnections() throws Exception {
         ss = new SocketService(portNumber, connectionCounter);
+        ss.start();
         ss.close();
         assertEquals(0, connections);
     }
 
     public void testOneConnection() throws Exception {
         ss = new SocketService(portNumber, connectionCounter);
+        ss.start();
         connect(portNumber);
         ss.close();
         assertEquals(1, connections);
@@ -50,6 +52,7 @@ public class SocketServiceTest extends TestCase {
 
     public void testManyConnections() throws Exception {
         ss = new SocketService(portNumber, connectionCounter);
+        ss.start();
         for (int i = 0; i < 10; i++)
             connect(portNumber);
         ss.close();
@@ -58,6 +61,7 @@ public class SocketServiceTest extends TestCase {
 
     public void testSendMessage() throws Exception {
         ss = new SocketService(portNumber, new HelloService());
+        ss.start();
         Socket s = new Socket("localhost", portNumber);
         BufferedReader br = GetBufferedReader(s);
         String answer = br.readLine();
@@ -68,6 +72,7 @@ public class SocketServiceTest extends TestCase {
 
     public void testReceiveMessage() throws Exception {
         ss = new SocketService(portNumber, new EchoService());
+        ss.start();
         Socket s = new Socket("localhost", portNumber);
         BufferedReader br = GetBufferedReader(s);
         PrintStream ps = GetPrintStream(s);
@@ -80,6 +85,7 @@ public class SocketServiceTest extends TestCase {
 
     public void testMultiThreaded() throws Exception {
         ss = new SocketService(portNumber, new EchoService());
+        ss.start();
         Socket s = new Socket("localhost", portNumber);
         BufferedReader br = GetBufferedReader(s);
         PrintStream ps = GetPrintStream(s);

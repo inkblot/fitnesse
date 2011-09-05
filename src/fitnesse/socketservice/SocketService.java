@@ -9,23 +9,28 @@ import java.net.SocketException;
 import java.util.LinkedList;
 
 public class SocketService {
+    private final int port;
+    private final SocketServer server;
+    private final Thread serviceThread = new Thread(
+            new Runnable() {
+                public void run() {
+                    serviceThread();
+                }
+            }
+    );
+    private final LinkedList<Thread> threads = new LinkedList<Thread>();
+
     private ServerSocket serverSocket = null;
-    private Thread serviceThread = null;
     private volatile boolean running = false;
-    private SocketServer server = null;
-    private LinkedList<Thread> threads = new LinkedList<Thread>();
     private volatile boolean everRan = false;
 
-    public SocketService(int port, SocketServer server) throws Exception {
+    public SocketService(int port, SocketServer server) {
         this.server = server;
-        serverSocket = new ServerSocket(port);
-        serviceThread = new Thread(
-                new Runnable() {
-                    public void run() {
-                        serviceThread();
-                    }
-                }
-        );
+        this.port = port;
+    }
+
+    public void start() throws IOException {
+        serverSocket = new ServerSocket(this.port);
         serviceThread.start();
     }
 

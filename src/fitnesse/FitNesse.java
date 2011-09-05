@@ -61,7 +61,10 @@ public class FitNesse {
 
     public boolean start() {
         try {
-            if (context.port > 0) theService = new SocketService(context.port, new FitNesseServer(context));
+            if (context.port > 0) {
+                theService = new SocketService(context.port, new FitNesseServer(context));
+                theService.start();
+            }
             return true;
         } catch (BindException e) {
             printBadPortMessage(context.port);

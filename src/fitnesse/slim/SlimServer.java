@@ -109,7 +109,7 @@ public class SlimServer implements SocketServer {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    SlimService.instance.close();
+                    SlimService.service.close();
                 } catch (IOException e) {
                     // ignore
                 }

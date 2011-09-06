@@ -5,6 +5,7 @@ package fitnesse.slim;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import util.CommandLineParseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,8 +138,8 @@ public abstract class SlimServiceTestBase {
 
     private void assertContainsException(String message, String id, Map<String, Object> results) {
         String result = (String) results.get(id);
-        assertTrue(result, result.indexOf(SlimServer.EXCEPTION_TAG) != -1
-                && result.indexOf(message) != -1);
+        assertTrue(result, result.contains(SlimServer.EXCEPTION_TAG)
+                && result.contains(message));
     }
 
     @Test
@@ -158,9 +159,13 @@ public abstract class SlimServiceTestBase {
 
     @Test
     public void verboseArgument() throws Exception {
-        String args[] = {"-v", "99"};
-        assertTrue(SlimService.parseCommandLine(args));
-        assertTrue(SlimService.verbose);
+        String argv[] = {"-v", "99"};
+        try {
+            SlimService.Arguments args = new SlimService.Arguments(argv);
+            assertTrue(args.isVerbose());
+        } catch (CommandLineParseException e) {
+            fail();
+        }
     }
 
     @Test

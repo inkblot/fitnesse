@@ -10,49 +10,54 @@ import fitnesse.socketservice.SocketService;
 import util.CommandLine;
 import util.CommandLineParseException;
 
-import java.util.Arrays;
+import java.io.IOException;
 
 public class SlimService extends SocketService {
-    public static SlimService instance = null;
-    public static boolean verbose;
-    public static int port;
+    public static SlimService service = null;
 
     @Inject
     @Named("inject")
     public static boolean inject = true;
 
-    public static void main(String[] args) throws Exception {
-        if (parseCommandLine(args)) {
-            startWithFactory(new JavaSlimFactory());
-        } else {
-            parseCommandLineFailed(args);
+    public static void main(String[] argv) throws IOException {
+        Arguments args = parseCommandLine(argv);
+        if (args != null) {
+            if (inject)
+                Guice.createInjector(new FitNesseModule());
+            service = new SlimService(args.getPort(), new JavaSlimFactory().getSlimServer(args.isVerbose()));
         }
     }
 
-    protected static void parseCommandLineFailed(String[] args) {
-        System.err.println("Invalid command line arguments:" + Arrays.asList(args));
-    }
-
-    protected static void startWithFactory(SlimFactory slimFactory) throws Exception {
-        if (inject)
-            Guice.createInjector(new FitNesseModule());
-        new SlimService(port, slimFactory.getSlimServer(verbose));
-    }
-
-    protected static boolean parseCommandLine(String[] args) {
+    private static Arguments parseCommandLine(String[] argv) {
         try {
-            CommandLine commandLine = new CommandLine("[-v] port", args);
-            verbose = commandLine.hasOption("v");
-            port = Integer.parseInt(commandLine.getArgument("port"));
-            return true;
+            return new Arguments(argv);
         } catch (CommandLineParseException e) {
-            return false;
+            System.err.println(e.getMessage());
+            return null;
         }
     }
 
-    public SlimService(int port, SlimServer slimServer) throws Exception {
+    private SlimService(int port, SlimServer slimServer) throws IOException {
         super(port, slimServer);
         start();
-        instance = this;
+    }
+
+    public static final class Arguments {
+        private final boolean verbose;
+        private final int port;
+
+        public Arguments(String[] argv) throws CommandLineParseException {
+            CommandLine commandLine = new CommandLine("[-v] port", argv);
+            verbose = commandLine.hasOption("v");
+            port = Integer.parseInt(commandLine.getArgument("port"));
+        }
+
+        public boolean isVerbose() {
+            return verbose;
+        }
+
+        public int getPort() {
+            return port;
+        }
     }
 }

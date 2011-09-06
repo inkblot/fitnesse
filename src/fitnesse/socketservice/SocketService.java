@@ -29,13 +29,17 @@ public class SocketService {
         this.port = port;
     }
 
-    public void start() throws IOException {
+    public synchronized void start() throws IOException {
         serverSocket = new ServerSocket(this.port);
         serviceThread.start();
+        try {
+            waitForServiceThreadToStart();
+        } catch (InterruptedException e) {
+            close();
+        }
     }
 
-    public void close() throws IOException {
-        waitForServiceThreadToStart();
+    public synchronized void close() throws IOException {
         running = false;
         serverSocket.close();
         try {
@@ -46,14 +50,19 @@ public class SocketService {
         }
     }
 
-    private void waitForServiceThreadToStart() {
+    private synchronized void waitForServiceThreadToStart() throws InterruptedException {
         if (everRan) return;
-        while (!running) Thread.yield();
+        while (!running) {
+            wait();
+        }
     }
 
     private void serviceThread() {
-        running = true;
-        everRan = true;
+        synchronized (this) {
+            running = true;
+            everRan = true;
+            notifyAll();
+        }
         while (running) {
             try {
                 Socket s = serverSocket.accept();
@@ -63,7 +72,7 @@ public class SocketService {
                 e.printStackTrace();
                 System.exit(99);
             } catch (SocketException sox) {
-                running = false;// do nothing
+                running = false;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

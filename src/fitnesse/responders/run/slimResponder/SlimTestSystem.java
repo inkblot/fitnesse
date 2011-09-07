@@ -193,7 +193,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
     private boolean tryCreateSlimService(String args) throws SocketException {
         try {
-            SlimService.main(args.trim().split(" "));
+            SlimService.startSlimService(args.trim().split(" "));
             return true;
         } catch (SocketException e) {
             throw e;

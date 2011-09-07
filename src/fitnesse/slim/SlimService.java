@@ -3,8 +3,6 @@
 package fitnesse.slim;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.socketservice.SocketService;
 import util.CommandLine;
@@ -12,20 +10,24 @@ import util.CommandLineParseException;
 
 import java.io.IOException;
 
-public class SlimService extends SocketService {
-    public static SlimService service = null;
-
-    @Inject
-    @Named("inject")
-    public static boolean inject = true;
-
+public class SlimService {
     public static void main(String[] argv) throws IOException {
+        Guice.createInjector(new FitNesseModule());
+        startSlimService(argv);
+    }
+
+    public static void startSlimService(String[] argv) throws IOException {
         Arguments args = parseCommandLine(argv);
         if (args != null) {
-            if (inject)
-                Guice.createInjector(new FitNesseModule());
-            service = new SlimService(args.getPort(), new JavaSlimFactory().getSlimServer(args.isVerbose()));
+            startSlimService(args.getPort(), args.isVerbose());
         }
+    }
+
+    public static void startSlimService(int port, boolean verbose) throws IOException {
+        SlimServer slimServer = new JavaSlimFactory().getSlimServer(verbose);
+        SocketService service = new SocketService(port, slimServer);
+        slimServer.setSocketService(service);
+        service.start();
     }
 
     private static Arguments parseCommandLine(String[] argv) {
@@ -35,11 +37,6 @@ public class SlimService extends SocketService {
             System.err.println(e.getMessage());
             return null;
         }
-    }
-
-    private SlimService(int port, SlimServer slimServer) throws IOException {
-        super(port, slimServer);
-        start();
     }
 
     public static final class Arguments {

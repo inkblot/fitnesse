@@ -9,7 +9,7 @@ public class SlimServiceTest extends SlimServiceTestBase {
     }
 
     protected void startSlimService() throws Exception {
-        SlimService.main(new String[]{"8099"});
+        SlimService.startSlimService(8099, false);
     }
 
     protected String expectedExceptionMessage() {

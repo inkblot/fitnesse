@@ -3,6 +3,7 @@
 package fitnesse.slim;
 
 import fitnesse.socketservice.SocketServer;
+import fitnesse.socketservice.SocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ImpossibleException;
@@ -22,6 +23,7 @@ public class SlimServer implements SocketServer {
     private ListExecutor executor;
     private boolean verbose;
     private SlimFactory slimFactory;
+    private SocketService socketService;
 
     public SlimServer(boolean verbose, SlimFactory slimFactory) {
         this.verbose = verbose;
@@ -106,15 +108,24 @@ public class SlimServer implements SocketServer {
     }
 
     private void closeEnclosingServiceInSeperateThread() {
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    SlimService.service.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-        }
-        ).start();
+        new Thread(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            getSocketService().close();
+                        } catch (IOException e) {
+                            // ignore
+                        }
+                    }
+                }).start();
+    }
+
+    public SocketService getSocketService() {
+        return socketService;
+    }
+
+    public void setSocketService(SocketService socketService) {
+        this.socketService = socketService;
     }
 }

@@ -25,27 +25,25 @@ public class FitServer {
     private final int socketToken;
 
     private Socket socket;
-    private final boolean noExit;
     private final boolean sentinel;
 
-    public FitServer(String host, int port, int socketToken, boolean noExit, boolean sentinel) {
+    public FitServer(String host, int port, int socketToken, boolean sentinel) {
         this.host = host;
         this.port = port;
         this.socketToken = socketToken;
-        this.noExit = noExit;
         this.sentinel = sentinel;
     }
 
     public static void main(String argv[]) throws IOException {
         Guice.createInjector(new FitNesseModule());
-        startFitServer(argv);
+        Counts counts = runFitServer(argv);
+        System.exit(exitCode(counts));
     }
 
-    public static void startFitServer(String[] argv) throws IOException {
+    public static Counts runFitServer(String[] argv) throws IOException {
         FitServer fitServer = FitServer.create(argv);
         fitServer.run();
-        if (!fitServer.noExit)
-            System.exit(exitCode(fitServer.counts));
+        return fitServer.counts;
     }
 
     private void run() throws IOException {
@@ -101,12 +99,11 @@ public class FitServer {
 
     private static FitServer create(String[] argv) {
         try {
-            CommandLine commandLine = new CommandLine("[-x][-s] host port socketToken", argv);
+            CommandLine commandLine = new CommandLine("[-s] host port socketToken", argv);
             return new FitServer(
                     commandLine.getArgument("host"),
                     Integer.parseInt(commandLine.getArgument("port")),
                     Integer.parseInt(commandLine.getArgument("socketToken")),
-                    commandLine.hasOption("x"),
                     commandLine.hasOption("s"));
         } catch (CommandLineParseException e) {
             usage();

@@ -34,7 +34,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         String commandLine = command + SPACE + fitArguments;
         if (fastTest) {
             commandRunner = new MockCommandRunner();
-            createFitServer("-x " + fitArguments);
+            createFitServer(fitArguments);
         } else
             commandRunner = new CommandRunner(commandLine, "", environmentVariables);
     }
@@ -66,7 +66,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
     private boolean tryCreateFitServer(String args) {
         try {
-            FitServer.startFitServer(args.trim().split(" "));
+            FitServer.runFitServer(args.trim().split(" "));
             return true;
         } catch (Exception e) {
             return false;

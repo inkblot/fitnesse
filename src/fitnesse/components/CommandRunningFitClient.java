@@ -16,7 +16,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     public static int TIMEOUT = 60000;
     private static final String SPACE = " ";
 
-    private int ticketNumber;
     public CommandRunner commandRunner;
     private SocketDonor donor;
     private boolean connectionEstablished = false;
@@ -26,14 +25,10 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     private boolean fastTest = false;
     private Thread fastFitServer;
 
-    public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer, boolean fastTest) throws IOException {
-        this(listener, command, port, null, dealer, fastTest);
-    }
-
     public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest) throws IOException {
         super(listener);
         this.fastTest = fastTest;
-        ticketNumber = dealer.seekingSocket(this);
+        int ticketNumber = dealer.seekingSocket(this);
         String hostName = java.net.InetAddress.getLocalHost().getHostName();
         String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
         String commandLine = command + SPACE + fitArguments;
@@ -71,7 +66,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
     private boolean tryCreateFitServer(String args) {
         try {
-            FitServer.main(args.trim().split(" "));
+            FitServer.startFitServer(args.trim().split(" "));
             return true;
         } catch (Exception e) {
             return false;
@@ -101,10 +96,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         synchronized (this) {
             notify();
         }
-    }
-
-    void setTicketNumber(int ticketNumber) {
-        this.ticketNumber = ticketNumber;
     }
 
     private void waitForConnection() throws InterruptedException {

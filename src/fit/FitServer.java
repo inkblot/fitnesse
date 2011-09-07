@@ -4,8 +4,6 @@
 package fit;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import fit.exception.FitParseException;
 import fitnesse.FitNesseModule;
 import org.apache.commons.io.IOUtils;
@@ -30,10 +28,6 @@ public class FitServer {
     private final boolean noExit;
     private final boolean sentinel;
 
-    @Inject
-    @Named("inject")
-    public static boolean inject = true;
-
     public FitServer(String host, int port, int socketToken, boolean noExit, boolean sentinel) {
         this.host = host;
         this.port = port;
@@ -43,8 +37,11 @@ public class FitServer {
     }
 
     public static void main(String argv[]) throws IOException {
-        if (inject)
-            Guice.createInjector(new FitNesseModule());
+        Guice.createInjector(new FitNesseModule());
+        startFitServer(argv);
+    }
+
+    public static void startFitServer(String[] argv) throws IOException {
         FitServer fitServer = FitServer.create(argv);
         fitServer.run();
         if (!fitServer.noExit)

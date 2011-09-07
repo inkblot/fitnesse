@@ -51,10 +51,9 @@ public class TestFormatterTest {
             }
         };
         PageHistoryFormatter pageHistoryFormatter = new PageHistoryFormatter(context, page, writerFactory) {
+            @Override
             protected void writeResults() throws Exception {
             }
-
-            ;
         };
         return Arrays.asList(new Object[][]{
                 {testTextFormatter},

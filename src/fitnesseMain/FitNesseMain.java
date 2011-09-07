@@ -1,8 +1,6 @@
 package fitnesseMain;
 
 import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -11,7 +9,7 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.WikiImportTestEventListener;
-import fitnesse.responders.run.formatters.TestTextFormatter;
+import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
 import fitnesse.wiki.WikiPage;
@@ -28,11 +26,8 @@ public class FitNesseMain {
     private static String extraOutput;
     public static boolean dontExitAfterSingleCommand;
 
-    @Inject
-    @Named("inject")
-    public static boolean inject = true;
-
     public static void main(String[] args) throws Exception {
+        Guice.createInjector(new FitNesseModule());
         Arguments arguments = parseCommandLine(args);
         if (arguments != null) {
             launchFitNesse(arguments);
@@ -43,8 +38,6 @@ public class FitNesseMain {
     }
 
     public static void launchFitNesse(Arguments arguments) throws Exception {
-        if (inject)
-            Guice.createInjector(new FitNesseModule());
         loadPlugins();
         FitNesseContext context = loadContext(arguments);
         Updater updater = null;
@@ -81,14 +74,14 @@ public class FitNesseMain {
 
     private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
         context.doNotChunk = true;
-        TestTextFormatter.finalErrorCount = 0;
+        BaseFormatter.finalErrorCount = 0;
         System.out.println("Executing command: " + arguments.getCommand());
         System.out.println("-----Command Output-----");
         fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
         System.out.println("-----Command Complete-----");
         fitnesse.stop();
         if (shouldExitAfterSingleCommand())
-            System.exit(TestTextFormatter.finalErrorCount);
+            System.exit(BaseFormatter.finalErrorCount);
     }
 
     private static boolean shouldExitAfterSingleCommand() {
@@ -125,10 +118,10 @@ public class FitNesseMain {
         return context;
     }
 
-    public static Arguments parseCommandLine(String[] args) {
+    public static Arguments parseCommandLine(String... argv) {
         Arguments arguments = null;
         try {
-            CommandLine commandLine = new CommandLine("[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]", args);
+            CommandLine commandLine = new CommandLine("[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]", argv);
             arguments = new Arguments();
             if (commandLine.hasOption("p"))
                 arguments.setPort(commandLine.getOptionArgument("p", "port"));
@@ -147,7 +140,7 @@ public class FitNesseMain {
             arguments.setOmitUpdates(commandLine.hasOption("o"));
             arguments.setInstallOnly(commandLine.hasOption("i"));
         } catch (CommandLineParseException e) {
-            logger.error("Invalid command line: ", Arrays.asList(args));
+            logger.error("Invalid command line: ", Arrays.asList(argv));
         }
         return arguments;
     }

@@ -25,8 +25,7 @@ public class StartFitnesseTask extends Task {
     @Override
     public void execute() throws BuildException {
         try {
-            FitNesseMain.main(new String[]
-                    {"-p", String.valueOf(fitnessePort), "-d", wikiDirectoryRootPath, "-e", "0", "-o"});
+            FitNesseMain.launchFitNesse(FitNesseMain.parseCommandLine("-p", String.valueOf(fitnessePort), "-d", wikiDirectoryRootPath, "-e", "0", "-o"));
             log("Sucessfully Started Fitnesse on port " + fitnessePort);
         } catch (Exception e) {
             throw new BuildException("Failed to start FitNesse. Error Msg: " + e.getMessage(), e);

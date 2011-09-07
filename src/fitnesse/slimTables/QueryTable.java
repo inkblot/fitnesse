@@ -51,7 +51,7 @@ public class QueryTable extends SlimTable {
 
     public boolean shouldIgnoreException(String resultKey, String resultString) {
         boolean isTableInstruction = resultKey.equals(tableInstruction);
-        boolean isNoMethodException = resultString.indexOf("NO_METHOD_IN_CLASS") != -1;
+        boolean isNoMethodException = resultString.contains("NO_METHOD_IN_CLASS");
         return isTableInstruction && isNoMethodException;
     }
 
@@ -65,7 +65,6 @@ public class QueryTable extends SlimTable {
         Object queryReturn = returnValues.get(queryId);
         if (queryId == null || queryReturn == null) {
             table.appendToCell(0, 0, error("query method did not return a list."));
-            return;
         } else if (queryReturn instanceof String) {
             appendQueryErrorMessage((String) queryReturn);
         } else {

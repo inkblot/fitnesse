@@ -133,7 +133,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
         PrintStream out = System.out;
         ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputBytes));
-        FitNesseMain.main(args);
+        FitNesseMain.launchFitNesse(FitNesseMain.parseCommandLine(args));
         System.setOut(out);
         return outputBytes.toString();
     }

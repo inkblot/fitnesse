@@ -12,7 +12,6 @@ public abstract class BaseFormatter implements ResultsListener {
 
     protected WikiPage page = null;
     protected FitNesseContext context;
-    public static final BaseFormatter NULL = new NullFormatter();
     public static int finalErrorCount = 0;
     protected int testCount = 0;
     protected int failCount = 0;

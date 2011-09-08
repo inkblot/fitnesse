@@ -34,14 +34,6 @@ public class MockCommandRunner extends CommandRunner {
         errorBuffer = new StringBuffer(error);
     }
 
-    public void addException(Exception e) {
-        exceptions.add(e);
-    }
-
-    public void setExitCode(int i) {
-        exitCode = i;
-    }
-
     public long getExecutionTime() {
         return -1;
     }

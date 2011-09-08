@@ -10,27 +10,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CommandRunner {
+    private final String command;
+    private final String input;
+    private final Map<String, String> environmentVariables;
+
+    private final TimeMeasurement timeMeasurement = new TimeMeasurement();
+    private final List<Throwable> exceptions = new ArrayList<Throwable>();
+
+    private OutputStream stdin;
+
     protected Process process;
-    protected String input = "";
-    protected List<Throwable> exceptions = new ArrayList<Throwable>();
-    protected OutputStream stdin;
-    protected InputStream stdout;
-    protected InputStream stderr;
     protected StringBuffer outputBuffer = new StringBuffer();
     protected StringBuffer errorBuffer = new StringBuffer();
     protected int exitCode = -1;
-    private TimeMeasurement timeMeasurement = new TimeMeasurement();
-    private String command = "";
-    private Map<String, String> environmentVariables;
-
-    public CommandRunner() {
-    }
 
     public CommandRunner(String command, String input) {
         this(command, input, null);
@@ -39,20 +34,17 @@ public class CommandRunner {
     public CommandRunner(String command, String input, Map<String, String> environmentVariables) {
         this.command = command;
         this.input = input;
-        this.environmentVariables = environmentVariables;
+        this.environmentVariables = environmentVariables == null ? null : Collections.unmodifiableMap(environmentVariables);
     }
 
-    public void asynchronousStart() throws Exception {
-        Runtime rt = Runtime.getRuntime();
+    public void asynchronousStart() throws IOException {
         timeMeasurement.start();
         String[] environmentVariables = determineEnvironment();
-        process = rt.exec(command, environmentVariables);
+        process = Runtime.getRuntime().exec(command, environmentVariables);
         stdin = process.getOutputStream();
-        stdout = process.getInputStream();
-        stderr = process.getErrorStream();
 
-        new Thread(new OuputReadingRunnable(stdout, outputBuffer), "CommandRunner stdout").start();
-        new Thread(new OuputReadingRunnable(stderr, errorBuffer), "CommandRunner error").start();
+        new Thread(new OutputReadingRunnable(process.getInputStream(), outputBuffer), "CommandRunner stdout").start();
+        new Thread(new OutputReadingRunnable(process.getErrorStream(), errorBuffer), "CommandRunner error").start();
 
         sendInput();
     }
@@ -90,10 +82,6 @@ public class CommandRunner {
                 // ok
             }
         }
-    }
-
-    protected void setCommand(String command) {
-        this.command = command;
     }
 
     public String getCommand() {
@@ -136,28 +124,21 @@ public class CommandRunner {
         return timeMeasurement.elapsed();
     }
 
-    protected void sendInput() throws InterruptedException {
-        Thread thread = new Thread() {
-            public void run() {
-                try {
-                    stdin.write(input.getBytes("UTF-8"));
-                    stdin.flush();
-                } catch (UnsupportedEncodingException e) {
-                    throw new ImpossibleException("UTF-8 is a supported encoding", e);
-                } catch (Exception e) {
-                    exceptionOccurred(e);
-                } finally {
-                    try {
-                        stdin.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+    private void sendInput() {
+        try {
+            stdin.write(input.getBytes("UTF-8"));
+            stdin.flush();
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        } catch (Exception e) {
+            exceptionOccurred(e);
+        } finally {
+            try {
+                stdin.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        };
-        thread.start();
-        thread.join();
-
+        }
     }
 
     private void readOutput(InputStream input, StringBuffer buffer) {
@@ -170,11 +151,11 @@ public class CommandRunner {
         }
     }
 
-    private class OuputReadingRunnable implements Runnable {
-        public InputStream input;
-        public StringBuffer buffer;
+    private class OutputReadingRunnable implements Runnable {
+        private final InputStream input;
+        private final StringBuffer buffer;
 
-        public OuputReadingRunnable(InputStream input, StringBuffer buffer) {
+        public OutputReadingRunnable(InputStream input, StringBuffer buffer) {
             this.input = input;
             this.buffer = buffer;
         }

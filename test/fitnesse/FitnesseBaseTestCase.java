@@ -11,6 +11,7 @@ import fitnesse.wiki.WikiPage;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
+import util.UtilModule;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -72,7 +73,7 @@ public class FitnesseBaseTestCase {
 
     public void inject(Module... testModules) {
         Guice.createInjector(
-                Modules.override(new FitNesseModule())
+                Modules.override(new UtilModule())
                         .with(testModules))
                 .injectMembers(this);
     }

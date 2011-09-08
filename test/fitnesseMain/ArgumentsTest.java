@@ -9,23 +9,18 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ArgumentsTest {
-    private Arguments args;
 
     @Test
     public void testSimpleCommandline() throws Exception {
-        args = makeArgs();
+        Arguments args = FitNesseMain.parseCommandLine();
         assertNotNull(args);
         assertEquals(80, args.getPort());
         assertEquals(".", args.getRootPath());
     }
 
-    private Arguments makeArgs(String... argArray) {
-        return args = FitNesseMain.parseCommandLine(argArray);
-    }
-
     @Test
     public void testArgumentsDefaults() throws Exception {
-        makeArgs();
+        Arguments args = FitNesseMain.parseCommandLine();
         assertEquals(80, args.getPort());
         assertEquals(".", args.getRootPath());
         assertEquals("FitNesseRoot", args.getRootDirectory());
@@ -40,7 +35,7 @@ public class ArgumentsTest {
     @Test
     public void testArgumentsAlternates() throws Exception {
         String argString = "-p 123 -d MyWd -r MyRoot -l LogDir -e 321 -o -a userpass.txt -i";
-        makeArgs(argString.split(" "));
+        Arguments args = FitNesseMain.parseCommandLine(argString.split(" "));
         assertEquals(123, args.getPort());
         assertEquals("MyWd", args.getRootPath());
         assertEquals("MyRoot", args.getRootDirectory());
@@ -53,8 +48,7 @@ public class ArgumentsTest {
 
     @Test
     public void testAllArguments() throws Exception {
-        args = makeArgs("-p", "81", "-d", "directory", "-r", "root",
-                "-l", "myLogDirectory", "-o", "-e", "22");
+        Arguments args = FitNesseMain.parseCommandLine("-p", "81", "-d", "directory", "-r", "root", "-l", "myLogDirectory", "-o", "-e", "22");
         assertNotNull(args);
         assertEquals(81, args.getPort());
         assertEquals("directory", args.getRootPath());
@@ -66,8 +60,7 @@ public class ArgumentsTest {
 
     @Test
     public void testNotOmitUpdates() throws Exception {
-        args = makeArgs("-p", "81", "-d", "directory", "-r", "root",
-                "-l", "myLogDirectory");
+        Arguments args = FitNesseMain.parseCommandLine("-p", "81", "-d", "directory", "-r", "root", "-l", "myLogDirectory");
         assertNotNull(args);
         assertEquals(81, args.getPort());
         assertEquals("directory", args.getRootPath());
@@ -78,21 +71,21 @@ public class ArgumentsTest {
 
     @Test
     public void commandShouldUseDifferentDefaultPort() throws Exception {
-        args = makeArgs("-c", "someCommand");
+        Arguments args = FitNesseMain.parseCommandLine("-c", "someCommand");
         assertNotNull(args);
         assertEquals(FitNesseContext.DEFAULT_COMMAND_PORT, args.getPort());
     }
 
     @Test
     public void commandShouldAllowPortToBeSet() throws Exception {
-        args = makeArgs("-c", "someCommand", "-p", "666");
+        Arguments args = FitNesseMain.parseCommandLine("-c", "someCommand", "-p", "666");
         assertNotNull(args);
         assertEquals(666, args.getPort());
     }
 
     @Test
     public void testBadArgument() throws Exception {
-        args = makeArgs("-x");
+        Arguments args = FitNesseMain.parseCommandLine("-x");
         assertNull(args);
     }
 }

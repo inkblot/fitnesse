@@ -33,7 +33,7 @@ public class FitNesseExpediter implements ResponseSender {
     private volatile boolean hasError;
 
     public FitNesseExpediter(Socket s,
-                             FitNesseContext context) throws Exception {
+                             FitNesseContext context) throws IOException {
         this.context = context;
         socket = s;
         input = s.getInputStream();

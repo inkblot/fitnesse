@@ -3,9 +3,9 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import fit.exception.FitParseException;
-import fitnesse.FitNesseModule;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,12 @@ public class FitServer {
     }
 
     public static void main(String argv[]) throws IOException {
-        Guice.createInjector(new FitNesseModule());
+        Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                install(new UtilModule());
+            }
+        });
         Counts counts = runFitServer(argv);
         System.exit(exitCode(counts));
     }

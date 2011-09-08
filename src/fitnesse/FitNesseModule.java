@@ -1,7 +1,7 @@
 package fitnesse;
 
 import com.google.inject.AbstractModule;
-import util.ClockUtil;
+import util.UtilModule;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,6 +12,6 @@ import util.ClockUtil;
 public class FitNesseModule extends AbstractModule {
     @Override
     protected void configure() {
-        requestStaticInjection(ClockUtil.class);
+        install(new UtilModule());
     }
 }

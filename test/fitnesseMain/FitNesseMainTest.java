@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -21,6 +23,8 @@ import static org.mockito.Mockito.*;
 
 public class FitNesseMainTest extends FitnesseBaseTestCase {
 
+    @Inject
+    public Injector injector;
     private FitNesseContext context;
 
     @Before
@@ -131,7 +135,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
         PrintStream out = System.out;
         ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputBytes));
-        FitNesseMain.launchFitNesse(new FitNesseMain.Arguments(args));
+        FitNesseMain.launchFitNesse(new FitNesseMain.Arguments(args), injector);
         System.setOut(out);
         return outputBytes.toString();
     }

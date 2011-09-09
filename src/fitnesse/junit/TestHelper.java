@@ -1,5 +1,6 @@
 package fitnesse.junit;
 
+import com.google.inject.Injector;
 import fitnesse.responders.run.JavaFormatter;
 import fitnesse.responders.run.ResultsListener;
 import fitnesse.responders.run.TestSummary;
@@ -15,15 +16,17 @@ public class TestHelper {
 
     public static final String PAGE_TYPE_SUITE = "suite";
     public static final String PAGE_TYPE_TEST = "test";
+    private Injector injector;
 
-    public TestHelper(String fitNesseRootPath, String outputPath) {
-        this(fitNesseRootPath, outputPath, new PrintTestListener());
+    public TestHelper(String fitNesseRootPath, String outputPath, Injector injector) {
+        this(fitNesseRootPath, outputPath, new PrintTestListener(), injector);
     }
 
-    public TestHelper(String fitNesseRootPath, String outputPath, ResultsListener resultListener) {
+    public TestHelper(String fitNesseRootPath, String outputPath, ResultsListener resultListener, Injector injector) {
         this.fitNesseRootPath = fitNesseRootPath;
         this.outputPath = outputPath;
         this.resultListener = resultListener;
+        this.injector = injector;
     }
 
     public TestSummary run(String pageName, String pageType) throws Exception {
@@ -41,7 +44,7 @@ public class TestHelper {
         arguments.setPort(String.valueOf(port));
         arguments.setRootPath(fitNesseRootPath);
         arguments.setCommand(getCommand(pageName, pageType, suiteFilter));
-        FitNesseMain.launchFitNesse(arguments);
+        FitNesseMain.launchFitNesse(arguments, injector);
         return testFormatter.getTotalSummary();
     }
 

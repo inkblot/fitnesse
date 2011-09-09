@@ -1,6 +1,7 @@
 package fitnesseMain;
 
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -25,10 +26,10 @@ public class FitNesseMain {
     private static final Logger logger = LoggerFactory.getLogger(FitNesseMain.class);
 
     public static void main(String[] argv) throws Exception {
-        Guice.createInjector(new FitNesseModule());
+        Injector injector = Guice.createInjector(new FitNesseModule());
         try {
             Arguments args = new Arguments(argv);
-            launchFitNesse(args);
+            launchFitNesse(args, injector);
             if (args.getCommand() != null) {
                 System.exit(BaseFormatter.finalErrorCount);
             }
@@ -51,7 +52,7 @@ public class FitNesseMain {
         }
     }
 
-    public static void launchFitNesse(Arguments arguments) throws Exception {
+    public static void launchFitNesse(Arguments arguments, Injector injector) throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
         WikiPageFactory wikiPageFactory = new WikiPageFactory();
         ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());

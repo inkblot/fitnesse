@@ -1,6 +1,7 @@
 package fitnesse.junit;
 
 
+import com.google.inject.Injector;
 import fitnesse.responders.run.ResultsListener;
 import fitnesse.responders.run.TestSummary;
 import junit.framework.Assert;
@@ -14,13 +15,13 @@ public class JUnitHelper {
         this.port = port;
     }
 
-    public JUnitHelper(String fitNesseRootPath, String outputPath) {
-        this(fitNesseRootPath, outputPath, new PrintTestListener());
+    public JUnitHelper(String fitNesseRootPath, String outputPath, Injector injector) {
+        this(fitNesseRootPath, outputPath, new PrintTestListener(), injector);
     }
 
     public JUnitHelper(String fitNesseDir, String outputDir,
-                       ResultsListener resultsListener) {
-        helper = new TestHelper(fitNesseDir, outputDir, resultsListener);
+                       ResultsListener resultsListener, Injector injector) {
+        helper = new TestHelper(fitNesseDir, outputDir, resultsListener, injector);
     }
 
     public void setDebugMode(boolean enabled) {
@@ -29,10 +30,6 @@ public class JUnitHelper {
 
     public void assertTestPasses(String testName) throws Exception {
         assertPasses(testName, TestHelper.PAGE_TYPE_TEST, null);
-    }
-
-    public void assertSuitePasses(String suiteName) throws Exception {
-        assertPasses(suiteName, TestHelper.PAGE_TYPE_SUITE, null);
     }
 
     public void assertSuitePasses(String suiteName, String suiteFilter) throws Exception {

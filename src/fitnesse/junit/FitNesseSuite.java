@@ -1,5 +1,7 @@
 package fitnesse.junit;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import fitnesse.responders.run.JavaFormatter;
 import junit.framework.AssertionFailedError;
 import org.junit.runner.Description;
@@ -8,6 +10,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
+import util.UtilModule;
 
 import java.io.File;
 import java.lang.annotation.ElementType;
@@ -17,6 +20,8 @@ import java.lang.annotation.Target;
 import java.util.List;
 
 public class FitNesseSuite extends ParentRunner<String> {
+
+    private Injector injector;
 
     /**
      * The <code>Name</code> annotation specifies the name of the Fitnesse suite
@@ -106,6 +111,7 @@ public class FitNesseSuite extends ParentRunner<String> {
         this.suiteFilter = getSuiteFilter(suiteClass);
         this.debugMode = useDebugMode(suiteClass);
         this.port = getPort(suiteClass);
+        this.injector = Guice.createInjector(new UtilModule());
     }
 
     @Override
@@ -127,8 +133,7 @@ public class FitNesseSuite extends ParentRunner<String> {
         return fitnesseDirAnnotation.value();
     }
 
-    static String getSuiteFilter(Class<?> klass)
-            throws InitializationError {
+    static String getSuiteFilter(Class<?> klass) {
         SuiteFilter suiteFilterAnnotation = klass.getAnnotation(SuiteFilter.class);
         if (suiteFilterAnnotation == null) {
             return null;
@@ -163,10 +168,7 @@ public class FitNesseSuite extends ParentRunner<String> {
 
     public static boolean useDebugMode(Class<?> klass) {
         DebugMode debugModeAnnotation = klass.getAnnotation(DebugMode.class);
-        if (null == debugModeAnnotation) {
-            return true;
-        }
-        return debugModeAnnotation.value();
+        return null == debugModeAnnotation || debugModeAnnotation.value();
     }
 
     public static int getPort(Class<?> klass) {
@@ -206,7 +208,7 @@ public class FitNesseSuite extends ParentRunner<String> {
     }
 
     private JUnitHelper createJUnitHelper(final RunNotifier notifier) {
-        JUnitHelper jUnitHelper = new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier, suiteClass));
+        JUnitHelper jUnitHelper = new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier, suiteClass), injector);
         jUnitHelper.setDebugMode(debugMode);
         jUnitHelper.setPort(port);
         return jUnitHelper;

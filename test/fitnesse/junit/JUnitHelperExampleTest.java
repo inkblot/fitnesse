@@ -1,5 +1,8 @@
 package fitnesse.junit;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.JavaFormatter;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -9,17 +12,19 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class JUnitHelperExampleTest {
+public class JUnitHelperExampleTest extends FitnesseBaseTestCase {
     JUnitHelper helper;
     private String[] expectedTestsWithSuiteFilter = new String[]{
             "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ErikPragtBug",
             "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim"
     };
+    @Inject
+    public Injector injector;
 
     @Before
     public void prepare() {
         helper = new JUnitHelper("..",
-                new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath());
+                new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath(), injector);
         JavaFormatter.dropInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
     }
 

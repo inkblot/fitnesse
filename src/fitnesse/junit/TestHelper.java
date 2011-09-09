@@ -26,18 +26,6 @@ public class TestHelper {
         this.resultListener = resultListener;
     }
 
-    public TestSummary runSuite(String suiteName) throws Exception {
-        return run(suiteName, PAGE_TYPE_SUITE);
-    }
-
-    public TestSummary runSuite(String suiteName, String suiteFilter) throws Exception {
-        return run(suiteName, PAGE_TYPE_SUITE, suiteFilter);
-    }
-
-    public TestSummary runTest(String suiteName) throws Exception {
-        return run(suiteName, PAGE_TYPE_TEST);
-    }
-
     public TestSummary run(String pageName, String pageType) throws Exception {
         return run(pageName, pageType, null);
     }
@@ -70,8 +58,8 @@ public class TestHelper {
             return commandPrefix + getCommandArgs();
     }
 
-    private static String COMMON_ARGS = "&nohistory=true&format=java";
-    private static String DEBUG_ARG = "&debug=true";
+    private final static String COMMON_ARGS = "&nohistory=true&format=java";
+    private final static String DEBUG_ARG = "&debug=true";
 
     private String getCommandArgs() {
         if (debug) {

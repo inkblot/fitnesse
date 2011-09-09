@@ -26,14 +26,13 @@ public class FitNesseMain {
     private static String extraOutput;
     public static boolean dontExitAfterSingleCommand;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] argv) throws Exception {
         Guice.createInjector(new FitNesseModule());
-        Arguments arguments = parseCommandLine(args);
-        if (arguments != null) {
-            launchFitNesse(arguments);
-        } else {
+        try {
+            launchFitNesse(new Arguments(argv));
+        } catch (CommandLineParseException e) {
+            logger.error("Invalid command line: ", Arrays.asList(argv));
             printUsage();
-            System.exit(1);
         }
     }
 
@@ -118,33 +117,6 @@ public class FitNesseMain {
         return context;
     }
 
-    public static Arguments parseCommandLine(String... argv) {
-        Arguments arguments = null;
-        try {
-            CommandLine commandLine = new CommandLine("[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]", argv);
-            arguments = new Arguments();
-            if (commandLine.hasOption("p"))
-                arguments.setPort(commandLine.getOptionArgument("p", "port"));
-            if (commandLine.hasOption("d"))
-                arguments.setRootPath(commandLine.getOptionArgument("d", "dir"));
-            if (commandLine.hasOption("r"))
-                arguments.setRootDirectory(commandLine.getOptionArgument("r", "root"));
-            if (commandLine.hasOption("l"))
-                arguments.setLogDirectory(commandLine.getOptionArgument("l", "logDir"));
-            if (commandLine.hasOption("e"))
-                arguments.setDaysTillVersionsExpire(commandLine.getOptionArgument("e", "days"));
-            if (commandLine.hasOption("a"))
-                arguments.setUserpass(commandLine.getOptionArgument("a", "userpass"));
-            if (commandLine.hasOption("c"))
-                arguments.setCommand(commandLine.getOptionArgument("c", "command"));
-            arguments.setOmitUpdates(commandLine.hasOption("o"));
-            arguments.setInstallOnly(commandLine.hasOption("i"));
-        } catch (CommandLineParseException e) {
-            logger.error("Invalid command line: ", Arrays.asList(argv));
-        }
-        return arguments;
-    }
-
     public static Authenticator makeAuthenticator(String authenticationParameter,
                                                   ComponentFactory componentFactory) throws Exception {
         Authenticator authenticator = new PromiscuousAuthenticator();
@@ -196,6 +168,26 @@ public class FitNesseMain {
         private String userpass;
         private boolean installOnly;
         private String command = null;
+
+        public Arguments(String... argv) throws CommandLineParseException {
+            CommandLine commandLine = new CommandLine("[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]", argv);
+            if (commandLine.hasOption("p"))
+                this.setPort(commandLine.getOptionArgument("p", "port"));
+            if (commandLine.hasOption("d"))
+                this.setRootPath(commandLine.getOptionArgument("d", "dir"));
+            if (commandLine.hasOption("r"))
+                this.setRootDirectory(commandLine.getOptionArgument("r", "root"));
+            if (commandLine.hasOption("l"))
+                this.setLogDirectory(commandLine.getOptionArgument("l", "logDir"));
+            if (commandLine.hasOption("e"))
+                this.setDaysTillVersionsExpire(commandLine.getOptionArgument("e", "days"));
+            if (commandLine.hasOption("a"))
+                this.setUserpass(commandLine.getOptionArgument("a", "userpass"));
+            if (commandLine.hasOption("c"))
+                this.setCommand(commandLine.getOptionArgument("c", "command"));
+            this.setOmitUpdates(commandLine.hasOption("o"));
+            this.setInstallOnly(commandLine.hasOption("i"));
+        }
 
         public String getRootPath() {
             return rootPath;

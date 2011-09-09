@@ -30,7 +30,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void testInstallOnly() throws Exception {
-        Arguments args = new Arguments();
+        FitNesseMain.Arguments args = new FitNesseMain.Arguments();
         args.setInstallOnly(true);
         FitNesse fitnesse = mock(FitNesse.class);
         FitNesseMain.updateAndLaunch(args, context, fitnesse);
@@ -41,7 +41,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
     @Test
     public void commandArgCallsExecuteSingleCommand() throws Exception {
         FitNesseMain.dontExitAfterSingleCommand = true;
-        Arguments args = new Arguments();
+        FitNesseMain.Arguments args = new FitNesseMain.Arguments();
         args.setCommand("command");
         FitNesse fitnesse = mock(FitNesse.class);
         when(fitnesse.start()).thenReturn(true);

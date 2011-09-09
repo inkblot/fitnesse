@@ -185,4 +185,98 @@ public class FitNesseMain {
         if (extraOutput != null)
             System.out.print(extraOutput);
     }
+
+    public static class Arguments {
+        private String rootPath = FitNesseContext.DEFAULT_PATH;
+        private int port = -1;
+        private String rootDirectory = FitNesseContext.DEFAULT_ROOT;
+        private String logDirectory;
+        private boolean omitUpdate = false;
+        private int daysTillVersionsExpire = FitNesseContext.DEFAULT_VERSION_DAYS;
+        private String userpass;
+        private boolean installOnly;
+        private String command = null;
+
+        public String getRootPath() {
+            return rootPath;
+        }
+
+        public void setRootPath(String rootPath) {
+            this.rootPath = rootPath;
+        }
+
+        public int getPort() {
+            return port == -1 ? getDefaultPort() : port;
+        }
+
+        private int getDefaultPort() {
+            return command == null ? FitNesseContext.DEFAULT_PORT : FitNesseContext.DEFAULT_COMMAND_PORT;
+        }
+
+        public void setPort(String port) {
+            this.port = Integer.parseInt(port);
+        }
+
+        public String getRootDirectory() {
+            return rootDirectory;
+        }
+
+        public void setRootDirectory(String rootDirectory) {
+            this.rootDirectory = rootDirectory;
+        }
+
+        public String getLogDirectory() {
+            return logDirectory;
+        }
+
+        public void setLogDirectory(String logDirectory) {
+            this.logDirectory = logDirectory;
+        }
+
+        public void setOmitUpdates(boolean omitUpdates) {
+            this.omitUpdate = omitUpdates;
+        }
+
+        public boolean isOmittingUpdates() {
+            return omitUpdate;
+        }
+
+        public void setUserpass(String userpass) {
+            this.userpass = userpass;
+        }
+
+        public String getUserpass() {
+            if (userpass == null || userpass.length() == 0)
+                return null;
+            else
+                return userpass;
+        }
+
+        public int getDaysTillVersionsExpire() {
+            return daysTillVersionsExpire;
+        }
+
+        public void setDaysTillVersionsExpire(String daysTillVersionsExpire) {
+            this.daysTillVersionsExpire = Integer.parseInt(daysTillVersionsExpire);
+        }
+
+        public boolean isInstallOnly() {
+            return installOnly;
+        }
+
+        public void setInstallOnly(boolean installOnly) {
+            this.installOnly = installOnly;
+        }
+
+        public String getCommand() {
+            if (command == null)
+                return null;
+            else
+                return command;
+        }
+
+        public void setCommand(String command) {
+            this.command = command;
+        }
+    }
 }

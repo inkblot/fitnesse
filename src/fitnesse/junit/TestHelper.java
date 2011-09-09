@@ -1,6 +1,5 @@
 package fitnesse.junit;
 
-import fitnesse.Arguments;
 import fitnesse.responders.run.JavaFormatter;
 import fitnesse.responders.run.ResultsListener;
 import fitnesse.responders.run.TestSummary;
@@ -47,7 +46,7 @@ public class TestHelper {
         JavaFormatter testFormatter = JavaFormatter.getInstance(pageName);
         testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputPath, fitNesseRootPath));
         testFormatter.setListener(resultListener);
-        Arguments arguments = new Arguments();
+        FitNesseMain.Arguments arguments = new FitNesseMain.Arguments();
         arguments.setDaysTillVersionsExpire("0");
         arguments.setInstallOnly(false);
         arguments.setOmitUpdates(true);

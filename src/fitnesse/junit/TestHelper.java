@@ -41,7 +41,6 @@ public class TestHelper {
         arguments.setPort(String.valueOf(port));
         arguments.setRootPath(fitNesseRootPath);
         arguments.setCommand(getCommand(pageName, pageType, suiteFilter));
-        FitNesseMain.dontExitAfterSingleCommand = true;
         FitNesseMain.launchFitNesse(arguments);
         return testFormatter.getTotalSummary();
     }

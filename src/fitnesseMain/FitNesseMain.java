@@ -23,98 +23,85 @@ import java.util.Arrays;
 
 public class FitNesseMain {
     private static final Logger logger = LoggerFactory.getLogger(FitNesseMain.class);
-    private static String extraOutput;
-    public static boolean dontExitAfterSingleCommand;
 
     public static void main(String[] argv) throws Exception {
         Guice.createInjector(new FitNesseModule());
         try {
-            launchFitNesse(new Arguments(argv));
+            Arguments args = new Arguments(argv);
+            launchFitNesse(args);
+            if (args.getCommand() != null) {
+                System.exit(BaseFormatter.finalErrorCount);
+            }
         } catch (CommandLineParseException e) {
             logger.error("Invalid command line: ", Arrays.asList(argv));
-            printUsage();
+            System.err.println("Usage: java -jar fitnesse.jar [-pdrleoa]");
+            System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
+            System.err.println("\t-d <working directory> {" + FitNesseContext.DEFAULT_PATH
+                    + "}");
+            System.err.println("\t-r <page root directory> {" + FitNesseContext.DEFAULT_ROOT
+                    + "}");
+            System.err.println("\t-l <log directory> {no logging}");
+            System.err.println("\t-e <days> {" + FitNesseContext.DEFAULT_VERSION_DAYS
+                    + "} Number of days before page versions expire");
+            System.err.println("\t-o omit updates");
+            System.err
+                    .println("\t-a {user:pwd | user-file-name} enable authentication.");
+            System.err.println("\t-i Install only, then quit.");
+            System.err.println("\t-c <command> execute single command.");
         }
     }
 
     public static void launchFitNesse(Arguments arguments) throws Exception {
-        loadPlugins();
-        FitNesseContext context = loadContext(arguments);
-        Updater updater = null;
-        if (!arguments.isOmittingUpdates())
-            updater = new UpdaterImplementation(context);
-        PageVersionPruner.daysTillVersionsExpire = arguments
-                .getDaysTillVersionsExpire();
-        FitNesse fitnesse = new FitNesse(context, updater);
-        updateAndLaunch(arguments, context, fitnesse);
-    }
-
-    private static void loadPlugins() throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
-    }
-
-    static void updateAndLaunch(Arguments arguments, FitNesseContext context,
-                                FitNesse fitnesse) throws Exception {
-        if (!arguments.isOmittingUpdates())
-            fitnesse.applyUpdates();
-        if (!arguments.isInstallOnly()) {
-            runFitNesse(arguments, context, fitnesse);
-        }
-    }
-
-    private static void runFitNesse(Arguments arguments, FitNesseContext context, FitNesse fitnesse) throws Exception {
-        boolean started = fitnesse.start();
-        if (started) {
-            printStartMessage(arguments, context);
-            if (arguments.getCommand() != null) {
-                executeSingleCommand(arguments, fitnesse, context);
-            }
-        }
-    }
-
-    private static void executeSingleCommand(Arguments arguments, FitNesse fitnesse, FitNesseContext context) throws Exception {
-        context.doNotChunk = true;
-        BaseFormatter.finalErrorCount = 0;
-        System.out.println("Executing command: " + arguments.getCommand());
-        System.out.println("-----Command Output-----");
-        fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
-        System.out.println("-----Command Complete-----");
-        fitnesse.stop();
-        if (shouldExitAfterSingleCommand())
-            System.exit(BaseFormatter.finalErrorCount);
-    }
-
-    private static boolean shouldExitAfterSingleCommand() {
-        return !dontExitAfterSingleCommand;
-    }
-
-    private static FitNesseContext loadContext(Arguments arguments)
-            throws Exception {
         WikiPageFactory wikiPageFactory = new WikiPageFactory();
         ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
-        WikiPage root = wikiPageFactory.makeRootPage(arguments.getRootPath(),
-                arguments.getRootDirectory(), componentFactory);
+        WikiPage root = wikiPageFactory.makeRootPage(arguments.getRootPath(), arguments.getRootDirectory(), componentFactory);
         FitNesseContext context = new FitNesseContext(root, arguments.getRootPath());
         context.port = arguments.getPort();
-        String defaultNewPageContent = componentFactory
-                .getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
-        if (defaultNewPageContent != null)
+        String defaultNewPageContent = componentFactory.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+        if (defaultNewPageContent != null) {
             context.defaultNewPageContent = defaultNewPageContent;
-        context.authenticator = makeAuthenticator(arguments.getUserpass(),
-                componentFactory);
-        context.htmlPageFactory = componentFactory
-                .getHtmlPageFactory(new HtmlPageFactory());
+        }
+        context.authenticator = makeAuthenticator(arguments.getUserpass(), componentFactory);
+        context.htmlPageFactory = componentFactory.getHtmlPageFactory(new HtmlPageFactory());
 
-        extraOutput = componentFactory.loadPlugins(context.responderFactory,
-                wikiPageFactory);
+        String extraOutput = componentFactory.loadPlugins(context.responderFactory, wikiPageFactory);
         extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
         extraOutput += componentFactory.loadResponders(context.responderFactory);
         extraOutput += componentFactory.loadSymbolTypes();
         extraOutput += componentFactory.loadContentFilter();
 
-
         WikiImportTestEventListener.register();
 
-        return context;
+        PageVersionPruner.daysTillVersionsExpire = arguments.getDaysTillVersionsExpire();
+        FitNesse fitnesse = new FitNesse(context, !arguments.isOmittingUpdates() ? new UpdaterImplementation(context) : null);
+        updateAndLaunch(arguments, context, fitnesse, extraOutput);
+    }
+
+    static void updateAndLaunch(Arguments arguments, FitNesseContext context,
+                                FitNesse fitnesse, String extraOutput) throws Exception {
+        if (!arguments.isOmittingUpdates()) {
+            fitnesse.applyUpdates();
+        }
+        if (!arguments.isInstallOnly()) {
+            if (fitnesse.start()) {
+                System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
+                System.out.print(context.toString());
+                System.out.println("\tpage version expiration set to "
+                        + arguments.getDaysTillVersionsExpire() + " days.");
+                if (extraOutput != null)
+                    System.out.print(extraOutput);
+                if (arguments.getCommand() != null) {
+                    context.doNotChunk = true;
+                    BaseFormatter.finalErrorCount = 0;
+                    System.out.println("Executing command: " + arguments.getCommand());
+                    System.out.println("-----Command Output-----");
+                    fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
+                    System.out.println("-----Command Complete-----");
+                    fitnesse.stop();
+                }
+            }
+        }
     }
 
     public static Authenticator makeAuthenticator(String authenticationParameter,
@@ -130,32 +117,6 @@ public class FitNesseMain {
         }
 
         return componentFactory.getAuthenticator(authenticator);
-    }
-
-    private static void printUsage() {
-        System.err.println("Usage: java -jar fitnesse.jar [-pdrleoa]");
-        System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
-        System.err.println("\t-d <working directory> {" + FitNesseContext.DEFAULT_PATH
-                + "}");
-        System.err.println("\t-r <page root directory> {" + FitNesseContext.DEFAULT_ROOT
-                + "}");
-        System.err.println("\t-l <log directory> {no logging}");
-        System.err.println("\t-e <days> {" + FitNesseContext.DEFAULT_VERSION_DAYS
-                + "} Number of days before page versions expire");
-        System.err.println("\t-o omit updates");
-        System.err
-                .println("\t-a {user:pwd | user-file-name} enable authentication.");
-        System.err.println("\t-i Install only, then quit.");
-        System.err.println("\t-c <command> execute single command.");
-    }
-
-    private static void printStartMessage(Arguments args, FitNesseContext context) {
-        System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
-        System.out.print(context.toString());
-        System.out.println("\tpage version expiration set to "
-                + args.getDaysTillVersionsExpire() + " days.");
-        if (extraOutput != null)
-            System.out.print(extraOutput);
     }
 
     public static class Arguments {

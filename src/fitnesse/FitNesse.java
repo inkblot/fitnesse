@@ -96,10 +96,6 @@ public class FitNesse {
         return theService != null;
     }
 
-    public FitNesseContext getContext() {
-        return context;
-    }
-
     public void executeSingleCommand(String command, OutputStream out) throws Exception {
         Request request = new MockRequestBuilder(command).build();
         FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context);

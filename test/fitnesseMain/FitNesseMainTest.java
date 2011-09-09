@@ -33,19 +33,18 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
         FitNesseMain.Arguments args = new FitNesseMain.Arguments();
         args.setInstallOnly(true);
         FitNesse fitnesse = mock(FitNesse.class);
-        FitNesseMain.updateAndLaunch(args, context, fitnesse);
+        FitNesseMain.updateAndLaunch(args, context, fitnesse, null);
         verify(fitnesse, never()).start();
         verify(fitnesse, times(1)).applyUpdates();
     }
 
     @Test
     public void commandArgCallsExecuteSingleCommand() throws Exception {
-        FitNesseMain.dontExitAfterSingleCommand = true;
         FitNesseMain.Arguments args = new FitNesseMain.Arguments();
         args.setCommand("command");
         FitNesse fitnesse = mock(FitNesse.class);
         when(fitnesse.start()).thenReturn(true);
-        FitNesseMain.updateAndLaunch(args, context, fitnesse);
+        FitNesseMain.updateAndLaunch(args, context, fitnesse, null);
         verify(fitnesse, times(1)).applyUpdates();
         verify(fitnesse, times(1)).start();
         verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
@@ -129,7 +128,6 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
     }
 
     private String runFitnesseMainWith(String... args) throws Exception {
-        FitNesseMain.dontExitAfterSingleCommand = true;
         PrintStream out = System.out;
         ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputBytes));

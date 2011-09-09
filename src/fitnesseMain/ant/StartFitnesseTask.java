@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain.ant;
 
-import fitnesseMain.FitNesseMain;
+import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Reference;
 
 /**
  * Task to start fitnesse.
@@ -21,20 +23,33 @@ import org.apache.tools.ant.Task;
 public class StartFitnesseTask extends Task {
     private String wikiDirectoryRootPath;
     private int fitnessePort = 8082;
+    private Reference classpathRef;
 
     @Override
     public void execute() throws BuildException {
-        try {
-            FitNesseMain.launchFitNesse(FitNesseMain.parseCommandLine("-p", String.valueOf(fitnessePort), "-d", wikiDirectoryRootPath, "-e", "0", "-o"));
-            log("Sucessfully Started Fitnesse on port " + fitnessePort);
-        } catch (Exception e) {
-            throw new BuildException("Failed to start FitNesse. Error Msg: " + e.getMessage(), e);
-        }
+        Java java = new Java();
+        java.setProject(getProject());
+        java.setOwningTarget(getOwningTarget());
+
+        java.setFailonerror(true);
+        java.setClassname("fitnesseMain.FitNesseMain");
+        java.setClasspathRef(getClasspathRef());
+
+        String[] argv = {"-p", String.valueOf(getFitnessePort()), "-d", getWikiDirectoryRootPath(), "-e", "0", "-o"};
+        java.setArgs(StringUtils.join(argv, " "));
+
+        super.execute();
     }
 
     /**
      * Port on which fitnesse would run. Defaults to <b>8082</b>.
+     *
+     * @return fitnessePort
      */
+    public int getFitnessePort() {
+        return fitnessePort;
+    }
+
     public void setFitnessePort(int fitnessePort) {
         this.fitnessePort = fitnessePort;
     }
@@ -42,9 +57,26 @@ public class StartFitnesseTask extends Task {
     /**
      * Path to the FitnesseRoot filder which contains all the wiki pages. <b>MUST SET</b>.
      *
-     * @param wikiDirectoryRootPath
+     * @return wikiDirectoryRootPath
      */
+    public String getWikiDirectoryRootPath() {
+        return wikiDirectoryRootPath;
+    }
+
     public void setWikiDirectoryRootPath(String wikiDirectoryRootPath) {
         this.wikiDirectoryRootPath = wikiDirectoryRootPath;
+    }
+
+    /**
+     * FitNesse's classpath.
+     *
+     * @return a Reference representing the complete classpath for FitNesse
+     */
+    public Reference getClasspathRef() {
+        return classpathRef;
+    }
+
+    public void setClasspathRef(Reference classpathRef) {
+        this.classpathRef = classpathRef;
     }
 }

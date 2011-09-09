@@ -1,7 +1,5 @@
 package fitnesse.junit;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.After;
 import org.junit.Before;
@@ -10,9 +8,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class JUnitHelperTest extends FitnesseBaseTestCase {
-
-    @Inject
-    public Injector injector;
 
     private JUnitHelper helper;
 

@@ -1,7 +1,10 @@
 package util;
 
+import com.google.inject.ImplementedBy;
+
 import java.io.IOException;
 
+@ImplementedBy(DiskFileSystem.class)
 public interface FileSystem {
     void makeFile(String path, String content) throws IOException;
 

@@ -1,7 +1,5 @@
 package fitnesse.junit;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestSummary;
 import org.junit.Assert;
@@ -14,9 +12,6 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class JUnitXmlTestListenerIntegrationTest extends FitnesseBaseTestCase {
-    @Inject
-    public Injector injector;
-
     String htmlOutputDir = new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath();
     String xmlOutputDir = new File(System.getProperty("java.io.tmpdir"), "fitnesse-xml").getAbsolutePath();
     String fitNesseRootDir = "..";

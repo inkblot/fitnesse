@@ -1,8 +1,6 @@
 package fitnesse;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Module;
+import com.google.inject.*;
 import com.google.inject.util.Modules;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.updates.UpdaterImplementation;
@@ -27,6 +25,9 @@ import static util.FileUtil.deleteFileSystemDirectory;
  * Time: 10:24 PM
  */
 public class FitnesseBaseTestCase {
+
+    @Inject
+    public Injector injector;
 
     private FitNesseContext context;
     protected SampleFileUtility samples;

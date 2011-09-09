@@ -1,7 +1,5 @@
 package fitnesse.junit;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.JavaFormatter;
 import junit.framework.Assert;
@@ -18,8 +16,6 @@ public class JUnitHelperExampleTest extends FitnesseBaseTestCase {
             "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ErikPragtBug",
             "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim"
     };
-    @Inject
-    public Injector injector;
 
     @Before
     public void prepare() {

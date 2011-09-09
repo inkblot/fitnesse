@@ -1,22 +1,21 @@
 package fitnesse;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.WikiPage;
-import util.DiskFileSystem;
 import util.FileSystem;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Properties;
 
+@Singleton
 public class WikiPageFactory {
     private Class<?> wikiPageClass = FileSystemPage.class;
     private FileSystem fileSystem;
 
-    public WikiPageFactory() {
-        this(new DiskFileSystem());
-    }
-
+    @Inject
     public WikiPageFactory(FileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }

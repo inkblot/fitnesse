@@ -1,6 +1,10 @@
 package fitnesse.wiki;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.Module;
 import fitnesse.ComponentFactory;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.WikiPageFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,16 +13,29 @@ import util.MemoryFileSystem;
 
 import static org.junit.Assert.assertEquals;
 
-public class PageRepositoryTest {
-    private FileSystem fileSystem;
+public class PageRepositoryTest extends FitnesseBaseTestCase {
+    @Inject
+    public FileSystem fileSystem;
+    @Inject
+    public WikiPageFactory wikiPageFactory;
+
     private PageRepository pageRepository;
     private FileSystemPage rootPage;
 
+    @Override
+    protected Module getTestModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(FileSystem.class).to(MemoryFileSystem.class);
+            }
+        };
+    }
+
     @Before
     public void SetUp() throws Exception {
-        fileSystem = new MemoryFileSystem();
         pageRepository = new PageRepository(fileSystem);
-        rootPage = (FileSystemPage) new WikiPageFactory(fileSystem).makeRootPage(".", "somepath", new ComponentFactory());
+        rootPage = (FileSystemPage) wikiPageFactory.makeRootPage(".", "somepath", new ComponentFactory());
     }
 
     @Test

@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Inject;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
@@ -35,6 +36,9 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     private ComponentFactory factory;
     private SymbolProvider testProvider;
 
+    @Inject
+    public WikiPageFactory wikiPageFactory;
+
     @Before
     public void setUp() throws Exception {
         testProperties = new Properties();
@@ -55,7 +59,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     public void testRootPageCreation() throws Exception {
         testProperties.setProperty(ComponentFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
 
-        WikiPageFactory wikiPageFactory = new WikiPageFactory();
         factory.loadWikiPage(wikiPageFactory);
         assertEquals(InMemoryPage.class, wikiPageFactory.getWikiPageClass());
 
@@ -66,7 +69,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
 
     @Test
     public void testDefaultRootPage() throws Exception {
-        WikiPageFactory wikiPageFactory = new WikiPageFactory();
         factory.loadWikiPage(wikiPageFactory);
         assertEquals(FileSystemPage.class, wikiPageFactory.getWikiPageClass());
 
@@ -96,7 +98,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     public void testAddPlugins() throws Exception {
         testProperties.setProperty(ComponentFactory.PLUGINS, DummyPlugin.class.getName());
 
-        WikiPageFactory wikiPageFactory = new WikiPageFactory();
         ResponderFactory responderFactory = new ResponderFactory(".");
 
         assertMatch("!today", false);

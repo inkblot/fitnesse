@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -23,8 +21,6 @@ import static org.mockito.Mockito.*;
 
 public class FitNesseMainTest extends FitnesseBaseTestCase {
 
-    @Inject
-    public Injector injector;
     private FitNesseContext context;
 
     @Before

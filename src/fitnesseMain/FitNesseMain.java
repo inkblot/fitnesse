@@ -54,7 +54,7 @@ public class FitNesseMain {
 
     public static void launchFitNesse(Arguments arguments, Injector injector) throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
-        WikiPageFactory wikiPageFactory = new WikiPageFactory();
+        WikiPageFactory wikiPageFactory = injector.getInstance(WikiPageFactory.class);
         ComponentFactory componentFactory = new ComponentFactory(arguments.getRootPath());
         WikiPage root = wikiPageFactory.makeRootPage(arguments.getRootPath(), arguments.getRootDirectory(), componentFactory);
         FitNesseContext context = new FitNesseContext(root, arguments.getRootPath());

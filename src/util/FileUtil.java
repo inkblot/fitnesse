@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -126,7 +128,7 @@ public class FileUtil {
         return getFileLines(new File(filename));
     }
 
-    public static LinkedList<String> getFileLines(File file) throws Exception {
+    public static LinkedList<String> getFileLines(File file) throws IOException {
         LinkedList<String> lines = new LinkedList<String>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
@@ -209,5 +211,19 @@ public class FileUtil {
         Method method = sysclass.getDeclaredMethod("addURL", new Class[]{URL.class});
         method.setAccessible(true);
         method.invoke(sysloader, u);
+    }
+
+    public static Properties loadProperties(File file) {
+        Properties properties = new Properties();
+        FileInputStream propertiesIn = null;
+        try {
+            propertiesIn = new FileInputStream(file);
+            properties.load(propertiesIn);
+        } catch (IOException e) {
+            // ignore?  the Properties object will be empty
+        } finally {
+            IOUtils.closeQuietly(propertiesIn);
+        }
+        return properties;
     }
 }

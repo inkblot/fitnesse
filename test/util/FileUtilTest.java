@@ -7,6 +7,8 @@ import org.junit.Test;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -178,6 +180,15 @@ public class FileUtilTest {
         return urlString.toString();
     }
 
+    @Test
+    public void loadPropertiesFile() throws Exception {
+        File propertiesFile = new File("test.properties");
+        assertTrue(propertiesFile.createNewFile());
+        FileUtil.writeLinesToFile(propertiesFile, Arrays.asList("happy=joy"));
+        Properties properties = FileUtil.loadProperties(propertiesFile);
+        assertEquals("joy", properties.getProperty("happy"));
+        assertTrue(propertiesFile.delete());
+    }
 
 }
 

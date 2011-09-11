@@ -6,8 +6,6 @@ import fitnesse.components.Base64;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import org.ietf.jgss.*;
 import org.junit.Assert;
 import org.junit.Before;
@@ -61,8 +59,7 @@ public class NegotiateAuthenticatorTest {
 
     @Test
     public void negotiationErrorScreenForFailureToComplete() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        FitNesseContext context = new FitNesseContext(root);
+        FitNesseContext context = new FitNesseContext("RooT");
         Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token");
         Request request = new MockRequest();
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
@@ -74,8 +71,7 @@ public class NegotiateAuthenticatorTest {
 
     @Test
     public void negotiationErrorScreenForNeedingAuthentication() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        FitNesseContext context = new FitNesseContext(root);
+        FitNesseContext context = new FitNesseContext("RooT");
         Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token");
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, null);
         String content = response.getContent();

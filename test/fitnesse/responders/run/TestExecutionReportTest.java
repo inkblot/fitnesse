@@ -1,9 +1,7 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.responders.run.TestExecutionReport.*;
-import fitnesse.wiki.InMemoryPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +14,6 @@ import static org.junit.Assert.assertNull;
 
 public class TestExecutionReportTest {
     private TestExecutionReport expected;
-    private FitNesseContext context;
     private TestExecutionReport actual;
     private TestResult result;
 
@@ -24,7 +21,6 @@ public class TestExecutionReportTest {
     public void setup() throws Exception {
         expected = new TestExecutionReport();
         makeHeader();
-        context = new FitNesseContext(InMemoryPage.makeRoot("RooT"));
     }
 
     private void makeHeader() {

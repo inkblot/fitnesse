@@ -13,12 +13,9 @@ import static util.RegexAssertions.assertSubString;
 
 public class AddChildPageResponderTest {
     private WikiPage root;
-    private WikiPage childPage;
     private PageData childPageData;
     private PageCrawler crawler;
     private String childName;
-    private String childContent;
-    private String pagetype;
     private MockRequest request;
     private FitNesseContext context;
     private Responder responder;
@@ -26,18 +23,18 @@ public class AddChildPageResponderTest {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("root");
+        context = new FitNesseContext("root");
+        root = context.root;
         crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("TestPage"));
         childName = "ChildPage";
-        childContent = "child content";
-        pagetype = "";
+        String childContent = "child content";
+        String pagetype = "";
         request = new MockRequest();
         request.setResource("TestPage");
         request.addInput("name", childName);
         request.addInput("content", childContent);
         request.addInput("pageType", pagetype);
-        context = new FitNesseContext(root);
         responder = new AddChildPageResponder();
         path = PathParser.parse("TestPage.ChildPage");
     }
@@ -160,7 +157,7 @@ public class AddChildPageResponderTest {
 
 
     private void getChildPage(String childName) throws Exception {
-        childPage = crawler.getPage(root, PathParser.parse("TestPage." + childName));
+        WikiPage childPage = crawler.getPage(root, PathParser.parse("TestPage." + childName));
         childPageData = childPage.getData();
     }
 }

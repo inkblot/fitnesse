@@ -8,7 +8,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -30,12 +29,12 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        context.port = 9123;
+        root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
         responder = new TestResponder();
-        context = new FitNesseContext(root);
-        context.port = 9123;
 
         receiver = new FitSocketReceiver(context.port, context.socketDealer);
         receiver.receiveSocket();

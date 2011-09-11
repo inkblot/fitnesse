@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -18,14 +17,13 @@ public class RefactorPageResponderTest extends TestCase {
     WikiPage root;
     private MockRequest request;
     private Responder responder;
-    private String childPage = "ChildPage";
-    private PageCrawler crawler;
     private FitNesseContext context;
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("root");
-        context = new FitNesseContext(root);
-        crawler = root.getPageCrawler();
+        context = new FitNesseContext("root");
+        root = context.root;
+        PageCrawler crawler = root.getPageCrawler();
+        String childPage = "ChildPage";
         crawler.addPage(root, PathParser.parse(childPage));
 
         request = new MockRequest();
@@ -34,7 +32,7 @@ public class RefactorPageResponderTest extends TestCase {
     }
 
     public void testHtml() throws Exception {
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals(200, response.getStatus());
 
         String content = response.getContent();

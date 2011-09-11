@@ -4,8 +4,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.After;
 import org.junit.Before;
@@ -33,8 +31,7 @@ public class TestFormatterTest {
 
     @Parameterized.Parameters
     public static Collection formatters() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        FitNesseContext context = new FitNesseContext(root);
+        FitNesseContext context = new FitNesseContext("RooT");
         ChunkedResponse response = mock(ChunkedResponse.class);
         WikiPageDummy page = new WikiPageDummy("testPage", "testContent");
         XmlFormatter.WriterFactory writerFactory = mock(XmlFormatter.WriterFactory.class);

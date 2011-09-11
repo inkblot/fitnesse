@@ -29,10 +29,10 @@ public class ExecuteSearchPropertiesResponderTest extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         responder = new ExecuteSearchPropertiesResponder();
-        context = new FitNesseContext(root);
     }
 
     @Test
@@ -199,10 +199,9 @@ public class ExecuteSearchPropertiesResponderTest extends TestCase {
         WikiPage page = crawler.addPage(root, PathParser.parse("ObsoletePage"));
         PageData data = page.getData();
         data.setContent("some content");
-        WikiPageProperties properties1 = data.getProperties();
-        properties1.set(TEST.toString(), "true");
-        properties1.set("Suites", "filter1,filter2");
-        WikiPageProperties properties = properties1;
+        WikiPageProperties properties = data.getProperties();
+        properties.set(TEST.toString(), "true");
+        properties.set("Suites", "filter1,filter2");
         properties.set(PropertyPRUNE, "true");
         page.commit(data);
 

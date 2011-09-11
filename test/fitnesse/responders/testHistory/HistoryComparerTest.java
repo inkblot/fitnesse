@@ -36,8 +36,8 @@ public class HistoryComparerTest {
                     return null;
             }
         };
-        root = InMemoryPage.makeRoot("RooT");
-        context = new FitNesseContext(root);
+        context = new FitNesseContext("RooT");
+        root = context.root;
         firstContent = getContentWith("pass");
         secondContent = getContentWith("fail");
         comparer.resultContent = new ArrayList<String>();

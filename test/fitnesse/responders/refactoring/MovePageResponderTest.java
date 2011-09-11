@@ -73,7 +73,7 @@ public class MovePageResponderTest extends ResponderTestCase {
         request.setResource(pageToMove);
         if (refactorReferences)
             request.addInput("refactorReferences", "on");
-        return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        return (SimpleResponse) responder.makeResponse(context, request);
     }
 
     private SimpleResponse movePage(WikiPagePath pageToMove, WikiPagePath newParent, boolean refactorReferences) throws Exception {

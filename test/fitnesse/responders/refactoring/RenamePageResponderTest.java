@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -143,6 +142,6 @@ public class RenamePageResponderTest extends ResponderTestCase {
         request.addInput("newName", toName);
         if (renameReferences)
             request.addInput("refactorReferences", "on");
-        return responder.makeResponse(new FitNesseContext(root), request);
+        return responder.makeResponse(context, request);
     }
 }

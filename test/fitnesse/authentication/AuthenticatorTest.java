@@ -8,16 +8,13 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import junit.framework.TestCase;
 
 public class AuthenticatorTest extends TestCase {
     SimpleAuthenticator authenticator;
-    private WikiPage root;
     private MockRequest request;
-    private Responder responder;
     private Class<? extends Responder> responderType;
     private DummySecureResponder privilegedResponder;
     private FitNesseContext context;
@@ -39,7 +36,8 @@ public class AuthenticatorTest extends TestCase {
 
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        WikiPage root = context.root;
         WikiPage frontpage = root.addChildPage("FrontPage");
         makeReadSecure(frontpage);
         authenticator = new SimpleAuthenticator();
@@ -47,7 +45,6 @@ public class AuthenticatorTest extends TestCase {
 
         request = new MockRequest();
         request.setResource("FrontPage");
-        context = new FitNesseContext(root);
     }
 
     private void makeReadSecure(WikiPage frontpage) throws Exception {
@@ -71,7 +68,7 @@ public class AuthenticatorTest extends TestCase {
     }
 
     private void makeResponder() throws Exception {
-        responder = authenticator.authenticate(context, request, privilegedResponder);
+        Responder responder = authenticator.authenticate(context, request, privilegedResponder);
         responderType = responder.getClass();
     }
 }

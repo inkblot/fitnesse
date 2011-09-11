@@ -4,7 +4,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -20,15 +19,14 @@ public class PacketResponderTest {
     protected Responder responder;
     protected PageCrawler crawler;
     protected FitNesseContext context;
-    private SimpleResponse response;
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
         responder = new PacketResponder();
-        context = new FitNesseContext(root);
     }
 
     private SimpleResponse makeResponse() throws Exception {
@@ -45,7 +43,7 @@ public class PacketResponderTest {
     @Test
     public void noSuchPage() throws Exception {
         request.setResource("NoSuchPage");
-        response = makeResponse();
+        SimpleResponse response = makeResponse();
         assertEquals(404, response.getStatus());
     }
 

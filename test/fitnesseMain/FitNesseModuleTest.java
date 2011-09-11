@@ -45,14 +45,14 @@ public class FitNesseModuleTest {
 
     @Test
     public void testMakeDefaultAuthenticator() throws Exception {
-        Injector injector = Guice.createInjector(new FitNesseModule(new Properties(), null));
+        Injector injector = Guice.createInjector(new FitNesseModule(new Properties(), null, "."));
         Authenticator auth = injector.getInstance(Authenticator.class);
         assertTrue(auth instanceof PromiscuousAuthenticator);
     }
 
     @Test
     public void testMakeOneUserAuthenticator() throws Exception {
-        Injector injector = Guice.createInjector(new FitNesseModule(new Properties(), "bob:uncle"));
+        Injector injector = Guice.createInjector(new FitNesseModule(new Properties(), "bob:uncle", "."));
         Authenticator auth = injector.getInstance(Authenticator.class);
         assertTrue(auth instanceof OneUserAuthenticator);
         OneUserAuthenticator oua = (OneUserAuthenticator) auth;
@@ -62,7 +62,7 @@ public class FitNesseModuleTest {
 
     @Test
     public void testMakeMultiUserAuthenticator() throws Exception {
-        Injector injector = Guice.createInjector(new FitNesseModule(new Properties(), passwordFilename));
+        Injector injector = Guice.createInjector(new FitNesseModule(new Properties(), passwordFilename, "."));
         Authenticator auth = injector.getInstance(Authenticator.class);
         assertTrue(auth instanceof MultiUserAuthenticator);
     }
@@ -72,7 +72,7 @@ public class FitNesseModuleTest {
     public void testAuthenticatorCustomCreation() throws Exception {
         testProperties.setProperty(Authenticator.class.getSimpleName(), SimpleAuthenticator.class.getName());
 
-        Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
+        Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null, "."));
         Authenticator authenticator = injector.getInstance(Authenticator.class);
 
         assertNotNull(authenticator);

@@ -4,8 +4,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,8 +37,7 @@ public class TestHistoryResponderTest {
         history = new TestHistory();
         responder = new TestHistoryResponder();
         responder.setResultsDirectory(resultsDirectory);
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        context = new FitNesseContext(root);
+        context = new FitNesseContext("RooT");
     }
 
     private void makeResponse() throws Exception {

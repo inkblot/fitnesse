@@ -8,7 +8,6 @@ import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -36,8 +35,8 @@ public class CachingSuiteXmlFormatterTest {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        context = new FitNesseContext(root);
+        context = new FitNesseContext("RooT");
+        root = context.root;
         testSummary = new TestSummary(1, 2, 3, 4);
         testPage = root.addChildPage("TestPage");
         formatter = new CachingSuiteXmlFormatter(context, root, null);

@@ -3,15 +3,12 @@
 package fitnesse;
 
 import com.google.inject.Inject;
-import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.*;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.WidgetInterceptor;

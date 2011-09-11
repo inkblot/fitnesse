@@ -8,8 +8,6 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.junit.After;
@@ -52,8 +50,7 @@ public class PageHistoryResponderTest {
         history = new TestHistory();
         responder = new PageHistoryResponder();
         responder.setResultsDirectory(resultsDirectory);
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        context = new FitNesseContext(root);
+        context = new FitNesseContext("RooT");
     }
 
     @After
@@ -64,8 +61,7 @@ public class PageHistoryResponderTest {
     private void makeResponse() throws Exception {
         request = new MockRequest();
         request.setResource("TestPage");
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        response = (SimpleResponse) responder.makeResponse(context, request);
     }
 
     private void removeResultsDirectory() {
@@ -430,8 +426,7 @@ public class PageHistoryResponderTest {
         request = new MockRequest();
         request.setResource("TestPage");
         request.addInput("format", "xml");
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals("text/xml", response.getContentType());
     }
 
@@ -440,8 +435,7 @@ public class PageHistoryResponderTest {
         request = new MockRequest();
         request.setResource("TestPage");
         request.addInput("format", "XMl");
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals("text/xml", response.getContentType());
     }
 

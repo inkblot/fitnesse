@@ -15,11 +15,11 @@ import static util.RegexAssertions.assertSubString;
 
 public class VersionSelectionResponderTest extends TestCase {
     private WikiPage page;
-    private WikiPage root;
+    private FitNesseContext context;
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        page = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "some content");
+        context = new FitNesseContext("RooT");
+        page = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "some content");
     }
 
     public void tearDown() throws Exception {
@@ -68,7 +68,7 @@ public class VersionSelectionResponderTest extends TestCase {
         request.setResource("PageOne");
 
         Responder responder = new VersionSelectionResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         String content = response.getContent();
         assertSubString("<input", content);

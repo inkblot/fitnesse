@@ -14,12 +14,10 @@ import static util.RegexAssertions.*;
 public class VersionResponderTest extends TestCase {
     private String oldVersion;
     private SimpleResponse response;
-    private WikiPage root;
-    private WikiPage page;
 
     private void makeTestResponse(String pageName) throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original content");
+        FitNesseContext context = new FitNesseContext("RooT");
+        WikiPage page = context.root.getPageCrawler().addPage(context.root, PathParser.parse(pageName), "original content");
         PageData data = page.getData();
         data.setContent("new stuff");
         VersionInfo commitRecord = page.commit(data);
@@ -30,7 +28,7 @@ public class VersionResponderTest extends TestCase {
         request.addInput("version", oldVersion);
 
         Responder responder = new VersionResponder();
-        response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        response = (SimpleResponse) responder.makeResponse(context, request);
     }
 
     public void testVersionName() throws Exception {

@@ -5,8 +5,6 @@ package fitnesse.responders.search;
 import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,8 +17,7 @@ public class SearchFormResponderTest {
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        FitNesseContext context = new FitNesseContext(root);
+        FitNesseContext context = new FitNesseContext("RooT");
         SearchFormResponder responder = new SearchFormResponder();
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
         content = response.getContent();

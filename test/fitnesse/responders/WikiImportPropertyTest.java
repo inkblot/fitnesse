@@ -22,6 +22,7 @@ import static util.RegexAssertions.assertSubString;
 public class WikiImportPropertyTest extends TestCase {
     private WikiImportProperty property;
     private WikiPage page;
+    private FitNesseContext context;
 
     public void setUp() {
         property = new WikiImportProperty("");
@@ -100,7 +101,8 @@ public class WikiImportPropertyTest extends TestCase {
     private PageCrawler crawler;
 
     public void pageRenderingSetUp() throws Exception {
-        root = InMemoryPage.makeRoot("root");
+        context = new FitNesseContext("root");
+        root = context.root;
         crawler = root.getPageCrawler();
     }
 
@@ -108,7 +110,7 @@ public class WikiImportPropertyTest extends TestCase {
         MockRequest request = new MockRequest();
         request.setResource(name);
         Responder responder = new WikiPageResponder();
-        return (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        return (SimpleResponse) responder.makeResponse(context, request);
     }
 
     public void testVirtualPageIndication() throws Exception {

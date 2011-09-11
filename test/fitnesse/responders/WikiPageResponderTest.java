@@ -22,9 +22,9 @@ public class WikiPageResponderTest extends TestCase {
 
     @Override
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("root");
+        context = new FitNesseContext("root");
+        root = context.root;
         crawler = root.getPageCrawler();
-        context = new FitNesseContext(root);
     }
 
     public void testResponse() throws Exception {

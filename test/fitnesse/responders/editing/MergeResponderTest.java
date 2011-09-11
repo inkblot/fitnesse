@@ -6,20 +6,18 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 import junit.framework.TestCase;
 
 import static util.RegexAssertions.assertHasRegexp;
 
 public class MergeResponderTest extends TestCase {
-    private WikiPage source;
     private MockRequest request;
+    private FitNesseContext context;
 
     public void setUp() throws Exception {
-        source = InMemoryPage.makeRoot("RooT");
-        source.getPageCrawler().addPage(source, PathParser.parse("SimplePage"), "this is SimplePage");
+        context = new FitNesseContext("RooT");
+        context.root.getPageCrawler().addPage(context.root, PathParser.parse("SimplePage"), "this is SimplePage");
         request = new MockRequest();
         request.setResource("SimplePage");
         request.addInput(EditResponder.TIME_STAMP, "");
@@ -31,7 +29,7 @@ public class MergeResponderTest extends TestCase {
 
     public void testHtml() throws Exception {
         Responder responder = new MergeResponder(request);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(source), new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
         assertHasRegexp("name=\\\"" + EditResponder.CONTENT_INPUT_NAME + "\\\"", response.getContent());
         assertHasRegexp("this is SimplePage", response.getContent());
         assertHasRegexp("name=\\\"oldContent\\\"", response.getContent());
@@ -43,7 +41,7 @@ public class MergeResponderTest extends TestCase {
         request.addInput("PageType", "Test");
         request.addInput("Search", "On");
         Responder responder = new MergeResponder(request);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(source), new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
 
         assertHasRegexp("type=\"hidden\"", response.getContent());
         assertHasRegexp("name=\"Edit\"", response.getContent());

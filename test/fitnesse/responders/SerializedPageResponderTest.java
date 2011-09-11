@@ -21,9 +21,14 @@ public class SerializedPageResponderTest extends TestCase {
     private PageCrawler crawler;
     private WikiPage root;
     private MockRequest request;
+    private FitNesseContext context;
+
+    public SerializedPageResponderTest() {
+    }
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
     }
@@ -33,14 +38,16 @@ public class SerializedPageResponderTest extends TestCase {
     }
 
     public void testWithInMemory() throws Exception {
-        Object obj = doSetUpWith(root, "bones");
+        Object obj = doSetUpWith("bones");
         doTestWith(obj);
 
     }
 
     public void testWithFileSystem() throws Exception {
-        root = new FileSystemPage(".", RootPath);
-        Object obj = doSetUpWith(root, "bones");
+        context = new FitNesseContext(new FileSystemPage(".", RootPath));
+        root = context.root;
+        crawler = root.getPageCrawler();
+        Object obj = doSetUpWith("bones");
         FileUtil.deleteFileSystemDirectory(RootPath);
         doTestWith(obj);
     }
@@ -52,7 +59,7 @@ public class SerializedPageResponderTest extends TestCase {
         assertEquals("PageOne", page.getName());
     }
 
-    private Object doSetUpWith(WikiPage root, String proxyType) throws Exception {
+    private Object doSetUpWith(String proxyType) throws Exception {
         WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "this is page one");
         PageData data = page1.getData();
         data.setAttribute("Attr1", "true");
@@ -62,19 +69,19 @@ public class SerializedPageResponderTest extends TestCase {
         request.addInput("type", proxyType);
         request.setResource("PageOne");
 
-        return getObject(root, request);
+        return getObject();
     }
 
-    private Object getObject(WikiPage root, MockRequest request) throws Exception {
+    private Object getObject() throws Exception {
         Responder responder = new SerializedPageResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));
         return ois.readObject();
     }
 
     public void testGetContentAndAttributes() throws Exception {
-        Object obj = doSetUpWith(root, "meat");
+        Object obj = doSetUpWith("meat");
         assertNotNull(obj);
         assertTrue(obj instanceof PageData);
         PageData data = (PageData) obj;
@@ -93,7 +100,7 @@ public class SerializedPageResponderTest extends TestCase {
         request.addInput("version", commitRecord.getName());
         request.setResource("PageOne");
 
-        Object obj = getObject(root, request);
+        Object obj = getObject();
         assertEquals(PageData.class, obj.getClass());
         PageData data = (PageData) obj;
         assertEquals("some content", data.getContent());
@@ -107,7 +114,7 @@ public class SerializedPageResponderTest extends TestCase {
         request.setResource("root");
         request.addInput("type", "pages");
         Responder responder = new SerializedPageResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String xml = response.getContent();
 
         assertEquals("text/xml", response.getContentType());
@@ -130,7 +137,7 @@ public class SerializedPageResponderTest extends TestCase {
         request.setResource("root");
         request.addInput("type", "pages");
         Responder responder = new SerializedPageResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String xml = response.getContent();
 
         assertEquals("text/xml", response.getContentType());
@@ -146,7 +153,7 @@ public class SerializedPageResponderTest extends TestCase {
         request.setResource("TestPageOne");
         request.addInput("type", "data");
         Responder responder = new SerializedPageResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String xml = response.getContent();
 
         assertEquals("text/xml", response.getContentType());

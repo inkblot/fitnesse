@@ -15,17 +15,15 @@ import static util.RegexAssertions.*;
 
 public class PropertiesResponderTest extends TestCase {
     private WikiPage root;
-
     private PageCrawler crawler;
-
     private MockRequest request;
-
     private Responder responder;
-
     private String content;
+    private FitNesseContext context;
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
     }
 
@@ -42,7 +40,7 @@ public class PropertiesResponderTest extends TestCase {
         request.setResource("PageOne");
 
         Responder responder = new PropertiesResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals("max-age=0", response.getHeader("Cache-Control"));
 
         String content = response.getContent();
@@ -80,7 +78,7 @@ public class PropertiesResponderTest extends TestCase {
         request.addInput("format", "json");
 
         Responder responder = new PropertiesResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals("text/json", response.getContentType());
         String jsonText = response.getContent();
         JSONObject jsonObject = new JSONObject(jsonText);
@@ -120,7 +118,7 @@ public class PropertiesResponderTest extends TestCase {
         page.commit(data);
 
         request.setResource("SomePage");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         content = response.getContent();
 
         assertSubString("Last modified by Bill", content);
@@ -136,7 +134,7 @@ public class PropertiesResponderTest extends TestCase {
         request = new MockRequest();
         request.setResource(page.getName());
         responder = new PropertiesResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         content = response.getContent();
         return page;
     }

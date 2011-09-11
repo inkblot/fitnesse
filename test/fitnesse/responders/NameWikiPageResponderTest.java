@@ -29,10 +29,12 @@ public class NameWikiPageResponderTest {
     private WikiPagePath pageOnePath;
     private WikiPagePath pageTwoPath;
     private WikiPagePath frontPagePath;
+    private FitNesseContext context;
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         responder = new NameWikiPageResponder();
         request = new MockRequest();
@@ -49,7 +51,7 @@ public class NameWikiPageResponderTest {
     @Test
     public void testTextPlain() throws Exception {
 
-        Response r = responder.makeResponse(new FitNesseContext(root), request);
+        Response r = responder.makeResponse(context, request);
         assertEquals("text/plain", r.getContentType());
     }
 
@@ -58,7 +60,7 @@ public class NameWikiPageResponderTest {
         crawler.addPage(root, pageOnePath);
         crawler.addPage(root, pageTwoPath);
         request.setResource("");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertHasRegexp(pageOneName, response.getContent());
         assertHasRegexp(pageTwoName, response.getContent());
     }
@@ -69,13 +71,13 @@ public class NameWikiPageResponderTest {
         crawler.addPage(frontPage, pageOnePath);
         crawler.addPage(frontPage, pageTwoPath);
         request.setResource("");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertHasRegexp(frontPageName, response.getContent());
         assertDoesNotHaveRegexp(pageOneName, response.getContent());
         assertDoesNotHaveRegexp(pageTwoName, response.getContent());
 
         request.setResource(frontPageName);
-        response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        response = (SimpleResponse) responder.makeResponse(context, request);
         assertHasRegexp(pageOneName, response.getContent());
         assertHasRegexp(pageTwoName, response.getContent());
         assertDoesNotHaveRegexp(frontPageName, response.getContent());
@@ -87,7 +89,7 @@ public class NameWikiPageResponderTest {
         crawler.addPage(root, pageTwoPath);
         request.setResource("");
         request.addInput("format", "json");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         JSONArray actual = new JSONArray(response.getContent());
         assertEquals(2, actual.length());
         Set<String> actualSet = new HashSet<String>();
@@ -106,7 +108,7 @@ public class NameWikiPageResponderTest {
         crawler.addPage(frontPage, pageTwoPath);
         request.setResource("");
         request.addInput("ShowChildCount", "");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertHasRegexp("FrontPage 2", response.getContent());
 
     }

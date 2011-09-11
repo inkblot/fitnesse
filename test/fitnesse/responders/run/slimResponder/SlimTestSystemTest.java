@@ -57,9 +57,9 @@ public class SlimTestSystemTest {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("root");
+        context = new FitNesseContext("root");
+        root = context.root;
         crawler = root.getPageCrawler();
-        context = new FitNesseContext(root);
         request = new MockRequest();
         responder = getSlimResponder();
         responder.setFastTest(true);

@@ -6,10 +6,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
 import junit.framework.TestCase;
 
 import static util.RegexAssertions.assertHasRegexp;
@@ -21,14 +19,13 @@ public class SearchResponderTest extends TestCase {
     private FitNesseContext context;
 
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        PageCrawler crawler = root.getPageCrawler();
-        crawler.addPage(root, PathParser.parse("SomePage"), "has something in it");
+        context = new FitNesseContext("RooT");
+        PageCrawler crawler = context.root.getPageCrawler();
+        crawler.addPage(context.root, PathParser.parse("SomePage"), "has something in it");
         responder = new SearchResponder();
         request = new MockRequest();
         request.addInput("searchString", "blah");
         request.addInput("searchType", "blah");
-        context = new FitNesseContext(root);
     }
 
     public void tearDown() throws Exception {

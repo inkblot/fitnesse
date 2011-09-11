@@ -20,12 +20,11 @@ public class FitClientResponderTest extends TestCase {
     private static WikiPage suite;
 
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
         responder = new FitClientResponder();
         request = new MockRequest();
-        context = new FitNesseContext(root);
+        context = new FitNesseContext("RooT");
 
-        buildSuite(root);
+        buildSuite(context.root);
     }
 
     public static void buildSuite(WikiPage root) throws Exception {

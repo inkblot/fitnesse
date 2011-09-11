@@ -5,7 +5,6 @@ package fitnesse.responders;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import junit.framework.TestCase;
@@ -18,11 +17,11 @@ public abstract class ResponderTestCase extends TestCase {
     protected FitNesseContext context;
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
         responder = responderInstance();
-        context = new FitNesseContext(root);
     }
 
     // Return an instance of the Responder being tested.

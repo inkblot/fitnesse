@@ -23,14 +23,14 @@ public class SearchReplaceResponderTest {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         pagePath = PathParser.parse("SomePage");
         somePage = crawler.addPage(root, pagePath, "has something in it");
         responder = new SearchReplaceResponder();
         request = new MockRequest();
         request.setResource("SomePage");
-        context = new FitNesseContext(root);
     }
 
     @Test

@@ -25,10 +25,12 @@ public class SaveResponderTest {
     public MockRequest request;
     public Responder responder;
     private PageCrawler crawler;
+    private FitNesseContext context;
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
         responder = new SaveResponder();
@@ -46,7 +48,7 @@ public class SaveResponderTest {
         crawler.addPage(root, PathParser.parse("ChildPage"));
         prepareRequest("ChildPage");
 
-        Response response = responder.makeResponse(new FitNesseContext(root), request);
+        Response response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
         assertHasRegexp("Location: ChildPage", response.makeHttpHeaders());
 
@@ -69,7 +71,7 @@ public class SaveResponderTest {
         prepareRequest("ChildPage");
         request.addInput("redirect", "http://fitnesse.org:8080/SomePage");
 
-        Response response = responder.makeResponse(new FitNesseContext(root), request);
+        Response response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
         assertHasRegexp("Location: http://fitnesse.org:8080/SomePage", response.makeHttpHeaders());
     }
@@ -84,7 +86,7 @@ public class SaveResponderTest {
     public void testCanCreatePage() throws Exception {
         prepareRequest("ChildPageTwo");
 
-        responder.makeResponse(new FitNesseContext(root), request);
+        responder.makeResponse(context, request);
 
         assertEquals(true, root.hasChildPage("ChildPageTwo"));
         String newContent = root.getChildPage("ChildPageTwo").getData().getContent();
@@ -98,7 +100,7 @@ public class SaveResponderTest {
         request.setResource("ChildPageTwo");
         request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
 
-        responder.makeResponse(new FitNesseContext(root), request);
+        responder.makeResponse(context, request);
 
         assertEquals(true, root.hasChildPage("ChildPageTwo"));
         String newContent = root.getChildPage("ChildPageTwo").getData().getContent();
@@ -117,7 +119,7 @@ public class SaveResponderTest {
         request.addInput(EditResponder.TIME_STAMP, "" + (SaveRecorder.timeStamp() - 10000));
         request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertHasRegexp("Merge", response.getContent());
     }
@@ -132,12 +134,12 @@ public class SaveResponderTest {
         request.addInput(EditResponder.TIME_STAMP, "" + SaveRecorder.timeStamp());
         request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
-        Response response = responder.makeResponse(new FitNesseContext(root), request);
+        Response response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
 
         request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent + " Ok I'm working now");
         request.addInput(EditResponder.TIME_STAMP, "" + SaveRecorder.timeStamp());
-        response = responder.makeResponse(new FitNesseContext(root), request);
+        response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
     }
 
@@ -145,7 +147,7 @@ public class SaveResponderTest {
     public void testUsernameIsSavedInPageProperties() throws Exception {
         addRequestParameters();
         request.setCredentials("Aladdin", "open sesame");
-        response = responder.makeResponse(new FitNesseContext(root), request);
+        response = responder.makeResponse(context, request);
 
         String user = root.getChildPage("EditPage").getData().getAttribute(PageData.LAST_MODIFYING_USER);
         assertEquals("Aladdin", user);
@@ -161,7 +163,7 @@ public class SaveResponderTest {
         crawler.addPage(root, PathParser.parse("ChildPage"));
         prepareRequest("ChildPage");
 
-        Response response = responder.makeResponse(new FitNesseContext(root), request);
+        Response response = responder.makeResponse(context, request);
         assertEquals(200, response.getStatus());
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
@@ -180,7 +182,7 @@ public class SaveResponderTest {
         crawler.addPage(root, PathParser.parse("EditPage"));
         addRequestParameters();
 
-        response = responder.makeResponse(new FitNesseContext(root), request);
+        response = responder.makeResponse(context, request);
     }
 
     private void addRequestParameters() {

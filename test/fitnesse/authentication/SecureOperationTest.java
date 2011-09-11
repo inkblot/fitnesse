@@ -17,8 +17,8 @@ public class SecureOperationTest extends TestCase {
     private WikiPagePath childPagePath;
 
     protected void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        context = new FitNesseContext(root);
+        context = new FitNesseContext("RooT");
+        root = context.root;
         sro = new SecureReadOperation();
         request = new MockRequest();
         crawler = root.getPageCrawler();

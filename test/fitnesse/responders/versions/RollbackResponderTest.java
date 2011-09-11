@@ -14,8 +14,8 @@ public class RollbackResponderTest extends TestCase {
     private Response response;
 
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        page = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "original content");
+        FitNesseContext context = new FitNesseContext("RooT");
+        page = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "original content");
         PageData data = page.getData();
         data.setContent("new stuff");
         data.setProperties(new WikiPageProperties());
@@ -26,7 +26,7 @@ public class RollbackResponderTest extends TestCase {
         request.addInput("version", commitRecord.getName());
 
         Responder responder = new RollbackResponder();
-        response = responder.makeResponse(new FitNesseContext(root), request);
+        response = responder.makeResponse(context, request);
     }
 
     public void tearDown() throws Exception {

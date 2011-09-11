@@ -33,8 +33,8 @@ public class MultipleTestsRunnerTest {
     @Before
     public void setUp() throws Exception {
         String suitePageName = "SuitePage";
-        root = InMemoryPage.makeRoot("RooT");
-        context = new FitNesseContext(root);
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         PageData data = root.getData();
         data.setContent(classpathWidgets());

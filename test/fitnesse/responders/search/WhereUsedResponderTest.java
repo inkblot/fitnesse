@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -15,13 +14,13 @@ import junit.framework.TestCase;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class WhereUsedResponderTest extends TestCase {
-    private WikiPage root;
+    private FitNesseContext context;
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        PageCrawler crawler = root.getPageCrawler();
-        crawler.addPage(root, PathParser.parse("PageOne"), "PageOne");
-        WikiPage pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne");
+        context = new FitNesseContext("RooT");
+        PageCrawler crawler = context.root.getPageCrawler();
+        crawler.addPage(context.root, PathParser.parse("PageOne"), "PageOne");
+        WikiPage pageTwo = crawler.addPage(context.root, PathParser.parse("PageTwo"), "PageOne");
         crawler.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
     }
 
@@ -30,7 +29,7 @@ public class WhereUsedResponderTest extends TestCase {
         request.setResource("PageOne");
         WhereUsedResponder responder = new WhereUsedResponder();
 
-        Response response = responder.makeResponse(new FitNesseContext(root), request);
+        Response response = responder.makeResponse(context, request);
         MockResponseSender sender = new MockResponseSender();
         response.readyToSend(sender);
         sender.waitForClose(5000);

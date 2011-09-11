@@ -4,7 +4,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,9 +28,8 @@ public class SuiteHistoryFormatterTest {
 
     @Before
     public void setup() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        FitNesseContext context = new FitNesseContext(root);
-        WikiPage suitePage = root.addChildPage("SuitePage");
+        FitNesseContext context = new FitNesseContext("RooT");
+        WikiPage suitePage = context.root.addChildPage("SuitePage");
         testPage = suitePage.addChildPage("TestPage");
         writer = new StringWriter();
         formatter = new SuiteHistoryFormatter(context, suitePage, writer);

@@ -32,8 +32,7 @@ public class FitNesseExpediter implements ResponseSender {
     private long requestParsingDeadline;
     private volatile boolean hasError;
 
-    public FitNesseExpediter(Socket s,
-                             FitNesseContext context) throws IOException {
+    public FitNesseExpediter(Socket s, FitNesseContext context) throws IOException {
         this.context = context;
         socket = s;
         input = s.getInputStream();
@@ -128,7 +127,7 @@ public class FitNesseExpediter implements ResponseSender {
         while (!hasError && !request.hasBeenParsed()) {
             Thread.sleep(10);
             if (timeIsUp(now) && parsingIsUnproductive(request))
-                reportError(408, "The client request has been unproductive for too long.  It has timed out and will now longer be processed");
+                reportError(408, "The client request has been unproductive for too long.  It has timed out and will no longer be processed");
         }
     }
 

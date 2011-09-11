@@ -6,18 +6,17 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import junit.framework.TestCase;
 
 public class PageDataWikiPageResponderTest extends TestCase {
-    WikiPage root;
-    WikiPage pageOne;
+    private WikiPage pageOne;
+    private FitNesseContext context;
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        pageOne = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "Line one\nLine two");
+        context = new FitNesseContext("RooT");
+        pageOne = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "Line one\nLine two");
     }
 
     public void testGetPageData() throws Exception {
@@ -25,7 +24,7 @@ public class PageDataWikiPageResponderTest extends TestCase {
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
         request.addInput("pageData", "");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext(root), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals(pageOne.getData().getContent(), response.getContent());
     }
 }

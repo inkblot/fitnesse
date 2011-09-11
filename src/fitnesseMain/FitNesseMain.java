@@ -27,9 +27,9 @@ public class FitNesseMain {
     private static final Logger logger = LoggerFactory.getLogger(FitNesseMain.class);
 
     public static void main(String[] argv) throws Exception {
-        Injector injector = Guice.createInjector(new FitNesseModule());
         try {
             Arguments args = new Arguments(argv);
+            Injector injector = Guice.createInjector(new FitNesseModule(args));
             launchFitNesse(args, injector);
             if (args.getCommand() != null) {
                 System.exit(BaseFormatter.finalErrorCount);

@@ -157,22 +157,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     }
 
     @Test
-    public void testAuthenticatorDefaultCreation() throws Exception {
-        Authenticator authenticator = factory.getAuthenticator(new PromiscuousAuthenticator());
-        assertNotNull(authenticator);
-        assertEquals(PromiscuousAuthenticator.class, authenticator.getClass());
-    }
-
-    @Test
-    public void testAuthenticatorCustomCreation() throws Exception {
-        testProperties.setProperty(Authenticator.class.getSimpleName(), SimpleAuthenticator.class.getName());
-
-        Authenticator authenticator = factory.getAuthenticator(new PromiscuousAuthenticator());
-        assertNotNull(authenticator);
-        assertEquals(SimpleAuthenticator.class, authenticator.getClass());
-    }
-
-    @Test
     public void testContentFilterCreation() throws Exception {
         assertEquals("", factory.loadContentFilter());
         assertEquals(null, SaveResponder.contentFilter);

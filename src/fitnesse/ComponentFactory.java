@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.authentication.Authenticator;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
@@ -174,11 +173,6 @@ public class ComponentFactory {
             return null;
         else
             return value.split(",");
-    }
-
-    public Authenticator getAuthenticator(Authenticator defaultAuthenticator) {
-        Authenticator authenticator = createComponent(Authenticator.class);
-        return authenticator == null ? defaultAuthenticator : authenticator;
     }
 
     public String loadSymbolTypes() throws Exception {

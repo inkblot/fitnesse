@@ -3,7 +3,6 @@
 package fitnesse.wiki;
 
 import fitnesse.ComponentFactory;
-import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import org.apache.commons.io.IOUtils;
 import util.*;
@@ -26,7 +25,7 @@ public class FileSystemPage extends CachingPage {
         super(name, null);
         this.path = path;
 
-        versionsController = createVersionsController(componentFactory);
+        versionsController = componentFactory.loadVersionsController();
         createDirectoryIfNewPage(fileSystem);
     }
 
@@ -39,11 +38,6 @@ public class FileSystemPage extends CachingPage {
         path = parent.getFileSystemPath();
         versionsController = parent.versionsController;
         createDirectoryIfNewPage(fileSystem);
-    }
-
-    private VersionsController createVersionsController(ComponentFactory factory) throws Exception {
-        return (VersionsController) factory.createComponent(ComponentFactory.VERSIONS_CONTROLLER,
-                ZipFileVersionsController.class);
     }
 
     @Override

@@ -87,7 +87,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
 
     @Test
     public void testHtmlPageFactoryCreation() throws Exception {
-        testProperties.setProperty(ComponentFactory.HTML_PAGE_FACTORY, TestPageFactory.class.getName());
+        testProperties.setProperty(HtmlPageFactory.class.getSimpleName(), TestPageFactory.class.getName());
 
         HtmlPageFactory pageFactory = factory.getHtmlPageFactory(null);
         assertNotNull(pageFactory);
@@ -165,7 +165,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
 
     @Test
     public void testAuthenticatorCustomCreation() throws Exception {
-        testProperties.setProperty(ComponentFactory.AUTHENTICATOR, SimpleAuthenticator.class.getName());
+        testProperties.setProperty(Authenticator.class.getSimpleName(), SimpleAuthenticator.class.getName());
 
         Authenticator authenticator = factory.getAuthenticator(new PromiscuousAuthenticator());
         assertNotNull(authenticator);
@@ -177,7 +177,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         assertEquals("", factory.loadContentFilter());
         assertEquals(null, SaveResponder.contentFilter);
 
-        testProperties.setProperty(ComponentFactory.CONTENT_FILTER, TestContentFilter.class.getName());
+        testProperties.setProperty(ContentFilter.class.getSimpleName(), TestContentFilter.class.getName());
 
         String content = factory.loadContentFilter();
         assertEquals("\tContent filter installed: " + SaveResponder.contentFilter.getClass().getName() + "\n", content);
@@ -186,14 +186,14 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     }
 
     @Test
-    public void testShouldUseZipFileRevisionControllerAsDefault() throws Exception {
+    public void testShouldUseZipFileRevisionControllerAsDefault() {
         VersionsController defaultRevisionController = factory.loadVersionsController();
         assertEquals(ZipFileVersionsController.class, defaultRevisionController.getClass());
     }
 
     @Test
-    public void testShouldUseSpecifiedRevisionController() throws Exception {
-        testProperties.setProperty(ComponentFactory.VERSIONS_CONTROLLER, NullVersionsController.class.getName());
+    public void testShouldUseSpecifiedRevisionController() {
+        testProperties.setProperty(VersionsController.class.getSimpleName(), NullVersionsController.class.getName());
 
         VersionsController defaultRevisionController = factory.loadVersionsController();
         assertEquals(NullVersionsController.class, defaultRevisionController.getClass());

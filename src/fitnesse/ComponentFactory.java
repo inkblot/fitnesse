@@ -11,6 +11,7 @@ import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
+import util.TodoException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,13 +24,9 @@ public class ComponentFactory {
     private final String endl = System.getProperty("line.separator");
     public static final String PROPERTIES_FILE = "plugins.properties";
     public static final String WIKI_PAGE_CLASS = "WikiPage";
-    public static final String HTML_PAGE_FACTORY = "HtmlPageFactory";
     public static final String PLUGINS = "Plugins";
     public static final String RESPONDERS = "Responders";
     public static final String SYMBOL_TYPES = "SymbolTypes";
-    public static final String AUTHENTICATOR = "Authenticator";
-    public static final String CONTENT_FILTER = "ContentFilter";
-    public static final String VERSIONS_CONTROLLER = "VersionsController";
     public static final String DEFAULT_NEWPAGE_CONTENT = "newpage.default.content";
 
     private final Properties loadedProperties;
@@ -85,27 +82,43 @@ public class ComponentFactory {
         return getProperties().getProperty(propertyName);
     }
 
-    public Object createComponent(String componentType, Class<?> defaultComponent) throws Exception {
-        String componentClassName = loadedProperties.getProperty(componentType);
-        Class<?> componentClass;
-        if (componentClassName != null)
-            componentClass = Class.forName(componentClassName);
-        else
-            componentClass = defaultComponent;
+    public <T> T createComponent(Class<T> componentType, Class<? extends T> defaultComponent) {
+        String componentClassName = loadedProperties.getProperty(componentType.getSimpleName());
+        Class<? extends T> componentClass = defaultComponent;
+        try {
+            if (componentClassName != null) {
+                Class<?> someClass = Class.forName(componentClassName);
+                if (componentType.isAssignableFrom(someClass)) {
+                    //noinspection unchecked
+                    componentClass = (Class<? extends T>) someClass;
+                }
+            }
 
-        if (componentClass != null) {
-            Constructor<?> constructor = componentClass.getConstructor(Properties.class);
-            return constructor.newInstance(loadedProperties);
+            if (componentClass != null) {
+                Constructor<? extends T> constructor = componentClass.getConstructor(Properties.class);
+                return constructor.newInstance(loadedProperties);
+            } else {
+                return null;
+            }
+        } catch (ClassNotFoundException e) {
+            throw new TodoException(e);
+        } catch (NoSuchMethodException e) {
+            throw new TodoException(e);
+        } catch (InvocationTargetException e) {
+            throw new TodoException(e);
+        } catch (InstantiationException e) {
+            throw new TodoException(e);
+        } catch (IllegalAccessException e) {
+            throw new TodoException(e);
         }
-        return null;
     }
 
-    public Object createComponent(String componentType) throws Exception {
+    public <T> T createComponent(Class<T> componentType) {
         return createComponent(componentType, null);
     }
 
     public String loadWikiPage(WikiPageFactory factory) throws Exception {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         String rootPageClassName = loadedProperties.getProperty(WIKI_PAGE_CLASS);
         if (rootPageClassName != null) {
             factory.setWikiPageClass(Class.forName(rootPageClassName));
@@ -114,8 +127,8 @@ public class ComponentFactory {
         return buffer.toString();
     }
 
-    public HtmlPageFactory getHtmlPageFactory(HtmlPageFactory defaultPageFactory) throws Exception {
-        HtmlPageFactory htmlPageFactory = (HtmlPageFactory) createComponent(HTML_PAGE_FACTORY);
+    public HtmlPageFactory getHtmlPageFactory(HtmlPageFactory defaultPageFactory) {
+        HtmlPageFactory htmlPageFactory = createComponent(HtmlPageFactory.class);
         return htmlPageFactory == null ? defaultPageFactory : htmlPageFactory;
     }
 
@@ -168,7 +181,7 @@ public class ComponentFactory {
     }
 
     public String loadResponders(ResponderFactory responderFactory) throws Exception {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         String[] responderList = getListFromProperties(RESPONDERS);
         if (responderList != null) {
             buffer.append("\tCustom responders loaded:").append(endl);
@@ -191,13 +204,13 @@ public class ComponentFactory {
             return value.split(",");
     }
 
-    public Authenticator getAuthenticator(Authenticator defaultAuthenticator) throws Exception {
-        Authenticator authenticator = (Authenticator) createComponent(AUTHENTICATOR);
+    public Authenticator getAuthenticator(Authenticator defaultAuthenticator) {
+        Authenticator authenticator = createComponent(Authenticator.class);
         return authenticator == null ? defaultAuthenticator : authenticator;
     }
 
     public String loadSymbolTypes() throws Exception {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         String[] symbolTypeNames = getListFromProperties(SYMBOL_TYPES);
         if (symbolTypeNames != null) {
             buffer.append("\tCustom symbol types loaded:").append(endl);
@@ -210,8 +223,8 @@ public class ComponentFactory {
         return buffer.toString();
     }
 
-    public String loadContentFilter() throws Exception {
-        ContentFilter filter = (ContentFilter) createComponent(CONTENT_FILTER);
+    public String loadContentFilter() {
+        ContentFilter filter = createComponent(ContentFilter.class);
         if (filter != null) {
             SaveResponder.contentFilter = filter;
             return "\tContent filter installed: " + filter.getClass().getName() + "\n";
@@ -219,11 +232,7 @@ public class ComponentFactory {
         return "";
     }
 
-    public VersionsController loadVersionsController() throws Exception {
-        VersionsController versionsController = (VersionsController) createComponent(VERSIONS_CONTROLLER);
-        if (versionsController == null) {
-            versionsController = new ZipFileVersionsController();
-        }
-        return versionsController;
+    public VersionsController loadVersionsController() {
+        return createComponent(VersionsController.class, ZipFileVersionsController.class);
     }
 }

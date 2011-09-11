@@ -20,6 +20,7 @@ import util.CommandLine;
 import util.CommandLineParseException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class FitNesseMain {
@@ -105,8 +106,7 @@ public class FitNesseMain {
         }
     }
 
-    public static Authenticator makeAuthenticator(String authenticationParameter,
-                                                  ComponentFactory componentFactory) throws Exception {
+    public static Authenticator makeAuthenticator(String authenticationParameter, ComponentFactory componentFactory) throws IOException {
         Authenticator authenticator = new PromiscuousAuthenticator();
         if (authenticationParameter != null) {
             if (new File(authenticationParameter).exists())

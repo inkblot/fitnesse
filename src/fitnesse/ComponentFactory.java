@@ -13,12 +13,13 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
 import util.TodoException;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
+
+import static util.FileUtil.loadProperties;
 
 public class ComponentFactory {
     private final String endl = System.getProperty("line.separator");
@@ -29,53 +30,24 @@ public class ComponentFactory {
     public static final String SYMBOL_TYPES = "SymbolTypes";
     public static final String DEFAULT_NEWPAGE_CONTENT = "newpage.default.content";
 
-    private final Properties loadedProperties;
-    private final String propertiesLocation;
-    private boolean propertiesAreLoaded = false;
-    private SymbolProvider symbolProvider;
+    private final Properties properties;
+    private final SymbolProvider symbolProvider;
 
     public ComponentFactory() {
-        this(new Properties());
+        this(new Properties(), SymbolProvider.wikiParsingProvider);
     }
 
     public ComponentFactory(String propertiesLocation) {
-        this(propertiesLocation, new Properties(), SymbolProvider.wikiParsingProvider);
-    }
-
-    public ComponentFactory(Properties properties) {
-        this(properties, SymbolProvider.wikiParsingProvider);
+        this(loadProperties(new File(propertiesLocation, PROPERTIES_FILE)), SymbolProvider.wikiParsingProvider);
     }
 
     public ComponentFactory(Properties properties, SymbolProvider symbolProvider) {
-        this.propertiesLocation = null;
-        this.loadedProperties = properties;
-        propertiesAreLoaded = true;
+        this.properties = properties;
         this.symbolProvider = symbolProvider;
-    }
-
-    public ComponentFactory(String propertiesLocation, Properties properties, SymbolProvider symbolProvider) {
-        this.propertiesLocation = propertiesLocation;
-        this.loadedProperties = properties;
-        loadProperties(propertiesLocation);
-        this.symbolProvider = symbolProvider;
-    }
-
-    protected void loadProperties(String propertiesLocation) {
-        try {
-            String propertiesPath = propertiesLocation + "/" + PROPERTIES_FILE;
-            FileInputStream propertiesStream = new FileInputStream(propertiesPath);
-            loadedProperties.load(propertiesStream);
-        } catch (IOException e) {
-            // No properties files means all defaults are loaded
-        }
     }
 
     Properties getProperties() {
-        if (!propertiesAreLoaded) {
-            loadProperties(propertiesLocation);
-            propertiesAreLoaded = true;
-        }
-        return loadedProperties;
+        return properties;
     }
 
     public String getProperty(String propertyName) {
@@ -83,7 +55,7 @@ public class ComponentFactory {
     }
 
     public <T> T createComponent(Class<T> componentType, Class<? extends T> defaultComponent) {
-        String componentClassName = loadedProperties.getProperty(componentType.getSimpleName());
+        String componentClassName = properties.getProperty(componentType.getSimpleName());
         Class<? extends T> componentClass = defaultComponent;
         try {
             if (componentClassName != null) {
@@ -96,7 +68,7 @@ public class ComponentFactory {
 
             if (componentClass != null) {
                 Constructor<? extends T> constructor = componentClass.getConstructor(Properties.class);
-                return constructor.newInstance(loadedProperties);
+                return constructor.newInstance(properties);
             } else {
                 return null;
             }
@@ -119,7 +91,7 @@ public class ComponentFactory {
 
     public String loadWikiPage(WikiPageFactory factory) throws Exception {
         StringBuilder buffer = new StringBuilder();
-        String rootPageClassName = loadedProperties.getProperty(WIKI_PAGE_CLASS);
+        String rootPageClassName = properties.getProperty(WIKI_PAGE_CLASS);
         if (rootPageClassName != null) {
             factory.setWikiPageClass(Class.forName(rootPageClassName));
             buffer.append("\tCustom wiki page plugin loaded: ").append(rootPageClassName).append(endl);
@@ -197,7 +169,7 @@ public class ComponentFactory {
     }
 
     private String[] getListFromProperties(String propertyName) {
-        String value = loadedProperties.getProperty(propertyName);
+        String value = properties.getProperty(propertyName);
         if (value == null)
             return null;
         else

@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import com.google.inject.ImplementedBy;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 
+@ImplementedBy(PromiscuousAuthenticator.class)
 public abstract class Authenticator {
-    public Authenticator() {
-    }
 
     public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
         request.getCredentials();

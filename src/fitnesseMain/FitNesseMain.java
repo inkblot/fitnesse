@@ -4,9 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import fitnesse.*;
 import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.MultiUserAuthenticator;
-import fitnesse.authentication.OneUserAuthenticator;
-import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.WikiImportTestEventListener;
@@ -19,8 +16,6 @@ import org.slf4j.LoggerFactory;
 import util.CommandLine;
 import util.CommandLineParseException;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 
 public class FitNesseMain {
@@ -64,7 +59,7 @@ public class FitNesseMain {
         if (defaultNewPageContent != null) {
             context.defaultNewPageContent = defaultNewPageContent;
         }
-        context.authenticator = makeAuthenticator(arguments.getUserpass(), componentFactory);
+        context.authenticator = injector.getInstance(Authenticator.class);
         context.htmlPageFactory = componentFactory.getHtmlPageFactory(new HtmlPageFactory());
 
         String extraOutput = componentFactory.loadPlugins(context.responderFactory, wikiPageFactory);
@@ -104,20 +99,6 @@ public class FitNesseMain {
                 }
             }
         }
-    }
-
-    public static Authenticator makeAuthenticator(String authenticationParameter, ComponentFactory componentFactory) throws IOException {
-        Authenticator authenticator = new PromiscuousAuthenticator();
-        if (authenticationParameter != null) {
-            if (new File(authenticationParameter).exists())
-                authenticator = new MultiUserAuthenticator(authenticationParameter);
-            else {
-                String[] values = authenticationParameter.split(":");
-                authenticator = new OneUserAuthenticator(values[0], values[1]);
-            }
-        }
-
-        return componentFactory.getAuthenticator(authenticator);
     }
 
     public static class Arguments {

@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +9,7 @@ public class MultiUserAuthenticator extends Authenticator {
     private Map<String, String> users = new HashMap<String, String>();
     private PasswordCipher cipher;
 
-    public MultiUserAuthenticator(String passwdFile) throws IOException {
+    public MultiUserAuthenticator(String passwdFile) {
         PasswordFile passwords = new PasswordFile(passwdFile);
         users = passwords.getPasswordMap();
         cipher = passwords.getCipher();

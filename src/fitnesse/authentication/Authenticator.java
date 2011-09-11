@@ -44,7 +44,7 @@ public abstract class Authenticator {
         return (privilegedResponder instanceof SecureResponder);
     }
 
-    public abstract boolean isAuthenticated(String username, String password) throws Exception;
+    public abstract boolean isAuthenticated(String username, String password);
 
     public String toString() {
         return getClass().getName();

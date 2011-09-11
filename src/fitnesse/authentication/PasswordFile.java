@@ -3,17 +3,23 @@
 package fitnesse.authentication;
 
 import util.FileUtil;
+import util.TodoException;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class PasswordFile {
     private File passwordFile;
     private Map<String, String> passwordMap = new HashMap<String, String>();
     private PasswordCipher cipher = new TransparentCipher();
 
-    public PasswordFile(String filename) throws Exception {
+    public PasswordFile(String filename) throws IOException {
         passwordFile = new File(filename);
         loadFile();
     }
@@ -40,15 +46,14 @@ public class PasswordFile {
         savePasswords();
     }
 
-    private void loadFile() throws Exception {
+    private void loadFile() throws IOException {
         LinkedList<String> lines = getPasswordFileLines();
         loadCipher(lines);
         loadPasswords(lines);
     }
 
     private void loadPasswords(LinkedList<String> lines) {
-        for (Iterator<String> iterator = lines.iterator(); iterator.hasNext(); ) {
-            String line = iterator.next();
+        for (String line : lines) {
             if (!"".equals(line)) {
                 String[] tokens = line.split(":");
                 passwordMap.put(tokens[0], tokens[1]);
@@ -56,9 +61,9 @@ public class PasswordFile {
         }
     }
 
-    private void loadCipher(LinkedList<String> lines) throws Exception {
+    private void loadCipher(LinkedList<String> lines) throws IOException {
         if (lines.size() > 0) {
-            String firstLine = lines.getFirst().toString();
+            String firstLine = lines.getFirst();
             if (firstLine.startsWith("!")) {
                 String cipherClassName = firstLine.substring(1);
                 instantiateCipher(cipherClassName);
@@ -67,25 +72,36 @@ public class PasswordFile {
         }
     }
 
-    public PasswordCipher instantiateCipher(String cipherClassName) throws Exception {
-        Class<?> cipherClass = Class.forName(cipherClassName);
-        Constructor<?> constructor = cipherClass.getConstructor(new Class[]{});
-        cipher = (PasswordCipher) constructor.newInstance(new Object[]{});
+    public PasswordCipher instantiateCipher(String cipherClassName) throws IOException {
+        try {
+            Class<?> cipherClass = Class.forName(cipherClassName);
+            Constructor<?> constructor = cipherClass.getConstructor(new Class[]{});
+            cipher = (PasswordCipher) constructor.newInstance();
+        } catch (InstantiationException e) {
+            throw new TodoException(e);
+        } catch (IllegalAccessException e) {
+            throw new TodoException(e);
+        } catch (InvocationTargetException e) {
+            throw new TodoException(e);
+        } catch (ClassNotFoundException e) {
+            throw new TodoException(e);
+        } catch (NoSuchMethodException e) {
+            throw new TodoException(e);
+        }
         return cipher;
     }
 
     private void savePasswords() throws Exception {
         List<String> lines = new LinkedList<String>();
         lines.add("!" + cipher.getClass().getName());
-        for (Iterator<String> iterator = passwordMap.keySet().iterator(); iterator.hasNext(); ) {
-            Object user = iterator.next();
+        for (String user : passwordMap.keySet()) {
             Object password = passwordMap.get(user);
             lines.add(user + ":" + password);
         }
         FileUtil.writeLinesToFile(passwordFile, lines);
     }
 
-    private LinkedList<String> getPasswordFileLines() throws Exception {
+    private LinkedList<String> getPasswordFileLines() throws IOException {
         LinkedList<String> lines = new LinkedList<String>();
         if (passwordFile.exists())
             lines = FileUtil.getFileLines(passwordFile);

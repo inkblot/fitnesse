@@ -152,7 +152,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     }
 
     class StoneWallAuthenticator extends Authenticator {
-        public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
+        public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
             return new UnauthorizedResponder();
         }
 

@@ -3,17 +3,17 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
-import fitnesse.wiki.WikiPageDummy;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class ChunkingResponderTest {
+public class ChunkingResponderTest extends FitnesseBaseTestCase {
 
     private Exception exception;
     private ChunkedResponse response;
@@ -22,7 +22,7 @@ public class ChunkingResponderTest {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext(new WikiPageDummy());
+        context = new FitNesseContext("RooT");
         responder = new ChunkingResponder() {
             protected void doSending() throws Exception {
                 throw exception;

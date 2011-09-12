@@ -2,32 +2,32 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageProperties;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ImportAndViewResponderTest extends TestCase {
-    private WikiImporterTest testData;
+import static org.junit.Assert.assertEquals;
+
+public class ImportAndViewResponderTest extends ImporterTestCase {
     private ImportAndViewResponder responder;
 
+    @Before
     public void setUp() throws Exception {
-        testData = new WikiImporterTest();
-        testData.createRemoteRoot();
-        testData.createLocalRoot();
-
-        FitNesseUtil.startFitnesse(testData.remoteRoot);
-
+        FitNesseUtil.startFitnesse(remoteRoot);
         responder = new ImportAndViewResponder();
     }
 
+    @After
     public void tearDown() throws Exception {
         FitNesseUtil.stopFitnesse();
     }
 
+    @Test
     public void testRedirect() throws Exception {
         Response response = getResponse();
 
@@ -36,23 +36,23 @@ public class ImportAndViewResponderTest extends TestCase {
     }
 
     private Response getResponse() throws Exception {
-        FitNesseContext context = new FitNesseContext(testData.localRoot);
         MockRequest request = new MockRequest();
         request.setResource("PageTwo");
-        return responder.makeResponse(context, request);
+        return responder.makeResponse(localContext, request);
     }
 
+    @Test
     public void testPageContentIsUpdated() throws Exception {
-        PageData data = testData.pageTwo.getData();
+        PageData data = pageTwo.getData();
         WikiPageProperties props = data.getProperties();
 
         WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.port + "/PageTwo");
         importProps.addTo(props);
-        testData.pageTwo.commit(data);
+        pageTwo.commit(data);
 
         getResponse();
 
-        data = testData.pageTwo.getData();
+        data = pageTwo.getData();
         assertEquals("page two", data.getContent());
     }
 }

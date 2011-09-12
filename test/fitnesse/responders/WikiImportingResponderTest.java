@@ -10,21 +10,20 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.*;
 import static util.RegexAssertions.*;
 
-public class WikiImportingResponderTest extends TestCase {
+public class WikiImportingResponderTest extends ImporterTestCase {
     private WikiImportingResponder responder;
     private String baseUrl;
-    private WikiImporterTest testData;
 
+    @Before
     public void setUp() throws Exception {
-        testData = new WikiImporterTest();
-        testData.createRemoteRoot();
-        testData.createLocalRoot();
-
-        FitNesseUtil.startFitnesse(testData.remoteRoot);
+        FitNesseUtil.startFitnesse(remoteRoot);
         baseUrl = "http://localhost:" + FitNesseUtil.port + "/";
 
         createResponder();
@@ -39,21 +38,23 @@ public class WikiImportingResponderTest extends TestCase {
         responder.getImporter().setDeleteOrphanOption(false);
     }
 
+    @After
     public void tearDown() throws Exception {
         FitNesseUtil.stopFitnesse();
     }
 
+    @Test
     public void testActionsOfMakeResponse() throws Exception {
         Response response = makeSampleResponse(baseUrl);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 
-        assertEquals(2, testData.pageTwo.getChildren().size());
-        WikiPage importedPageOne = testData.pageTwo.getChildPage("PageOne");
+        assertEquals(2, pageTwo.getChildren().size());
+        WikiPage importedPageOne = pageTwo.getChildPage("PageOne");
         assertNotNull(importedPageOne);
         assertEquals("page one", importedPageOne.getData().getContent());
 
-        WikiPage importedPageTwo = testData.pageTwo.getChildPage("PageTwo");
+        WikiPage importedPageTwo = pageTwo.getChildPage("PageTwo");
         assertNotNull(importedPageTwo);
         assertEquals("page two", importedPageTwo.getData().getContent());
 
@@ -63,38 +64,40 @@ public class WikiImportingResponderTest extends TestCase {
         assertEquals("child one", importedChildOne.getData().getContent());
     }
 
+    @Test
     public void testImportingFromNonRootPageUpdatesPageContent() throws Exception {
-        PageData data = testData.pageTwo.getData();
+        PageData data = pageTwo.getData();
         WikiImportProperty importProperty = new WikiImportProperty(baseUrl + "PageOne");
         importProperty.addTo(data.getProperties());
         data.setContent("nonsense");
-        testData.pageTwo.commit(data);
+        pageTwo.commit(data);
 
         Response response = makeSampleResponse("blah");
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 
-        data = testData.pageTwo.getData();
+        data = pageTwo.getData();
         assertEquals("page one", data.getContent());
 
         assertFalse(WikiImportProperty.createFrom(data.getProperties()).isRoot());
     }
 
+    @Test
     public void testImportPropertiesGetAdded() throws Exception {
         Response response = makeSampleResponse(baseUrl);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 
-        checkProperties(testData.pageTwo, baseUrl, true, null);
+        checkProperties(pageTwo, baseUrl, true, null);
 
-        WikiPage importedPageOne = testData.pageTwo.getChildPage("PageOne");
-        checkProperties(importedPageOne, baseUrl + "PageOne", false, testData.remoteRoot.getChildPage("PageOne"));
+        WikiPage importedPageOne = pageTwo.getChildPage("PageOne");
+        checkProperties(importedPageOne, baseUrl + "PageOne", false, remoteRoot.getChildPage("PageOne"));
 
-        WikiPage importedPageTwo = testData.pageTwo.getChildPage("PageTwo");
-        checkProperties(importedPageTwo, baseUrl + "PageTwo", false, testData.remoteRoot.getChildPage("PageTwo"));
+        WikiPage importedPageTwo = pageTwo.getChildPage("PageTwo");
+        checkProperties(importedPageTwo, baseUrl + "PageTwo", false, remoteRoot.getChildPage("PageTwo"));
 
         WikiPage importedChildOne = importedPageOne.getChildPage("ChildOne");
-        checkProperties(importedChildOne, baseUrl + "PageOne.ChildOne", false, testData.remoteRoot.getChildPage("PageOne").getChildPage("ChildOne"));
+        checkProperties(importedChildOne, baseUrl + "PageOne.ChildOne", false, remoteRoot.getChildPage("PageOne").getChildPage("ChildOne"));
     }
 
     private void checkProperties(WikiPage page, String source, boolean isRoot, WikiPage remotePage) throws Exception {
@@ -114,6 +117,7 @@ public class WikiImportingResponderTest extends TestCase {
         }
     }
 
+    @Test
     public void testHtmlOfMakeResponse() throws Exception {
         Response response = makeSampleResponse(baseUrl);
         MockResponseSender sender = new MockResponseSender();
@@ -131,6 +135,7 @@ public class WikiImportingResponderTest extends TestCase {
         assertSubString("3 pages were imported.", content);
     }
 
+    @Test
     public void testHtmlOfMakeResponseWithNoModifications() throws Exception {
         Response response = makeSampleResponse(baseUrl);
         MockResponseSender sender = new MockResponseSender();
@@ -162,7 +167,7 @@ public class WikiImportingResponderTest extends TestCase {
     }
 
     private ChunkedResponse getResponse(MockRequest request) throws Exception {
-        Response response = responder.makeResponse(new FitNesseContext(testData.localRoot), request);
+        Response response = responder.makeResponse(localContext, request);
         assertTrue(response instanceof ChunkedResponse);
         return (ChunkedResponse) response;
     }
@@ -175,19 +180,21 @@ public class WikiImportingResponderTest extends TestCase {
         return request;
     }
 
+    @Test
     public void testMakeResponseImportingNonRootPage() throws Exception {
         MockRequest request = makeRequest(baseUrl + "PageOne");
 
-        Response response = responder.makeResponse(new FitNesseContext(testData.localRoot), request);
+        Response response = responder.makeResponse(localContext, request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         String content = sender.sentData();
 
-        assertNotNull(testData.pageTwo.getChildPage("ChildOne"));
+        assertNotNull(pageTwo.getChildPage("ChildOne"));
         assertSubString("href=\"PageTwo.ChildOne\"", content);
         assertSubString(">ChildOne<", content);
     }
 
+    @Test
     public void testRemoteUrlNotFound() throws Exception {
         String remoteUrl = baseUrl + "PageDoesntExist";
         Response response = makeSampleResponse(remoteUrl);
@@ -198,6 +205,7 @@ public class WikiImportingResponderTest extends TestCase {
         assertSubString("The remote resource, " + remoteUrl + ", was not found.", content);
     }
 
+    @Test
     public void testErrorMessageForBadUrlProvided() throws Exception {
         String remoteUrl = baseUrl + "blah";
         Response response = makeSampleResponse(remoteUrl);
@@ -208,8 +216,9 @@ public class WikiImportingResponderTest extends TestCase {
         assertSubString("The URL's resource path, blah, is not a valid WikiWord.", content);
     }
 
+    @Test
     public void testUnauthorizedResponse() throws Exception {
-        makeSecurePage(testData.remoteRoot);
+        makeSecurePage(remoteRoot);
 
         Response response = makeSampleResponse(baseUrl);
         MockResponseSender sender = new MockResponseSender();
@@ -232,8 +241,9 @@ public class WikiImportingResponderTest extends TestCase {
         assertHasRegexp("<input[^>]*name=\"remotePassword\"", content);
     }
 
+    @Test
     public void testUnauthorizedResponseFromNonRoot() throws Exception {
-        WikiPage childPage = testData.remoteRoot.getChildPage("PageOne");
+        WikiPage childPage = remoteRoot.getChildPage("PageOne");
         makeSecurePage(childPage);
 
         Response response = makeSampleResponse(baseUrl);
@@ -244,8 +254,9 @@ public class WikiImportingResponderTest extends TestCase {
         assertSubString("<form", content);
     }
 
+    @Test
     public void testImportingFromSecurePageWithCredentials() throws Exception {
-        makeSecurePage(testData.remoteRoot);
+        makeSecurePage(remoteRoot);
 
         MockRequest request = makeRequest(baseUrl);
         request.addInput("remoteUsername", "joe");
@@ -262,6 +273,7 @@ public class WikiImportingResponderTest extends TestCase {
         assertEquals("blow", WikiImporter.remotePassword);
     }
 
+    @Test
     public void testListOfOrphanedPages() throws Exception {
         WikiImporter importer = new WikiImporter();
 
@@ -271,8 +283,8 @@ public class WikiImportingResponderTest extends TestCase {
         assertNotSubString("PageOne", tail);
         assertNotSubString("PageOne.ChildPagae", tail);
 
-        importer.getOrphans().add(new WikiPagePath(testData.pageOne));
-        importer.getOrphans().add(new WikiPagePath(testData.childPageOne));
+        importer.getOrphans().add(new WikiPagePath(pageOne));
+        importer.getOrphans().add(new WikiPagePath(childPageOne));
 
         tail = responder.makeTailHtml(importer).html();
 
@@ -281,6 +293,7 @@ public class WikiImportingResponderTest extends TestCase {
         assertSubString("PageOne.ChildOne", tail);
     }
 
+    @Test
     public void testAutoUpdatingTurnedOn() throws Exception {
         MockRequest request = makeRequest(baseUrl);
         responder.setRequest(request);
@@ -294,6 +307,7 @@ public class WikiImportingResponderTest extends TestCase {
         assertTrue(responder.getImporter().getAutoUpdateSetting());
     }
 
+    @Test
     public void testAutoUpdateSettingDisplayedInTail() throws Exception {
         WikiImporter importer = new MockWikiImporter();
         importer.setAutoUpdateSetting(true);

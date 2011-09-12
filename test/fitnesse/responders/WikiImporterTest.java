@@ -4,7 +4,9 @@ package fitnesse.responders;
 
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import util.ClockUtil;
 import util.XmlUtil;
@@ -13,22 +15,16 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
-public class WikiImporterTest extends TestCase implements WikiImporterClient {
-    public WikiPage pageOne;
-    public WikiPage childPageOne;
-    public WikiPage pageTwo;
-    public WikiPage remoteRoot;
+public class WikiImporterTest extends ImporterTestCase implements WikiImporterClient {
     private WikiImporter importer;
     private LinkedList<WikiPage> imports;
     private LinkedList<Exception> errors;
-    public WikiPage localRoot;
 
+    @Before
     public void setUp() throws Exception {
-        createRemoteRoot();
-        createLocalRoot();
-
         FitNesseUtil.startFitnesse(remoteRoot);
 
         importer = new WikiImporter();
@@ -39,26 +35,12 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         errors = new LinkedList<Exception>();
     }
 
-    public void createLocalRoot() throws Exception {
-        localRoot = InMemoryPage.makeRoot("RooT2");
-        pageOne = localRoot.addChildPage("PageOne");
-        childPageOne = pageOne.addChildPage("ChildOne");
-        pageTwo = localRoot.addChildPage("PageTwo");
-    }
-
-    public WikiPage createRemoteRoot() throws Exception {
-        remoteRoot = InMemoryPage.makeRoot("RooT");
-        PageCrawler crawler = remoteRoot.getPageCrawler();
-        crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
-        crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
-        crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
-        return remoteRoot;
-    }
-
+    @After
     public void tearDown() throws Exception {
         FitNesseUtil.stopFitnesse();
     }
 
+    @Test
     public void testEnterChildPage() throws Exception {
         importer.enterChildPage(pageOne, ClockUtil.currentDate());
 
@@ -66,6 +48,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertEquals("page one", data.getContent());
     }
 
+    @Test
     public void testChildPageAdded() throws Exception {
         importer.enterChildPage(pageOne, ClockUtil.currentDate());
         importer.enterChildPage(childPageOne, ClockUtil.currentDate());
@@ -74,6 +57,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertEquals("child one", data.getContent());
     }
 
+    @Test
     public void testEnterChildPageWhenRemotePageNotModified() throws Exception {
         importer.enterChildPage(pageOne, ClockUtil.currentDate());
         importer.exitPage();
@@ -87,6 +71,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertEquals("new content", pageOne.getData().getContent());
     }
 
+    @Test
     public void testExiting() throws Exception {
         importer.enterChildPage(pageOne, ClockUtil.currentDate());
         importer.enterChildPage(childPageOne, ClockUtil.currentDate());
@@ -98,6 +83,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertEquals("page two", data.getContent());
     }
 
+    @Test
     public void testGetPageTree() throws Exception {
         Document doc = importer.getPageTree();
         assertNotNull(doc);
@@ -107,23 +93,25 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertSubString("PageTwo", xml);
     }
 
+    @Test
     public void testUrlParsing() throws Exception {
-        testUrlParsing("http://mysite.com", "mysite.com", 80, "");
-        testUrlParsing("http://mysite.com/", "mysite.com", 80, "");
-        testUrlParsing("http://mysite.com:8080/", "mysite.com", 8080, "");
-        testUrlParsing("http://mysite.com:8080", "mysite.com", 8080, "");
-        testUrlParsing("http://mysite.com:80/", "mysite.com", 80, "");
-        testUrlParsing("http://mysite.com/PageOne", "mysite.com", 80, "PageOne");
-        testUrlParsing("http://mysite.com/PageOne.ChildOne", "mysite.com", 80, "PageOne.ChildOne");
+        assertUrlParsing("http://mysite.com", "mysite.com", 80, "");
+        assertUrlParsing("http://mysite.com/", "mysite.com", 80, "");
+        assertUrlParsing("http://mysite.com:8080/", "mysite.com", 8080, "");
+        assertUrlParsing("http://mysite.com:8080", "mysite.com", 8080, "");
+        assertUrlParsing("http://mysite.com:80/", "mysite.com", 80, "");
+        assertUrlParsing("http://mysite.com/PageOne", "mysite.com", 80, "PageOne");
+        assertUrlParsing("http://mysite.com/PageOne.ChildOne", "mysite.com", 80, "PageOne.ChildOne");
     }
 
-    private void testUrlParsing(String url, String host, int port, String path) throws Exception {
+    private void assertUrlParsing(String url, String host, int port, String path) throws Exception {
         importer.parseUrl(url);
         assertEquals(host, importer.getRemoteHostname());
         assertEquals(port, importer.getRemotePort());
         assertEquals(path, PathParser.render(importer.getRemotePath()));
     }
 
+    @Test
     public void testParsingBadUrl() throws Exception {
         try {
             importer.parseUrl("blah");
@@ -133,6 +121,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         }
     }
 
+    @Test
     public void testParsingUrlWithNonWikiWord() throws Exception {
         try {
             importer.parseUrl("http://blah.com/notawikiword");
@@ -142,6 +131,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         }
     }
 
+    @Test
     public void testImportingWiki() throws Exception {
         localRoot = InMemoryPage.makeRoot("LocalRoot");
         importer.importWiki(localRoot);
@@ -151,6 +141,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertEquals(0, errors.size());
     }
 
+    @Test
     public void testFindsOrphansOnLocalWiki() throws Exception {
         performImportWithExtraLocalPages();
 
@@ -173,6 +164,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         importer.importWiki(localRoot);
     }
 
+    @Test
     public void testOrphansAreRemoved() throws Exception {
         performImportWithExtraLocalPages();
 
@@ -184,6 +176,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertTrue(localRoot.hasChildPage("OtherImportRoot"));
     }
 
+    @Test
     public void testWholeTreeOrphaned() throws Exception {
         importer.importWiki(localRoot);
 
@@ -194,6 +187,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertFalse(localRoot.hasChildPage("PageOne"));
     }
 
+    @Test
     public void testContextIsNotOrphanWhenUpdatingNonRoot() throws Exception {
         addLocalPageWithImportProperty(localRoot, "PageOne", false);
         importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
@@ -203,6 +197,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertEquals(0, importer.getOrphans().size());
     }
 
+    @Test
     public void testAutoUpdatePropertySetOnRoot() throws Exception {
         addLocalPageWithImportProperty(localRoot, "PageOne", false);
         importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
@@ -220,6 +215,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertFalse(importProp.isAutoUpdate());
     }
 
+    @Test
     public void testAutoUpdate_NewPage() throws Exception {
         importer.setAutoUpdateSetting(true);
         importer.enterChildPage(pageOne, ClockUtil.currentDate());
@@ -228,6 +224,7 @@ public class WikiImporterTest extends TestCase implements WikiImporterClient {
         assertTrue(importProps.isAutoUpdate());
     }
 
+    @Test
     public void testAutoUpdateWhenRemotePageNotModified() throws Exception {
         importer.enterChildPage(pageOne, ClockUtil.currentDate());
         importer.exitPage();

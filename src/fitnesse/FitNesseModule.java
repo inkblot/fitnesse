@@ -5,6 +5,8 @@ import com.google.inject.name.Names;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
+import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.WikiPage;
 import fitnesseMain.FitNesseMain;
 import util.FileUtil;
 import util.UtilModule;
@@ -20,10 +22,12 @@ import java.util.Properties;
  */
 public class FitNesseModule extends AbstractModule {
     private final Properties properties;
-    private String userpass;
+    private final String userpass;
 
     public FitNesseModule(FitNesseMain.Arguments args) {
-        this(FileUtil.loadProperties(new File(args.getRootPath(), ComponentFactory.PROPERTIES_FILE)), args.getUserpass());
+        this(
+                FileUtil.loadProperties(new File(args.getRootPath(), ComponentFactory.PROPERTIES_FILE)),
+                args.getUserpass());
     }
 
     public FitNesseModule(Properties properties, String userpass) {
@@ -35,6 +39,7 @@ public class FitNesseModule extends AbstractModule {
     protected void configure() {
         bind(Properties.class).annotatedWith(Names.named(ComponentFactory.PROPERTIES_FILE)).toInstance(properties);
         bindAuthenticator();
+        bindWikiPageClass();
         install(new UtilModule());
     }
 
@@ -59,6 +64,18 @@ public class FitNesseModule extends AbstractModule {
                     // ignore
                 }
             }
+        }
+    }
+
+    private void bindWikiPageClass() {
+        String wikiPageClassName = properties.getProperty(ComponentFactory.WIKI_PAGE_CLASS, FileSystemPage.class.getName());
+        try {
+            Class<?> wikiPageClass = Class.forName(wikiPageClassName);
+            if (WikiPage.class.isAssignableFrom(wikiPageClass)) {
+                bind(Class.class).annotatedWith(Names.named(ComponentFactory.WIKI_PAGE_CLASS)).toInstance(wikiPageClass);
+            }
+        } catch (ClassNotFoundException e) {
+            // ignore.  will cause binding exception
         }
     }
 }

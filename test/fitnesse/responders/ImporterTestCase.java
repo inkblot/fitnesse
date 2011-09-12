@@ -2,6 +2,7 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -16,6 +17,7 @@ import org.junit.Before;
  */
 public class ImporterTestCase extends FitnesseBaseTestCase {
 
+    protected FitNesseUtil fitNesseUtil = new FitNesseUtil();
     public WikiPage pageOne;
     public FitNesseContext remoteContext;
     public WikiPage remoteRoot;

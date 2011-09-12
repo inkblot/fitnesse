@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WidgetBuilder;
@@ -17,9 +18,11 @@ public class IncludeWidgetTest extends WidgetTestCase {
     protected WikiPage child2;
     protected WikiPage grandChild1;
     protected PageCrawler crawler;
+    private FitNesseContext context;
 
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
@@ -244,15 +247,16 @@ public class IncludeWidgetTest extends WidgetTestCase {
     }
 
     public void testVirtualInclude() throws Exception {
-        String virtualWikiURL = "http://localhost:" + FitNesseUtil.port + "/PageTwo";
+        String virtualWikiURL = FitNesseUtil.URL + "PageTwo";
         VirtualCouplingExtensionTest.setVirtualWiki(page1, virtualWikiURL);
-        FitNesseUtil.startFitnesse(root);
+        FitNesseUtil fitNesseUtil = new FitNesseUtil();
+        fitNesseUtil.startFitnesse(context);
         try {
             IncludeWidget widget = createIncludeWidget(page1, ".PageOne.ChildOne");
             String result = widget.render();
             verifySubstrings(new String[]{"child page", ".PageOne.ChildOne"}, result);
         } finally {
-            FitNesseUtil.stopFitnesse();
+            fitNesseUtil.stopFitnesse();
         }
     }
 
@@ -266,20 +270,21 @@ public class IncludeWidgetTest extends WidgetTestCase {
         crawler.addPage(root, includingPagePath, "!include .AcceptanceTestPage.IncludedPage");
         crawler.addPage(root, childOfIncludingPagePath, "!include .AcceptanceTestPage.IncludedPage");
 
-        String virtualWikiURL = "http://localhost:" + FitNesseUtil.port + "/AcceptanceTestPage";
+        String virtualWikiURL = FitNesseUtil.URL + "AcceptanceTestPage";
         WikiPage alternateRoot = InMemoryPage.makeRoot("RooT");
         WikiPagePath virtualPagePath = PathParser.parse("VirtualPage");
         WikiPage virtualHost = crawler.addPage(alternateRoot, virtualPagePath, "virtual host\n!contents\n");
         VirtualCouplingExtensionTest.setVirtualWiki(virtualHost, virtualWikiURL);
 
-        FitNesseUtil.startFitnesse(root);
+        FitNesseUtil fitNesseUtil = new FitNesseUtil();
+        fitNesseUtil.startFitnesse(context);
         try {
             WikiPage virtualChild = crawler.getPage(alternateRoot, PathParser.parse("VirtualPage.IncludingPage"));
             PageData data = virtualChild.getData();
             String result = data.getHtml();
             verifySubstrings(new String[]{"included page", "AcceptanceTestPage.IncludedPage"}, result);
         } finally {
-            FitNesseUtil.stopFitnesse();
+            fitNesseUtil.stopFitnesse();
         }
     }
 

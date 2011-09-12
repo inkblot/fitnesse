@@ -25,11 +25,11 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
 
     @Before
     public void setUp() throws Exception {
-        FitNesseUtil.startFitnesse(remoteRoot);
+        fitNesseUtil.startFitnesse(remoteContext);
 
         importer = new WikiImporter();
         importer.setWikiImporterClient(this);
-        importer.parseUrl("http://localhost:" + FitNesseUtil.port);
+        importer.parseUrl(FitNesseUtil.URL);
 
         imports = new LinkedList<WikiPage>();
         errors = new LinkedList<Exception>();
@@ -37,7 +37,7 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
 
     @After
     public void tearDown() throws Exception {
-        FitNesseUtil.stopFitnesse();
+        fitNesseUtil.stopFitnesse();
     }
 
     @Test
@@ -190,7 +190,7 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
     @Test
     public void testContextIsNotOrphanWhenUpdatingNonRoot() throws Exception {
         addLocalPageWithImportProperty(localRoot, "PageOne", false);
-        importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
+        importer.parseUrl(FitNesseUtil.URL + "PageOne");
 
         importer.importWiki(localRoot.getChildPage("PageOne"));
 
@@ -200,7 +200,7 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
     @Test
     public void testAutoUpdatePropertySetOnRoot() throws Exception {
         addLocalPageWithImportProperty(localRoot, "PageOne", false);
-        importer.parseUrl("http://localhost:" + FitNesseUtil.port + "/PageOne");
+        importer.parseUrl(FitNesseUtil.URL + "PageOne");
         importer.setAutoUpdateSetting(true);
         WikiPage importedPage = localRoot.getChildPage("PageOne");
         importer.importWiki(importedPage);
@@ -245,7 +245,7 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
         PageData data = page.getData();
 
         WikiPagePath pagePath = localRoot.getPageCrawler().getFullPath(page);
-        WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.port + "/" + PathParser.render(pagePath));
+        WikiImportProperty importProps = new WikiImportProperty(FitNesseUtil.URL + PathParser.render(pagePath));
         if (isRoot)
             importProps.setRoot(true);
         importProps.addTo(data.getProperties());

@@ -81,8 +81,7 @@ public class SavePropertiesResponderTest extends TestCase {
         // new request to get rid of the virtual wiki link
         SavePropertiesResponder responder = new SavePropertiesResponder();
         request = new MockRequest();
-        request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:" + FitNesseUtil.port
-                + "/LinkeePageTwo");
+        request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "LinkeePageTwo");
         request.setResource("LinkerPage");
         responder.makeResponse(context, request);
 

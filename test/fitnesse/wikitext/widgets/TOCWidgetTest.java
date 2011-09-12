@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 
@@ -11,12 +12,14 @@ public class TOCWidgetTest extends WidgetTestCase {
     private WikiPage root;
     private WikiPage parent, parent2, child1P2, child2P2;
     private PageCrawler crawler;
+    private FitNesseContext context;
 
     //===================================================[ SetUp / TearDown
     //
     @Override
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = new FitNesseContext("RooT");
+        root = context.root;
         crawler = root.getPageCrawler();
         parent = crawler.addPage(root, PathParser.parse("ParenT"), "parent");
         crawler.addPage(root, PathParser.parse("ParentTwo"), "parent two");
@@ -204,15 +207,16 @@ public class TOCWidgetTest extends WidgetTestCase {
     public void testDisplaysVirtualChildren() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("VirtualParent"));
         PageData data = page.getData();
-        data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:" + FitNesseUtil.port + "/ParenT");
+        data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "ParenT");
         page.commit(data);
+        FitNesseUtil fitNesseUtil = new FitNesseUtil();
+        fitNesseUtil.startFitnesse(context);
         try {
-            FitNesseUtil.startFitnesse(root);
             TOCWidget widget = new TOCWidget(new WidgetRoot(page), "!contents\n");
             String html = widget.render();
             assertVirtualChildrenHtml(html);
         } finally {
-            FitNesseUtil.stopFitnesse();
+            fitNesseUtil.stopFitnesse();
         }
     }
 

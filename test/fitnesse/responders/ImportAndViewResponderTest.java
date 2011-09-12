@@ -18,13 +18,13 @@ public class ImportAndViewResponderTest extends ImporterTestCase {
 
     @Before
     public void setUp() throws Exception {
-        FitNesseUtil.startFitnesse(remoteRoot);
+        fitNesseUtil.startFitnesse(remoteContext);
         responder = new ImportAndViewResponder();
     }
 
     @After
     public void tearDown() throws Exception {
-        FitNesseUtil.stopFitnesse();
+        fitNesseUtil.stopFitnesse();
     }
 
     @Test
@@ -46,7 +46,7 @@ public class ImportAndViewResponderTest extends ImporterTestCase {
         PageData data = pageTwo.getData();
         WikiPageProperties props = data.getProperties();
 
-        WikiImportProperty importProps = new WikiImportProperty("http://localhost:" + FitNesseUtil.port + "/PageTwo");
+        WikiImportProperty importProps = new WikiImportProperty(FitNesseUtil.URL + "PageTwo");
         importProps.addTo(props);
         pageTwo.commit(data);
 

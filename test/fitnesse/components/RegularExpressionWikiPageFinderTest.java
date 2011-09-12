@@ -20,7 +20,6 @@ public class RegularExpressionWikiPageFinderTest implements SearchObserver {
     private WikiPage pageOne;
     private WikiPage childPage;
     private WikiPage virtualPage;
-    private PageCrawler crawler;
 
     List<WikiPage> foundPages = new ArrayList<WikiPage>();
     private WikiPageFinder pageFinder;
@@ -32,15 +31,14 @@ public class RegularExpressionWikiPageFinderTest implements SearchObserver {
     @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
-        crawler = root.getPageCrawler();
+        PageCrawler crawler = root.getPageCrawler();
         pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
         childPage = crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"),
                 "PageChild is a child of PageOne");
         virtualPage = crawler.addPage(root, PathParser.parse("PageTwo"),
                 "PageTwo has a bit of content too\n^PageOneChild");
         PageData data = virtualPage.getData();
-        data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "http://localhost:"
-                + FitNesseUtil.port + "/PageOne");
+        data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "PageOne");
         virtualPage.commit(data);
         foundPages.clear();
     }

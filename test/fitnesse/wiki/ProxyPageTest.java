@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import junit.framework.TestCase;
 import util.ClockUtil;
@@ -12,10 +13,12 @@ public class ProxyPageTest extends TestCase {
     private ProxyPage proxy;
     public WikiPage child1;
     private PageCrawler crawler;
+    private FitNesseUtil fitNesseUtil;
 
     public void setUp() throws Exception {
         CachingPage.cacheTime = 0;
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        FitNesseContext context = new FitNesseContext("RooT");
+        WikiPage root = context.root;
         crawler = root.getPageCrawler();
         WikiPagePath page1Path = PathParser.parse("PageOne");
         WikiPage original = crawler.addPage(root, page1Path, "page one content");
@@ -25,15 +28,16 @@ public class ProxyPageTest extends TestCase {
         data.setAttribute("Attr1");
         original.commit(data);
 
-        FitNesseUtil.startFitnesse(root);
+        fitNesseUtil = new FitNesseUtil();
+        fitNesseUtil.startFitnesse(context);
 
         proxy = new ProxyPage(original);
         proxy.setTransientValues("localhost", ClockUtil.currentTimeInMillis());
-        proxy.setHostPort(FitNesseUtil.port);
+        proxy.setHostPort(FitNesseUtil.DEFAULT_PORT);
     }
 
     public void tearDown() throws Exception {
-        FitNesseUtil.stopFitnesse();
+        fitNesseUtil.stopFitnesse();
     }
 
     public void testConstructor() throws Exception {

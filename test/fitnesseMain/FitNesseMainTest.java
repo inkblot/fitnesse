@@ -64,7 +64,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void testIsRunning() throws Exception {
-        context.port = FitNesseUtil.port;
+        context.port = FitNesseUtil.DEFAULT_PORT;
         FitNesse fitnesse = new FitNesse(context, false);
 
         assertFalse(fitnesse.isRunning());
@@ -78,7 +78,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void testShouldInitializeFitNesseContext() {
-        context.port = FitNesseUtil.port;
+        context.port = FitNesseUtil.DEFAULT_PORT;
         new FitNesse(context, false);
         assertNotNull(FitNesseContext.globalContext);
     }

@@ -14,18 +14,18 @@ public class VirtualWikiWidgetTest extends WidgetTestCase {
     }
 
     public void testRegexp() throws Exception {
-        assertMatch("!virtualwiki http://localhost:" + FitNesseUtil.port + "/SomePage");
+        assertMatch("!virtualwiki " + FitNesseUtil.URL + "SomePage");
         assertNoMatch("!virtualwiki SomeName");
     }
 
     public void testPieces() throws Exception {
-        String text = "!virtualwiki http://localhost:" + FitNesseUtil.port + "/SomePage.ChildPage";
+        String text = "!virtualwiki " + FitNesseUtil.URL + "SomePage.ChildPage";
         VirtualWikiWidget widget = new VirtualWikiWidget(new MockWidgetRoot(), text);
-        assertEquals("http://localhost:" + FitNesseUtil.port + "/SomePage.ChildPage", widget.getRemoteUrl());
+        assertEquals(FitNesseUtil.URL + "SomePage.ChildPage", widget.getRemoteUrl());
     }
 
     public void testHtml() throws Exception {
-        String text = "!virtualwiki http://localhost:" + FitNesseUtil.port + "/SomePage.ChildPage";
+        String text = "!virtualwiki " + FitNesseUtil.URL + "SomePage.ChildPage";
         VirtualWikiWidget widget = new VirtualWikiWidget(new MockWidgetRoot(), text);
         String html = widget.render();
         assertHasRegexp("deprecated", html);

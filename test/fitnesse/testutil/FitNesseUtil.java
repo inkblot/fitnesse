@@ -10,25 +10,24 @@ import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
 public class FitNesseUtil {
-    private static FitNesse instance = null;
-    public static final int port = 1999;
-    public static FitNesseContext context;
-    public static final String URL = "http://localhost:" + port + "/";
+    public static final int DEFAULT_PORT = 1999;
+    public static final String URL = "http://localhost:" + FitNesseUtil.DEFAULT_PORT + "/";
 
-    public static void startFitnesse(WikiPage root) throws Exception {
-        context = new FitNesseContext(root);
-        context.port = port;
+    private FitNesse instance = null;
+
+    public void startFitnesse(FitNesseContext context) throws Exception {
+        context.port = DEFAULT_PORT;
         startFitnesseWithContext(context);
     }
 
-    public static void startFitnesseWithContext(FitNesseContext context) {
+    public void startFitnesseWithContext(FitNesseContext context) {
         instance = new FitNesse(context);
         instance.start();
     }
 
-    public static void stopFitnesse() throws Exception {
+    public void stopFitnesse() throws Exception {
         instance.stop();
-        FileUtil.deleteFileSystemDirectory("TestDir");
+        destroyTestContext();
     }
 
     public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) throws Exception {

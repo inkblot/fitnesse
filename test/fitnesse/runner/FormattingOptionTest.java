@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import fitnesse.FitNesseContext;
 import fitnesse.http.Request;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
 import junit.framework.TestCase;
 import util.FileUtil;
 
@@ -22,8 +22,7 @@ public class FormattingOptionTest extends TestCase {
     private CachingResultFormatter formatter;
     private PageResult result1;
     private PageResult result2;
-    private TestSummary finalSummary;
-    private int port = FitNesseUtil.port;
+    private int port = FitNesseUtil.DEFAULT_PORT;
 
     public void setUp() throws Exception {
         output = new ByteArrayOutputStream();
@@ -76,12 +75,13 @@ public class FormattingOptionTest extends TestCase {
     public void testTheWholeDeal() throws Exception {
         sampleFormatter();
 
-        FitNesseUtil.startFitnesse(InMemoryPage.makeRoot("RooT"));
+        FitNesseUtil fitNesseUtil = new FitNesseUtil();
+        fitNesseUtil.startFitnesse(new FitNesseContext("RooT"));
         try {
             option = new FormattingOption("mock", "stdout", output, "localhost", port, "");
             option.process(formatter.getResultStream(), formatter.getByteCount());
         } finally {
-            FitNesseUtil.stopFitnesse();
+            fitNesseUtil.stopFitnesse();
         }
 
         String result = output.toString();
@@ -94,7 +94,7 @@ public class FormattingOptionTest extends TestCase {
         formatter = new CachingResultFormatter();
         result1 = new PageResult("ResultOne", new TestSummary(1, 2, 3, 4), "result one content");
         result2 = new PageResult("ResultTwo", new TestSummary(4, 3, 2, 1), "result two content");
-        finalSummary = new TestSummary(5, 5, 5, 5);
+        TestSummary finalSummary = new TestSummary(5, 5, 5, 5);
         formatter.acceptResult(result1);
         formatter.acceptResult(result2);
         formatter.acceptFinalCount(finalSummary);

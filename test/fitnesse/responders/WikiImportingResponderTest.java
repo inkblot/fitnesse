@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
@@ -23,8 +22,8 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Before
     public void setUp() throws Exception {
-        FitNesseUtil.startFitnesse(remoteRoot);
-        baseUrl = "http://localhost:" + FitNesseUtil.port + "/";
+        fitNesseUtil.startFitnesse(remoteContext);
+        baseUrl = FitNesseUtil.URL;
 
         createResponder();
     }
@@ -40,7 +39,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @After
     public void tearDown() throws Exception {
-        FitNesseUtil.stopFitnesse();
+        fitNesseUtil.stopFitnesse();
     }
 
     @Test
@@ -231,7 +230,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         PageData data = page.getData();
         data.setAttribute(PageData.PropertySECURE_READ);
         page.commit(data);
-        FitNesseUtil.context.authenticator = new OneUserAuthenticator("joe", "blow");
+        remoteContext.authenticator = new OneUserAuthenticator("joe", "blow");
     }
 
     private void checkRemoteLoginForm(String content) {

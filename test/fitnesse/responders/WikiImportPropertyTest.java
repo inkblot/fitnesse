@@ -119,14 +119,15 @@ public class WikiImportPropertyTest extends TestCase {
         WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
         crawler.addPage(targetPage, PathParser.parse("ChildPage"));
         WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
-        VirtualCouplingExtensionTest.setVirtualWiki(linkPage, "http://localhost:" + FitNesseUtil.port + "/TargetPage");
+        VirtualCouplingExtensionTest.setVirtualWiki(linkPage, FitNesseUtil.URL + "TargetPage");
 
-        FitNesseUtil.startFitnesse(root);
+        FitNesseUtil fitNesseUtil = new FitNesseUtil();
+        fitNesseUtil.startFitnesse(context);
         SimpleResponse response = null;
         try {
             response = requestPage("LinkPage.ChildPage");
         } finally {
-            FitNesseUtil.stopFitnesse();
+            fitNesseUtil.stopFitnesse();
         }
 
         assertSubString("<body class=\"virtual\">", response.getContent());

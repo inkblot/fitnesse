@@ -53,29 +53,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     }
 
     @Test
-    public void testRootPageCreation() throws Exception {
-        testProperties.setProperty(ComponentFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
-
-        factory.loadWikiPage(wikiPageFactory);
-        assertEquals(InMemoryPage.class, wikiPageFactory.getWikiPageClass());
-
-        WikiPage page = wikiPageFactory.makeRootPage(null, "", factory);
-        assertNotNull(page);
-        assertEquals(InMemoryPage.class, page.getClass());
-    }
-
-    @Test
-    public void testDefaultRootPage() throws Exception {
-        factory.loadWikiPage(wikiPageFactory);
-        assertEquals(FileSystemPage.class, wikiPageFactory.getWikiPageClass());
-
-        WikiPage page = wikiPageFactory.makeRootPage("testPath", "TestRoot", factory);
-        assertNotNull(page);
-        assertEquals(FileSystemPage.class, page.getClass());
-        assertEquals("TestRoot", page.getName());
-    }
-
-    @Test
     public void testDefaultHtmlPageFactory() throws Exception {
         HtmlPageFactory pageFactory = factory.getHtmlPageFactory(new HtmlPageFactory());
         assertNotNull(pageFactory);
@@ -198,6 +175,9 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
 
     static class DummyPlugin {
         public static void registerWikiPage(WikiPageFactory factory) {
+            // TODO: find a better way for a plugin to register a wiki page class.
+            // Or, alternately, can't a plugin user just put the damn jar on the classpath and set the
+            // WikiPage property in the wiki properties?
             factory.setWikiPageClass(InMemoryPage.class);
         }
 

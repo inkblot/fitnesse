@@ -2,6 +2,7 @@ package fitnesse.junit;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import fitnesse.FitNesseModule;
 import fitnesse.responders.run.JavaFormatter;
 import junit.framework.AssertionFailedError;
 import org.junit.runner.Description;
@@ -10,7 +11,6 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerBuilder;
-import util.UtilModule;
 
 import java.io.File;
 import java.lang.annotation.ElementType;
@@ -18,6 +18,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
+import java.util.Properties;
 
 public class FitNesseSuite extends ParentRunner<String> {
 
@@ -111,7 +112,7 @@ public class FitNesseSuite extends ParentRunner<String> {
         this.suiteFilter = getSuiteFilter(suiteClass);
         this.debugMode = useDebugMode(suiteClass);
         this.port = getPort(suiteClass);
-        this.injector = Guice.createInjector(new UtilModule());
+        this.injector = Guice.createInjector(new FitNesseModule(new Properties(), null));
     }
 
     @Override

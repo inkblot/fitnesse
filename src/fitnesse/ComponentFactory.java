@@ -88,16 +88,6 @@ public class ComponentFactory {
         return createComponent(componentType, null);
     }
 
-    public String loadWikiPage(WikiPageFactory factory) throws Exception {
-        StringBuilder buffer = new StringBuilder();
-        String rootPageClassName = properties.getProperty(WIKI_PAGE_CLASS);
-        if (rootPageClassName != null) {
-            factory.setWikiPageClass(Class.forName(rootPageClassName));
-            buffer.append("\tCustom wiki page plugin loaded: ").append(rootPageClassName).append(endl);
-        }
-        return buffer.toString();
-    }
-
     public HtmlPageFactory getHtmlPageFactory(HtmlPageFactory defaultPageFactory) {
         HtmlPageFactory htmlPageFactory = createComponent(HtmlPageFactory.class);
         return htmlPageFactory == null ? defaultPageFactory : htmlPageFactory;

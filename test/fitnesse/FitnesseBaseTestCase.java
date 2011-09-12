@@ -9,10 +9,10 @@ import fitnesse.wiki.WikiPage;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
-import util.UtilModule;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Properties;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -74,9 +74,17 @@ public class FitnesseBaseTestCase {
 
     public void inject(Module... testModules) {
         Guice.createInjector(
-                Modules.override(new UtilModule())
+                Modules.override(new FitNesseModule(getFitNesseProperties(), getUserpass()))
                         .with(testModules))
                 .injectMembers(this);
+    }
+
+    protected String getUserpass() {
+        return null;
+    }
+
+    protected Properties getFitNesseProperties() {
+        return new Properties();
     }
 
     protected Module getTestModule() {

@@ -2,7 +2,7 @@ package fitnesse;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import fitnesse.wiki.FileSystemPage;
+import com.google.inject.name.Named;
 import fitnesse.wiki.WikiPage;
 import util.FileSystem;
 
@@ -12,12 +12,13 @@ import java.util.Properties;
 
 @Singleton
 public class WikiPageFactory {
-    private Class<?> wikiPageClass = FileSystemPage.class;
+    private Class<? extends WikiPage> wikiPageClass;
     private FileSystem fileSystem;
 
     @Inject
-    public WikiPageFactory(FileSystem fileSystem) {
+    public WikiPageFactory(FileSystem fileSystem, @Named(ComponentFactory.WIKI_PAGE_CLASS) Class wikiPageClass) {
         this.fileSystem = fileSystem;
+        this.wikiPageClass = wikiPageClass;
     }
 
     public WikiPage makeRootPage(String rootPath, String rootPageName, ComponentFactory componentFactory) throws Exception {
@@ -34,7 +35,8 @@ public class WikiPageFactory {
         return wikiPageClass;
     }
 
-    public void setWikiPageClass(Class<?> wikiPageClass) {
+    @Deprecated
+    public void setWikiPageClass(Class<? extends WikiPage> wikiPageClass) {
         this.wikiPageClass = wikiPageClass;
     }
 }

@@ -63,7 +63,6 @@ public class FitNesseMain {
         context.htmlPageFactory = componentFactory.getHtmlPageFactory(new HtmlPageFactory());
 
         String extraOutput = componentFactory.loadPlugins(context.responderFactory, wikiPageFactory);
-        extraOutput += componentFactory.loadWikiPage(wikiPageFactory);
         extraOutput += componentFactory.loadResponders(context.responderFactory);
         extraOutput += componentFactory.loadSymbolTypes();
         extraOutput += componentFactory.loadContentFilter();

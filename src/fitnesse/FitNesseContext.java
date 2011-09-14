@@ -43,11 +43,7 @@ public class FitNesseContext {
     public boolean doNotChunk;
 
     public FitNesseContext(String rootName) {
-        this(InMemoryPage.makeRoot(rootName));
-    }
-
-    public FitNesseContext(WikiPage root) {
-        this(root, DEFAULT_PATH);
+        this(InMemoryPage.makeRoot(rootName), DEFAULT_PATH);
     }
 
     public FitNesseContext(WikiPage root, String rootPath) {

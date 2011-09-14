@@ -51,7 +51,7 @@ public class SerializedPageResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testWithFileSystem() throws Exception {
-        context = new FitNesseContext(new FileSystemPage(".", ROOT_PAGE));
+        context = new FitNesseContext(new FileSystemPage(".", ROOT_PAGE), this.getRootPath());
         root = context.root;
         crawler = root.getPageCrawler();
         Object obj = doSetUpWith("bones");

@@ -8,6 +8,8 @@ import fitnesse.wiki.WikiPage;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
+import util.Clock;
+import util.ClockUtil;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -38,11 +40,15 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     protected final FitNesseContext makeContext(WikiPage root) {
         if (context == null) {
-            File rootPath = new File(System.getProperty("java.io.tmpdir"), getClass().getSimpleName());
-            assertTrue(rootPath.mkdirs());
-            context = new FitNesseContext(root, rootPath.getAbsolutePath());
+            context = new FitNesseContext(root, getRootPath());
         }
         return context;
+    }
+
+    protected final String getRootPath() {
+        File rootPath = new File(System.getProperty("java.io.tmpdir"), getClass().getSimpleName());
+        assertTrue(rootPath.mkdirs());
+        return rootPath.getAbsolutePath();
     }
 
     protected final void installUpdates() throws Exception {
@@ -77,14 +83,11 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     @After
     public final void afterAllFitNesseTests() {
-        if (context != null) {
-            deleteFileSystemDirectory(context.rootPath);
-            context = null;
-        }
-        if (samples != null) {
-            samples = null;
-        }
+        deleteFileSystemDirectory(getRootPath());
+        context = null;
+        samples = null;
         inject(NOOP_MODULE);
+        ClockUtil.inject((Clock) null);
     }
 
     protected String classPath() {

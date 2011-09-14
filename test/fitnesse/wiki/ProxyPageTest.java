@@ -25,7 +25,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         CachingPage.cacheTime = 0;
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         WikiPage root = context.root;
         crawler = root.getPageCrawler();
         WikiPagePath page1Path = PathParser.parse("PageOne");

@@ -25,7 +25,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());

@@ -28,7 +28,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("root");
+        context = makeContext("root");
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();

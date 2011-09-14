@@ -34,7 +34,7 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
         history = new TestHistory();
         responder = new PurgeHistoryResponder();
         responder.setResultsDirectory(resultsDirectory);
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         request = new MockRequest();
         request.setResource("TestPage");
     }

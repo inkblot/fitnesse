@@ -44,7 +44,7 @@ public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
         result1 = new PageResult("Result1Title", new TestSummary(1, 2, 3, 4), "result1 data");
         result2 = new PageResult("Result2Title", new TestSummary(4, 3, 2, 1), "result2 data");
 
-        context = new FitNesseContext("RooT");
+        context = makeContext();
     }
 
     @Test

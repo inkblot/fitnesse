@@ -26,7 +26,7 @@ public class TestHtmlFormatterTest extends FitnesseBaseTestCase {
         root = InMemoryPage.makeRoot("RooT");
         page = root.addChildPage("NewPage");
         page.getData().setContent("page content here");
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
 
         formatter = new TestHtmlFormatter(context, page, new HtmlPageFactory()) {
             @Override

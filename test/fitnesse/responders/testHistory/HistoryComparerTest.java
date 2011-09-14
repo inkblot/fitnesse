@@ -37,7 +37,7 @@ public class HistoryComparerTest extends FitnesseBaseTestCase {
                     return null;
             }
         };
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         root = context.root;
         firstContent = getContentWith("pass");
         secondContent = getContentWith("fail");

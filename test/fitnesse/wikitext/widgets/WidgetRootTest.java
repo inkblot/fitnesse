@@ -139,7 +139,7 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
 
     @Test
     public void testShouldHavePortVariableAvailable() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         context.port = 9876;
         new FitNesse(context, false);
         WidgetRoot root = new WidgetRoot("", rootPage);

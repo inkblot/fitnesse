@@ -23,7 +23,7 @@ public class SearchResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         PageCrawler crawler = context.root.getPageCrawler();
         crawler.addPage(context.root, PathParser.parse("SomePage"), "has something in it");
         responder = new SearchResponder();

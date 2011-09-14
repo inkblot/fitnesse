@@ -60,7 +60,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
 
     @Test
     public void negotiationErrorScreenForFailureToComplete() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token");
         Request request = new MockRequest();
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
@@ -72,7 +72,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
 
     @Test
     public void negotiationErrorScreenForNeedingAuthentication() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token");
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, null);
         String content = response.getContent();

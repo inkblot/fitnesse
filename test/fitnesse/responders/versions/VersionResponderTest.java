@@ -17,7 +17,7 @@ public class VersionResponderTest extends FitnesseBaseTestCase {
     private SimpleResponse response;
 
     private void makeTestResponse(String pageName) throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         WikiPage page = context.root.getPageCrawler().addPage(context.root, PathParser.parse(pageName), "original content");
         PageData data = page.getData();
         data.setContent("new stuff");

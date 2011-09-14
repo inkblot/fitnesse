@@ -23,7 +23,7 @@ public class VirtualCouplingExtensionTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         fitNesseUtil = new FitNesseUtil();

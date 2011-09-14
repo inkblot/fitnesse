@@ -19,7 +19,7 @@ public class DeleteConfirmationResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = new FitNesseContext("RooT");
+        context = makeContext();
     }
 
     @Test

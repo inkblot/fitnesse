@@ -51,7 +51,7 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
         history = new TestHistory();
         responder = new PageHistoryResponder();
         responder.setResultsDirectory(resultsDirectory);
-        context = new FitNesseContext("RooT");
+        context = makeContext();
     }
 
     @After

@@ -19,7 +19,7 @@ public abstract class ResponderTestCase extends FitnesseBaseTestCase {
 
     @Before
     public void beforeResponderTests() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();

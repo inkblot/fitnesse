@@ -6,10 +6,8 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import util.FileUtil;
 
 import java.io.File;
 
@@ -17,20 +15,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CreateDirectoryResponderTest extends FitnesseBaseTestCase {
+    private FitNesseContext context;
+
     @Before
     public void setUp() throws Exception {
-        FileUtil.makeDir("testdir");
-        FileUtil.makeDir("testdir/files");
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        FileUtil.deleteFileSystemDirectory("testdir");
+        context = makeContext("testdir");
+        assertTrue(new File(getRootPath(), "testdir").mkdir());
+        assertTrue(new File(new File(getRootPath(), "testdir"), "files").mkdir());
     }
 
     @Test
     public void testMakeResponse() throws Exception {
-        FitNesseContext context = new FitNesseContext("testdir");
         CreateDirectoryResponder responder = new CreateDirectoryResponder();
         MockRequest request = new MockRequest();
         request.addInput("dirname", "subdir");
@@ -38,7 +33,7 @@ public class CreateDirectoryResponderTest extends FitnesseBaseTestCase {
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File("testdir/subdir");
+        File file = new File(new File(getRootPath(), "testdir"), "subdir");
         assertTrue(file.exists());
         assertTrue(file.isDirectory());
 

@@ -18,7 +18,7 @@ public class SearchFormResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         SearchFormResponder responder = new SearchFormResponder();
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
         content = response.getContent();

@@ -29,7 +29,7 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         context.port = 9123;
         root = context.root;
         crawler = root.getPageCrawler();

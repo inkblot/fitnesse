@@ -19,7 +19,7 @@ public class RollbackResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         page = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "original content");
         PageData data = page.getData();
         data.setContent("new stuff");

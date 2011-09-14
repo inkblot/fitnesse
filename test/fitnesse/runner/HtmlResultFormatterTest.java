@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestSummary;
 import org.junit.Before;
@@ -21,7 +20,7 @@ public class HtmlResultFormatterTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        formatter = new HtmlResultFormatter(new FitNesseContext("RooT"), "somehost.com:8080", "FitNesse");
+        formatter = new HtmlResultFormatter(makeContext(), "somehost.com:8080", "FitNesse");
     }
 
     @Test

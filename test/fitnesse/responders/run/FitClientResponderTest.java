@@ -27,7 +27,7 @@ public class FitClientResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         responder = new FitClientResponder();
         request = new MockRequest();
-        context = new FitNesseContext("RooT");
+        context = makeContext();
 
         buildSuite(context.root);
     }

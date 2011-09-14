@@ -22,7 +22,7 @@ public class SuiteHtmlFormatterTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         htmlPage = new HtmlPageFactory().newPage();
         formatter = new SuiteHtmlFormatter(context) {
             @Override

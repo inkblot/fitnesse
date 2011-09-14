@@ -22,7 +22,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         parent = crawler.addPage(root, PathParser.parse("ParenT"), "parent");

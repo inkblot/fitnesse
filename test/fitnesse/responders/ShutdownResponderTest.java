@@ -24,7 +24,7 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         context.port = FitNesseUtil.DEFAULT_PORT;
         fitnesse = new FitNesse(context);
         fitnesse.start();

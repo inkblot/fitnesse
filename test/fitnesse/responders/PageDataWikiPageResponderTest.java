@@ -20,7 +20,7 @@ public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         pageOne = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "Line one\nLine two");
     }
 

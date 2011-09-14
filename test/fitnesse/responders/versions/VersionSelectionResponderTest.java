@@ -22,7 +22,7 @@ public class VersionSelectionResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         page = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "some content");
     }
 

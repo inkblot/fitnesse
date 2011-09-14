@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
@@ -19,7 +18,7 @@ public class NotFoundResponderTest extends FitnesseBaseTestCase {
         request.setResource("some page");
 
         Responder responder = new NotFoundResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext("RooT"), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(makeContext(), request);
 
         assertEquals(404, response.getStatus());
 
@@ -37,7 +36,7 @@ public class NotFoundResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageOne.PageTwo");
 
         Responder responder = new NotFoundResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext("RooT"), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(makeContext(), request);
 
         assertHasRegexp("\"PageOne[.]PageTwo[?]edit\"", response.getContent());
     }

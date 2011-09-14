@@ -31,7 +31,7 @@ public class SerializedPageResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext(ROOT_PAGE);
+        context = makeContext(ROOT_PAGE);
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();

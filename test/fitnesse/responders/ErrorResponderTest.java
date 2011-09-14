@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
@@ -18,7 +17,7 @@ public class ErrorResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testResponse() throws Exception {
         Responder responder = new ErrorResponder(new Exception("some error message"));
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext("RooT"), new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(makeContext(), new MockRequest());
 
         assertEquals(400, response.getStatus());
 
@@ -32,7 +31,7 @@ public class ErrorResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testWithMessage() throws Exception {
         Responder responder = new ErrorResponder("error Message");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext("RooT"), new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(makeContext(), new MockRequest());
         String body = response.getContent();
 
         assertSubString("error Message", body);

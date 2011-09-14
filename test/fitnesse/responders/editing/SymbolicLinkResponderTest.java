@@ -28,7 +28,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");                      //#  root
+        context = makeContext();                      //#  root
         pageOne = context.root.addChildPage("PageOne");             //#    |--PageOne
         pageOne.addChildPage("ChildOne");                           //#    |    `--ChildOne
         WikiPage pageTwo = context.root.addChildPage("PageTwo");    //#    `--PageTwo

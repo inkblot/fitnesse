@@ -38,7 +38,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
         history = new TestHistory();
         responder = new TestHistoryResponder();
         responder.setResultsDirectory(resultsDirectory);
-        context = new FitNesseContext("RooT");
+        context = makeContext();
     }
 
     private void makeResponse() throws Exception {

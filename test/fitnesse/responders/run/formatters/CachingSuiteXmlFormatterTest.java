@@ -36,7 +36,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         root = context.root;
         testSummary = new TestSummary(1, 2, 3, 4);
         testPage = root.addChildPage("TestPage");

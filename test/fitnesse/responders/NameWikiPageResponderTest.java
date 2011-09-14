@@ -34,7 +34,7 @@ public class NameWikiPageResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         responder = new NameWikiPageResponder();

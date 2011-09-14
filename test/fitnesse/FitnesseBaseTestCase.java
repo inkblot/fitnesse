@@ -47,7 +47,7 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     protected final String getRootPath() {
         File rootPath = new File(System.getProperty("java.io.tmpdir"), getClass().getSimpleName());
-        assertTrue(rootPath.mkdirs());
+        assertTrue(rootPath.exists() || rootPath.mkdirs());
         return rootPath.getAbsolutePath();
     }
 

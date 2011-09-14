@@ -19,7 +19,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         context.root.getPageCrawler().addPage(context.root, PathParser.parse("SimplePage"), "this is SimplePage");
         request = new MockRequest();
         request.setResource("SimplePage");

@@ -22,7 +22,7 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         responder = new ChunkingResponder() {
             protected void doSending() throws Exception {
                 throw exception;

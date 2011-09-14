@@ -23,7 +23,7 @@ public class SecureOperationTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         root = context.root;
         sro = new SecureReadOperation();
         request = new MockRequest();

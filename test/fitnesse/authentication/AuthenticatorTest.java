@@ -40,7 +40,7 @@ public class AuthenticatorTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         WikiPage root = context.root;
         WikiPage frontpage = root.addChildPage("FrontPage");
         makeReadSecure(frontpage);

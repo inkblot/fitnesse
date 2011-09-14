@@ -29,7 +29,7 @@ public class SuiteHistoryFormatterTest extends FitnesseBaseTestCase {
 
     @Before
     public void setup() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
+        FitNesseContext context = makeContext();
         WikiPage suitePage = context.root.addChildPage("SuitePage");
         testPage = suitePage.addChildPage("TestPage");
         writer = new StringWriter();

@@ -34,7 +34,7 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         String suitePageName = "SuitePage";
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         PageData data = root.getData();

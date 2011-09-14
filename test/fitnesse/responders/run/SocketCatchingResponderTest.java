@@ -29,7 +29,7 @@ public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
         seeker = new SimpleSocketSeeker();
         sender = new MockResponseSender();
         responder = new SocketCatchingResponder();
-        context = new FitNesseContext("RooT");
+        context = makeContext();
         context.socketDealer = dealer;
         request = new MockRequest();
     }

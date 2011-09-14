@@ -2,6 +2,7 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;
@@ -20,7 +21,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class SuiteHistoryFormatterTest {
+public class SuiteHistoryFormatterTest extends FitnesseBaseTestCase {
     private SuiteHistoryFormatter formatter;
     private WikiPage testPage;
     private StringWriter writer;

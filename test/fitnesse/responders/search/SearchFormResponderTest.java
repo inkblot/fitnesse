@@ -3,6 +3,7 @@
 package fitnesse.responders.search;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import org.junit.Before;
@@ -12,7 +13,7 @@ import static fitnesse.responders.search.SearchFormResponder.SEARCH_ACTION_ATTRI
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SearchFormResponderTest {
+public class SearchFormResponderTest extends FitnesseBaseTestCase {
     private String content;
 
     @Before

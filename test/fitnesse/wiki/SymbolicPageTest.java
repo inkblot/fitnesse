@@ -2,12 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 
 import java.util.List;
 
-public class SymbolicPageTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+
+public class SymbolicPageTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private WikiPage root;
     private WikiPage pageOne;
@@ -15,36 +22,42 @@ public class SymbolicPageTest extends TestCase {
     private SymbolicPage symPage;
     private String pageOnePath = "PageOne";
     private String pageTwoPath = "PageTwo";
-    private String pageOneContent = "page one";
     private String pageTwoContent = "page two";
     private WikiPage externalRoot;
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
+        String pageOneContent = "page one";
         pageOne = crawler.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
         pageTwo = crawler.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
         symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
     }
 
+    @After
     public void tearDown() throws Exception {
         FileUtil.deleteFileSystemDirectory("testDir");
     }
 
+    @Test
     public void testCreation() throws Exception {
         assertEquals("SymPage", symPage.getName());
     }
 
+    @Test
     public void testLinkage() throws Exception {
         assertSame(pageTwo, symPage.getRealPage());
     }
 
+    @Test
     public void testInternalData() throws Exception {
         PageData data = symPage.getData();
         assertEquals(pageTwoContent, data.getContent());
         assertSame(symPage, data.getWikiPage());
     }
 
+    @Test
     public void testCommitInternal() throws Exception {
         commitNewContent(symPage);
 
@@ -55,6 +68,7 @@ public class SymbolicPageTest extends TestCase {
         assertEquals("new content", data.getContent());
     }
 
+    @Test
     public void testGetChild() throws Exception {
         WikiPage childPage = crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "child page");
         WikiPage page = symPage.getChildPage("ChildPage");
@@ -64,6 +78,7 @@ public class SymbolicPageTest extends TestCase {
         assertSame(childPage, symChild.getRealPage());
     }
 
+    @Test
     public void testGetChildren() throws Exception {
         crawler.addPage(pageTwo, PathParser.parse("ChildOne"), "child one");
         crawler.addPage(pageTwo, PathParser.parse("ChildTwo"), "child two");
@@ -73,6 +88,7 @@ public class SymbolicPageTest extends TestCase {
         assertEquals(SymbolicPage.class, children.get(1).getClass());
     }
 
+    @Test
     public void testCyclicSymbolicLinks() throws Exception {
         PageData data = pageOne.getData();
         data.getProperties().set(SymbolicPage.PROPERTY_NAME).set("SymOne", pageTwoPath);
@@ -91,6 +107,7 @@ public class SymbolicPageTest extends TestCase {
         assertEquals(1, children.size());
     }
 
+    @Test
     public void testSymbolicPageUsingExternalDirectory() throws Exception {
         CreateExternalRoot();
 
@@ -121,6 +138,7 @@ public class SymbolicPageTest extends TestCase {
         symPage = new SymbolicPage("SymPage", externalRoot, pageOne);
     }
 
+    @Test
     public void testCommittingToExternalRoot() throws Exception {
         CreateExternalRoot();
 

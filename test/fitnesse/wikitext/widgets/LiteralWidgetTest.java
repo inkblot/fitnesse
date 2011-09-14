@@ -3,7 +3,12 @@
 package fitnesse.wikitext.widgets;
 
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 public class LiteralWidgetTest extends WidgetTestCase {
+    @Test
     public void testMatches() throws Exception {  //Paren Literal: () -> ??
         assertMatch("!lit?0?");
         assertMatch("!lit?99?");
@@ -15,6 +20,7 @@ public class LiteralWidgetTest extends WidgetTestCase {
         return LiteralWidget.REGEXP;
     }
 
+    @Test
     public void testWikiWordIsNotParsed() throws Exception {
         ParentWidget root = new MockWidgetRoot();
         root.defineLiteral("Bob");

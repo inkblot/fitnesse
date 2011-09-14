@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,12 +12,11 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class SetupTeardownAndLibraryIncluderTest {
+public class SetupTeardownAndLibraryIncluderTest extends FitnesseBaseTestCase {
     private PageData pageData;
     private PageCrawler crawler;
     private WikiPage root;
     private WikiPage testPage;
-    private WikiPage subPage;
     private WikiPage subTestPage;
 
     @Before
@@ -29,7 +29,7 @@ public class SetupTeardownAndLibraryIncluderTest {
         addPage("SuiteSetUp", "suiteSetUp");
         addPage("SuiteTearDown", "suiteTearDown");
 
-        subPage = crawler.addPage(testPage, PathParser.parse("SubPage"), "sub page");
+        WikiPage subPage = crawler.addPage(testPage, PathParser.parse("SubPage"), "sub page");
         crawler.addPage(testPage, PathParser.parse("ScenarioLibrary"), "scenario library 2");
 
         subTestPage = crawler.addPage(subPage, PathParser.parse("TestSubPage"), "sub test page");

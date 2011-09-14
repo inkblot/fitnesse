@@ -4,19 +4,26 @@ package fitnesse.responders;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.http.MockRequest;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
 import fitnesse.testutil.FitNesseUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ShutdownResponderTest extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class ShutdownResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private FitNesse fitnesse;
     private boolean doneShuttingDown;
 
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         context.port = FitNesseUtil.DEFAULT_PORT;
         fitnesse = new FitNesse(context);
@@ -24,10 +31,12 @@ public class ShutdownResponderTest extends TestCase {
         context.fitnesse = fitnesse;
     }
 
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         fitnesse.stop();
     }
 
+    @Test
     public void testFitNesseGetsShutdown() throws Exception {
         ShutdownResponder responder = new ShutdownResponder();
         responder.makeResponse(context, new MockRequest());
@@ -35,6 +44,7 @@ public class ShutdownResponderTest extends TestCase {
         assertFalse(fitnesse.isRunning());
     }
 
+    @Test
     public void testShutdownCalledFromServer() throws Exception {
         Thread thread = new Thread() {
             public void run() {
@@ -55,6 +65,7 @@ public class ShutdownResponderTest extends TestCase {
         assertFalse(fitnesse.isRunning());
     }
 
+    @Test
     public void testIsSecure() throws Exception {
         assertTrue(new ShutdownResponder().getSecureOperation() instanceof AlwaysSecureOperation);
     }

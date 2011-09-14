@@ -3,21 +3,25 @@
 package fitnesse.responders.search;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SearchResponderTest extends TestCase {
+public class SearchResponderTest extends FitnesseBaseTestCase {
     private SearchResponder responder;
     private MockRequest request;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         PageCrawler crawler = context.root.getPageCrawler();
@@ -28,9 +32,7 @@ public class SearchResponderTest extends TestCase {
         request.addInput("searchType", "blah");
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testHtml() throws Exception {
         String content = getResponseContentUsingSearchString("something");
 
@@ -38,31 +40,37 @@ public class SearchResponderTest extends TestCase {
         assertHasRegexp("SomePage", content);
     }
 
+    @Test
     public void testTableSorterScript() throws Exception {
         String content = getResponseContentUsingSearchString("something");
         assertSubString("<script language=\"javascript\">tableSorter = new TableSorter('searchResultsTable', new DateParser(/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/,8,2,3,4,5,6));</script>", content);
     }
 
+    @Test
     public void testClientSideSortScript() throws Exception {
         String content = getResponseContentUsingSearchString("something");
         assertHasRegexp("<script src=\"/files/javascript/clientSideSort.js\"> </script>", content);
     }
 
+    @Test
     public void testPageSortLink() throws Exception {
         String content = getResponseContentUsingSearchString("something");
         assertSubString("<a href=\"javascript:void(tableSorter.sort(1));\">Page</a>", content);
     }
 
+    @Test
     public void testLastModifiedSortLink() throws Exception {
         String content = getResponseContentUsingSearchString("something");
         assertSubString("<a href=\"javascript:void(tableSorter.sort(3, 'date'));\">LastModified</a>", content);
     }
 
+    @Test
     public void testNoSearchStringBringsUpNoResults() throws Exception {
         String content = getResponseContentUsingSearchString("");
         assertSubString("No pages matched your search criteria.", content);
     }
 
+    @Test
     public void testEscapesSearchString() throws Exception {
         String content = getResponseContentUsingSearchString("!+-<&>");
         assertSubString("!+-<&>", content);
@@ -77,6 +85,7 @@ public class SearchResponderTest extends TestCase {
         return sender.sentData();
     }
 
+    @Test
     public void testTitle() throws Exception {
         request.addInput("searchType", "something with the word title in it");
         responder.setRequest(request);
@@ -88,6 +97,7 @@ public class SearchResponderTest extends TestCase {
         assertSubString("Content Search Results", title);
     }
 
+    @Test
     public void testJavascriptDateFormatRegex() {
         assertEquals("/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/", SearchResponder.getDateFormatJavascriptRegex());
     }

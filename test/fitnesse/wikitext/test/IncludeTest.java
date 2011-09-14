@@ -1,12 +1,13 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
 import static fitnesse.wikitext.test.ParserTestHelper.assertParses;
 import static org.junit.Assert.assertTrue;
 
-public class IncludeTest {
+public class IncludeTest extends FitnesseBaseTestCase {
     @Test
     public void scansIncludes() {
         ParserTestHelper.assertScansTokenType("!include name", "Include", true);
@@ -135,7 +136,7 @@ public class IncludeTest {
     }
 
     private void assertContains(String result, String substring) {
-        assertTrue(result, result.indexOf(substring) >= 0);
+        assertTrue(result, result.contains(substring));
     }
 
 }

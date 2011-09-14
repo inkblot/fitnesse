@@ -1,11 +1,11 @@
 package fitnesse.responders.search;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,10 +18,13 @@ import static fitnesse.responders.search.ExecuteSearchPropertiesResponder.SPECIA
 import static fitnesse.wiki.PageData.PAGE_TYPE_ATTRIBUTE;
 import static fitnesse.wiki.PageData.PropertyPRUNE;
 import static fitnesse.wiki.PageType.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class ExecuteSearchPropertiesResponderTest extends TestCase {
+public class ExecuteSearchPropertiesResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private ExecuteSearchPropertiesResponder responder;
@@ -210,6 +213,7 @@ public class ExecuteSearchPropertiesResponderTest extends TestCase {
         return request;
     }
 
+    @Test
     public void testFindJustObsoletePages() throws Exception {
         MockRequest request = setupRequestForObsoletePage();
         request.addInput(PAGE_TYPE_ATTRIBUTE, "Test,Suite,Normal");

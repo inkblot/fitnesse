@@ -3,6 +3,7 @@
 
 package fitnesse.wiki;
 
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class FileSystemPageTest {
+public class FileSystemPageTest extends FitnesseBaseTestCase {
     private static final String defaultPath = "./teststorage";
     private static final File base = new File(defaultPath);
     private FileSystemPage root;
@@ -92,7 +93,7 @@ public class FileSystemPageTest {
     }
 
     @Test
-    public void testGetChidren() throws Exception {
+    public void testGetChildren() throws Exception {
         crawler.addPage(root, PathParser.parse("AaAa"), "A content");
         crawler.addPage(root, PathParser.parse("BbBb"), "B content");
         crawler.addPage(root, PathParser.parse("CcCc"), "C content");

@@ -2,13 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class WikiTextTranslatorTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class WikiTextTranslatorTest extends FitnesseBaseTestCase {
     private WikiPage page;
     private String expectedHtmlFromWikiText =
             "<table border=\"1\" cellspacing=\"0\">\n<tr><td>this</td>" + HtmlElement.endl +
@@ -22,15 +26,14 @@ public class WikiTextTranslatorTest extends TestCase {
                     "<td>columns</td>" + HtmlElement.endl +
                     "</tr>\n</table>\n";
 
+    @Before
     public void setUp() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RooT");
         PageCrawler crawler = root.getPageCrawler();
         page = crawler.addPage(root, PathParser.parse("WidgetRoot"));
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testTranslation1() throws Exception {
         String wikiText = "!c !1 This is a WidgetRoot\n" +
                 "\n" +
@@ -41,22 +44,26 @@ public class WikiTextTranslatorTest extends TestCase {
         assertEquals(html, translate(wikiText, page));
     }
 
+    @Test
     public void testHtmlEscape() throws Exception {
         String wikiText = "<h1>this \"&\" that</h1>";
         String html = "&lt;h1&gt;this \"&amp;\" that&lt;/h1&gt;";
         assertEquals(html, translate(wikiText, new WikiPageDummy()));
     }
 
+    @Test
     public void testTableHtml() throws Exception {
         String wikiText = "|this|is|a|table|\n|that|has|four|columns|\n";
         assertEquals(expectedHtmlFromWikiText, translate(wikiText, new WikiPageDummy()));
     }
 
+    @Test
     public void testTableHtmlStripsTrailingWhiteSpaceFromLines() throws Exception {
         String wikiText = "|this|is|a|table|\t\n|that|has|four|columns|  \n";
         assertEquals(expectedHtmlFromWikiText, translate(wikiText, new WikiPageDummy()));
     }
 
+    @Test
     public void testTableBlankLinesConvertedToBreaks() throws Exception {
         String wikiText1 = "|this|is|a|table|\t\n|that|has|four|columns|  \n\n  \n\t\n\t";
         assertEquals(expectedHtmlFromWikiText + "<br/><br/><br/>\t", translate(wikiText1, new WikiPageDummy()));
@@ -66,6 +73,7 @@ public class WikiTextTranslatorTest extends TestCase {
         assertEquals(expectedHtmlFromWikiText + "<br/><br/><br/><br/><br/>", translate(wikiText3, new WikiPageDummy()));
     }
 
+    @Test
     public void testBlankLinesConvertedToBreaks() throws Exception {
         String wikiText1 = "\n  \n\t\n\t";
         assertEquals("<br/><br/><br/>\t", translate(wikiText1, new WikiPageDummy()));

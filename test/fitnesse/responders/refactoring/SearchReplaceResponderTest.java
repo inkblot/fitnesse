@@ -1,6 +1,7 @@
 package fitnesse.responders.refactoring;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -12,7 +13,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
 
-public class SearchReplaceResponderTest {
+public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private SearchReplaceResponder responder;

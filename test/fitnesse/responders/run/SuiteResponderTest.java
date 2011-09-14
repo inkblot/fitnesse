@@ -48,7 +48,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
             "|wow|wow|\n";
 
     @Override
-    protected Module getTestModule() {
+    protected Module getOverrideModule() {
         return new AbstractModule() {
             @Override
             protected void configure() {

@@ -1,5 +1,6 @@
 package fitnesse.responders.run;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.Before;
@@ -9,7 +10,7 @@ import util.TimeMeasurement;
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class JavaFormatterTest {
+public class JavaFormatterTest extends FitnesseBaseTestCase {
 
     private final String nestedPageName = "ParentTest.ChildTest";
     private final String suiteName = "MySuite";
@@ -65,7 +66,6 @@ public class JavaFormatterTest {
         jf.testComplete(secondPage, new TestSummary(11, 12, 13, 14), timeMeasurement.stop());
         jf.writeSummary("SummaryPageName");
         verify(mockResultsRepository).open("SummaryPageName");
-        StringBuffer sb = new StringBuffer();
         verify(mockResultsRepository, times(1)).write(JavaFormatter.SUMMARY_HEADER);
         verify(mockResultsRepository, times(1)).write(jf.summaryRow(nestedPageName, new TestSummary(5, 6, 7, 8)));
         verify(mockResultsRepository, times(1)).write(jf.summaryRow("SecondPage", new TestSummary(11, 12, 13, 14)));
@@ -152,7 +152,6 @@ public class JavaFormatterTest {
     @Test
     public void ifListenerIsSet_AllTestingCompleteFiresAllTestingComplete() throws Exception {
         jf.setListener(listener);
-        WikiPage page = buildNestedTestPage();
         TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start().stop();
         jf.allTestingComplete(totalTimeMeasurement);
         verify(listener).allTestingComplete(same(totalTimeMeasurement));

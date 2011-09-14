@@ -6,31 +6,36 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
 //created by Jason Sypher
 
 public class LastModifiedWidgetTest extends WidgetTestCase {
-    private WikiPage root;
     private WikiPage page;
     private LastModifiedWidget widget;
 
+    @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT");
         page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "some text");
         widget = new LastModifiedWidget(new WidgetRoot(page), "!lastmodified");
     }
 
+    @Test
     public void testRegularExpression() throws Exception {
         assertMatchEquals("!lastmodified", "!lastmodified");
     }
 
+    @Test
     public void testResults() throws Exception {
         setUp();
         Date date = page.getData().getProperties().getLastModificationTime();
@@ -38,6 +43,7 @@ public class LastModifiedWidgetTest extends WidgetTestCase {
         assertHasRegexp(formattedDate, widget.render());
     }
 
+    @Test
     public void testDateFormat() throws Exception {
         Locale.setDefault(Locale.US);
         GregorianCalendar date = new GregorianCalendar(2003, 3, 1, 11, 41, 30);
@@ -45,10 +51,12 @@ public class LastModifiedWidgetTest extends WidgetTestCase {
         assertEquals("Apr 01, 2003 at 11:41:30 AM", formattedDate);
     }
 
+    @Test
     public void testDefaultUsername() throws Exception {
         assertSubString("Last modified anonymously", widget.render());
     }
 
+    @Test
     public void testUsername() throws Exception {
         PageData data = page.getData();
         data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");

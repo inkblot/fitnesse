@@ -6,14 +6,17 @@ import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.RawHtml;
 import fitnesse.wiki.WikiPageDummy;
+import org.junit.Test;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.Assert.*;
 import static util.RegexAssertions.*;
 
 public class CollapsableWidgetTest extends WidgetTestCase {
+    @Test
     public void testRegExp() throws Exception {
         assertMatch("!* Some title\n content \n*!");
         assertMatch("!*> Some title\n content \n*!");
@@ -33,6 +36,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
         return CollapsableWidget.REGEXP;
     }
 
+    @Test
     public void testRender() throws Exception {
         CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
         String html = widget.render();
@@ -44,6 +48,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
     }
 
     //invisible: Test invisible too
+    @Test
     public void testExpandedOrCollapsedOrInvisible() throws Exception {
         CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
         assertTrue(widget.expanded);
@@ -59,6 +64,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
         assertTrue(widget.invisible);
     }
 
+    @Test
     public void testRenderCollapsedSection() throws Exception {
         CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!*> title\ncontent\n*!");
         String html = widget.render();
@@ -68,6 +74,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
     }
 
     //invisible: Test invisible class
+    @Test
     public void testRenderInvisibleSection() throws Exception {
         CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!*< title\ncontent\n*!\n");
         String html = widget.render();
@@ -75,6 +82,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
         assertNotSubString("class=\"collapsable\"", html);
     }
 
+    @Test
     public void testTwoCollapsableSections() throws Exception {
         String text = "!* section1\nsection1 content\n*!\n" +
                 "!* section2\nsection2 content\n*!\n";
@@ -84,6 +92,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
         assertSubString("<span class=\"meta\">section2", html);
     }
 
+    @Test
     public void testEatsNewlineAtEnd() throws Exception {
         String text = "!* section1\nsection1 content\n*!\n";
         ParentWidget widgetRoot = new WidgetRoot(text, new WikiPageDummy());
@@ -91,6 +100,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
         assertNotSubString("<br/>", html);
     }
 
+    @Test
     public void testMakeCollapsableSection() throws Exception {
         CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot());
         HtmlTag outerTag = widget.makeCollapsableSection(new RawHtml("title"), new RawHtml("content"));
@@ -116,6 +126,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
         assertEquals("content", content.html());
     }
 
+    @Test
     public void testWeirdBugThatUncleBobEncountered() throws Exception {
         try {
             new CollapsableWidget(new MockWidgetRoot(), "!* Title\n * list element\n*!\n");
@@ -126,12 +137,14 @@ public class CollapsableWidgetTest extends WidgetTestCase {
         }
     }
 
+    @Test
     public void testEditLinkSuppressedWhenWidgetBuilderConstructorIsUsed() throws Exception {
         CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
         String html = widget.render();
         assertDoesNotHaveRegexp("^.*href.*edit.*$", html);
     }
 
+    @Test
     public void testEditLinkIncludedWhenOtherConstructorsAreUsed() throws Exception {
         CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), new MockWidgetRoot(),
                 "title", "!* title\ncontent\n*!", "include", false);

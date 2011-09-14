@@ -6,18 +6,23 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 //created by Clare McLennan
 
 public class HelpWidgetTest extends WidgetTestCase {
-    private WikiPage root;
     private WikiPage page;
     private WikiPage pageNoHelp;
 
+    @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT");
         page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "some text");
         pageNoHelp = root.getPageCrawler().addPage(root, PathParser.parse("NoHelp"), "some text too");
         PageData data = page.getData();
@@ -25,11 +30,13 @@ public class HelpWidgetTest extends WidgetTestCase {
         page.commit(data);
     }
 
+    @Test
     public void testRegularExpression() throws Exception {
         assertTrue(Pattern.matches(HelpWidget.REGEXP, "!help"));
         assertTrue(Pattern.matches(HelpWidget.REGEXP, "!help -editable"));
     }
 
+    @Test
     public void testResultsWithHelp() throws Exception {
         setUp();
         HelpWidget widget = new HelpWidget(new WidgetRoot(page), "!help");
@@ -40,6 +47,7 @@ public class HelpWidgetTest extends WidgetTestCase {
                 "<a href=\"SomePage?properties\">(edit)</a>", editableWidget.render());
     }
 
+    @Test
     public void testResultsWithoutHelp() throws Exception {
         setUp();
         HelpWidget widget = new HelpWidget(new WidgetRoot(pageNoHelp), "!help");

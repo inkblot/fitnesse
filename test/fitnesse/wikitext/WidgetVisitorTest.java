@@ -2,15 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.*;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WidgetVisitorTest extends TestCase implements WidgetVisitor {
+import static org.junit.Assert.assertEquals;
+
+public class WidgetVisitorTest extends FitnesseBaseTestCase implements WidgetVisitor {
     List<WikiWidget> visits = new ArrayList<WikiWidget>();
     private WikiPage root;
 
@@ -25,11 +29,13 @@ public class WidgetVisitorTest extends TestCase implements WidgetVisitor {
     public void visit(AliasLinkWidget widget) throws Exception {
     }
 
+    @Before
     public void setUp() throws Exception {
         visits.clear();
         root = InMemoryPage.makeRoot("RooT");
     }
 
+    @Test
     public void testSimpleVisitorVisitsAllWidgets() throws Exception {
         ParentWidget root = new WidgetRoot("''hello''", this.root);
         root.acceptVisitor(this);
@@ -39,6 +45,7 @@ public class WidgetVisitorTest extends TestCase implements WidgetVisitor {
         assertEquals(TextWidget.class, visits.get(2).getClass());
     }
 
+    @Test
     public void testComplexVisitorVisitsAllWidgets() throws Exception {
         ParentWidget root = new WidgetRoot("|CellOne|CellTwo|\n|''hello''|'''hello'''|\n", this.root);
         root.acceptVisitor(this);

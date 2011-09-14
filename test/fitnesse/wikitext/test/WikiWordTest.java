@@ -1,5 +1,6 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import org.junit.Before;
@@ -7,7 +8,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class WikiWordTest {
+public class WikiWordTest extends FitnesseBaseTestCase {
     private TestRoot root;
     private WikiPage pageOne;
     private WikiPage pageOneTwo;
@@ -41,7 +42,7 @@ public class WikiWordTest {
     @Test
     public void regracesWikiWords() throws Exception {
         root.setPageData(pageOne, "!define " + WikiWordWidget.REGRACE_LINK + " {true}\nPageOne\n!define " + WikiWordWidget.REGRACE_LINK + " {false}\n");
-        assertTrue(ParserTestHelper.translateTo(pageOne).indexOf(wikiLink("PageOne", "Page One")) >= 0);
+        assertTrue(ParserTestHelper.translateTo(pageOne).contains(wikiLink("PageOne", "Page One")));
     }
 
     private String wikiLink(String link, String text) {

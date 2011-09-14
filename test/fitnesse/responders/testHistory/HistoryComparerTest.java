@@ -1,6 +1,7 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.VelocityFactory;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.wiki.*;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
-public class HistoryComparerTest {
+public class HistoryComparerTest extends FitnesseBaseTestCase {
     private HistoryComparer comparer;
     public FitNesseContext context;
     public WikiPage root;

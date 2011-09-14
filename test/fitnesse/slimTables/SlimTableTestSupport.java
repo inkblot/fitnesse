@@ -1,7 +1,7 @@
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.slim.SlimBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @param <T> The type of the table under test.
  */
-public abstract class SlimTableTestSupport<T extends SlimTable> {
+public abstract class SlimTableTestSupport<T extends SlimTable> extends SlimBaseTestCase {
 
     private WikiPage root;
     protected List<Object> instructions;

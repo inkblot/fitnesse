@@ -1,7 +1,7 @@
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.slim.SlimBaseTestCase;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.wiki.InMemoryPage;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static util.ListUtility.list;
 
-public abstract class QueryTableTestCase {
+public abstract class QueryTableTestCase extends SlimBaseTestCase {
     private WikiPage root;
     private List<Object> instructions;
     private String queryTableHeader;

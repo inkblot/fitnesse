@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.slim.SlimBaseTestCase;
 import fitnesse.slim.SlimClient;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -17,7 +17,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
-public class TableTableTest {
+public class TableTableTest extends SlimBaseTestCase {
     private WikiPage root;
     private List<Object> instructions;
     private final String tableTableHeader =

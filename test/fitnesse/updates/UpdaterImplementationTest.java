@@ -1,6 +1,7 @@
 package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
@@ -10,14 +11,13 @@ import org.junit.Test;
 import util.FileUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
-public class UpdaterImplementationTest {
+public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     private File updateList;
     private File updateDoNotCopyOver;
     public static final String testDir = "testDir";
@@ -51,7 +51,7 @@ public class UpdaterImplementationTest {
         crawler = root.getPageCrawler();
     }
 
-    private void createFakeJarFileResources() throws IOException {
+    private void createFakeJarFileResources() {
         FileUtil.createFile("classes/Resources/files/TestFile", "");
         FileUtil.createFile("classes/Resources/files/BestFile", "");
         FileUtil.createFile("classes/Resources/SpecialFile", "");

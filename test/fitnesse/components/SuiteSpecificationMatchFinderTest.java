@@ -1,5 +1,6 @@
 package fitnesse.components;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -14,17 +15,16 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SuiteSpecificationMatchFinderTest implements SearchObserver {
+public class SuiteSpecificationMatchFinderTest extends FitnesseBaseTestCase implements SearchObserver {
 
     WikiPage root;
     private List<WikiPage> hits = new ArrayList<WikiPage>();
-    private PageCrawler crawler;
     SuiteSpecificationMatchFinder finder;
 
     @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
-        crawler = root.getPageCrawler();
+        PageCrawler crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child\nThe meaning of life, the universe, and evertything is 42");
         crawler.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne\nDo you believe in love after life?");
         crawler.addPage(root, PathParser.parse("TestPageTwo"), "TestPageTwo has a bit of content too\nThere is no life without death");

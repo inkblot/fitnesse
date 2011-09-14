@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.Before;
+import org.junit.Test;
 import util.ClockUtil;
 
 import java.io.*;
@@ -10,7 +12,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
-public class WikiPagePropertiesTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class WikiPagePropertiesTest extends FitnesseBaseTestCase {
     private WikiPageProperties properties;
 
     static String endl = System.getProperty("line.separator"),
@@ -36,14 +40,13 @@ public class WikiPagePropertiesTest extends TestCase {
                     "</properties>" + endl;
     static String[] sampleXmlFragments = sampleXml.split("\t*" + endl);
 
+    @Before
     public void setUp() throws Exception {
         InputStream sampleInputStream = new ByteArrayInputStream(sampleXml.getBytes());
         properties = new WikiPageProperties(sampleInputStream);
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testLoadingOfXmlWithoutAddedSpaces() throws Exception {
         validateLoading();
     }
@@ -69,6 +72,7 @@ public class WikiPagePropertiesTest extends TestCase {
         assertEquals(">SubChild.SymLink", symbolics.get("SubLink"));
     }
 
+    @Test
     public void testSave() throws Exception {
         ByteArrayOutputStream os = new ByteArrayOutputStream(1000);
         properties.save(os);
@@ -79,6 +83,7 @@ public class WikiPagePropertiesTest extends TestCase {
         }
     }
 
+    @Test
     public void testKeySet() throws Exception {
         properties = new WikiPageProperties();
         properties.set("one");
@@ -92,6 +97,7 @@ public class WikiPagePropertiesTest extends TestCase {
         assertFalse(keys.contains("four"));
     }
 
+    @Test
     public void testIsSerializable() throws Exception {
         try {
             new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(properties);
@@ -100,6 +106,7 @@ public class WikiPagePropertiesTest extends TestCase {
         }
     }
 
+    @Test
     public void testLastModificationTime() throws Exception {
         SimpleDateFormat format = WikiPageProperty.getTimeFormat();
         WikiPageProperties props = new WikiPageProperties();
@@ -110,6 +117,7 @@ public class WikiPagePropertiesTest extends TestCase {
         assertEquals(date, props.getLastModificationTime());
     }
 
+    @Test
     public void testShouldRemoveSpacesFromPropertyValues() throws Exception {
         validateLoading();
     }

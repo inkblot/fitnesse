@@ -6,6 +6,7 @@ import fitnesse.Responder;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.PathParser;
+import org.junit.Test;
 
 import static util.RegexAssertions.assertSubString;
 
@@ -14,11 +15,13 @@ public class RawContentResponderTest extends ResponderTestCase {
         return new RawContentResponder();
     }
 
+    @Test
     public void testSimplePage() throws Exception {
         String result = getResultsUsing("simple content");
         assertSubString("simple content", result);
     }
 
+    @Test
     public void testNoHtmlRendered() throws Exception {
         String result = getResultsUsing("'''simple content'''");
         assertSubString("'''simple content'''", result);

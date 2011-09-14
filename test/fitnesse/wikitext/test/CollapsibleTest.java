@@ -1,10 +1,11 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wikitext.parser.Collapsible;
 import org.junit.Test;
 
-public class CollapsibleTest {
+public class CollapsibleTest extends FitnesseBaseTestCase {
     @Test
     public void scansCollapsible() {
         ParserTestHelper.assertScansTokenType("!* title\ncontent\n*!", "Collapsible", true);

@@ -3,20 +3,22 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
 
-public abstract class ResponderTestCase extends TestCase {
+public abstract class ResponderTestCase extends FitnesseBaseTestCase {
     protected WikiPage root;
     protected MockRequest request;
     protected Responder responder;
     protected PageCrawler crawler;
     protected FitNesseContext context;
 
-    public void setUp() throws Exception {
+    @Before
+    public void beforeResponderTests() throws Exception {
         context = new FitNesseContext("RooT");
         root = context.root;
         crawler = root.getPageCrawler();

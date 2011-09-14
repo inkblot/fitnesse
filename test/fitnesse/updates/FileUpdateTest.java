@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -17,13 +19,13 @@ public class FileUpdateTest extends UpdateTestCase {
         return new FileUpdate(context.rootPagePath, "testFile", "files" + File.separator + "images");
     }
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         testFile.createNewFile();
     }
 
+    @After
     public void tearDown() throws Exception {
-        super.tearDown();
         testFile.delete();
     }
 

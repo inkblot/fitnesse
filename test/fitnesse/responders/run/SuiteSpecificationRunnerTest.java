@@ -1,5 +1,6 @@
 package fitnesse.responders.run;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
@@ -15,7 +16,7 @@ import static org.junit.Assert.*;
 //|Title|titleRegEx|
 //|Content|contentRegEx|
 
-public class SuiteSpecificationRunnerTest {
+public class SuiteSpecificationRunnerTest extends FitnesseBaseTestCase {
     private SuiteSpecificationRunner runner;
     private WikiPage root;
     private PageCrawler crawler;

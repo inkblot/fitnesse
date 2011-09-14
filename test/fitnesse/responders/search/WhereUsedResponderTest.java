@@ -3,19 +3,23 @@
 package fitnesse.responders.search;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class WhereUsedResponderTest extends TestCase {
+public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         PageCrawler crawler = context.root.getPageCrawler();
@@ -24,6 +28,7 @@ public class WhereUsedResponderTest extends TestCase {
         crawler.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
     }
 
+    @Test
     public void testResponse() throws Exception {
         MockRequest request = new MockRequest();
         request.setResource("PageOne");

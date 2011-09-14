@@ -1,6 +1,7 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -11,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
-public class AddChildPageResponderTest {
+public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageData childPageData;
     private PageCrawler crawler;

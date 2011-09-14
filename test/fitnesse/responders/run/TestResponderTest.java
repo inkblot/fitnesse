@@ -54,7 +54,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     private XmlChecker xmlChecker = new XmlChecker();
 
     @Override
-    protected Module getTestModule() {
+    protected Module getOverrideModule() {
         return new AbstractModule() {
             @Override
             protected void configure() {

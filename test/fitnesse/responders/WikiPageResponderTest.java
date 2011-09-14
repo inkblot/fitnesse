@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -11,22 +12,25 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.*;
 
-public class WikiPageResponderTest extends TestCase {
+public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private FitNesseContext context;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("root");
         root = context.root;
         crawler = root.getPageCrawler();
     }
 
+    @Test
     public void testResponse() throws Exception {
         crawler.addPage(root, PathParser.parse("ChildPage"), "child content");
         final MockRequest request = new MockRequest();
@@ -48,6 +52,7 @@ public class WikiPageResponderTest extends TestCase {
         assertSubString("<div id=\"addChildPopup\" class=\"popup_window\"", body);
     }
 
+    @Test
     public void testAttributeButtons() throws Exception {
         crawler.addPage(root, PathParser.parse("NormalPage"));
         final WikiPage noButtonsPage = crawler.addPage(root, PathParser.parse("NoButtonPage"));
@@ -72,6 +77,7 @@ public class WikiPageResponderTest extends TestCase {
         assertNotSubString("<!--Test button-->", response.getContent());
     }
 
+    @Test
     public void testHeadersAndFooters() throws Exception {
         crawler.addPage(root, PathParser.parse("NormalPage"), "normal");
         crawler.addPage(root, PathParser.parse("TestPage"), "test page");
@@ -104,6 +110,7 @@ public class WikiPageResponderTest extends TestCase {
         return (SimpleResponse) responder.makeResponse(context, request);
     }
 
+    @Test
     public void testShouldGetVirtualPage() throws Exception {
         final WikiPage pageOne = crawler.addPage(root, PathParser.parse("TargetPage"), "some content");
         crawler.addPage(pageOne, PathParser.parse("ChildPage"), "child content");
@@ -114,6 +121,7 @@ public class WikiPageResponderTest extends TestCase {
         assertSubString("child content", response.getContent());
     }
 
+    @Test
     public void testVirtualPageIndication() throws Exception {
         final WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
         crawler.addPage(targetPage, PathParser.parse("ChildPage"));
@@ -132,6 +140,7 @@ public class WikiPageResponderTest extends TestCase {
         assertSubString("<body class=\"virtual\">", response.getContent());
     }
 
+    @Test
     public void testImportedPageIndication() throws Exception {
         final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
         final PageData data = page.getData();
@@ -144,6 +153,7 @@ public class WikiPageResponderTest extends TestCase {
         assertSubString("<body class=\"imported\">", content);
     }
 
+    @Test
     public void testImportedPageIndicationNotOnRoot() throws Exception {
         final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
         final PageData data = page.getData();
@@ -157,6 +167,7 @@ public class WikiPageResponderTest extends TestCase {
         assertNotSubString("<body class=\"imported\">", content);
     }
 
+    @Test
     public void testResponderIsSecureReadOperation() throws Exception {
         final Responder responder = new WikiPageResponder();
         final SecureOperation operation = ((SecureResponder) responder).getSecureOperation();

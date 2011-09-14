@@ -3,16 +3,13 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.WikiPageDummy;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
 public class LinkWidgetTest extends WidgetTestCase {
-    public void setUp() throws Exception {
-    }
-
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testRegexp() throws Exception {
         assertMatchEquals("http://www.objectmentor.com/resources/bookstore/books/PPPCoverIcon.html", "http://www.objectmentor.com/resources/bookstore/books/PPPCoverIcon.html");
         assertMatchEquals("http://files/someFile", "http://files/someFile");
@@ -24,6 +21,7 @@ public class LinkWidgetTest extends WidgetTestCase {
         assertMatchEquals("https://objectmentor.com", "https://objectmentor.com");
     }
 
+    @Test
     public void testHtml() throws Exception {
         LinkWidget widget = new LinkWidget(new MockWidgetRoot(), "http://host.com/file.html");
         assertEquals("<a href=\"http://host.com/file.html\">http://host.com/file.html</a>", widget.render());
@@ -35,12 +33,14 @@ public class LinkWidgetTest extends WidgetTestCase {
         assertEquals("<a href=\"http://www.objectmentor.com\">http://www.objectmentor.com</a>", widget.render());
     }
 
+    @Test
     public void testAsWikiText() throws Exception {
         final String LINK_TEXT = "http://xyz.com";
         LinkWidget widget = new LinkWidget(new MockWidgetRoot(), LINK_TEXT);
         assertEquals(LINK_TEXT, widget.asWikiText());
     }
 
+    @Test
     public void testHttpsLink() throws Exception {
         String link = "https://link.com";
         LinkWidget widget = new LinkWidget(new MockWidgetRoot(), link);
@@ -48,6 +48,7 @@ public class LinkWidgetTest extends WidgetTestCase {
         assertEquals(link, widget.asWikiText());
     }
 
+    @Test
     public void testLinkWikiWithVariable() throws Exception {
         String text = "!define HOST {somehost}\nhttp://www.${HOST}.com\n";
         ParentWidget root = new WidgetRoot(text, new WikiPageDummy());

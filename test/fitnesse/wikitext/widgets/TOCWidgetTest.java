@@ -5,7 +5,11 @@ package fitnesse.wikitext.widgets;
 import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class TOCWidgetTest extends WidgetTestCase {
@@ -16,7 +20,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     //===================================================[ SetUp / TearDown
     //
-    @Override
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         root = context.root;
@@ -32,10 +36,6 @@ public class TOCWidgetTest extends WidgetTestCase {
         child2P2 = crawler.addPage(parent2, PathParser.parse("Child2Page"), "content");
     }
 
-    @Override
-    public void tearDown() throws Exception {
-    }
-
     //===================================================[ Miscellaneous
     //
     @Override
@@ -45,6 +45,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     //===================================================[ Matchers
     //
+    @Test
     public void testMatch() throws Exception {
         assertMatchEquals("!contents\n", "!contents");
         assertMatchEquals("!contents -R\n", "!contents -R");
@@ -109,6 +110,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     // DeanW: ... and they are an annoying pain in the ass, because they break everytime
     // you tweak the look and feel!
 
+    @Test
     public void testTocOnRoot() throws Exception {
         TOCWidget widget = new TOCWidget(new WidgetRoot(root), "!contents\n");
         String html = widget.render();
@@ -116,17 +118,20 @@ public class TOCWidgetTest extends WidgetTestCase {
         assertHasRegexp("ParentTwo", html);
     }
 
+    @Test
     public void testNoGrandchildren() throws Exception {
         assertHtmlWithNoHierarchy(renderNormalTOCWidget());
         assertHtmlWithNoHierarchy(renderHierarchicalTOCWidget());
     }
 
+    @Test
     public void testWithGrandchildren() throws Exception {
         addGrandChild(parent, "ChildOne");
         assertHtmlWithNoHierarchy(renderNormalTOCWidget());
         assertHtmlWithGrandChild(renderHierarchicalTOCWidget());
     }
 
+    @Test
     public void testWithGreatGrandchildren() throws Exception {
         addGrandChild(parent, "ChildOne");
         addGreatGrandChild(parent, "ChildOne");
@@ -134,10 +139,12 @@ public class TOCWidgetTest extends WidgetTestCase {
         assertHtmlWithGreatGrandChild(renderHierarchicalTOCWidget());
     }
 
+    @Test
     public void testIsNotHierarchical() throws Exception {
         assertFalse(new TOCWidget(new WidgetRoot(parent), "!contents\n").isRecursive());
     }
 
+    @Test
     public void testIsHierarchical() throws Exception {
         assertTrue(new TOCWidget(new WidgetRoot(parent), "!contents -R\n").isRecursive());
     }
@@ -204,6 +211,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     //===================================================[ Virtual Children
     //
+    @Test
     public void testDisplaysVirtualChildren() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("VirtualParent"));
         PageData data = page.getData();
@@ -234,6 +242,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     //===================================================[ Graceful Naming
     //
+    @Test
     public void testWithGreatGrandchildrenRegraced() throws Exception {
         addGrandChild(parent2, "Child1Page");
         addGreatGrandChild(parent2, "Child1Page");
@@ -285,6 +294,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     //===================================================[ Properties with Graceful Naming
     //
+    @Test
     public void testWithGreatGrandchildrenRegracedProp() throws Exception {
         setProperties(child1P2, new String[]{"Suite", "Prune"});
         setProperties(child2P2, new String[]{"Suite", "Test", "WikiImport"});
@@ -377,6 +387,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     //===================================================[ Filter Suffix
     //
+    @Test
     public void testWithGreatGrandchildrenAndFilters() throws Exception {
         setProperties(child1P2, new String[]{"Suites=F1"});
         setProperties(child2P2, new String[]{"Suites=F1,F2"});
@@ -431,6 +442,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     //===================================================[ Help Suffix
     //
+    @Test
     public void testWithGreatGrandchildrenAndHelp() throws Exception {
         setProperties(child1P2, new String[]{"Suites=F1", "Help=Root child 1 help"});
         setProperties(child2P2, new String[]{"Suites=F1,F2", "Help=Root child 2 help"});

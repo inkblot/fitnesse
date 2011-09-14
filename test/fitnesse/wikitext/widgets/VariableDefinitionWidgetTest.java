@@ -6,8 +6,10 @@ import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.test.ParserTestHelper;
+import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
@@ -20,14 +22,13 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
         return VariableDefinitionWidget.REGEXP;
     }
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testRegexp() throws Exception {
         assertMatch("!define xyz {\n123\r\n456\r\n}");
         assertMatch("!define abc {1}");
@@ -62,6 +63,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
         assertMatch("!define brace [!-some brace literal-!]");
     }
 
+    @Test
     public void testHtml() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"), "content");
         WikiPage page2 = crawler.addPage(root, PathParser.parse("SecondPage"), "content");
@@ -98,6 +100,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
         assertEquals("1", widget.value);
     }
 
+    @Test
     public void testRenderedText() throws Exception {
         WikiWidget widget = new VariableDefinitionWidget(new WidgetRoot(root), "!define x (1)\n");
         String renderedText = widget.render();
@@ -106,6 +109,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
     }
 
     //Test includeInto with periods
+    @Test
     public void testRenderedTextWithPeriods() throws Exception {
         WikiWidget widget = new VariableDefinitionWidget(new WidgetRoot(root), "!define x.y.z (1)\n");
         String renderedText = widget.render();
@@ -113,6 +117,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
         assertSubString("1", renderedText);
     }
 
+    @Test
     public void testDefinePrecedingClasspath() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RooT");
         PageData data = root.getData();
@@ -124,6 +129,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
         assertEquals("c:\\dotnet\\*.dll", data.getClasspaths().get(0));
     }
 
+    @Test
     public void testNoExtraLineBreakInHtml() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RooT");
         PageData data = root.getData();
@@ -133,21 +139,25 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
         assertNotSubString("SOME_VARIABLE=Variable #1</span><br/><br/><span", data.getHtml());
     }
 
+    @Test
     public void testBraceAsWikiText() throws Exception {
         VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x {1}\n");
         assertEquals("!define x {1}", widget.asWikiText());
     }
 
+    @Test
     public void testParenAsWikiText() throws Exception {
         VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x (1)\n");
         assertEquals("!define x (1)", widget.asWikiText());
     }
 
+    @Test
     public void testBracketAsWikiText() throws Exception {
         VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x [1]\n");
         assertEquals("!define x [1]", widget.asWikiText());
     }
 
+    @Test
     public void testParentAndBraceAsWikeText() throws Exception {
         VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x ({1})\n");
         assertEquals("!define x ({1})", widget.asWikiText());

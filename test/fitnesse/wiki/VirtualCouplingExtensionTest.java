@@ -3,20 +3,25 @@
 package fitnesse.wiki;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SimpleCachinePage;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
-public class VirtualCouplingExtensionTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class VirtualCouplingExtensionTest extends FitnesseBaseTestCase {
     private FitNesseUtil fitNesseUtil;
     public WikiPage root;
     public BaseWikiPage page1;
     public WikiPage page2;
     private PageCrawler crawler;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
         FitNesseContext context = new FitNesseContext("RooT");
         root = context.root;
@@ -38,11 +43,12 @@ public class VirtualCouplingExtensionTest extends TestCase {
         page.commit(data);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         fitNesseUtil.stopFitnesse();
     }
 
+    @Test
     public void testGetChildren() throws Exception {
         List<?> children = page1.getChildren();
         assertEquals(1, children.size());
@@ -55,6 +61,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
         assertEquals("PageTwoChild", ((WikiPage) children.get(0)).getName());
     }
 
+    @Test
     public void testNewProxyChildrenAreFound() throws Exception {
         CachingPage.cacheTime = 0;
         BaseWikiPage realChild = (BaseWikiPage) page2.getChildPage("PageTwoChild");
@@ -68,6 +75,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
         assertNotNull(childProxy.getChildPage("AnotherChild"));
     }
 
+    @Test
     public void testProxyChildrenAreFoundOnStartUp() throws Exception {
         WikiPage page3 = crawler.addPage(root, PathParser.parse("PageThree"), "page three content");
         setVirtualWiki(page3, FitNesseUtil.URL + "PageTwo");
@@ -80,6 +88,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
         assertEquals("PageTwoChild", ((WikiPage) children.get(0)).getName());
     }
 
+    @Test
     public void testGetChildrenOnlyAsksOnce() throws Exception {
         CachingPage.cacheTime = 10000;
         ProxyPage.retrievalCount = 0;
@@ -90,6 +99,7 @@ public class VirtualCouplingExtensionTest extends TestCase {
         assertEquals(1, ProxyPage.retrievalCount);
     }
 
+    @Test
     public void testNoNastyExceptionIsThrownWhenVirutalChildrenAreLoaded() throws Exception {
         WikiPage page3 = crawler.addPage(root, PathParser.parse("PageThree"), "page three content");
         setVirtualWiki(page3, "http://google.com/SomePage");

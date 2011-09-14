@@ -1,8 +1,9 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 
-public class LinkTest {
+public class LinkTest extends FitnesseBaseTestCase {
     @Test
     public void scansLinks() {
         ParserTestHelper.assertScansTokenType("http://mysite.org", "Link", true);

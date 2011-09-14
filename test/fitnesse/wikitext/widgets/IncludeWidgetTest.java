@@ -6,7 +6,10 @@ import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WidgetBuilder;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.*;
 
 public class IncludeWidgetTest extends WidgetTestCase {
@@ -20,6 +23,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
     protected PageCrawler crawler;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         root = context.root;
@@ -30,9 +34,6 @@ public class IncludeWidgetTest extends WidgetTestCase {
         child1 = crawler.addPage(page2, PathParser.parse("ChildOne"), "child page");
         child2 = crawler.addPage(page2, PathParser.parse("ChildTwo"), "child two");
         grandChild1 = crawler.addPage(child1, PathParser.parse("GrandChildOne"), "grand child one");
-    }
-
-    public void tearDown() throws Exception {
     }
 
     private IncludeWidget createIncludeWidget(WikiPage wikiPage, String includedPageName) throws Exception {
@@ -47,18 +48,21 @@ public class IncludeWidgetTest extends WidgetTestCase {
         return IncludeWidget.REGEXP;
     }
 
+    @Test
     public void testIsCollapsable() throws Exception {
         IncludeWidget widget = createIncludeWidget(page1, "PageTwo");
         final String result = widget.render();
         assertSubString("class=\"collapsable\"", result);
     }
 
+    @Test
     public void testSeamlessIsNotCollapsable() throws Exception {
         IncludeWidget widget = createIncludeWidget(page1, "-seamless PageTwo");
         final String result = widget.render();
         assertNotSubString("class=\"collapsable\"", result);
     }
 
+    @Test
     public void testCollapsedIsHidden() throws Exception {
         IncludeWidget widget = createIncludeWidget(page1, "-c PageTwo");
         final String result = widget.render();
@@ -67,12 +71,14 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertSubString("collapsableClosed.gif", result);
     }
 
+    @Test
     public void testHasEditLink() throws Exception {
         IncludeWidget widget = createIncludeWidget(page1, "PageTwo");
         final String result = widget.render();
         assertHasRegexp("^.*href.*edit.*$", result);
     }
 
+    @Test
     public void testRegexp() throws Exception {
         assertMatchEquals("!include SomePage", "!include SomePage");
         assertMatchEquals("!include SomePage\n", "!include SomePage\n");
@@ -82,6 +88,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertNoMatch(" " + "!include WikiWord");
     }
 
+    @Test
     public void testRegexpWithOptions() throws Exception {
         assertMatchEquals("!include -c SomePage", "!include -c SomePage");
         assertMatchEquals("!include -setup SomePage", "!include -setup SomePage");
@@ -92,6 +99,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertMatchEquals("!include  -seamless SomePage", "!include  -seamless SomePage");
     }
 
+    @Test
     public void testSetUpParts() throws Exception {
         IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -setup SomePage");
         assertSubString("Set Up: ", widget.render());
@@ -99,6 +107,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertSubString("class=\"hidden\"", widget.render());
     }
 
+    @Test
     public void testSetUpCollapsed() throws Exception {
         ParentWidget widgetRoot = new WidgetRoot(root);
         widgetRoot.addVariable(IncludeWidget.COLLAPSE_SETUP, "true");
@@ -108,6 +117,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertSubString("class=\"hidden\"", widget.render());
     }
 
+    @Test
     public void testSetUpUncollapsed() throws Exception {
         ParentWidget widgetRoot = new WidgetRoot(root);
         widgetRoot.addVariable(IncludeWidget.COLLAPSE_SETUP, "false");
@@ -117,6 +127,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertSubString("class=\"collapsable\"", widget.render());
     }
 
+    @Test
     public void testTearDownParts() throws Exception {
         IncludeWidget widget = new IncludeWidget(new WidgetRoot(root), "!include -teardown SomePage");
         assertSubString("Tear Down: ", widget.render());
@@ -124,6 +135,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertSubString("class=\"hidden\"", widget.render());
     }
 
+    @Test
     public void testTearDownCollapsed() throws Exception {
         ParentWidget widgetRoot = new WidgetRoot(root);
         widgetRoot.addVariable(IncludeWidget.COLLAPSE_TEARDOWN, "true");
@@ -133,6 +145,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertSubString("class=\"hidden\"", widget.render());
     }
 
+    @Test
     public void testTearDownUncollapsed() throws Exception {
         ParentWidget widgetRoot = new WidgetRoot(root);
         widgetRoot.addVariable(IncludeWidget.COLLAPSE_TEARDOWN, "false");
@@ -142,10 +155,12 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertSubString("class=\"collapsable\"", widget.render());
     }
 
+    @Test
     public void testLiteralsGetRendered() throws Exception {
         verifyLiteralsGetRendered("", "LiteralPage");
     }
 
+    @Test
     public void testLiteralsGetRenderedSeamless() throws Exception {
         verifyLiteralsGetRendered("-seamless ", "LiteralPage");
     }
@@ -162,14 +177,17 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertEquals("three", widgetRoot.getLiteral(2));
     }
 
+    @Test
     public void testPageNameOnSetUpPage() throws Exception {
         verifyPageNameResolving("-setup ", "IncludingPage");
     }
 
+    @Test
     public void testPageNameOnTearDownPage() throws Exception {
         verifyPageNameResolving("-teardown ", "IncludingPage");
     }
 
+    @Test
     public void testPageNameOnRegularPage() throws Exception {
         verifyPageNameResolving("", "IncludedPage");
     }
@@ -183,11 +201,12 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertHasRegexp("included page name is <a href=\"" + expectedPageName + "\">" + expectedPageName, content);
     }
 
-
+    @Test
     public void testRenderWhenMissing() throws Exception {
         verifyRenderWhenMissing("MissingPage");
     }
 
+    @Test
     public void testRenderWhenMissingSeamless() throws Exception {
         verifyRenderWhenMissing("-seamless MissingPage");
     }
@@ -198,10 +217,13 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertHasRegexp("MissingPage.*does not exist", widget.render());
     }
 
+
+    @Test
     public void testNoNullPointerWhenIncludingFromRootPage() throws Exception {
         verifyNoNullPointerWhenIncludingFromRootPage(".PageOne");
     }
 
+    @Test
     public void testNoNullPointerWhenIncludingFromRootPageSeamless() throws Exception {
         verifyNoNullPointerWhenIncludingFromRootPage("-seamless .PageOne");
     }
@@ -212,10 +234,12 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertHasRegexp("page one", widget.render());
     }
 
+    @Test
     public void testIncludingVariables() throws Exception {
         verifyIncludingVariables("");
     }
 
+    @Test
     public void testIncludingVariablesSeamless() throws Exception {
         verifyIncludingVariables("-seamless ");
     }
@@ -230,10 +254,12 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertHasRegexp("X=blah!", content);
     }
 
+    @Test
     public void testVirtualIncludeNotFound() throws Exception {
         verifyVirtualIncludeNotFound("IncludedPage");
     }
 
+    @Test
     public void testVirtualIncludeNotFoundSeamless() throws Exception {
         verifyVirtualIncludeNotFound("-seamless IncludedPage");
     }
@@ -246,6 +272,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertHasRegexp("IncludedPage.* does not exist", output);
     }
 
+    @Test
     public void testVirtualInclude() throws Exception {
         String virtualWikiURL = FitNesseUtil.URL + "PageTwo";
         VirtualCouplingExtensionTest.setVirtualWiki(page1, virtualWikiURL);
@@ -260,6 +287,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         }
     }
 
+    @Test
     public void testDeepVirtualInclude() throws Exception {
         WikiPagePath atPath = PathParser.parse("AcceptanceTestPage");
         WikiPagePath includedPagePath = PathParser.parse("AcceptanceTestPage.IncludedPage");
@@ -288,30 +316,35 @@ public class IncludeWidgetTest extends WidgetTestCase {
         }
     }
 
+    @Test
     public void testRenderIncludedSibling() throws Exception {
         IncludeWidget widget = createIncludeWidget(page1, "PageTwo");
         final String result = widget.render();
         verifyRegexes(new String[]{"page two", "Included page: .*PageTwo"}, result);
     }
 
+    @Test
     public void testRenderIncludedSiblingSeamless() throws Exception {
         IncludeWidget widget = createIncludeWidget(page1, "-seamless PageTwo");
         final String result = widget.render();
         verifySubstrings(new String[]{"page two<br/>"}, result);
     }
 
+    @Test
     public void testRenderIncludedNephew() throws Exception {
         IncludeWidget widget = createIncludeWidget(page1, ".PageTwo.ChildOne");
         String result = widget.render();
         verifyRegexes(new String[]{"child page", "class=\"included\""}, result);
     }
 
+    @Test
     public void testRenderSubPage() throws Exception {
         IncludeWidget widget = createIncludeWidget(page2, ">ChildOne");
         String result = widget.render();
         verifyRegexes(new String[]{"child page", "class=\"included\""}, result);
     }
 
+    @Test
     public void testCannotIncludeParentPage() throws Exception {
         WikiPage childPage = crawler.addPage(page1, PathParser.parse("ChildPage"));
         IncludeWidget widget = createIncludeWidget(childPage, "<PageOne");
@@ -319,6 +352,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         assertSubString("Cannot include parent page", result);
     }
 
+    @Test
     public void testRenderBackwardsSearch() throws Exception {
         IncludeWidget widget = createIncludeWidget(grandChild1, "<PageTwo.ChildTwo");
         String result = widget.render();

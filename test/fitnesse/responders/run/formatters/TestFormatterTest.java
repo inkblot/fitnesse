@@ -1,6 +1,7 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.TestSummary;
@@ -8,66 +9,33 @@ import fitnesse.wiki.WikiPageDummy;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import util.TimeMeasurement;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
-@RunWith(Parameterized.class)
-public class TestFormatterTest {
-    private BaseFormatter formatter;
-
-    public TestFormatterTest(BaseFormatter formatter) {
-        this.formatter = formatter;
-    }
-
-    @Parameterized.Parameters
-    public static Collection formatters() throws Exception {
-        FitNesseContext context = new FitNesseContext("RooT");
-        ChunkedResponse response = mock(ChunkedResponse.class);
-        WikiPageDummy page = new WikiPageDummy("testPage", "testContent");
-        XmlFormatter.WriterFactory writerFactory = mock(XmlFormatter.WriterFactory.class);
-
-        TestTextFormatter testTextFormatter = new TestTextFormatter(response);
-        XmlFormatter xmlFormatter = new XmlFormatter(context, page, writerFactory) {
-            @Override
-            protected void writeResults() throws Exception {
-            }
-        };
-        TestHtmlFormatter testHtmlFormatter = new TestHtmlFormatter(context, page, mock(HtmlPageFactory.class)) {
-            @Override
-            protected void writeData(String output) throws Exception {
-            }
-        };
-        PageHistoryFormatter pageHistoryFormatter = new PageHistoryFormatter(context, page, writerFactory) {
-            @Override
-            protected void writeResults() throws Exception {
-            }
-        };
-        return Arrays.asList(new Object[][]{
-                {testTextFormatter},
-                {xmlFormatter},
-                {testHtmlFormatter},
-                {pageHistoryFormatter},
-        });
-    }
+public class TestFormatterTest extends FitnesseBaseTestCase {
 
     private WikiPageDummy page;
     private TestSummary right;
     private TestSummary wrong;
     private TestSummary exception;
+    private XmlFormatter.WriterFactory writerFactory;
+    private ChunkedResponse response;
+    private WikiPageDummy testPage;
+    private FitNesseContext context;
 
     @Before
     public void setUp() throws Exception {
-        page = new WikiPageDummy("page", "content");
+        context = makeContext();
+        response = mock(ChunkedResponse.class);
+        testPage = new WikiPageDummy("testPage", "testContent");
+        writerFactory = mock(XmlFormatter.WriterFactory.class);
+
+        this.page = new WikiPageDummy("page", "content");
         right = new TestSummary(1, 0, 0, 0);
         wrong = new TestSummary(0, 1, 0, 0);
         exception = new TestSummary(0, 0, 0, 1);
@@ -79,7 +47,38 @@ public class TestFormatterTest {
     }
 
     @Test
-    public void testComplete_shouldCountTestResults() throws Exception {
+    public void testTestTextFormatter() throws Exception {
+        assertShouldCountTestResults(new TestTextFormatter(response));
+    }
+
+    @Test
+    public void testXmlFormatter() throws Exception {
+        assertShouldCountTestResults(new XmlFormatter(context, page, writerFactory) {
+            @Override
+            protected void writeResults() throws Exception {
+            }
+        });
+    }
+
+    @Test
+    public void testTestHtmlFormatter() throws Exception {
+        assertShouldCountTestResults(new TestHtmlFormatter(context, testPage, mock(HtmlPageFactory.class)) {
+            @Override
+            protected void writeData(String output) throws Exception {
+            }
+        });
+    }
+
+    @Test
+    public void testPageHistoryFormatter() throws Exception {
+        assertShouldCountTestResults(new PageHistoryFormatter(context, testPage, writerFactory) {
+            @Override
+            protected void writeResults() throws Exception {
+            }
+        });
+    }
+
+    public void assertShouldCountTestResults(BaseFormatter formatter) throws Exception {
         TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
         when(timeMeasurement.startedAtDate()).thenReturn(new Date(0));
         when(timeMeasurement.elapsedSeconds()).thenReturn(0d);

@@ -1,6 +1,7 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -13,7 +14,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class PacketResponderTest {
+public class PacketResponderTest extends FitnesseBaseTestCase {
     protected WikiPage root;
     protected MockRequest request;
     protected Responder responder;

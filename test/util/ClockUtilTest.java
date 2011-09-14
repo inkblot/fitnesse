@@ -2,7 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Module;
+import fitnesse.BaseInjectedTestCase;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -10,7 +11,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class ClockUtilTest extends FitnesseBaseTestCase {
+public class ClockUtilTest extends BaseInjectedTestCase {
 
     @Test
     public void systemClockTimeInMillisShouldIncreaseAsTimeFlies() throws Exception {
@@ -64,5 +65,10 @@ public class ClockUtilTest extends FitnesseBaseTestCase {
         long before = ClockUtil.currentTimeInMillis();
         assertThat(ClockUtil.currentTimeInMillis(), is(not(0L)));
         assertTrue(ClockUtil.currentTimeInMillis() - before < 1000);
+    }
+
+    @Override
+    protected Module[] getBaseModules() {
+        return new Module[]{new UtilModule()};
     }
 }

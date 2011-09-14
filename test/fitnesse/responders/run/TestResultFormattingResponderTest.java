@@ -5,6 +5,7 @@ package fitnesse.responders.run;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -12,15 +13,17 @@ import fitnesse.runner.HtmlResultFormatter;
 import fitnesse.runner.MockResultFormatter;
 import fitnesse.runner.PageResult;
 import fitnesse.runner.XmlResultFormatter;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class TestResultFormattingResponderTest extends TestCase {
+public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
     private PipedOutputStream output;
     private PipedInputStream input;
     private TestResultFormattingResponder responder;
@@ -29,6 +32,7 @@ public class TestResultFormattingResponderTest extends TestCase {
     private PageResult result2;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         output = new PipedOutputStream();
         input = new PipedInputStream(output);
@@ -43,6 +47,7 @@ public class TestResultFormattingResponderTest extends TestCase {
         context = new FitNesseContext("RooT");
     }
 
+    @Test
     public void testOneResult() throws Exception {
         FitProtocol.writeData(result1.toString(), output);
         FitProtocol.writeCounts(new Counts(0, 0, 0, 0), output);
@@ -52,6 +57,7 @@ public class TestResultFormattingResponderTest extends TestCase {
         assertEquals(result1.toString(), formatter.results.get(0).toString());
     }
 
+    @Test
     public void testTwoResults() throws Exception {
         FitProtocol.writeData(result1.toString(), output);
         FitProtocol.writeData(result2.toString(), output);
@@ -63,6 +69,7 @@ public class TestResultFormattingResponderTest extends TestCase {
         assertEquals(result2.toString(), formatter.results.get(1).toString());
     }
 
+    @Test
     public void testFinalCounts() throws Exception {
         FitProtocol.writeData(result1.toString(), output);
         Counts counts = new Counts(1, 2, 3, 4);
@@ -76,6 +83,7 @@ public class TestResultFormattingResponderTest extends TestCase {
         assertEquals(counts.exceptions, summary.getExceptions());
     }
 
+    @Test
     public void testMakeResponse() throws Exception {
         MockRequest request = new MockRequest();
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -92,14 +100,17 @@ public class TestResultFormattingResponderTest extends TestCase {
         assertSubString("Mock Results", content);
     }
 
+    @Test
     public void testMockFormatter() throws Exception {
         checkFormatterCreated(null, MockResultFormatter.class);
     }
 
+    @Test
     public void testHtmlFormatter() throws Exception {
         checkFormatterCreated("html", HtmlResultFormatter.class);
     }
 
+    @Test
     public void testXmlFormatter() throws Exception {
         checkFormatterCreated("xml", XmlResultFormatter.class);
     }

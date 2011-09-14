@@ -3,14 +3,17 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import junit.framework.TestCase;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class NotFoundResponderTest extends TestCase {
+public class NotFoundResponderTest extends FitnesseBaseTestCase {
+    @Test
     public void testResponse() throws Exception {
         MockRequest request = new MockRequest();
         request.setResource("some page");
@@ -28,6 +31,7 @@ public class NotFoundResponderTest extends TestCase {
         assertHasRegexp("Not Found", body);
     }
 
+    @Test
     public void testHasEditLinkForWikiWords() throws Exception {
         MockRequest request = new MockRequest();
         request.setResource("PageOne.PageTwo");

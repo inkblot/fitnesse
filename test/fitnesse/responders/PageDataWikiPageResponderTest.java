@@ -3,22 +3,28 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class PageDataWikiPageResponderTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage pageOne;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         pageOne = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "Line one\nLine two");
     }
 
+    @Test
     public void testGetPageData() throws Exception {
         Responder responder = new PageDataWikiPageResponder();
         MockRequest request = new MockRequest();

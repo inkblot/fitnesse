@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SaveRecorderTest {
+public class SaveRecorderTest extends FitnesseBaseTestCase {
     public WikiPage somePage;
     public WikiPage root;
     private PageCrawler crawler;

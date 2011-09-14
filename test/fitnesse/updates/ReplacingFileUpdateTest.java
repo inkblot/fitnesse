@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
 
@@ -18,13 +20,13 @@ public class ReplacingFileUpdateTest extends UpdateTestCase {
     public final String destPath = UpdateTestCase.testDir + "/" + UpdateTestCase.rootName + "/" + destDirName + "/testFile";
     public final File destFile = new File(destPath);
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         sourceFile.createNewFile();
     }
 
+    @After
     public void tearDown() throws Exception {
-        super.tearDown();
         sourceFile.delete();
     }
 

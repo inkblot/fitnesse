@@ -1,22 +1,26 @@
-// Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
-// Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static util.RegexAssertions.assertSubString;
 
-public class HtmlUtilTest extends TestCase {
+public class HtmlUtilTest extends FitnesseBaseTestCase {
     private static final String endl = HtmlElement.endl;
 
     private WikiPage root;
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("root");
     }
 
+    @Test
     public void testBreadCrumbsWithCurrentPageLinked() throws Exception {
         String trail = "1.2.3.4";
         HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(trail);
@@ -24,6 +28,7 @@ public class HtmlUtilTest extends TestCase {
         assertEquals(expected, breadcrumbs.html());
     }
 
+    @Test
     public void testBreadCrumbsWithCurrentPageNotLinked() throws Exception {
         String trail = "1.2.3.4";
         HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithCurrentPageNotLinked(trail);
@@ -31,6 +36,7 @@ public class HtmlUtilTest extends TestCase {
         assertEquals(expected, breadcrumbs.html());
     }
 
+    @Test
     public void testBreadCrumbsWithPageType() throws Exception {
         String trail = "1.2.3.4";
         HtmlTag breadcrumbs = HtmlUtil.makeBreadCrumbsWithPageType(trail, "Some Type");
@@ -55,17 +61,20 @@ public class HtmlUtilTest extends TestCase {
                 "<a href=\"/1.2.3\">3</a>." + endl;
     }
 
+    @Test
     public void testMakeFormTag() throws Exception {
         HtmlTag formTag = HtmlUtil.makeFormTag("method", "action");
         assertSubString("method", formTag.getAttribute("method"));
         assertSubString("action", formTag.getAttribute("action"));
     }
 
+    @Test
     public void testMakeDivTag() throws Exception {
         String expected = "<div class=\"myClass\"></div>" + HtmlElement.endl;
         assertEquals(expected, HtmlUtil.makeDivTag("myClass").html());
     }
 
+    @Test
     public void testMakeBreadCrumbsWithCurrentPageLinkedWithEmptyArray() throws Exception {
         try {
             HtmlUtil.makeBreadCrumbsWithCurrentPageLinked(".");
@@ -75,12 +84,14 @@ public class HtmlUtilTest extends TestCase {
         }
     }
 
+    @Test
     public void testMakeDefaultActions() throws Exception {
         String pageName = "SomePage";
         String html = getActionsHtml(pageName);
         verifyDefaultLinks(html, "SomePage");
     }
 
+    @Test
     public void testMakeActionsWithTestButtonWhenNameStartsWithTest() throws Exception {
         String pageName = "TestSomething";
         String html = getActionsHtml(pageName);
@@ -88,6 +99,7 @@ public class HtmlUtilTest extends TestCase {
         assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
     }
 
+    @Test
     public void testMakeActionsWithSuffixButtonWhenNameEndsWithTest() throws Exception {
         String pageName = "SomethingTest";
         String html = getActionsHtml(pageName);
@@ -95,6 +107,7 @@ public class HtmlUtilTest extends TestCase {
         assertSubString("<a href=\"" + pageName + "?test\" accesskey=\"t\">Test</a>", html);
     }
 
+    @Test
     public void testMakeActionsWithSuiteButtonWhenNameStartsWithSuite() throws Exception {
         String pageName = "SuiteNothings";
         String html = getActionsHtml(pageName);
@@ -102,6 +115,7 @@ public class HtmlUtilTest extends TestCase {
         assertSubString("<a href=\"" + pageName + "?suite\" accesskey=\"\">Suite</a>", html);
     }
 
+    @Test
     public void testMakeActionsWithSuiteButtonWhenNameEndsWithSuite() throws Exception {
         String pageName = "NothingsSuite";
         String html = getActionsHtml(pageName);
@@ -125,6 +139,7 @@ public class HtmlUtilTest extends TestCase {
         assertSubString("<a href=\".FitNesse.UserGuide\" accesskey=\"\">User Guide</a>", html);
     }
 
+    @Test
     public void testMakeReplaceElementScript() throws Exception {
         String newText = "<p>My string has \"quotes\" and \r \n</p>";
         HtmlTag scriptTag = HtmlUtil.makeReplaceElementScript("element-name", newText);
@@ -133,6 +148,7 @@ public class HtmlUtilTest extends TestCase {
         assertSubString(expected, scriptTag.html());
     }
 
+    @Test
     public void testMakeAppendElementScript() throws Exception {
         String appendText = "<p>My string has \"quotes\" and \r \n</p>";
         HtmlTag scriptTag = HtmlUtil.makeAppendElementScript("element-name", appendText);
@@ -145,6 +161,7 @@ public class HtmlUtilTest extends TestCase {
         assertSubString(expected3, scriptTag.html());
     }
 
+    @Test
     public void testMakeSilentLink() throws Exception {
         HtmlTag tag = HtmlUtil.makeSilentLink("test?responder", new RawHtml("string with \"quotes\""));
         assertSubString("<a href=\"#\" onclick=\"doSilentRequest('test?responder')\">string with \"quotes\"</a>", tag.html());

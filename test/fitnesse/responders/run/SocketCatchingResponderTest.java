@@ -3,15 +3,19 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.testutil.SimpleSocketSeeker;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class SocketCatchingResponderTest extends TestCase {
+public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
     private SocketDealer dealer;
     private SimpleSocketSeeker seeker;
     private MockResponseSender sender;
@@ -19,6 +23,7 @@ public class SocketCatchingResponderTest extends TestCase {
     private FitNesseContext context;
     private MockRequest request;
 
+    @Before
     public void setUp() throws Exception {
         dealer = new SocketDealer();
         seeker = new SimpleSocketSeeker();
@@ -29,9 +34,7 @@ public class SocketCatchingResponderTest extends TestCase {
         request = new MockRequest();
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testSuccess() throws Exception {
         int ticket = dealer.seekingSocket(seeker);
         request.addInput("ticket", ticket + "");
@@ -41,6 +44,7 @@ public class SocketCatchingResponderTest extends TestCase {
         assertEquals("", sender.sentData());
     }
 
+    @Test
     public void testMissingSeeker() throws Exception {
         request.addInput("ticket", "123");
         Response response = responder.makeResponse(context, request);

@@ -2,9 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import org.junit.Test;
+
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class AnchorDeclarationWidgetTest extends WidgetTestCase {
+    @Test
     public void testRegularExpressionToMatch() throws Exception {
         assertTrue("Match 1", Pattern.matches(AnchorDeclarationWidget.REGEXP, "!anchor name"));
         assertTrue("Match 2", Pattern.matches(AnchorDeclarationWidget.REGEXP, "!anchor 1234"));
@@ -14,21 +21,25 @@ public class AnchorDeclarationWidgetTest extends WidgetTestCase {
         assertFalse("Match 6", Pattern.matches(AnchorDeclarationWidget.REGEXP, "!anchor name "));
     }
 
+    @Test
     public void testRendering() throws Exception {
         AnchorDeclarationWidget declarationWidget = new AnchorDeclarationWidget(null, "!anchor name");
         assertEquals("<a name=\"name\"> </a>", declarationWidget.render().trim());
     }
 
+    @Test
     public void testRenderingManyWordMatch() throws Exception {
         AnchorDeclarationWidget declarationWidget = new AnchorDeclarationWidget(null, "!anchor name some other stuff");
         assertEquals("<a name=\"name\"> </a>", declarationWidget.render().trim());
     }
 
+    @Test
     public void testRenderingTextBefore() throws Exception {
         AnchorDeclarationWidget declarationWidget = new AnchorDeclarationWidget(null, "stuff!anchor name some other stuff");
         assertEquals("<a name=\"name\"> </a>", declarationWidget.render().trim());
     }
 
+    @Test
     public void testRenderingTextBeforeWithSpace() throws Exception {
         AnchorDeclarationWidget declarationWidget = new AnchorDeclarationWidget(null, "stuff !anchor name some other stuff");
         assertEquals("<a name=\"name\"> </a>", declarationWidget.render().trim());

@@ -1,6 +1,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
 
-public class StopTestResponderTest {
+public class StopTestResponderTest extends FitnesseBaseTestCase {
 
     private Request request = null;
     private FitNesseContext context = null;

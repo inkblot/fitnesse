@@ -3,13 +3,14 @@
 
 package fitnesse.wiki;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.SimpleCachinePage;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class CachingPageTest {
+public class CachingPageTest extends FitnesseBaseTestCase {
     private CachingPage root;
     private PageCrawler crawler;
     private WikiPagePath pageOnePath;
@@ -103,7 +104,7 @@ public class CachingPageTest {
         PageData data = page.getData();
         assertNotNull(data);
         Thread.sleep(200);
-        ((CachingPage) page).dumpExpiredCachedData();
+        page.dumpExpiredCachedData();
         assertNull(page.getCachedData());
     }
 

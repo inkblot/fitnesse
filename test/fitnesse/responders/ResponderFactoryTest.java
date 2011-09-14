@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.responders.editing.*;
@@ -34,7 +35,7 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ResponderFactoryTest {
+public class ResponderFactoryTest extends FitnesseBaseTestCase {
     private ResponderFactory factory;
     private MockRequest request;
     private PageCrawler crawler;

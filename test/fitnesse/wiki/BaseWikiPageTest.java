@@ -2,15 +2,23 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 
 import java.io.File;
 import java.util.List;
 
-public class BaseWikiPageTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+public class BaseWikiPageTest extends FitnesseBaseTestCase {
     private WikiPage linkingPage;
 
+    @Before
     public void setUp() throws Exception {
         BaseWikiPage root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
         root.addChildPage("LinkedPage");
@@ -18,10 +26,12 @@ public class BaseWikiPageTest extends TestCase {
         linkingPage.addChildPage("ChildPage");
     }
 
+    @After
     public void tearDown() throws Exception {
         FileUtil.deleteFileSystemDirectory("testDir");
     }
 
+    @Test
     public void testGetChildrenUsesSymbolicPages() throws Exception {
         createLink("LinkedPage");
 
@@ -32,11 +42,13 @@ public class BaseWikiPageTest extends TestCase {
         checkSymbolicPage(children.get(1));
     }
 
+    @Test
     public void testGetChildUsesSymbolicPages() throws Exception {
         createLink("LinkedPage");
         checkSymbolicPage(linkingPage.getChildPage("SymLink"));
     }
 
+    @Test
     public void testCanCreateSymLinksToExternalDirectories() throws Exception {
         FileUtil.createDir("testDir");
         FileUtil.createDir("testDir/ExternalRoot");
@@ -55,9 +67,10 @@ public class BaseWikiPageTest extends TestCase {
         assertEquals(FileSystemPage.class, realPage.getClass());
 
         assertEquals("testDir/ExternalRoot", ((FileSystemPage) realPage).getFileSystemPath());
-        assertEquals("ExternalRoot", ((FileSystemPage) realPage).getName());
+        assertEquals("ExternalRoot", realPage.getName());
     }
 
+    @Test
     public void testExternalSymbolicLinkToNewDirectory() throws Exception {
         FileUtil.createDir("testDir");
         createLink("file://testDir/ExternalRoot");

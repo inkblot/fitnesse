@@ -3,23 +3,30 @@
 package fitnesse.responders.editing;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static util.RegexAssertions.assertSubString;
 
-public class SymbolicLinkResponderTest extends TestCase {
+public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     private WikiPage pageOne;
     private WikiPage childTwo;
     private MockRequest request;
     private Responder responder;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");                      //#  root
         pageOne = context.root.addChildPage("PageOne");             //#    |--PageOne
@@ -33,18 +40,22 @@ public class SymbolicLinkResponderTest extends TestCase {
         responder = new SymbolicLinkResponder();
     }
 
+    @After
     public void tearDown() throws Exception {
         FileUtil.deleteFileSystemDirectory("testDir");
     }
 
+    @Test
     public void testSubmitGoodForm() throws Exception {
         executeSymbolicLinkTestWith("SymLink", "PageTwo");
     }
 
+    @Test
     public void testShouldTrimSpacesOnLinkPath() throws Exception {
         executeSymbolicLinkTestWith("SymLink", "    PageTwo   ");
     }
 
+    @Test
     public void testShouldTrimSpacesOnLinkName() throws Exception {
         executeSymbolicLinkTestWith("   SymLink   ", "PageTwo");
     }
@@ -61,10 +72,12 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertEquals(SymbolicPage.class, symLink.getClass());
     }
 
+    @Test
     public void testSubmitGoodFormToSiblingChild() throws Exception {
         executeSymbolicLinkTestWith("SymLink", "PageTwo.ChildTwo");
     }
 
+    @Test
     public void testSubmitGoodFormToChildSibling() throws Exception {
         request.setResource("PageTwo.ChildTwo");
         request.addInput("linkName", "SymLink");
@@ -78,6 +91,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertEquals(SymbolicPage.class, symLink.getClass());
     }
 
+    @Test
     public void testSubmitGoodFormToAbsolutePath() throws Exception {
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", ".PageTwo");
@@ -90,6 +104,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertEquals(SymbolicPage.class, symLink.getClass());
     }
 
+    @Test
     public void testSubmitGoodFormToSubChild() throws Exception {
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", ">ChildOne");
@@ -102,6 +117,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertEquals(SymbolicPage.class, symLink.getClass());
     }
 
+    @Test
     public void testSubmitGoodFormToSibling() throws Exception {
         request.addInput("linkName", "SymTwo");
         request.addInput("linkPath", "PageTwo");
@@ -114,6 +130,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertEquals(SymbolicPage.class, symLink.getClass());
     }
 
+    @Test
     public void testSubmitGoodFormToBackwardRelative() throws Exception {
         request.setResource("PageTwo.ChildTwo");
         request.addInput("linkName", "SymLink");
@@ -127,6 +144,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertEquals(SymbolicPage.class, symLink.getClass());
     }
 
+    @Test
     public void testRemoval() throws Exception {
         PageData data = pageOne.getData();
         WikiPageProperty symLinks = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
@@ -141,6 +159,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertNull(pageOne.getChildPage("SymLink"));
     }
 
+    @Test
     public void testRename() throws Exception {
         PageData data = pageOne.getData();
         WikiPageProperty symLinks = data.getProperties().set(SymbolicPage.PROPERTY_NAME);
@@ -156,6 +175,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertNotNull(pageOne.getChildPage("NewLink"));
     }
 
+    @Test
     public void testNoPageAtPath() throws Exception {
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", "NonExistingPage");
@@ -167,6 +187,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertSubString("Error Occured", content);
     }
 
+    @Test
     public void testAddFailWhenPageAlreadyHasChild() throws Exception {
         pageOne.addChildPage("SymLink");
         request.addInput("linkName", "SymLink");
@@ -179,6 +200,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertSubString("Error Occured", content);
     }
 
+    @Test
     public void testSubmitFormForLinkToExternalRoot() throws Exception {
         FileUtil.createDir("testDir");
         FileUtil.createDir("testDir/ExternalRoot");
@@ -198,6 +220,7 @@ public class SymbolicLinkResponderTest extends TestCase {
         assertEquals("testDir/ExternalRoot", ((FileSystemPage) realPage).getFileSystemPath());
     }
 
+    @Test
     public void testSubmitFormForLinkToExternalRootThatsMissing() throws Exception {
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", "file://testDir/ExternalRoot");

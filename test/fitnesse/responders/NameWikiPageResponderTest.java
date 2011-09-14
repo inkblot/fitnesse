@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -18,7 +19,7 @@ import static junit.framework.Assert.assertEquals;
 import static util.RegexAssertions.assertDoesNotHaveRegexp;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class NameWikiPageResponderTest {
+public class NameWikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private NameWikiPageResponder responder;
     private MockRequest request;

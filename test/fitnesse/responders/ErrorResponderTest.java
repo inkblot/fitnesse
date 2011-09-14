@@ -3,15 +3,19 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import junit.framework.TestCase;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class ErrorResponderTest extends TestCase {
+public class ErrorResponderTest extends FitnesseBaseTestCase {
+
+    @Test
     public void testResponse() throws Exception {
         Responder responder = new ErrorResponder(new Exception("some error message"));
         SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext("RooT"), new MockRequest());
@@ -25,6 +29,7 @@ public class ErrorResponderTest extends TestCase {
         assertHasRegexp("java.lang.Exception: some error message", body);
     }
 
+    @Test
     public void testWithMessage() throws Exception {
         Responder responder = new ErrorResponder("error Message");
         SimpleResponse response = (SimpleResponse) responder.makeResponse(new FitNesseContext("RooT"), new MockRequest());

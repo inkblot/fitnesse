@@ -3,6 +3,7 @@
 package fitnesse.responders.editing;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
 import fitnesse.http.MockRequest;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SaveResponderTest {
+public class SaveResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private Response response;
     public MockRequest request;

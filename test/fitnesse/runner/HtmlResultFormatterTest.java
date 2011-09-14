@@ -3,22 +3,28 @@
 package fitnesse.runner;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestSummary;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 import util.StreamReader;
 
 import java.io.InputStream;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class HtmlResultFormatterTest extends TestCase {
+public class HtmlResultFormatterTest extends FitnesseBaseTestCase {
     private HtmlResultFormatter formatter;
 
+    @Before
     public void setUp() throws Exception {
         formatter = new HtmlResultFormatter(new FitNesseContext("RooT"), "somehost.com:8080", "FitNesse");
     }
 
+    @Test
     public void testIsValidHtml() throws Exception {
         String html = getHtml().trim();
         assertTrue(html.startsWith("<!DOCTYPE HTML"));
@@ -33,6 +39,7 @@ public class HtmlResultFormatterTest extends TestCase {
         assertSubString("<body onload=\"localizeInPageLinks()\"", html);
     }
 
+    @Test
     public void testUsage() throws Exception {
         formatter.acceptResult(new PageResult("PageOne", new TestSummary(1, 0, 0, 0), "page one"));
         formatter.acceptResult(new PageResult("PageTwo", new TestSummary(0, 1, 0, 0), "page two"));

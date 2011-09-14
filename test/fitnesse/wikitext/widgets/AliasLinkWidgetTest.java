@@ -3,21 +3,24 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static util.RegexAssertions.assertDoesNotHaveRegexp;
 
 public class AliasLinkWidgetTest extends WidgetTestCase {
     private WikiPage root;
     private PageCrawler crawler;
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testMatches() throws Exception {
         assertMatch("[[tag][link]]");
         assertMatch("[[this is fun][http://www.objectmentor.com]]");
@@ -31,6 +34,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertNoMatch("[[x]]");
     }
 
+    @Test
     public void testHtmlAtTopLevelPage() throws Exception {
         crawler.addPage(root, PathParser.parse("TestPage"));
         ParentWidget wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")));
@@ -39,6 +43,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertEquals("<a href=\"TestPage\">tag</a>", html);
     }
 
+    @Test
     public void testHtmlAtTopLevelPageWithQuestionMark() throws Exception {
         crawler.addPage(root, PathParser.parse("TestPage"));
         ParentWidget wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")));
@@ -47,6 +52,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertEquals("<a href=\"TestPage?test\">tag</a>", html);
     }
 
+    @Test
     public void testHtmlAtTopLevelPageWithAnchor() throws Exception {
         crawler.addPage(root, PathParser.parse("TestPage"));
         ParentWidget wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")));
@@ -55,6 +61,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertEquals("<a href=\"TestPage#anchor\">tag</a>", html);
     }
 
+    @Test
     public void testHtmlOnSubPage() throws Exception {
         crawler.addPage(root, PathParser.parse("ParenT"), "Content");
         WikiPage parent = root.getChildPage("ParenT");
@@ -68,6 +75,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertEquals("<a href=\"ParenT\">tag</a>", w2.render());
     }
 
+    @Test
     public void testHtmlForPageThatDoesNotExist() throws Exception {
         crawler.addPage(root, PathParser.parse("FrontPage"));
         ParentWidget parentWidget = new WidgetRoot(new PagePointer(root, PathParser.parse("FrontPage")));
@@ -75,12 +83,14 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertEquals("tag<a title=\"create page\" href=\"TestPage?edit&amp;nonExistent=true\">[?]</a>", w.render());
     }
 
+    @Test
     public void testUparrowOnPageThatDoesNotExist() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("FrontPage"));
         AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(page), "[[tag][^TestPage]]");
         assertEquals("tag<a title=\"create page\" href=\"FrontPage.TestPage?edit&amp;nonExistent=true\">[?]</a>", w.render());
     }
 
+    @Test
     public void testUparrowOnPageThatDoesExist() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
         crawler.addPage(page, PathParser.parse("SubPage"));
@@ -90,6 +100,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertEquals("<a href=\"TestPage.SubPage\">tag</a>", html);
     }
 
+    @Test
     public void testSpacePaddingOnAliasLink() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"));
         crawler.addPage(page, PathParser.parse("SubPage"));
@@ -99,6 +110,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertEquals("<a href=\"TestPage.SubPage\">tag</a>", html);
     }
 
+    @Test
     public void testVariableIsRenderedInAliasLink() throws Exception {
         ParentWidget wroot = new WidgetRoot(root);
         wroot.addVariable("X", "Y");
@@ -106,6 +118,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertEquals("<a href=\"Y\">x</a>", w.render());
     }
 
+    @Test
     public void testVariableIsRenderedInAliasTag() throws Exception {
         ParentWidget wroot = new WidgetRoot(root);
         wroot.addVariable("X", "Y");
@@ -113,21 +126,25 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         assertEquals("<a href=\"x\">Y</a>", w.render());
     }
 
+    @Test
     public void testStandardLink() throws Exception {
         AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(root), "[[x][http://a.com]]");
         assertEquals("<a href=\"http://a.com\">x</a>", w.render());
     }
 
+    @Test
     public void testStandardLinkWithQuestionMark() throws Exception {
         AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(root), "[[x][http://a.com?zap]]");
         assertEquals("<a href=\"http://a.com?zap\">x</a>", w.render());
     }
 
+    @Test
     public void testStandardLinkWithAnchor() throws Exception {
         AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(root), "[[x][http://a.com#zap]]");
         assertEquals("<a href=\"http://a.com#zap\">x</a>", w.render());
     }
 
+    @Test
     public void testQuestionMarkDoesNotAppear() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("FrontPage"));
         AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(page), "[[here][http://www.objectmentor.com/FitNesse/fitnesse.zip]]");
@@ -138,6 +155,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         return AliasLinkWidget.REGEXP;
     }
 
+    @Test
     public void testUsageOnRootPageDoesntCrash() throws Exception {
         AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(root), "[[here][PageOne]]");
         try {
@@ -147,12 +165,14 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         }
     }
 
+    @Test
     public void testAsWikiText() throws Exception {
         String ALIAS_LINK = "[[this][that]]";
         AliasLinkWidget w = new AliasLinkWidget(new WidgetRoot(root), ALIAS_LINK);
         assertEquals(ALIAS_LINK, w.asWikiText());
     }
 
+    @Test
     public void testLinkToNonExistentWikiPageOnVirtualPage() throws Exception {
         // When a virtual page contains a link to a non-existent page, the ? should
         // issue an edit request to the remote machine

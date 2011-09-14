@@ -3,18 +3,21 @@
 package fitnesse.responders.editing;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PathParser;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import static util.RegexAssertions.assertHasRegexp;
 
-public class MergeResponderTest extends TestCase {
+public class MergeResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         context.root.getPageCrawler().addPage(context.root, PathParser.parse("SimplePage"), "this is SimplePage");
@@ -24,9 +27,7 @@ public class MergeResponderTest extends TestCase {
         request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testHtml() throws Exception {
         Responder responder = new MergeResponder(request);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
@@ -36,6 +37,7 @@ public class MergeResponderTest extends TestCase {
         assertHasRegexp("some new content", response.getContent());
     }
 
+    @Test
     public void testAttributeValues() throws Exception {
         request.addInput("Edit", "On");
         request.addInput("PageType", "Test");

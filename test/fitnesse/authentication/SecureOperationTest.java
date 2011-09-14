@@ -3,11 +3,16 @@
 package fitnesse.authentication;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class SecureOperationTest extends TestCase {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class SecureOperationTest extends FitnesseBaseTestCase {
     private SecureReadOperation sro;
     private WikiPage root;
     FitNesseContext context;
@@ -16,7 +21,8 @@ public class SecureOperationTest extends TestCase {
     private WikiPagePath parentPagePath;
     private WikiPagePath childPagePath;
 
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         root = context.root;
         sro = new SecureReadOperation();
@@ -26,6 +32,7 @@ public class SecureOperationTest extends TestCase {
         childPagePath = PathParser.parse("ChildPage");
     }
 
+    @Test
     public void testNormalPageDoesNotRequireAuthentication() throws Exception {
         String insecurePageName = "InsecurePage";
         WikiPagePath insecurePagePath = PathParser.parse(insecurePageName);
@@ -34,6 +41,7 @@ public class SecureOperationTest extends TestCase {
         assertFalse(sro.shouldAuthenticate(context, request));
     }
 
+    @Test
     public void testReadSecurePageRequresAuthentication() throws Exception {
         String securePageName = "SecurePage";
         WikiPagePath securePagePath = PathParser.parse(securePageName);
@@ -49,6 +57,7 @@ public class SecureOperationTest extends TestCase {
         securePage.commit(data);
     }
 
+    @Test
     public void testChildPageOfSecurePageRequiresAuthentication() throws Exception {
         WikiPage parentPage = crawler.addPage(root, parentPagePath);
         makeSecure(parentPage);
@@ -57,11 +66,13 @@ public class SecureOperationTest extends TestCase {
         assertTrue(sro.shouldAuthenticate(context, request));
     }
 
+    @Test
     public void testNonExistentPageCanBeAuthenticated() throws Exception {
         request.setResource("NonExistentPage");
         assertFalse(sro.shouldAuthenticate(context, request));
     }
 
+    @Test
     public void testParentOfNonExistentPageStillSetsPriviledges() throws Exception {
         WikiPage parentPage = crawler.addPage(root, parentPagePath);
         makeSecure(parentPage);
@@ -69,6 +80,7 @@ public class SecureOperationTest extends TestCase {
         assertTrue(sro.shouldAuthenticate(context, request));
     }
 
+    @Test
     public void testChildPageIsRestricted() throws Exception {
         WikiPage parentPage = crawler.addPage(root, parentPagePath);
         WikiPage childPage = crawler.addPage(parentPage, childPagePath);
@@ -77,6 +89,7 @@ public class SecureOperationTest extends TestCase {
         assertTrue(sro.shouldAuthenticate(context, request));
     }
 
+    @Test
     public void testBlankResource() throws Exception {
         request.setResource("");
         assertFalse(sro.shouldAuthenticate(context, request));

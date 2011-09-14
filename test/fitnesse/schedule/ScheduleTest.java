@@ -2,14 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.schedule;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-public class ScheduleTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+public class ScheduleTest extends FitnesseBaseTestCase {
     private boolean shouldAddCounters;
 
+    @Test
     public void testRunsAtIntervals() throws Exception {
         ScheduleImpl schedule = new ScheduleImpl(250);
         Counter counter = new Counter();
@@ -20,6 +26,7 @@ public class ScheduleTest extends TestCase {
         assertTrue(String.format("Counter: %d should have been >= 3", counter.count), counter.count >= 3);
     }
 
+    @Test
     public void testAddingWhileRunning() throws Exception {
         ScheduleImpl schedule = new ScheduleImpl(250);
         Counter counter = new Counter();
@@ -32,6 +39,7 @@ public class ScheduleTest extends TestCase {
         assertTrue(counter.count >= 1);
     }
 
+    @Test
     public void testLotsOfAddingWhileRunning() throws Exception {
         final ScheduleImpl schedule = new ScheduleImpl(250);
         Runnable adder = new Runnable() {
@@ -58,6 +66,7 @@ public class ScheduleTest extends TestCase {
         }
     }
 
+    @Test
     public void testExceptionDoesNotCrashRun() throws Exception {
         ScheduleImpl schedule = new ScheduleImpl(250);
         Counter counter = new Counter();

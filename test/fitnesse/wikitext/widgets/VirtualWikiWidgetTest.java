@@ -3,27 +3,26 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.testutil.FitNesseUtil;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class VirtualWikiWidgetTest extends WidgetTestCase {
-    public void setUp() throws Exception {
-    }
-
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testRegexp() throws Exception {
         assertMatch("!virtualwiki " + FitNesseUtil.URL + "SomePage");
         assertNoMatch("!virtualwiki SomeName");
     }
 
+    @Test
     public void testPieces() throws Exception {
         String text = "!virtualwiki " + FitNesseUtil.URL + "SomePage.ChildPage";
         VirtualWikiWidget widget = new VirtualWikiWidget(new MockWidgetRoot(), text);
         assertEquals(FitNesseUtil.URL + "SomePage.ChildPage", widget.getRemoteUrl());
     }
 
+    @Test
     public void testHtml() throws Exception {
         String text = "!virtualwiki " + FitNesseUtil.URL + "SomePage.ChildPage";
         VirtualWikiWidget widget = new VirtualWikiWidget(new MockWidgetRoot(), text);

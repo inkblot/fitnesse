@@ -3,16 +3,21 @@
 package fitnesse.responders.versions;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class RollbackResponderTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class RollbackResponderTest extends FitnesseBaseTestCase {
     private WikiPage page;
     private Response response;
 
+    @Before
     public void setUp() throws Exception {
         FitNesseContext context = new FitNesseContext("RooT");
         page = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "original content");
@@ -29,9 +34,7 @@ public class RollbackResponderTest extends TestCase {
         response = responder.makeResponse(context, request);
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testStuff() throws Exception {
         assertEquals(303, response.getStatus());
         assertEquals("PageOne", response.getHeader("Location"));

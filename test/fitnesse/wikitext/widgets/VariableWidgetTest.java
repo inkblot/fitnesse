@@ -7,25 +7,26 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
 public class VariableWidgetTest extends WidgetTestCase {
     private WikiPage root;
     private PageCrawler crawler;
-    private WikiPage page;
     private ParentWidget widgetRoot;
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("root");
         crawler = root.getPageCrawler();
-        page = crawler.addPage(root, PathParser.parse("MyPage"));
+        WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"));
         widgetRoot = new WidgetRoot("", page);
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testMatches() throws Exception {
         assertMatch("${X}");
         assertMatch("${xyz}");
@@ -39,18 +40,21 @@ public class VariableWidgetTest extends WidgetTestCase {
         return VariableWidget.REGEXP;
     }
 
+    @Test
     public void testVariableIsExpressed() throws Exception {
         widgetRoot.addVariable("x", "1");
         VariableWidget w = new VariableWidget(widgetRoot, "${x}");
         assertEquals("1", w.render());
     }
 
+    @Test
     public void testVariableIsExpressedWithPeriods() throws Exception {
         widgetRoot.addVariable("x.y.z", "2");
         VariableWidget w = new VariableWidget(widgetRoot, "${x.y.z}");
         assertEquals("2", w.render());
     }
 
+    @Test
     public void testRenderTwice() throws Exception {
         widgetRoot.addVariable("x", "1");
         VariableWidget w = new VariableWidget(widgetRoot, "${x}");
@@ -58,6 +62,7 @@ public class VariableWidgetTest extends WidgetTestCase {
         assertEquals("1", w.render());
     }
 
+    @Test
     public void testVariableInParentPage() throws Exception {
         WikiPage parent = crawler.addPage(root, PathParser.parse("ParentPage"), "!define var {zot}\n");
         WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "ick");
@@ -67,6 +72,7 @@ public class VariableWidgetTest extends WidgetTestCase {
         assertEquals("zot", w.render());
     }
 
+    @Test
     public void testVariableInParentPageCanReferenceVariableInChildPage() throws Exception {
         WikiPage parent = crawler.addPage(root, PathParser.parse("ParentPage"), "!define X (value=${Y})\n");
         WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "!define Y {child}\n${X}\n");
@@ -75,6 +81,7 @@ public class VariableWidgetTest extends WidgetTestCase {
         assertSubString("value=child", html);
     }
 
+    @Test
     public void testUndefinedVariable() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"));
         ParentWidget widgetRoot = new WidgetRoot("", page);
@@ -82,16 +89,19 @@ public class VariableWidgetTest extends WidgetTestCase {
         assertSubString("undefined variable: x", w.render());
     }
 
+    @Test
     public void testAsWikiText() throws Exception {
         VariableWidget w = new VariableWidget(widgetRoot, "${x}");
         assertEquals("${x}", w.asWikiText());
     }
 
+    @Test
     public void testAsWikiTextWithPeriods() throws Exception {
         VariableWidget w = new VariableWidget(widgetRoot, "${x.y.z}");
         assertEquals("${x.y.z}", w.asWikiText());
     }
 
+    @Test
     public void testLiteralsInheritedFromParent() throws Exception {
         WikiPage parent = crawler.addPage
                 (root,
@@ -108,6 +118,7 @@ public class VariableWidgetTest extends WidgetTestCase {
         assertEquals("paren literal", w.render());
     }
 
+    @Test
     public void testNestedVariable() throws Exception {
         WikiPage parent = crawler.addPage(root, PathParser.parse("ParentPage"), "!define var {zot}\n!define voo (x${var})\n");
         WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "ick");

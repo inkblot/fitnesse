@@ -1,5 +1,6 @@
 package fitnesse.components;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.hamcrest.Description;
@@ -14,7 +15,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-public class RegularExpressionWikiPageFinderTest implements SearchObserver {
+public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase implements SearchObserver {
 
     private WikiPage root;
     private WikiPage pageOne;

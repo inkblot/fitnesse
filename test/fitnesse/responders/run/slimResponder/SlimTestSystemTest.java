@@ -3,6 +3,7 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
@@ -25,7 +26,7 @@ import java.net.SocketException;
 
 import static org.junit.Assert.*;
 
-public class SlimTestSystemTest {
+public class SlimTestSystemTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private FitNesseContext context;

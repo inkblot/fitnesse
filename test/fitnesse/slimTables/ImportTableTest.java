@@ -10,10 +10,9 @@ import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
 public class ImportTableTest extends SlimTableTestSupport<ImportTable> {
-    private final String importTableHeader = "|Import|\n";
 
     private void buildInstructionsFor(String scriptStatements) throws Exception {
-        makeSlimTableAndBuildInstructions(importTableHeader + scriptStatements);
+        makeSlimTableAndBuildInstructions("|Import|\n" + scriptStatements);
     }
 
     @Test

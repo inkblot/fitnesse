@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
@@ -16,7 +17,7 @@ import util.StandardOutAndErrorRecorder;
 
 import static org.junit.Assert.assertEquals;
 
-public class WikiImportTestEventListenerTest {
+public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     private WikiImportTestEventListener eventListener;
     private MockTestResponder testResponder;
     private MockSuiteResponder suiteResponder;

@@ -2,22 +2,26 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class RecentChangesTest extends TestCase {
+public class RecentChangesTest extends FitnesseBaseTestCase {
     private WikiPage rootPage;
     private WikiPage newPage;
     private WikiPage page1;
     private WikiPage page2;
 
+    @Before
     public void setUp() throws Exception {
         rootPage = InMemoryPage.makeRoot("RooT");
         newPage = rootPage.addChildPage("SomeNewPage");
@@ -25,9 +29,7 @@ public class RecentChangesTest extends TestCase {
         page2 = rootPage.addChildPage("PageTwo");
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testFirstRecentChange() throws Exception {
         assertEquals(false, rootPage.hasChildPage("RecentChanges"));
         RecentChanges.updateRecentChanges(newPage.getData());
@@ -38,6 +40,7 @@ public class RecentChangesTest extends TestCase {
         assertHasRegexp("SomeNewPage", lines.get(0));
     }
 
+    @Test
     public void testTwoChanges() throws Exception {
         RecentChanges.updateRecentChanges(page1.getData());
         RecentChanges.updateRecentChanges(page2.getData());
@@ -48,6 +51,7 @@ public class RecentChangesTest extends TestCase {
         assertHasRegexp("PageOne", lines.get(1));
     }
 
+    @Test
     public void testNoDuplicates() throws Exception {
         RecentChanges.updateRecentChanges(page1.getData());
         RecentChanges.updateRecentChanges(page1.getData());
@@ -57,6 +61,7 @@ public class RecentChangesTest extends TestCase {
         assertHasRegexp("PageOne", lines.get(0));
     }
 
+    @Test
     public void testMaxSize() throws Exception {
         for (int i = 0; i < 101; i++) {
             StringBuilder b = new StringBuilder("LotsOfAs");
@@ -71,6 +76,7 @@ public class RecentChangesTest extends TestCase {
         assertEquals(100, lines.size());
     }
 
+    @Test
     public void testUsernameColumnWithoutUser() throws Exception {
         RecentChanges.updateRecentChanges(page1.getData());
         WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
@@ -79,6 +85,7 @@ public class RecentChangesTest extends TestCase {
         assertSubString("|PageOne||", line);
     }
 
+    @Test
     public void testUsernameColumnWithUser() throws Exception {
         PageData data = page1.getData();
         data.setAttribute(PageData.LAST_MODIFYING_USER, "Aladdin");

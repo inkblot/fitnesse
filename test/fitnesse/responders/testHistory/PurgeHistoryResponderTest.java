@@ -1,6 +1,7 @@
 package fitnesse.responders.testHistory;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -17,7 +18,7 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 
-public class PurgeHistoryResponderTest {
+public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     private File resultsDirectory;
     private TestHistory history;
     private FitNesseContext context;

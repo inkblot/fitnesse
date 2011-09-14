@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.components.TraversalListener;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class PageCrawlerTest implements TraversalListener {
+public class PageCrawlerTest extends FitnesseBaseTestCase implements TraversalListener {
     private WikiPage root;
     private WikiPage page1;
     private WikiPage page2;

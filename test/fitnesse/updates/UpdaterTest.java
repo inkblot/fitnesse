@@ -3,6 +3,7 @@
 package fitnesse.updates;
 
 import fitnesse.wiki.PathParser;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -12,8 +13,8 @@ import static org.junit.Assert.assertTrue;
 
 public class UpdaterTest extends UpdateTestCase {
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         UpdaterImplementation.testing = true;
         crawler.addPage(root, PathParser.parse("PageOne"));
     }

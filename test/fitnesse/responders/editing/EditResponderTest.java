@@ -3,6 +3,7 @@
 package fitnesse.responders.editing;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
@@ -10,18 +11,22 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static util.RegexAssertions.assertMatches;
 import static util.RegexAssertions.assertSubString;
 
-public class EditResponderTest extends TestCase {
+public class EditResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private MockRequest request;
     private EditResponder responder;
     private PageCrawler crawler;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("root");
         root = context.root;
@@ -30,6 +35,7 @@ public class EditResponderTest extends TestCase {
         responder = new EditResponder();
     }
 
+    @Test
     public void testResponse() throws Exception {
         crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
         request.setResource("ChildPage");
@@ -49,6 +55,7 @@ public class EditResponderTest extends TestCase {
         assertSubString(String.format("textarea class=\"%s no_wrap\" wrap=\"off\"", EditResponder.CONTENT_INPUT_NAME), body);
     }
 
+    @Test
     public void testResponseWhenNonexistentPageRequestsed() throws Exception {
         request.setResource("NonExistentPage");
         request.addInput("nonExistent", true);
@@ -68,6 +75,7 @@ public class EditResponderTest extends TestCase {
         assertSubString("type=\"submit\"", body);
     }
 
+    @Test
     public void testRedirectToRefererEffect() throws Exception {
         crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
         request.setResource("ChildPage");
@@ -83,6 +91,7 @@ public class EditResponderTest extends TestCase {
         assertSubString(redirectInputTag.html(), body);
     }
 
+    @Test
     public void testPasteFromExcelExists() throws Exception {
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String body = response.getContent();
@@ -90,6 +99,7 @@ public class EditResponderTest extends TestCase {
         assertMatches("spreadsheetSupport.js", body);
     }
 
+    @Test
     public void testFormatterScriptsExist() throws Exception {
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String body = response.getContent();
@@ -97,12 +107,14 @@ public class EditResponderTest extends TestCase {
         assertMatches("wikiFormatterSupport.js", body);
     }
 
+    @Test
     public void testWrapScriptExists() throws Exception {
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String body = response.getContent();
         assertMatches("textareaWrapSupport.js", body);
     }
 
+    @Test
     public void testMissingPageDoesNotGetCreated() throws Exception {
         request.setResource("MissingPage");
         responder.makeResponse(context, request);

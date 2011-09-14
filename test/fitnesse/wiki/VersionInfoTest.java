@@ -2,7 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.Test;
 
 import java.util.Collections;
 import java.util.Date;
@@ -10,7 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class VersionInfoTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class VersionInfoTest extends FitnesseBaseTestCase {
+    @Test
     public void testRegex() throws Exception {
         Matcher match = VersionInfo.COMPEX_NAME_PATTERN.matcher("01234567890123");
         assertTrue(match.find());
@@ -22,12 +27,14 @@ public class VersionInfoTest extends TestCase {
         assertEquals("01234567890123", match.group(2));
     }
 
+    @Test
     public void testGetVersionNumber() throws Exception {
         assertEquals("01234567890123", VersionInfo.getVersionNumber("01234567890123"));
         assertEquals("01234567890123", VersionInfo.getVersionNumber("Joe-01234567890123"));
         assertEquals("09876543210987", VersionInfo.getVersionNumber("Joe-09876543210987"));
     }
 
+    @Test
     public void testSortVersions() throws Exception {
         List<VersionInfo> list = new LinkedList<VersionInfo>();
         VersionInfo toms = new VersionInfo("Tom-45678901234567");
@@ -47,18 +54,21 @@ public class VersionInfoTest extends TestCase {
         assertEquals(anons, list.get(3));
     }
 
+    @Test
     public void testParts() throws Exception {
         VersionInfo version = new VersionInfo("joe-20030101010101");
         assertEquals("joe", version.getAuthor());
         assertEquals("joe-20030101010101", version.getName());
     }
 
+    @Test
     public void testGetCreationTime() throws Exception {
         VersionInfo version = new VersionInfo("joe-20030101010101");
         Date date = version.getCreationTime();
         assertEquals("20030101010101", VersionInfo.makeVersionTimeFormat().format(date));
     }
 
+    @Test
     public void testGetAuthor() throws Exception {
         checkAuthor("01234567890123", "");
         checkAuthor("123-01234567890123", "");

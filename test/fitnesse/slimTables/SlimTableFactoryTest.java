@@ -1,11 +1,9 @@
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -19,13 +17,13 @@ import static org.mockito.Mockito.when;
 public class SlimTableFactoryTest {
     private SlimTableFactory slimTableFactory;
     private Table table;
-    private Map map;
+    private Map<String, Class<? extends SlimTable>> map;
 
     @Before
     public void setUp() {
         slimTableFactory = new SlimTableFactory();
         table = mock(Table.class);
-        map = new HashMap();
+        map = new HashMap<String, Class<? extends SlimTable>>();
         map.put("dt:", DecisionTable.class);
         map.put("dT:", DecisionTable.class);
         map.put("decision:", DecisionTable.class);
@@ -42,11 +40,10 @@ public class SlimTableFactoryTest {
 
     @Test
     public void shouldCreateCorrectSlimTableForTablesType() {
-        Set entrySet = map.entrySet();
+        Set<Entry<String,Class<? extends SlimTable>>> entrySet = map.entrySet();
 
-        for (Iterator iterator = entrySet.iterator(); iterator.hasNext(); ) {
-            Map.Entry entry = (Entry) iterator.next();
-            assertThatTableTypeCreateSlimTableType((String) entry.getKey(), (Class) entry.getValue());
+        for (Entry<String,Class<? extends SlimTable>> entry : entrySet) {
+            assertThatTableTypeCreateSlimTableType(entry.getKey(), entry.getValue());
 
         }
     }

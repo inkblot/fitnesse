@@ -1,5 +1,6 @@
 package fitnesse.components;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -7,6 +8,7 @@ import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -15,7 +17,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CompositePageFinderTestCase {
+public class CompositePageFinderTestCase extends FitnesseBaseTestCase {
 
     protected PageFinder delegate;
     protected CompositePageFinder sut;
@@ -46,11 +48,7 @@ public class CompositePageFinderTestCase {
     }
 
     protected List<WikiPage> setupWikiPageList(WikiPage... pages) {
-        List<WikiPage> returned = new ArrayList<WikiPage>();
-        for (WikiPage page : pages) {
-            returned.add(page);
-        }
-        return returned;
+        return new ArrayList<WikiPage>(Arrays.asList(pages));
     }
 
     protected void assertFoundResultsEqualsExpectation(List<WikiPage> expected2, List<WikiPage> results) {

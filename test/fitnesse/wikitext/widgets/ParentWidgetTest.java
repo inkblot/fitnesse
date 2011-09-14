@@ -2,12 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WikiWidget;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ParentWidgetTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class ParentWidgetTest extends FitnesseBaseTestCase {
     private ParentWidget parent;
     private WikiPage rootPage;
 
@@ -21,18 +25,18 @@ public class ParentWidgetTest extends TestCase {
         }
     }
 
+    @Before
     public void setUp() throws Exception {
         rootPage = InMemoryPage.makeRoot("RooT");
         parent = new MockParentWidget(new MockWidgetRoot());
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testEmptyPage() throws Exception {
         assertEquals(0, parent.numberOfChildren());
     }
 
+    @Test
     public void testAddOneChild() throws Exception {
         MockWidget mock1 = new MockWidget(parent, "mock1");
         assertEquals(1, parent.numberOfChildren());
@@ -41,6 +45,7 @@ public class ParentWidgetTest extends TestCase {
         assertSame(mock1, widget);
     }
 
+    @Test
     public void testAddTwoChildren() throws Exception {
         MockWidget mock1 = new MockWidget(parent, "mock1");
         MockWidget mock2 = new MockWidget(parent, "mock2");
@@ -53,6 +58,7 @@ public class ParentWidgetTest extends TestCase {
         assertTrue("should not have next", !parent.hasNextChild());
     }
 
+    @Test
     public void testNextChildWhenThereIsNoNext() throws Exception {
         try {
             parent.nextChild();
@@ -61,17 +67,20 @@ public class ParentWidgetTest extends TestCase {
         }
     }
 
+    @Test
     public void testChildHtml() throws Exception {
         new MockWidget(parent, "mock1");
         assertEquals("mock1", parent.childHtml());
     }
 
+    @Test
     public void testChildHtml2() throws Exception {
         new MockWidget(parent, "mock1");
         new MockWidget(parent, "mock2");
         assertEquals("mock1mock2", parent.childHtml());
     }
 
+    @Test
     public void testVariables() throws Exception {
         ParentWidget root = new WidgetRoot(rootPage);
         ParentWidget parent1 = new MockParentWidget(root);

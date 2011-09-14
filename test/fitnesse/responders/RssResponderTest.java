@@ -7,6 +7,8 @@ import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,6 +18,9 @@ import util.XmlUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class RssResponderTest extends ResponderTestCase {
     protected Element channelElement;
@@ -30,8 +35,8 @@ public class RssResponderTest extends ResponderTestCase {
         return new RssResponder();
     }
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         SimpleDateFormat dateFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
         date = dateFormat.format(ClockUtil.currentDate());
         SimpleDateFormat rfcDateFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
@@ -40,6 +45,7 @@ public class RssResponderTest extends ResponderTestCase {
         Locale.setDefault(Locale.US);
     }
 
+    @Test
     public void testEmptyRssReport() throws Exception {
         buildRssChannel();
         assertEquals("rss", rssElement.getTagName());
@@ -48,6 +54,7 @@ public class RssResponderTest extends ResponderTestCase {
         assertEquals("FitNesse:", XmlUtil.getTextValue(channelElement, "title"));
     }
 
+    @Test
     public void testOneNewPage() throws Exception {
         NodeList items = getReportedItems("|MyNewPage|me|" + date + "|");
         assertEquals(1, items.getLength());
@@ -58,6 +65,7 @@ public class RssResponderTest extends ResponderTestCase {
         checkItem(items.item(0), title, author, pubDate, description, "http://" + hostName + "/MyNewPage");
     }
 
+    @Test
     public void testTwoNewPages() throws Exception {
         String recentChangeOne = "|MyNewPage|me|" + date + "|";
         String recentChangeTwo = "|SomeOtherPage||" + date + "|";
@@ -68,6 +76,7 @@ public class RssResponderTest extends ResponderTestCase {
         checkItem(items.item(1), "SomeOtherPage", null, rfcDate, rfcDate, "http://" + hostName + "/SomeOtherPage");
     }
 
+    @Test
     public void testReportedPagesSelectedByResource() throws Exception {
         request.setResource("FrontPage");
         String page1 = "|SomePage|me|" + date + "|";
@@ -83,6 +92,7 @@ public class RssResponderTest extends ResponderTestCase {
                 + "/FrontPage.MyPage");
     }
 
+    @Test
     public void testLinkWithSetPrefix() throws Exception {
         PageData data = root.getData();
         data.setContent("!define RSS_PREFIX {http://host/}\n");
@@ -93,12 +103,14 @@ public class RssResponderTest extends ResponderTestCase {
         checkItem(items.item(0), "PageName", "author", rfcDate, "author:" + rfcDate, "http://host/PageName");
     }
 
+    @Test
     public void testLinkWitDefaultPrefix() throws Exception {
         NodeList items = getReportedItems("|PageName|author|" + date + "|");
         assertEquals(1, items.getLength());
         checkItem(items.item(0), "PageName", "author", rfcDate, "author:" + rfcDate, "http://" + hostName + "/PageName");
     }
 
+    @Test
     public void testConvertDateFormat() throws Exception {
         SimpleDateFormat oldFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
         SimpleDateFormat newFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
@@ -109,6 +121,7 @@ public class RssResponderTest extends ResponderTestCase {
         assertEquals(convertedDate, outDate);
     }
 
+    @Test
     public void testBadDateFormat() throws Exception {
         SimpleDateFormat oldFormat = new SimpleDateFormat("h:mm:ss a EEE MMM dd, yyyy");
         String inDate = oldFormat.format(ClockUtil.currentDate());

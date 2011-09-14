@@ -2,30 +2,34 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.widgets.*;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 import util.TimeMeasurement;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class WidgetBuilderTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class WidgetBuilderTest extends FitnesseBaseTestCase {
     private WikiPage mockSource;
 
+    @Before
     public void setUp() throws Exception {
         mockSource = new WikiPageDummy();
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testEmptyPage() throws Exception {
         ParentWidget widget = new WidgetRoot(null, mockSource);
         assertNotNull(widget);
         assertEquals(0, widget.numberOfChildren());
     }
 
+    @Test
     public void testSimpleText() throws Exception {
         ParentWidget page = new WidgetRoot("Hello, World!", mockSource);
         assertNotNull(page);
@@ -34,12 +38,14 @@ public class WidgetBuilderTest extends TestCase {
         testWidgetClassAndText(widget, TextWidget.class, "Hello, World!");
     }
 
+    @Test
     public void testSimpleWikiWord() throws Exception {
         ParentWidget page = new WidgetRoot("WikiWord", mockSource);
         WikiWidget widget = page.nextChild();
         testWidgetClassAndText(widget, WikiWordWidget.class, "WikiWord");
     }
 
+    @Test
     public void testTextThenWikiWord() throws Exception {
         ParentWidget page = new WidgetRoot("text WikiWord more Text", mockSource);
         assertEquals(3, page.numberOfChildren());
@@ -51,6 +57,7 @@ public class WidgetBuilderTest extends TestCase {
         testWidgetClassAndText(widget3, TextWidget.class, " more Text");
     }
 
+    @Test
     public void testWikiWord_Text_WikiWord() throws Exception {
         ParentWidget page = new WidgetRoot("WikiWord more WordWiki", mockSource);
         assertEquals(3, page.numberOfChildren());
@@ -62,6 +69,7 @@ public class WidgetBuilderTest extends TestCase {
         testWidgetClassAndText(widget3, WikiWordWidget.class, "WordWiki");
     }
 
+    @Test
     public void testItalic_text_WikiWord() throws Exception {
         ParentWidget page = new WidgetRoot("''italic'' text WikiWord", mockSource);
         assertEquals(3, page.numberOfChildren());
@@ -73,38 +81,45 @@ public class WidgetBuilderTest extends TestCase {
         testWidgetClassAndText(widget3, WikiWordWidget.class, "WikiWord");
     }
 
+    @Test
     public void testWikiWordInsideItalic() throws Exception {
         testWikiWordInParentWidget("''WikiWord''", ItalicWidget.class, "WikiWord", 1);
     }
 
+    @Test
     public void testWikiWordInsideBold() throws Exception {
         testWikiWordInParentWidget("'''WikiWord'''", BoldWidget.class, "WikiWord", 1);
     }
 
+    @Test
     public void testMultiLineWidget() throws Exception {
         ParentWidget page = new WidgetRoot("{{{\npreformatted\n}}}", mockSource);
         assertEquals(1, page.numberOfChildren());
         assertEquals(PreformattedWidget.class, page.nextChild().getClass());
     }
 
+    @Test
     public void testEmailWidget() throws Exception {
         ParentWidget page = new WidgetRoot("someone@somewhere.com", mockSource);
         assertEquals(1, page.numberOfChildren());
         assertEquals(EmailWidget.class, page.nextChild().getClass());
     }
 
+    @Test
     public void testHrule() throws Exception {
         ParentWidget page = new WidgetRoot("-----", mockSource);
         WikiWidget widget = page.nextChild();
         assertEquals(HruleWidget.class, widget.getClass());
     }
 
+    @Test
     public void testAnchorsMarker() throws Exception {
         ParentWidget page = new WidgetRoot(".#name ", mockSource);
         WikiWidget widget = page.nextChild();
         assertEquals(AnchorMarkerWidget.class, widget.getClass());
     }
 
+    @Test
     public void testAnchorsDeclaration() throws Exception {
         ParentWidget page = new WidgetRoot("!anchor name ", mockSource);
         WikiWidget widget = page.nextChild();
@@ -112,14 +127,17 @@ public class WidgetBuilderTest extends TestCase {
 
     }
 
+    @Test
     public void testWikiWordInsideHeader() throws Exception {
         testWikiWordInParentWidget("!1 WikiWord\n", HeaderWidget.class, "WikiWord", 1);
     }
 
+    @Test
     public void testWikiWordInsideCenter() throws Exception {
         testWikiWordInParentWidget("!c WikiWord\n", CenterWidget.class, "WikiWord", 1);
     }
 
+    @Test
     public void testTable() throws Exception {
         ParentWidget page = new WidgetRoot("|a|b|\n|c|d|\n", mockSource);
         assertEquals(1, page.numberOfChildren());
@@ -127,34 +145,40 @@ public class WidgetBuilderTest extends TestCase {
         assertEquals(StandardTableWidget.class, widget.getClass());
     }
 
+    @Test
     public void testList() throws Exception {
         ParentWidget page = new WidgetRoot(" *Item1\n", mockSource);
         assertEquals(1, page.numberOfChildren());
         assertEquals(ListWidget.class, page.nextChild().getClass());
     }
 
+    @Test
     public void testClasspath() throws Exception {
         ParentWidget page = new WidgetRoot("!path something", mockSource);
         assertEquals(1, page.numberOfChildren());
         assertEquals(ClasspathWidget.class, page.nextChild().getClass());
     }
 
+    @Test
     public void testStrike() throws Exception {
         testWikiWordInParentWidget("--WikiWord--", StrikeWidget.class, "WikiWord", 1);
     }
 
+    @Test
     public void testNoteWidget() throws Exception {
         ParentWidget page = new WidgetRoot("!note something", mockSource);
         assertEquals(1, page.numberOfChildren());
         assertEquals(NoteWidget.class, page.nextChild().getClass());
     }
 
+    @Test
     public void testCollapsableWidget() throws Exception {
         ParentWidget page = new WidgetRoot("!* title\ncontent\n*!\n", mockSource);
         assertEquals(1, page.numberOfChildren());
         assertEquals(CollapsableWidget.class, page.nextChild().getClass());
     }
 
+    @Test
     public void testNullPointerError() throws Exception {
         String wikiText = "''\nsome text that should be in italics\n''";
         ParentWidget root = new WidgetRoot(wikiText, new WikiPageDummy());
@@ -166,6 +190,7 @@ public class WidgetBuilderTest extends TestCase {
         }
     }
 
+    @Test
     public void testVirtualWikiWidget() throws Exception {
         ParentWidget page = new WidgetRoot("!virtualwiki http://localhost/FrontPage", mockSource);
         assertEquals(1, page.numberOfChildren());
@@ -173,9 +198,9 @@ public class WidgetBuilderTest extends TestCase {
     }
 
 // TODO MdM A Test that reveals FitNesse's weakness for parsing large wiki documents.
-
-    public void _testLargeTable() throws Exception {
-        StringBuffer buffer = new StringBuffer();
+//    @Test
+    public void testLargeTable() throws Exception {
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < 1000; i++)
             buffer.append("|'''bold'''|''italic''|!c centered|\n");
 
@@ -205,7 +230,7 @@ public class WidgetBuilderTest extends TestCase {
             assertEquals(expectedText, ((TextWidget) widget).getText());
     }
 
-    @SuppressWarnings("unchecked")
+    @Test
     public void testConcurrentAddWidgets() throws Exception {
         WidgetBuilder widgetBuilder = new WidgetBuilder(new Class[]{BoldWidget.class});
         String text = "'''bold text'''";
@@ -230,8 +255,9 @@ public class WidgetBuilderTest extends TestCase {
     //Parsing Line Breaks used to be very slow because it was done with the LineBreakWidget
     //which used regular expressions.  Now we just have the text widget replace line ends
     // with <br/>.  This is much faster.  This test is here to make sure it stays fast.
+    @Test
     public void testParsingManyLineBreaksIsFast() throws Exception {
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder();
         for (int i = 0; i < 100; i++)
             b.append("****************************************************************\n");
         for (int i = 0; i < 100; i++)
@@ -244,7 +270,7 @@ public class WidgetBuilderTest extends TestCase {
         String html = root.childHtml();
         long duration = measurement.elapsed();
 
-        StringBuffer expected = new StringBuffer();
+        StringBuilder expected = new StringBuilder();
         for (int i = 0; i < 300; i++)
             expected.append("****************************************************************<br/>");
 

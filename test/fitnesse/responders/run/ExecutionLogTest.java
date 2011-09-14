@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockCommandRunner;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -11,7 +12,7 @@ import static junit.framework.Assert.*;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class ExecutionLogTest {
+public class ExecutionLogTest extends FitnesseBaseTestCase {
     private static String ErrorLogName = ExecutionLog.ErrorLogName;
 
     private WikiPage testPage;

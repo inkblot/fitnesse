@@ -1,7 +1,6 @@
 package fitnesse;
 
 import com.google.inject.*;
-import com.google.inject.util.Modules;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.InMemoryPage;
@@ -24,19 +23,10 @@ import static util.FileUtil.deleteFileSystemDirectory;
  * Date: 8/22/11
  * Time: 10:24 PM
  */
-public class FitnesseBaseTestCase {
-
-    @Inject
-    public Injector injector;
+public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     private FitNesseContext context;
     protected SampleFileUtility samples;
-    private static final AbstractModule NOOP_MODULE =
-            new AbstractModule() {
-                @Override
-                protected void configure() {
-                }
-            };
 
     protected final FitNesseContext makeContext() {
         return makeContext("RooT");
@@ -68,15 +58,8 @@ public class FitnesseBaseTestCase {
         samples.makeSampleFiles();
     }
 
-    public void inject() {
-        inject(getTestModule());
-    }
-
-    public void inject(Module... testModules) {
-        Guice.createInjector(
-                Modules.override(new FitNesseModule(getFitNesseProperties(), getUserpass()))
-                        .with(testModules))
-                .injectMembers(this);
+    protected final Module[] getBaseModules() {
+        return new Module[]{new FitNesseModule(getFitNesseProperties(), getUserpass())};
     }
 
     protected String getUserpass() {
@@ -87,17 +70,13 @@ public class FitnesseBaseTestCase {
         return new Properties();
     }
 
-    protected Module getTestModule() {
-        return NOOP_MODULE;
-    }
-
     @Before
-    public void beforeAll() {
+    public final void beforeAllFitNesseTests() {
         inject();
     }
 
     @After
-    public void afterAll() {
+    public final void afterAllFitNesseTests() {
         if (context != null) {
             deleteFileSystemDirectory(context.rootPath);
             context = null;
@@ -138,11 +117,11 @@ public class FitnesseBaseTestCase {
         final File jarDirFile = new File(jarDir);
         assertTrue(jarDirFile.exists());
         File[] jarList = jarDirFile.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return dir.equals(jarDirFile) && name.endsWith(".jar");
-                    }
-                });
+            @Override
+            public boolean accept(File dir, String name) {
+                return dir.equals(jarDirFile) && name.endsWith(".jar");
+            }
+        });
         String[] jarPaths = new String[jarList.length];
         for (int index = 0; index < jarPaths.length; index++) {
             assertTrue(jarList[index].exists());

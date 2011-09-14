@@ -5,15 +5,16 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class XRefWidgetTest extends WidgetTestCase {
-    private WikiPage root;
-    private WikiPage page;
-    private WikiPage child;
     private ParentWidget wroot, croot;
 
+    @Test
     public void testRegexp() throws Exception {
         assertMatchEquals("!see SomePage", "!see SomePage");
         assertMatchEquals("!see SomePage.SubPage", "!see SomePage.SubPage");
@@ -24,10 +25,11 @@ public class XRefWidgetTest extends WidgetTestCase {
         assertMatchEquals("!see <SomeParent.SubPage junk", "!see <SomeParent.SubPage");
     }
 
-    protected void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"));
-        child = root.getPageCrawler().addPage(page, PathParser.parse("SomeChild"));
+    @Before
+    public void setUp() throws Exception {
+        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"));
+        WikiPage child = root.getPageCrawler().addPage(page, PathParser.parse("SomeChild"));
         /*child2*/
         root.getPageCrawler().addPage(page, PathParser.parse("SomeChild2"));
 
@@ -35,6 +37,7 @@ public class XRefWidgetTest extends WidgetTestCase {
         croot = new WidgetRoot(child);
     }
 
+    @Test
     public void testHtml() throws Exception {
         XRefWidget widget = new XRefWidget(wroot, "!see SomePage");
         assertHasRegexp("<b>See: <a href=.*SomePage</a></b>", widget.render());
@@ -65,6 +68,7 @@ public class XRefWidgetTest extends WidgetTestCase {
         assertHasRegexp("<b>See: <a href=.*SomePage.SomeChild2.*&lt;Some Page .Some Child 2</a></b>", widget.render());
     }
 
+    @Test
     public void testAsWikiText() throws Exception {
         final String TEST_WIDGET = "!see SomePage";
         XRefWidget w = new XRefWidget(wroot, TEST_WIDGET);

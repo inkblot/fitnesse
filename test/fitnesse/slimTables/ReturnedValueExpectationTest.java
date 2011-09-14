@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import org.junit.Before;
 import org.junit.Test;
 

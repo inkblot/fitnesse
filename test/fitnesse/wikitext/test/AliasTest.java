@@ -1,9 +1,10 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
-public class AliasTest {
+public class AliasTest extends FitnesseBaseTestCase {
     @Test
     public void scansAliases() {
         ParserTestHelper.assertScansTokenType("[[tag][link]]", "Alias", true);

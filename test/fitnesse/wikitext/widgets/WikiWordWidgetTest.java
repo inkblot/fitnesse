@@ -2,30 +2,34 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class WikiWordWidgetTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class WikiWordWidgetTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testIsSingleWikiWord() throws Exception {
         assertTrue(WikiWordWidget.isSingleWikiWord("WikiWord"));
         assertFalse(WikiWordWidget.isSingleWikiWord("notWikiWord"));
         assertFalse(WikiWordWidget.isSingleWikiWord("NotSingle.WikiWord"));
     }
 
+    @Test
     public void testGoodWikiWordsAreAccepted() throws Exception {
         checkWord(true, "WikiWord");
         checkWord(true, "WordWordWord");
@@ -41,6 +45,7 @@ public class WikiWordWidgetTest extends TestCase {
         checkWord(true, "<MyPage.YourPage");
     }
 
+    @Test
     public void testBadWikiWordsAreRejected() throws Exception {
         checkWord(false, "HelloDDouble");
         checkWord(false, "Hello");
@@ -51,6 +56,7 @@ public class WikiWordWidgetTest extends TestCase {
         checkWord(false, "WikiPage. ");
     }
 
+    @Test
     public void testWikiWordsWithSlashAndDotFail() throws Exception {
         checkWord(false, "WikiPage/SubPage");
         checkWord(false, "/WikiPage");
@@ -69,6 +75,7 @@ public class WikiWordWidgetTest extends TestCase {
         checkWord(false, "../..");
     }
 
+    @Test
     public void testWikiWordRegexpWithDigits() throws Exception {
         checkWord(true, "TestPage1");
         checkWord(true, "ParentPage1.SubPage5");
@@ -77,6 +84,7 @@ public class WikiWordWidgetTest extends TestCase {
         checkWord(false, "Page123");
     }
 
+    @Test
     public void testMakeWikiWord() {
         assertEquals("ExistingWikiWord", WikiWordWidget.makeWikiWord("ExistingWikiWord"));
         assertEquals("LowercaseworD", WikiWordWidget.makeWikiWord("lowercaseword"));
@@ -85,6 +93,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("AbC", WikiWordWidget.makeWikiWord("aBc"));
     }
 
+    @Test
     public void testHtmlForNormalLink() throws Exception {
         WikiPage page = addPage(root, "PageOne");
         WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "WikiWord");
@@ -94,6 +103,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("<a href=\"WikiWord\">WikiWord</a>", widget.render());
     }
 
+    @Test
     public void testHtmlForSetUpLink() throws Exception {
         WikiPage page = addPage(root, "PageOne");
         WikiPage pageTwo = addPage(page, "PageTwo");
@@ -107,6 +117,7 @@ public class WikiWordWidgetTest extends TestCase {
 
     //todo the ^ widget is deprecated.  Remove it by 7/2007? (DeanW: There is no real point in removing this, as it
     // is "harmless" and it will break some user's tests.)
+    @Test
     public void testSubPageWidget() throws Exception {
         WikiPage superPage = addPage(root, "SuperPage");
         PageData data = superPage.getData();
@@ -119,6 +130,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("<a href=\"SuperPage.SubPage\">^SubPage</a>", renderedText);
     }
 
+    @Test
     public void testGTSubPageWidget() throws Exception {
         WikiPage superPage = addPage(root, "SuperPage");
         PageData data = superPage.getData();
@@ -131,6 +143,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("<a href=\"SuperPage.SubPage\">&gt;SubPage</a>", renderedText);
     }
 
+    @Test
     public void testBackwardSearchWidget() throws Exception {
         WikiPage top = addPage(root, "TopPage");
         WikiPage target = addPage(top, "TargetPage");
@@ -151,6 +164,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("<a href=\"TopPage.TargetPage.SubTarget\">&lt;TargetPage.SubTarget</a>", renderedLink);
     }
 
+    @Test
     public void testHtmlForNormalLinkRegraced() throws Exception {
         WikiPage page = addPage(root, "PageOne");
         WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "Wiki42Word");
@@ -162,6 +176,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("<a href=\"Wiki42Word\">Wiki 42 Word</a>", widget.render());
     }
 
+    @Test
     public void testGTSubPageWidgetRegraced() throws Exception {
         WikiPage superPage = addPage(root, "SuperPage");
         WikiPage childPage = addPage(superPage, "SubPage");
@@ -182,6 +197,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("<a href=\"SuperPage.SubPage.Sub123Page\">&gt;Sub 123 Page</a>", renderedText);
     }
 
+    @Test
     public void testBackwardSearchWidgetRegraced() throws Exception {
         WikiPage top = addPage(root, "TopPage");
         WikiPage target = addPage(top, "TargetPage");
@@ -208,7 +224,7 @@ public class WikiWordWidgetTest extends TestCase {
         Pattern p = Pattern.compile(WikiWordWidget.REGEXP, Pattern.DOTALL | Pattern.MULTILINE);
         Matcher match = p.matcher(word);
         final boolean matches = match.find();
-        final boolean matchEquals = matches ? word.equals(match.group(0)) : false;
+        final boolean matchEquals = matches && word.equals(match.group(0));
         boolean pass = (matches && matchEquals);
         if (!expectedMatch)
             pass = !pass;
@@ -217,11 +233,13 @@ public class WikiWordWidgetTest extends TestCase {
         assertTrue(failureMessage, pass);
     }
 
+    @Test
     public void testIsWikiWord() throws Exception {
         assertEquals(true, WikiWordWidget.isWikiWord("HelloThere"));
         assertEquals(false, WikiWordWidget.isWikiWord("not.a.wiki.word"));
     }
 
+    @Test
     public void testAsWikiText() throws Exception {
         WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(addPage(root, "SomePage")), "OldText");
         assertEquals("OldText", widget.asWikiText());
@@ -229,6 +247,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("NewText", widget.asWikiText());
     }
 
+    @Test
     public void testQualifiedReferenceToSubReference() throws Exception {
         WikiPage myPage = addPage(root, "MyPage");
         addPage(myPage, "SubPage");
@@ -241,6 +260,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals(">NewName", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.NewName")));
     }
 
+    @Test
     public void testQualifiedReferenceToRelativeReference() throws Exception {
         WikiPage myPage = addPage(root, "MyPage");
         addPage(root, "MyBrother");
@@ -253,12 +273,14 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("SubPageTwo", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.SubPageTwo")));
     }
 
+    @Test
     public void testRefersTo() throws Exception {
         assertTrue(WikiWordWidget.refersTo(".PageOne", ".PageOne"));
         assertTrue(WikiWordWidget.refersTo(".PageOne.PageTwo", ".PageOne"));
         assertFalse(WikiWordWidget.refersTo(".PageOne.PageTwo", ".PageOne.PageTw"));
     }
 
+    @Test
     public void testSimpleRenamePage() throws Exception {
         WikiPage pageToRename = addPage(root, "OldPageName");
         WikiPage p1 = addPage(root, "PageOne");
@@ -267,6 +289,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("NewPageName", widget.getText());
     }
 
+    @Test
     public void testRenamePageInMiddleOfPath() throws Exception {
         WikiPage topPage = addPage(root, "TopPage");
         WikiPage pageToRename = addPage(topPage, "OldPageName");
@@ -277,6 +300,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("TopPage.NewPageName.LastPage", widget.getText());
     }
 
+    @Test
     public void testRenamePageInMiddleOfAbsolutePath() throws Exception {
         WikiPage topPage = addPage(root, "TopPage");
         WikiPage pageToRename = addPage(topPage, "OldPageName");
@@ -287,6 +311,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals(".TopPage.NewPageName.LastPage", widget.getText());
     }
 
+    @Test
     public void testRenameSubPage() throws Exception {
         WikiPage topPage = addPage(root, "TopPage");
         WikiPage pageToRename = addPage(topPage, "OldPageName");
@@ -297,6 +322,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals(">NewPageName.LastPage", widget.getText());
     }
 
+    @Test
     public void testRenamePageReferencedByBackwardSearch() throws Exception {
         WikiPage topPage = addPage(root, "TopPage");
         WikiPage pageToRename = addPage(topPage, "OldPageName");
@@ -306,18 +332,21 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals("<TopPage.NewPageName", widget.getText());
     }
 
+    @Test
     public void testBuildBackwardsSearchReferenceHandlesReferentRename() throws Exception {
         WikiPagePath parent = PathParser.parse(".AaA.BbB.CcC");
         WikiPagePath renamedPathToReferent = PathParser.parse(".AaA.BbB.CcC.NeW");
         assertEquals("<CcC.NeW", WikiWordWidget.buildBackwardSearchReference(parent, renamedPathToReferent));
     }
 
+    @Test
     public void testBuildBackwardsSearchReferenceHandlesReferentRenameOfFirstName() throws Exception {
         WikiPagePath parent = PathParser.parse(".AaA");
         WikiPagePath renamedPathToReferent = PathParser.parse(".RrR.BbB");
         assertEquals("<RrR.BbB", WikiWordWidget.buildBackwardSearchReference(parent, renamedPathToReferent));
     }
 
+    @Test
     public void testRenameMovedPageIfReferenced1() throws Exception {
         WikiPage page1 = addPage(root, "PageOne");
         WikiPage page2 = addPage(root, "PageTwo");
@@ -327,6 +356,7 @@ public class WikiWordWidgetTest extends TestCase {
         assertEquals(".PageOne.PageTwo", widget.getText());
     }
 
+    @Test
     public void testRenameMovedPageIfReferenced2() throws Exception {
         WikiPage page1 = addPage(root, "PageOne");
         WikiPage page2 = addPage(page1, "PageTwo");
@@ -337,6 +367,7 @@ public class WikiWordWidgetTest extends TestCase {
     }
 
     //TODO -MDM- bug I descovered while trying to refactor.
+    @Test
     public void testmakeRenamedRelativeReference() throws Exception {
         addPage(root, "FitNesse");
         addPage(root, "FitNesse.SuiteAcceptanceTests");

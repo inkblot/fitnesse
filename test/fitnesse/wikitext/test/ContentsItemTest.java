@@ -1,5 +1,6 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
@@ -9,7 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ContentsItemTest {
+public class ContentsItemTest extends FitnesseBaseTestCase {
     @Test
     public void buildsPlain() throws Exception {
         assertBuilds("PlainItem", new String[]{}, "", "", "<a href=\"PlainItem\">PlainItem</a>");

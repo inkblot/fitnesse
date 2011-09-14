@@ -2,19 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.WidgetBuilder;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.List;
 
-public class TextIgnoringWidgetRootTest extends TestCase {
-    public void setUp() throws Exception {
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-    public void tearDown() throws Exception {
-    }
-
+public class TextIgnoringWidgetRootTest extends FitnesseBaseTestCase {
+    @Test
     public void testNoTextWidgetAreCreated() throws Exception {
         String text = "Here is some text with '''bold''' and ''italics''.";
         WikiPageDummy page = new WikiPageDummy("SomePage", text);

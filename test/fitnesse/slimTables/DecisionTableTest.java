@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.slim.SlimBaseTestCase;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.VoidConverter;
 import fitnesse.wiki.InMemoryPage;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static util.ListUtility.list;
 
-public class DecisionTableTest {
+public class DecisionTableTest extends SlimBaseTestCase {
     private WikiPage root;
     private List<Object> instructions;
     private final String simpleDecisionTable =

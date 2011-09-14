@@ -3,21 +3,24 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPageDummy;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 import util.TimeMeasurement;
 
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SuiteHtmlFormatterTest extends TestCase {
+public class SuiteHtmlFormatterTest extends FitnesseBaseTestCase {
     private HtmlPage htmlPage;
     private SuiteHtmlFormatter formatter;
     private StringBuffer pageBuffer = new StringBuffer();
 
+    @Before
     public void setUp() throws Exception {
         FitNesseContext context = new FitNesseContext("RooT");
         htmlPage = new HtmlPageFactory().newPage();
@@ -34,9 +37,7 @@ public class SuiteHtmlFormatterTest extends TestCase {
         };
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testTestSummary() throws Exception {
         formatter.processTestResults("TestName", new TestSummary(49, 0, 0, 0));
         formatter.processTestResults("TestName2", new TestSummary(1, 0, 2, 0));
@@ -47,6 +48,7 @@ public class SuiteHtmlFormatterTest extends TestCase {
         assertSubString("<strong>Assertions:</strong> 51 right, 1 wrong, 2 ignored, 0 exceptions", pageBuffer.toString());
     }
 
+    @Test
     public void testCountsHtml() throws Exception {
         formatter.processTestResults("RelativePageName", new TestSummary(1, 0, 0, 0));
 
@@ -62,6 +64,7 @@ public class SuiteHtmlFormatterTest extends TestCase {
         assertSubString("<a href=\\\"#AnotherPageName0\\\" class=\\\"test_summary_link\\\">AnotherPageName</a>", pageBuffer.toString());
     }
 
+    @Test
     public void testResultsHtml() throws Exception {
         formatter.testSystemStarted(null, "Fit", "laughing.fit");
         formatter.announceNumberTestsToRun(2);
@@ -88,6 +91,7 @@ public class SuiteHtmlFormatterTest extends TestCase {
         assertSubString("<div class=\"alternating_block_2\">second test</div>", results);
     }
 
+    @Test
     public void testTestingProgressIndicator() throws Exception {
         formatter.testSystemStarted(null, "Fit", "laughing.fit");
         formatter.announceNumberTestsToRun(20);
@@ -115,6 +119,7 @@ public class SuiteHtmlFormatterTest extends TestCase {
         assertSubString("(3/20)", pageBuffer.toString());
     }
 
+    @Test
     public void testTotalTimingShouldAppearInSummary() throws Exception {
         TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
         TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(666);
@@ -128,6 +133,7 @@ public class SuiteHtmlFormatterTest extends TestCase {
         assertSubString("<strong>Assertions:</strong> 1 right, 2 wrong, 3 ignored, 4 exceptions (0.900 seconds)", pageBuffer.toString());
     }
 
+    @Test
     public void testIndividualTestTimingsShouldAppearInSummary() throws Exception {
         TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
         TimeMeasurement firstTimeMeasurement = newConstantElapsedTimeMeasurement(670);

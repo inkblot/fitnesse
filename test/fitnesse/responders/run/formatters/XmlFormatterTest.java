@@ -33,7 +33,7 @@ public class XmlFormatterTest extends FitnesseBaseTestCase {
     public Clock clock;
 
     @Override
-    protected Module getTestModule() {
+    protected Module getOverrideModule() {
         return new AbstractModule() {
             @Override
             protected void configure() {

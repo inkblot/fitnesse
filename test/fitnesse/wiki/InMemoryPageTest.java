@@ -2,27 +2,29 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.Iterator;
 import java.util.Set;
 
-public class InMemoryPageTest extends TestCase {
-    private WikiPage root;
-    private PageCrawler crawler;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+public class InMemoryPageTest extends FitnesseBaseTestCase {
     private WikiPage page1;
     private WikiPage page2;
 
+    @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        crawler = root.getPageCrawler();
+        WikiPage root = InMemoryPage.makeRoot("RooT");
+        PageCrawler crawler = root.getPageCrawler();
         page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
         page2 = crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testCommitUsesProperPageWhenCommitingFromOtherPage() throws Exception {
         PageData data = page1.getData();
         page2.commit(data);
@@ -31,6 +33,7 @@ public class InMemoryPageTest extends TestCase {
         assertSame(page2, data.getWikiPage());
     }
 
+    @Test
     public void testVersions() throws Exception {
         PageData data = page1.getData();
         data.setContent("version 1");
@@ -44,11 +47,11 @@ public class InMemoryPageTest extends TestCase {
         assertEquals(3, versions.size());
     }
 
+    @Test
     public void testVersionAuthor() throws Exception {
         PageData data = page1.getData();
         Set<VersionInfo> versions = data.getVersions();
-        for (Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext(); ) {
-            VersionInfo versionInfo = iterator.next();
+        for (VersionInfo versionInfo : versions) {
             assertEquals("", versionInfo.getAuthor());
         }
 
@@ -59,8 +62,7 @@ public class InMemoryPageTest extends TestCase {
         data = page1.getData();
         versions = data.getVersions();
         boolean joeFound = false;
-        for (Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext(); ) {
-            VersionInfo versionInfo = iterator.next();
+        for (VersionInfo versionInfo : versions) {
             if ("Joe".equals(versionInfo.getAuthor()))
                 joeFound = true;
         }

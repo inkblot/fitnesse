@@ -1,12 +1,13 @@
 package fitnesse.wiki;
 
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 import util.FileSystem;
 import util.MemoryFileSystem;
 
 import static org.junit.Assert.*;
 
-public class ExternalTestPageTest {
+public class ExternalTestPageTest extends FitnesseBaseTestCase {
 
     @Test
     public void PageDataIsFileContents() throws Exception {

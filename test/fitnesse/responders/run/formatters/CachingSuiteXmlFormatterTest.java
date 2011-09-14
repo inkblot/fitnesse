@@ -2,6 +2,7 @@ package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.run.TestExecutionReport;
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
-public class CachingSuiteXmlFormatterTest {
+public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     private CachingSuiteXmlFormatter formatter;
     private FitNesseContext context;
     private WikiPage root;

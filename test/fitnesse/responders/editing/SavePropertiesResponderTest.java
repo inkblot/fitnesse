@@ -3,16 +3,22 @@
 package fitnesse.responders.editing;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
-public class SavePropertiesResponderTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     private MockRequest request;
@@ -22,6 +28,7 @@ public class SavePropertiesResponderTest extends TestCase {
     private WikiPage linker;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         root = context.root;
@@ -43,9 +50,7 @@ public class SavePropertiesResponderTest extends TestCase {
         request.setResource("PageOne");
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testClearChildrenWhenVWisCleared() throws Exception {
         createSimpleVirtualLink();
 
@@ -74,6 +79,7 @@ public class SavePropertiesResponderTest extends TestCase {
         return linker;
     }
 
+    @Test
     public void testClearChildrenChangingVW() throws Exception {
         createSimpleVirtualLink();
         assertTrue(!(extension.getVirtualCoupling() instanceof NullVirtualCouplingPage));
@@ -88,6 +94,7 @@ public class SavePropertiesResponderTest extends TestCase {
         assertTrue(extension.getVirtualCoupling() instanceof NullVirtualCouplingPage);
     }
 
+    @Test
     public void testResponse() throws Exception {
         createRequest();
 

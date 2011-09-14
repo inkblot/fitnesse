@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.slim.SlimBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageUtil;
@@ -16,11 +16,10 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 
-public class ScenarioTableTest {
+public class ScenarioTableTest extends SlimBaseTestCase {
     private WikiPage root;
     private List<Object> instructions;
     public ScenarioTable st;
-    private MockSlimTestContext testContext;
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +33,7 @@ public class ScenarioTableTest {
 
         TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
         Table t = ts.getTable(0);
-        testContext = new MockSlimTestContext();
+        MockSlimTestContext testContext = new MockSlimTestContext();
         st = new ScenarioTable(t, "id", testContext);
         st.appendInstructions(instructions);
 

@@ -2,12 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class WidgetTestCase extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public abstract class WidgetTestCase extends FitnesseBaseTestCase {
     public void assertMatchEquals(String value, String expected) {
         Matcher match = Pattern.compile(getRegexp(), Pattern.DOTALL | Pattern.MULTILINE).matcher(value);
         if (expected != null) {

@@ -1,5 +1,6 @@
 package fitnesse.wikitext;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.test.TestRoot;
@@ -7,7 +8,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class PerformanceTest {
+public class PerformanceTest extends FitnesseBaseTestCase {
     private String tablePageContent = "";
     private String definePageContent = "";
 

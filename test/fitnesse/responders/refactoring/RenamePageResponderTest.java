@@ -9,7 +9,10 @@ import fitnesse.responders.ResponderTestCase;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.*;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
@@ -23,14 +26,15 @@ public class RenamePageResponderTest extends ResponderTestCase {
         return new RenamePageResponder();
     }
 
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         pageOneName = "PageOne";
         pageTwoName = "PageTwo";
         pageOnePath = PathParser.parse(pageOneName);
         pageTwoPath = PathParser.parse(pageTwoName);
     }
 
+    @Test
     public void testInvalidName() throws Exception {
         String invalidName = "FirstName.SecondName";
         String pageName = "MyPage";
@@ -40,6 +44,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
         assertHasRegexp("Cannot rename", getResponseContent(response));
     }
 
+    @Test
     public void testDontRenameFrontPage() throws Exception {
         String frontPageName = "FrontPage";
         crawler.addPage(root, PathParser.parse(frontPageName), "Content");
@@ -48,6 +53,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
         assertSubString("Cannot rename", getResponseContent(response));
     }
 
+    @Test
     public void testPageRedirection() throws Exception {
         WikiPage pageOne = crawler.addPage(root, PathParser.parse("OneOne"), "Content");
         crawler.addPage(pageOne, PathParser.parse("TwoOne"));
@@ -57,6 +63,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
         assertEquals("OneOne.ReName", response.getHeader("Location"));
     }
 
+    @Test
     public void testPageWasRenamed() throws Exception {
         String originalName = "OneOne";
         WikiPagePath originalPath = PathParser.parse(originalName);
@@ -73,6 +80,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
         assertFalse(crawler.pageExists(root, originalPath));
     }
 
+    @Test
     public void testReferencesChanged() throws Exception {
         crawler.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
         crawler.addPage(root, pageTwoPath, "Page two content");
@@ -82,6 +90,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
         assertEquals("Line one\nPageThree\nLine three", pageOne.getData().getContent());
     }
 
+    @Test
     public void testBackSearchReferencesChanged() throws Exception {
         WikiPage topPage = crawler.addPage(root, PathParser.parse("TopPage"), "");
         WikiPage pageOne = crawler.addPage(topPage, pageOnePath, "Line one\n<TopPage.PageTwo\nLine three");
@@ -91,6 +100,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
         assertEquals("Line one\n<TopPage.PageThree\nLine three", pageOne.getData().getContent());
     }
 
+    @Test
     public void testReferencesNotChangedWhenDisabled() throws Exception {
         crawler.addPage(root, pageOnePath, "Line one\nPageTwo\nLine three");
         crawler.addPage(root, pageTwoPath, "Page two content");
@@ -100,6 +110,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
         assertEquals("Line one\nPageTwo\nLine three", pageOne.getData().getContent());
     }
 
+    @Test
     public void testDontRenameToExistingPage() throws Exception {
         crawler.addPage(root, pageOnePath, "Page one content");
         crawler.addPage(root, pageTwoPath, "Page two content");
@@ -111,6 +122,7 @@ public class RenamePageResponderTest extends ResponderTestCase {
         assertSubString("Cannot rename", getResponseContent(response));
     }
 
+    @Test
     public void testChildPagesStayIntactWhenParentIsRenamed() throws Exception {
         crawler.addPage(root, pageOnePath, "page one");
         crawler.addPage(root, PathParser.parse("PageOne.ChildPage"), "child page");

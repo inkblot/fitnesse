@@ -3,17 +3,22 @@
 package fitnesse.responders.editing;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
 import org.json.JSONObject;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.*;
 
-public class PropertiesResponderTest extends TestCase {
+public class PropertiesResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private MockRequest request;
@@ -21,12 +26,14 @@ public class PropertiesResponderTest extends TestCase {
     private String content;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         root = context.root;
         crawler = root.getPageCrawler();
     }
 
+    @Test
     public void testResponse() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
         PageData data = page.getData();
@@ -65,6 +72,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"checkbox\" name=\"" + attribute + "\" checked=\"true\"/>", content);
     }
 
+    @Test
     public void testJsonResponse() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
         PageData data = page.getData();
@@ -98,6 +106,7 @@ public class PropertiesResponderTest extends TestCase {
         assertFalse(jsonObject.getBoolean(PageData.PropertySECURE_TEST));
     }
 
+    @Test
     public void testGetVirtualWikiValue() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"));
         PageData data = page.getData();
@@ -108,6 +117,7 @@ public class PropertiesResponderTest extends TestCase {
         assertEquals("http://www.objectmentor.com", PropertiesResponder.getVirtualWikiValue(data));
     }
 
+    @Test
     public void testUsernameDisplayed() throws Exception {
         WikiPage page = getContentFromSimplePropertiesPage();
 
@@ -139,6 +149,7 @@ public class PropertiesResponderTest extends TestCase {
         return page;
     }
 
+    @Test
     public void testWikiImportForm() throws Exception {
         getContentFromSimplePropertiesPage();
 
@@ -158,6 +169,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("value=\"import\"", content);
     }
 
+    @Test
     public void testWikiImportUpdate() throws Exception {
         WikiImportProperty property = new WikiImportProperty("http://my.host.com/PageRoot");
         property.setRoot(true);
@@ -168,6 +180,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("Automatically update imported content when executing tests", content);
     }
 
+    @Test
     public void testWikiImportUpdateNonroot() throws Exception {
         testWikiImportUpdateWith(new WikiImportProperty("http://my.host.com/PageRoot"));
         assertSubString(" imports its content and subpages from ", content);
@@ -190,6 +203,7 @@ public class PropertiesResponderTest extends TestCase {
         assertNotSubString("value=\"Import\"", content);
     }
 
+    @Test
     public void testSymbolicLinkForm() throws Exception {
         getContentFromSimplePropertiesPage();
 
@@ -200,6 +214,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"submit\" name=\"submit\" value=\"Create/Replace\"", content);
     }
 
+    @Test
     public void testSymbolicLinkListing() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         page.addChildPage("SomeChild");
@@ -233,6 +248,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<td>file://some/page</td>", content);
     }
 
+    @Test
     public void testSymbolicLinkListingForBackwardPath() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         WikiPage child = page.addChildPage("SomeChild");
@@ -250,6 +266,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<a href=\".SomePage.OtherChild\">&lt;SomePage.OtherChild</a>", content);
     }
 
+    @Test
     public void testPageTypePropertiesHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
@@ -261,6 +278,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\"/> - Suite", html);
     }
 
+    @Test
     public void testPageTypePropertiesSuiteHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
@@ -273,6 +291,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\" checked=\"checked\"/> - Suite", html);
     }
 
+    @Test
     public void testPageTypePropertiesTestHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
@@ -285,6 +304,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Suite\"/> - Suite", html);
     }
 
+    @Test
     public void testActionPropertiesHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
@@ -298,6 +318,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"checkbox\" name=\"WhereUsed\" checked=\"true\"/> - WhereUsed", html);
     }
 
+    @Test
     public void testMakeNavigationPropertiesHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
@@ -309,6 +330,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"checkbox\" name=\"Prune\"/> - Prune", html);
     }
 
+    @Test
     public void testMakeSecurityPropertiesHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
@@ -319,6 +341,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"checkbox\" name=\"secure-test\"/> - secure-test", html);
     }
 
+    @Test
     public void testEmptySuitesForm() throws Exception {
         getContentFromSimplePropertiesPage();
 
@@ -326,6 +349,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"text\" name=\"Suites\" value=\"\" size=\"40\"/>", content);
     }
 
+    @Test
     public void testSuitesDisplayed() throws Exception {
         WikiPage page = getContentFromSimplePropertiesPage();
         PageData data = page.getData();
@@ -338,6 +362,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"text\" name=\"Suites\" value=\"smoke\" size=\"40\"/>", content);
     }
 
+    @Test
     public void testEmptyHelpTextForm() throws Exception {
         getContentFromSimplePropertiesPage();
 
@@ -345,6 +370,7 @@ public class PropertiesResponderTest extends TestCase {
         assertSubString("<input type=\"text\" name=\"HelpText\" value=\"\" size=\"90\"/>", content);
     }
 
+    @Test
     public void testHelpTextDisplayed() throws Exception {
         WikiPage page = getContentFromSimplePropertiesPage();
         PageData data = page.getData();

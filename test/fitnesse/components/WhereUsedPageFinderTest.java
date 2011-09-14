@@ -1,17 +1,20 @@
 package fitnesse.components;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 
-public class WhereUsedPageFinderTest extends TestCase implements SearchObserver {
+public class WhereUsedPageFinderTest extends FitnesseBaseTestCase implements SearchObserver {
     private WikiPage root;
     private InMemoryPage pageOne;
     private WikiPage pageTwo;
@@ -25,6 +28,7 @@ public class WhereUsedPageFinderTest extends TestCase implements SearchObserver 
         hits.add(page);
     }
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
@@ -38,6 +42,7 @@ public class WhereUsedPageFinderTest extends TestCase implements SearchObserver 
         hits.clear();
     }
 
+    @Test
     public void testFindReferencingPages() throws Exception {
         whereUsed = new WhereUsedPageFinder(pageOne, this);
         List<WikiPage> resultList = whereUsed.search(root);
@@ -53,12 +58,14 @@ public class WhereUsedPageFinderTest extends TestCase implements SearchObserver 
         assertEquals(0, resultList.size());
     }
 
+    @Test
     public void testObserving() throws Exception {
         whereUsed = new WhereUsedPageFinder(pageOne, this);
         whereUsed.search(root);
         assertEquals(2, hits.size());
     }
 
+    @Test
     public void testOnlyOneReferencePerPage() throws Exception {
         whereUsed = new WhereUsedPageFinder(pageThree, this);
         WikiPage newPage = crawler.addPage(root, PathParser.parse("NewPage"), "one reference to PageThree.  Two reference to PageThree");
@@ -67,12 +74,14 @@ public class WhereUsedPageFinderTest extends TestCase implements SearchObserver 
         assertEquals(newPage, resultList.get(0));
     }
 
+    @Test
     public void testWordsNotFoundInPreprocessedText() throws Exception {
         crawler.addPage(root, PathParser.parse("NewPage"), "{{{ PageThree }}}");
         List<WikiPage> resultList = whereUsed.search(pageThree);
         assertEquals(0, resultList.size());
     }
 
+    @Test
     public void testDontLookForReferencesInVirtualPages() throws Exception {
         FitNesseUtil.bindVirtualLinkToPage(pageOne, pageTwo);
         whereUsed = new WhereUsedPageFinder(pageOne, this);

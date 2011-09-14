@@ -1,9 +1,10 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-public class AnchorReferenceTest {
+public class AnchorReferenceTest extends FitnesseBaseTestCase {
     @Test
     public void scansAnchors() {
         ParserTestHelper.assertScansTokenType(".#anchorName", "AnchorReference", true);

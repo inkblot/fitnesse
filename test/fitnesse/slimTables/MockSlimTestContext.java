@@ -1,16 +1,16 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.responders.run.slimResponder;
+package fitnesse.slimTables;
 
-import fitnesse.slimTables.ScenarioTable;
-import fitnesse.slimTables.SlimTable;
+import fitnesse.responders.run.slimResponder.SlimTestContext;
+import fitnesse.slim.SlimBaseTestCase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MockSlimTestContext implements SlimTestContext {
+public class MockSlimTestContext extends SlimBaseTestCase implements SlimTestContext {
     private Map<String, String> symbols = new HashMap<String, String>();
     private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
     private List<SlimTable.Expectation> expectations = new ArrayList<SlimTable.Expectation>();

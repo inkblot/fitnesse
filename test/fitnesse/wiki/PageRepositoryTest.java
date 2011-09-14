@@ -23,7 +23,7 @@ public class PageRepositoryTest extends FitnesseBaseTestCase {
     private FileSystemPage rootPage;
 
     @Override
-    protected Module getTestModule() {
+    protected Module getOverrideModule() {
         return new AbstractModule() {
             @Override
             protected void configure() {

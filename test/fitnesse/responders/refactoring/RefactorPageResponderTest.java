@@ -3,22 +3,26 @@
 package fitnesse.responders.refactoring;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class RefactorPageResponderTest extends TestCase {
+public class RefactorPageResponderTest extends FitnesseBaseTestCase {
     WikiPage root;
     private MockRequest request;
     private Responder responder;
     private FitNesseContext context;
 
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("root");
         root = context.root;
@@ -31,6 +35,7 @@ public class RefactorPageResponderTest extends TestCase {
         responder = new RefactorPageResponder();
     }
 
+    @Test
     public void testHtml() throws Exception {
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals(200, response.getStatus());

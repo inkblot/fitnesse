@@ -3,6 +3,7 @@
 package fitnesse.authentication;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
@@ -10,9 +11,12 @@ import fitnesse.http.Response;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class AuthenticatorTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class AuthenticatorTest extends FitnesseBaseTestCase {
     SimpleAuthenticator authenticator;
     private MockRequest request;
     private Class<? extends Responder> responderType;
@@ -34,7 +38,7 @@ public class AuthenticatorTest extends TestCase {
         }
     }
 
-
+    @Before
     public void setUp() throws Exception {
         context = new FitNesseContext("RooT");
         WikiPage root = context.root;
@@ -53,14 +57,13 @@ public class AuthenticatorTest extends TestCase {
         frontpage.commit(data);
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testNotAuthenticated() throws Exception {
         makeResponder();
         assertEquals(UnauthorizedResponder.class, responderType);
     }
 
+    @Test
     public void testAuthenticated() throws Exception {
         authenticator.authenticated = true;
         makeResponder();

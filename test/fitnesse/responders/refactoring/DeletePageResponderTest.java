@@ -10,9 +10,13 @@ import fitnesse.responders.ResponderTestCase;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import org.junit.Test;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
@@ -24,6 +28,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
     private final WikiPagePath level2FullPath = this.level1Path.copy().addNameToEnd(this.level2Name);
     private final String qualifiedLevel2Name = PathParser.render(this.level2FullPath);
 
+    @Test
     public void testDeleteConfirmation() throws Exception {
         WikiPage level1 = this.crawler.addPage(this.root, this.level1Path);
         this.crawler.addPage(level1, this.level2Path);
@@ -36,6 +41,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
         assertSubString("Are you sure you want to delete " + this.qualifiedLevel2Name, content);
     }
 
+    @Test
     public void testDeletePage() throws Exception {
         WikiPage level1 = this.crawler.addPage(this.root, this.level1Path);
         this.crawler.addPage(level1, this.level2Path);
@@ -55,6 +61,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
         assertEquals(0, children.size());
     }
 
+    @Test
     public void testDontDeleteFrontPage() throws Exception {
         this.crawler.addPage(this.root, PathParser.parse("FrontPage"), "Content");
         this.request.setResource("FrontPage");

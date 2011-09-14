@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
@@ -10,30 +11,35 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 import util.ClockUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static org.junit.Assert.*;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class WikiImportPropertyTest extends TestCase {
+public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private WikiImportProperty property;
     private WikiPage page;
     private FitNesseContext context;
 
+    @Before
     public void setUp() {
         property = new WikiImportProperty("");
     }
 
+    @Test
     public void testSource() throws Exception {
         property = new WikiImportProperty("import source");
         assertEquals("import source", property.getSourceUrl());
         assertEquals("import source", property.get("Source"));
     }
 
+    @Test
     public void testIsRoot() throws Exception {
         assertFalse(property.isRoot());
         assertFalse(property.has("IsRoot"));
@@ -44,6 +50,7 @@ public class WikiImportPropertyTest extends TestCase {
         assertTrue(property.has("IsRoot"));
     }
 
+    @Test
     public void testAutoUpdate() throws Exception {
         assertFalse(property.isAutoUpdate());
         assertFalse(property.has("AutoUpdate"));
@@ -54,6 +61,7 @@ public class WikiImportPropertyTest extends TestCase {
         assertTrue(property.has("AutoUpdate"));
     }
 
+    @Test
     public void testLastUpdated() throws Exception {
         SimpleDateFormat format = WikiPageProperty.getTimeFormat();
         Date date = ClockUtil.currentDate();
@@ -64,10 +72,12 @@ public class WikiImportPropertyTest extends TestCase {
         assertEquals(format.format(date), property.get("LastRemoteModification"));
     }
 
+    @Test
     public void testFailedCreateFromProperty() throws Exception {
         assertNull(WikiImportProperty.createFrom(new WikiPageProperty()));
     }
 
+    @Test
     public void testCreateFromProperty() throws Exception {
         WikiPageProperty rawImportProperty = property.set(WikiImportProperty.PROPERTY_NAME);
         rawImportProperty.set("IsRoot");
@@ -84,6 +94,7 @@ public class WikiImportPropertyTest extends TestCase {
         assertEquals(format.format(date), format.format(importProperty.getLastRemoteModificationTime()));
     }
 
+    @Test
     public void testAddtoProperty() throws Exception {
         WikiImportProperty importProperty = new WikiImportProperty("some source");
         importProperty.setRoot(true);
@@ -113,6 +124,7 @@ public class WikiImportPropertyTest extends TestCase {
         return (SimpleResponse) responder.makeResponse(context, request);
     }
 
+    @Test
     public void testVirtualPageIndication() throws Exception {
         pageRenderingSetUp();
 
@@ -133,6 +145,7 @@ public class WikiImportPropertyTest extends TestCase {
         assertSubString("<body class=\"virtual\">", response.getContent());
     }
 
+    @Test
     public void testImportedPageIndication() throws Exception {
         pageRenderingSetUp();
 
@@ -147,6 +160,7 @@ public class WikiImportPropertyTest extends TestCase {
         assertSubString("<body class=\"imported\">", content);
     }
 
+    @Test
     public void testEditActions() throws Exception {
         pageRenderingSetUp();
 

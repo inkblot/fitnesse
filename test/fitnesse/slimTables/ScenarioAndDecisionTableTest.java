@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
 import fitnesse.slim.SlimClient;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -21,7 +20,6 @@ import static util.RegexAssertions.assertSubString;
 public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
     private WikiPage root;
     private List<Object> instructions;
-    private ScenarioTable st;
     private DecisionTable dt;
 
     @Before
@@ -34,7 +32,7 @@ public class ScenarioAndDecisionTableTest extends MockSlimTestContext {
         WikiPageUtil.setPageContents(root, tableText);
         TableScanner ts = new HtmlTableScanner(root.getData().getHtml());
         Table t = ts.getTable(0);
-        st = new ScenarioTable(t, "s_id", this);
+        ScenarioTable st = new ScenarioTable(t, "s_id", this);
         t = ts.getTable(1);
         dt = new DecisionTable(t, "did", this);
         st.appendInstructions(instructions);

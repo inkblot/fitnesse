@@ -1,6 +1,7 @@
 package fitnesse.authentication;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.components.Base64;
 import fitnesse.http.MockRequest;
@@ -20,7 +21,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 import static util.RegexAssertions.assertSubString;
 
-public class NegotiateAuthenticatorTest {
+public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     private GSSManager manager;
     private Properties properties;
     private final String TOKEN = "xxxxxxxx";

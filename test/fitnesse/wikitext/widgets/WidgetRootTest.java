@@ -4,6 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class WidgetRootTest {
+public class WidgetRootTest extends FitnesseBaseTestCase {
     private WikiPage rootPage;
     private PageCrawler crawler;
 

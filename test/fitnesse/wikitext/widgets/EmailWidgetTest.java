@@ -3,14 +3,20 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
+import org.junit.Test;
 
 import java.util.regex.Pattern;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class EmailWidgetTest extends WidgetTestCase {
     protected String getRegexp() {
         return EmailWidget.REGEXP;
     }
 
+    @Test
     public void testEmailRegularExpression() throws Exception {
         assertTrue("Match 1", Pattern.matches(EmailWidget.REGEXP, "ppagel@objectmentor.com"));
         assertTrue("Match 2", Pattern.matches(EmailWidget.REGEXP, "ppagel123@objectmentor.com"));
@@ -21,6 +27,7 @@ public class EmailWidgetTest extends WidgetTestCase {
         assertFalse("Match 7", Pattern.matches(EmailWidget.REGEXP, "abc@efg.()"));
     }
 
+    @Test
     public void testEmailRendering() throws Exception {
         WikiWidget email = new EmailWidget(null, "ppagel@objectmentor.com");
         assertEquals("<a href=\"mailto:ppagel@objectmentor.com\">ppagel@objectmentor.com</a>", email.render());

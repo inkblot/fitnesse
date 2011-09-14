@@ -5,8 +5,12 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class ImageWidgetTest extends WidgetTestCase {
+    @Test
     public void testRegexp() throws Exception {
         assertMatchEquals("http://www.objectmentor.com/resources/bookstore/books/PPPCoverIcon.gif", "http://www.objectmentor.com/resources/bookstore/books/PPPCoverIcon.gif");
         assertMatchEquals("http://www.objectmentor.com/x.jpg", "http://www.objectmentor.com/x.jpg");
@@ -19,6 +23,7 @@ public class ImageWidgetTest extends WidgetTestCase {
         assertMatchEquals("!img-l http://files/x.gif", "!img-l http://files/x.gif");
     }
 
+    @Test
     public void testWidget() throws Exception {
         ImageWidget widget = new ImageWidget(new MockWidgetRoot(), "http://host.com/file.jpg");
         assertEquals("<img src=\"http://host.com/file.jpg\"/>", widget.render());
@@ -33,6 +38,7 @@ public class ImageWidgetTest extends WidgetTestCase {
         assertEquals("<img src=\"/files/file.jpg\"/>", widget.render());
     }
 
+    @Test
     public void testAsWikiText() throws Exception {
         checkWikiTextReconstruction("!img http://hello.jpg");
         checkWikiTextReconstruction("!img http://files/hello.jpg");

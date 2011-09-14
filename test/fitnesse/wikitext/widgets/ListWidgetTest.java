@@ -3,14 +3,22 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ListWidgetTest extends WidgetTestCase {
     private MockWidgetRoot widgetRoot;
 
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         widgetRoot = new MockWidgetRoot();
     }
 
+    @Test
     public void testRegexp() throws Exception {
         assertMatchEquals(" *Item1", " *Item1");
         assertMatchEquals(" *Item1\n *Item2", " *Item1\n *Item2");
@@ -23,6 +31,7 @@ public class ListWidgetTest extends WidgetTestCase {
         assertMatch(" * 50 ways to leave your lover.");
     }
 
+    @Test
     public void testSimpleList() throws Exception {
         formsSimpleOneElementList("Item1");
         formsSimpleOneElementList("50 ways to leave your lover");
@@ -43,6 +52,7 @@ public class ListWidgetTest extends WidgetTestCase {
         assertEquals(itemText, ((TextWidget) child).getText());
     }
 
+    @Test
     public void testSimpleOrderedList() throws Exception {
         ListWidget list = new ListWidget(widgetRoot, " 1Item1");
         assertTrue("should be ordered", list.isOrdered());
@@ -50,6 +60,7 @@ public class ListWidgetTest extends WidgetTestCase {
         assertEquals(1, list.numberOfChildren());
     }
 
+    @Test
     public void testMultipleItems() throws Exception {
         ListWidget list = new ListWidget(widgetRoot, " *Item1\n *Item2");
         assertEquals(2, list.numberOfChildren());
@@ -57,10 +68,11 @@ public class ListWidgetTest extends WidgetTestCase {
         assertEquals(ListItemWidget.class, list.nextChild().getClass());
     }
 
+    @Test
     public void testMultiLevelList() throws Exception {
         ListWidget list = new ListWidget(widgetRoot, " *Item1\n  1Item1a\n *Item2");
         assertEquals(2, list.numberOfChildren());
-        this.assertNotNull(list.children.get(0));
+        assertNotNull(list.children.get(0));
         assertEquals(0, list.getLevel());
         assertEquals(ListItemWidget.class, list.children.get(0).getClass());
         assertEquals(ListItemWidget.class, list.children.get(1).getClass());
@@ -72,6 +84,7 @@ public class ListWidgetTest extends WidgetTestCase {
         assertTrue("should be ordered", childList.isOrdered());
     }
 
+    @Test
     public void testHtml() throws Exception {
         compareHtmlResult(" *Item1", "<ul>\n\t<li>Item1</li>\n</ul>\n");
         compareHtmlResult(" 1Item1", "<ol>\n\t<li>Item1</li>\n</ol>\n");

@@ -2,36 +2,41 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.List;
 
 import static fitnesse.wiki.PageData.*;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertDoesNotHaveRegexp;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class PageDataTest extends TestCase {
+public class PageDataTest extends FitnesseBaseTestCase {
     public WikiPage page;
     private WikiPage root;
     private PageCrawler crawler;
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
         page = crawler.addPage(root, PathParser.parse("PagE"), "some content");
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testVariablePreprocessing() throws Exception {
         PageData d = new PageData(InMemoryPage.makeRoot("RooT"), "!define x {''italic''}\n${x}\n");
         String preprocessedText = d.getContent();
         assertHasRegexp("''italic''", preprocessedText);
     }
 
+    @Test
     public void testVariablesRenderedFirst() throws Exception {
         String text = "!define x {''italics''}\n${x}";
         WikiPage root = InMemoryPage.makeRoot("RooT");
@@ -41,6 +46,7 @@ public class PageDataTest extends TestCase {
         assertHasRegexp("<i>italics</i>", html);
     }
 
+    @Test
     public void testVariablesWithinVariablesAreResolved() throws Exception {
         String text = "!define x {b}\n!define y (a${x}c)\n${y}";
         WikiPage root = InMemoryPage.makeRoot("RooT");
@@ -52,12 +58,14 @@ public class PageDataTest extends TestCase {
         assertEquals("abc", variableContents);
     }
 
+    @Test
     public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
         PageData d = new PageData(new WikiPageDummy(), "<b>");
         String html = d.getHtml();
         assertEquals("&lt;b&gt;", html);
     }
 
+    @Test
     public void testLiteral() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RooT");
         WikiPage page = crawler.addPage(root, PathParser.parse("LiteralPage"), "!-literal-!");
@@ -66,6 +74,7 @@ public class PageDataTest extends TestCase {
         assertDoesNotHaveRegexp("!-literal-!", renderedContent);
     }
 
+    @Test
     public void testClasspath() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RooT");
         WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!path 123\n!path abc\n");
@@ -74,6 +83,7 @@ public class PageDataTest extends TestCase {
         assertTrue(paths.contains("abc"));
     }
 
+    @Test
     public void testClasspathWithVariable() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RooT");
 
@@ -90,6 +100,7 @@ public class PageDataTest extends TestCase {
         assertEquals("/my/path.jar", paths.get(0).toString());
     }
 
+    @Test
     public void testClasspathWithVariableDefinedInIncludedPage() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RooT");
         crawler.addPage(root, PathParser.parse("VariablePage"), "!define PATH {/my/path}\n");
@@ -99,6 +110,7 @@ public class PageDataTest extends TestCase {
         assertEquals("/my/path.jar", paths.get(0).toString());
     }
 
+    @Test
     public void testVariableIgnoredInParentPreformatted() throws Exception {  //--variables in parent preformatted blocks must not recognize !define widgets.
         WikiPage root = InMemoryPage.makeRoot("RooT");
         WikiPage parent = crawler.addPage(root, PathParser.parse("VariablePage"), "{{{\n!define SOMEVAR {A VALUE}\n}}}\n");
@@ -107,6 +119,7 @@ public class PageDataTest extends TestCase {
         assertHasRegexp("undefined variable", renderedContent);
     }
 
+    @Test
     public void testGetCrossReferences() throws Exception {
         WikiPage root = InMemoryPage.makeRoot("RooT");
         WikiPage page = crawler.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
@@ -114,24 +127,28 @@ public class PageDataTest extends TestCase {
         assertEquals("XrefPage", xrefs.get(0));
     }
 
+    @Test
     public void testThatExamplesAtEndOfNameSetsSuiteProperty() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("PageExamples"));
         PageData data = new PageData(page);
         assertTrue(data.hasAttribute(SUITE.toString()));
     }
 
+    @Test
     public void testThatExampleAtBeginningOfNameSetsTestProperty() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("ExamplePageExample"));
         PageData data = new PageData(page);
         assertTrue(data.hasAttribute(TEST.toString()));
     }
 
+    @Test
     public void testThatExampleAtEndOfNameSetsTestProperty() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("PageExample"));
         PageData data = new PageData(page);
         assertTrue(data.hasAttribute(TEST.toString()));
     }
 
+    @Test
     public void testThatSuiteAtBeginningOfNameSetsSuiteProperty() throws Exception {
         WikiPage suitePage1 = crawler.addPage(root, PathParser.parse("SuitePage"));
         PageData data = new PageData(suitePage1);
@@ -139,6 +156,7 @@ public class PageDataTest extends TestCase {
         assertTrue(data.hasAttribute(SUITE.toString()));
     }
 
+    @Test
     public void testThatSuiteAtEndOfNameSetsSuiteProperty() throws Exception {
         WikiPage suitePage2 = crawler.addPage(root, PathParser.parse("PageSuite"));
         PageData data = new PageData(suitePage2);
@@ -146,6 +164,7 @@ public class PageDataTest extends TestCase {
         assertTrue(data.hasAttribute(SUITE.toString()));
     }
 
+    @Test
     public void testThatTestAtBeginningOfNameSetsTestProperty() throws Exception {
         WikiPage testPage1 = crawler.addPage(root, PathParser.parse("TestPage"));
         PageData data = new PageData(testPage1);
@@ -153,6 +172,7 @@ public class PageDataTest extends TestCase {
         assertFalse(data.hasAttribute(SUITE.toString()));
     }
 
+    @Test
     public void testThatTestAtEndOfNameSetsTestProperty() throws Exception {
         WikiPage testPage2 = crawler.addPage(root, PathParser.parse("PageTest"));
         PageData data = new PageData(testPage2);
@@ -160,7 +180,7 @@ public class PageDataTest extends TestCase {
         assertFalse(data.hasAttribute(SUITE.toString()));
     }
 
-
+    @Test
     public void testDefaultAttributes() throws Exception {
         WikiPage normalPage = crawler.addPage(root, PathParser.parse("NormalPage"));
         WikiPage suitePage3 = crawler.addPage(root, PathParser.parse("TestPageSuite"));
@@ -191,6 +211,7 @@ public class PageDataTest extends TestCase {
         assertFalse(data.hasAttribute(SUITE.toString()));
     }
 
+    @Test
     public void testAttributesAreTruelyCopiedInCopyConstructor() throws Exception {
         PageData data = root.getData();
         data.setAttribute(LAST_MODIFYING_USER, "Joe");

@@ -3,52 +3,59 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.FileUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class SerializedPageResponderTest extends TestCase {
-    private final String RootPath = "TestRooT";
+public class SerializedPageResponderTest extends FitnesseBaseTestCase {
+    private static final String ROOT_PAGE = "TestRooT";
     private PageCrawler crawler;
     private WikiPage root;
     private MockRequest request;
     private FitNesseContext context;
 
-    public SerializedPageResponderTest() {
-    }
-
+    @Before
     public void setUp() throws Exception {
-        context = new FitNesseContext("RooT");
+        context = new FitNesseContext(ROOT_PAGE);
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
     }
 
+    @After
     public void tearDown() throws Exception {
-        FileUtil.deleteFileSystemDirectory(RootPath);
+        FileUtil.deleteFileSystemDirectory(ROOT_PAGE);
     }
 
+    @Test
     public void testWithInMemory() throws Exception {
         Object obj = doSetUpWith("bones");
         doTestWith(obj);
 
     }
 
+    @Test
     public void testWithFileSystem() throws Exception {
-        context = new FitNesseContext(new FileSystemPage(".", RootPath));
+        context = new FitNesseContext(new FileSystemPage(".", ROOT_PAGE));
         root = context.root;
         crawler = root.getPageCrawler();
         Object obj = doSetUpWith("bones");
-        FileUtil.deleteFileSystemDirectory(RootPath);
+        FileUtil.deleteFileSystemDirectory(ROOT_PAGE);
         doTestWith(obj);
     }
 
@@ -80,6 +87,7 @@ public class SerializedPageResponderTest extends TestCase {
         return ois.readObject();
     }
 
+    @Test
     public void testGetContentAndAttributes() throws Exception {
         Object obj = doSetUpWith("meat");
         assertNotNull(obj);
@@ -92,6 +100,7 @@ public class SerializedPageResponderTest extends TestCase {
         assertTrue(props.has("Attr1"));
     }
 
+    @Test
     public void testGetVersionOfPageData() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
         VersionInfo commitRecord = page.commit(page.getData());
@@ -106,6 +115,7 @@ public class SerializedPageResponderTest extends TestCase {
         assertEquals("some content", data.getContent());
     }
 
+    @Test
     public void testGetPageHieratchyAsXml() throws Exception {
         crawler.addPage(root, PathParser.parse("PageOne"));
         crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
@@ -123,6 +133,7 @@ public class SerializedPageResponderTest extends TestCase {
         assertSubString("<name>ChildOne</name>", xml);
     }
 
+    @Test
     public void testGetPageHieratchyAsXmlDoesntContainSymbolicLinks() throws Exception {
         WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"));
         crawler.addPage(root, PathParser.parse("PageOne.ChildOne"));
@@ -147,6 +158,7 @@ public class SerializedPageResponderTest extends TestCase {
         assertNotSubString("SymPage", xml);
     }
 
+    @Test
     public void testGetDataAsHtml() throws Exception {
         crawler.addPage(root, PathParser.parse("TestPageOne"), "test page");
 

@@ -1,5 +1,6 @@
 package fitnesse.wiki;
 
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class PageTypeTest {
+public class PageTypeTest extends FitnesseBaseTestCase {
 
     @Test
     public void fromString() {
@@ -45,8 +46,7 @@ public class PageTypeTest {
     }
 
     private WikiPage createDefaultPage() throws Exception {
-        WikiPage page = InMemoryPage.makeRoot("RooT");
-        return page;
+        return InMemoryPage.makeRoot("RooT");
     }
 
     @Test

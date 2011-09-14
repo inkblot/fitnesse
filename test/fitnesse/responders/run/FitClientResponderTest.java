@@ -3,22 +3,27 @@
 package fitnesse.responders.run;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class FitClientResponderTest extends TestCase {
+public class FitClientResponderTest extends FitnesseBaseTestCase {
     private FitClientResponder responder;
     private MockRequest request;
     private FitNesseContext context;
     private static PageCrawler crawler;
     private static WikiPage suite;
 
+    @Before
     public void setUp() throws Exception {
         responder = new FitClientResponder();
         request = new MockRequest();
@@ -48,20 +53,20 @@ public class FitClientResponderTest extends TestCase {
         page3.commit(data3);
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testPageNotFound() throws Exception {
         String result = getResultFor("MissingPage");
         assertSubString("MissingPage was not found", result);
     }
 
+    @Test
     public void testOneTest() throws Exception {
         String result = getResultFor("SuitePage.TestPassing");
         assertEquals("0000000000", result.substring(0, 10));
         assertSubString("PassFixture", result);
     }
 
+    @Test
     public void testSuite() throws Exception {
         String result = getResultFor("SuitePage");
         assertEquals("0000000000", result.substring(0, 10));
@@ -72,6 +77,7 @@ public class FitClientResponderTest extends TestCase {
         assertNotSubString("some page", result);
     }
 
+    @Test
     public void testRelativePageNamesIncluded() throws Exception {
         String result = getResultFor("SuitePage");
         assertNotSubString("SuitePage", result);
@@ -81,6 +87,7 @@ public class FitClientResponderTest extends TestCase {
         assertSubString("TestIgnore", result);
     }
 
+    @Test
     public void testPageThatIsNoATest() throws Exception {
         String result = getResultFor("SuitePage.SomePage");
         assertSubString("SomePage is neither a Test page nor a Suite page.", result);
@@ -100,11 +107,13 @@ public class FitClientResponderTest extends TestCase {
         return sender.sentData();
     }
 
+    @Test
     public void testWithClasspathOnSuite() throws Exception {
         String result = getResultFor("SuitePage", true);
         assertTrue("was: " + result, result.startsWith("00000000000000000007classes"));
     }
 
+    @Test
     public void testWithClasspathOnTestInSuite() throws Exception {
         crawler.addPage(suite, PathParser.parse("TestPage"), "!path jar.jar\n!path /some/dir/with/.class/files\n!|fitnesse.testutil.IgnoreFixture|\n");
         String result = getResultFor("SuitePage.TestPage", true);

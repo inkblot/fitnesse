@@ -3,15 +3,16 @@
 package fitnesse.responders.versions;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import static util.RegexAssertions.*;
 
-public class VersionResponderTest extends TestCase {
+public class VersionResponderTest extends FitnesseBaseTestCase {
     private String oldVersion;
     private SimpleResponse response;
 
@@ -31,6 +32,7 @@ public class VersionResponderTest extends TestCase {
         response = (SimpleResponse) responder.makeResponse(context, request);
     }
 
+    @Test
     public void testVersionName() throws Exception {
         makeTestResponse("PageOne");
 
@@ -39,6 +41,7 @@ public class VersionResponderTest extends TestCase {
         assertHasRegexp(oldVersion, response.getContent());
     }
 
+    @Test
     public void testButtons() throws Exception {
         makeTestResponse("PageOne");
 
@@ -51,6 +54,7 @@ public class VersionResponderTest extends TestCase {
         assertHasRegexp("Rollback button", response.getContent());
     }
 
+    @Test
     public void testNameNoAtRootLevel() throws Exception {
         makeTestResponse("PageOne.PageTwo");
         assertSubString("PageOne.PageTwo?responder=", response.getContent());

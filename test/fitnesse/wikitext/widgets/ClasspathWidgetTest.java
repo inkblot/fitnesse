@@ -3,10 +3,13 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.WikiPageDummy;
+import org.junit.Test;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
 public class ClasspathWidgetTest extends WidgetTestCase {
@@ -14,6 +17,7 @@ public class ClasspathWidgetTest extends WidgetTestCase {
         assertMatchEquals("!path somePath", "!path somePath");
     }
 
+    @Test
     public void testHtml() throws Exception {
         ClasspathWidget widget = new ClasspathWidget(new MockWidgetRoot(), "!path some.path");
         Pattern p = Pattern.compile("classpath: some.path");
@@ -21,12 +25,14 @@ public class ClasspathWidgetTest extends WidgetTestCase {
         assertTrue("pattern not found", match.find());
     }
 
+    @Test
     public void testAsWikiText() throws Exception {
         final String PATH_WIDGET = "!path some.path";
         ClasspathWidget w = new ClasspathWidget(new MockWidgetRoot(), PATH_WIDGET);
         assertEquals(PATH_WIDGET, w.asWikiText());
     }
 
+    @Test
     public void testPathWithVariable() throws Exception {
         String text = "!define BASE {/my/base/}\n!path ${BASE}*.jar\n";
         ParentWidget root = new WidgetRoot(text, new WikiPageDummy());
@@ -34,6 +40,7 @@ public class ClasspathWidgetTest extends WidgetTestCase {
         assertSubString("/my/base/*.jar", html);
     }
 
+    @Test
     public void testPathWikiTextWithVariable() throws Exception {
         String text = "!define BASE {/my/base/}\n!path ${BASE}*.jar\n";
         ParentWidget root = new WidgetRoot(text, new WikiPageDummy());
@@ -41,6 +48,7 @@ public class ClasspathWidgetTest extends WidgetTestCase {
         assertSubString("!path ${BASE}*.jar", text2);
     }
 
+    @Test
     public void testIsWidgetWithTextArgument() throws Exception {
         ClasspathWidget widget = new ClasspathWidget(new MockWidgetRoot(), "!path some.path");
         assertTrue(widget instanceof WidgetWithTextArgument);

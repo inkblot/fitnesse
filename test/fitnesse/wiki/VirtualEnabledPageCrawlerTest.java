@@ -2,10 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
-public class VirtualEnabledPageCrawlerTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public class VirtualEnabledPageCrawlerTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private WikiPage target;
     private WikiPage vlink;
@@ -13,6 +18,7 @@ public class VirtualEnabledPageCrawlerTest extends TestCase {
     private PageCrawler crawler;
     private WikiPagePath child1Path = PathParser.parse("ChildOne");
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
         crawler = root.getPageCrawler();
@@ -24,9 +30,7 @@ public class VirtualEnabledPageCrawlerTest extends TestCase {
         FitNesseUtil.bindVirtualLinkToPage(vlink, target);
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testCanCrossVirtualLink() throws Exception {
         WikiPage virtualChild = crawler.getPage(vlink, child1Path);
         assertNotNull(virtualChild);
@@ -34,6 +38,7 @@ public class VirtualEnabledPageCrawlerTest extends TestCase {
         assertNotNull(crawler.getPage(vlink, PathParser.parse("ChildOne.GrandChildOne")));
     }
 
+    @Test
     public void testCanCrossMultipleVirtualLinks() throws Exception {
         WikiPage secondTarget = crawler.addPage(root, PathParser.parse("SecondTarget"));
         crawler.addPage(secondTarget, PathParser.parse("ChildOfSecondTarget"));
@@ -43,12 +48,14 @@ public class VirtualEnabledPageCrawlerTest extends TestCase {
         assertEquals("ChildOfSecondTarget", virtualChild.getName());
     }
 
+    @Test
     public void testThatVirtualCylcesTerminate() throws Exception {
         FitNesseUtil.bindVirtualLinkToPage(child1, target); //Cycle.
         WikiPage virtualChild = crawler.getPage(vlink, PathParser.parse("ChildOne.ChildOne.ChildOne.ChildOne.ChildOne"));
         assertNotNull(virtualChild);
     }
 
+    @Test
     public void testFullyQualifiedNameUsesVirtualParent() throws Exception {
         WikiPage virtualChildPage = crawler.getPage(vlink, child1Path);
         WikiPagePath virtualChildFullPath = PathParser.parse("VirtualLink.ChildOne");

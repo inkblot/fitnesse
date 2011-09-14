@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.slim.SlimBaseTestCase;
 import org.junit.Test;
 
 import java.util.Map;
@@ -12,7 +12,7 @@ import static fitnesse.slimTables.SlimTable.Disgracer.disgraceMethodName;
 import static fitnesse.slimTables.SlimTable.approximatelyEqual;
 import static org.junit.Assert.*;
 
-public class SlimTableTest {
+public class SlimTableTest extends SlimBaseTestCase {
     @Test
     public void gracefulClassNames() throws Exception {
         assertDisgracedClassName("MyClass", "my class");

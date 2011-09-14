@@ -3,16 +3,22 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
+import org.junit.Test;
 import util.TimeMeasurement;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 // created by Jason Sypher
 
 public class StrikeWidgetTest extends WidgetTestCase {
+    @Test
     public void testRegularExpression() throws Exception {
         assertMatchEquals("abc--123--def", "--123--");
         assertNoMatch("------");
     }
 
+    @Test
     public void testOutput() throws Exception {
         StrikeWidget widget =
                 new StrikeWidget(new MockWidgetRoot(), "--some text--");
@@ -23,6 +29,7 @@ public class StrikeWidgetTest extends WidgetTestCase {
         assertEquals("<span class=\"strike\">some text</span>", widget.render());
     }
 
+    @Test
     public void testEmbeddedDashInStrikedText() throws Exception {
         StrikeWidget widget = new StrikeWidget(new MockWidgetRoot(), "--embedded-dash--");
         assertEquals(1, widget.numberOfChildren());
@@ -32,6 +39,7 @@ public class StrikeWidgetTest extends WidgetTestCase {
         assertEquals("<span class=\"strike\">embedded-dash</span>", widget.render());
     }
 
+    @Test
     public void testEvilExponentialMatch() throws Exception {
         TimeMeasurement measurement = new TimeMeasurement().start();
 
@@ -39,10 +47,6 @@ public class StrikeWidgetTest extends WidgetTestCase {
 
         long duration = measurement.elapsed();
         assertTrue("took too long", duration < 1000);
-    }
-
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(StrikeWidgetTest.class);
     }
 
     protected String getRegexp() {

@@ -3,22 +3,25 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 import util.TimeMeasurement;
 
 import static util.RegexAssertions.assertSubString;
 
-public class TestHtmlFormatterTest extends TestCase {
+public class TestHtmlFormatterTest extends FitnesseBaseTestCase {
     private BaseFormatter formatter;
     private StringBuffer pageBuffer = new StringBuffer();
     private WikiPage page;
     private WikiPage root;
 
+    @Before
     public void setUp() throws Exception {
         root = InMemoryPage.makeRoot("RooT");
         page = root.addChildPage("NewPage");
@@ -33,15 +36,14 @@ public class TestHtmlFormatterTest extends TestCase {
         };
     }
 
-    public void tearDown() throws Exception {
-    }
-
+    @Test
     public void testHead() throws Exception {
         formatter.writeHead("test");
 
         assertSubString("<div id=\"test-summary\">Running Tests ...</div>", pageBuffer.toString());
     }
 
+    @Test
     public void testTestSummaryTestPass() throws Exception {
         TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
         TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -55,6 +57,7 @@ public class TestHtmlFormatterTest extends TestCase {
         assertSubString("document.getElementById(\"test-summary\").className = \"pass\"", pageBuffer.toString());
     }
 
+    @Test
     public void testTestSummaryTestFail() throws Exception {
         TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
         TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -67,6 +70,7 @@ public class TestHtmlFormatterTest extends TestCase {
         assertSubString("document.getElementById(\"test-summary\").className = \"fail\"", pageBuffer.toString());
     }
 
+    @Test
     public void testExecutionStatusHtml() throws Exception {
         TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
         TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -79,6 +83,7 @@ public class TestHtmlFormatterTest extends TestCase {
         assertSubString("<div id=\"execution-status\">", pageBuffer.toString());
     }
 
+    @Test
     public void testTail() throws Exception {
         TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
         TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -91,6 +96,7 @@ public class TestHtmlFormatterTest extends TestCase {
         assertSubString("</html>", pageBuffer.toString());
     }
 
+    @Test
     public void testStop() throws Exception {
         TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
         TimeMeasurement timeMeasurement = new TimeMeasurement();
@@ -106,6 +112,7 @@ public class TestHtmlFormatterTest extends TestCase {
         assertSubString("document.getElementById(\"stop-test\").innerHTML = \"\"", pageBuffer.toString());
     }
 
+    @Test
     public void testIncompleteMessageAfterException() throws Exception {
         TimeMeasurement timeMeasurement = new TimeMeasurement();
         formatter.writeHead("test");
@@ -120,6 +127,7 @@ public class TestHtmlFormatterTest extends TestCase {
         assertSubString("className = \"fail\"", pageBuffer.toString());
     }
 
+    @Test
     public void testTimingShouldAppearInSummary() throws Exception {
         TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(987).start();
         TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(600);

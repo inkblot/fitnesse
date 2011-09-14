@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import fitnesse.responders.run.slimResponder.MockSlimTestContext;
+import fitnesse.slim.SlimBaseTestCase;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.converters.BooleanConverter;
 import fitnesse.slim.converters.VoidConverter;
@@ -20,10 +20,9 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static util.ListUtility.list;
 
-public class ScriptTableTest {
+public class ScriptTableTest extends SlimBaseTestCase {
     private WikiPage root;
     private List<Object> instructions;
-    private final String scriptTableHeader = "|Script|\n";
     public ScriptTable st;
     private MockSlimTestContext testContext;
 
@@ -57,7 +56,7 @@ public class ScriptTableTest {
     }
 
     private void buildInstructionsFor(String scriptStatements) throws Exception {
-        buildInstructionsForWholeTable(scriptTableHeader + scriptStatements);
+        buildInstructionsForWholeTable("|Script|\n" + scriptStatements);
     }
 
     @Test

@@ -3,18 +3,26 @@
 package fitnesse.wiki;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import util.ClockUtil;
 
 import java.util.List;
 
-public class ProxyPageTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+public class ProxyPageTest extends FitnesseBaseTestCase {
     private ProxyPage proxy;
     public WikiPage child1;
     private PageCrawler crawler;
     private FitNesseUtil fitNesseUtil;
 
+    @Before
     public void setUp() throws Exception {
         CachingPage.cacheTime = 0;
         FitNesseContext context = new FitNesseContext("RooT");
@@ -36,22 +44,26 @@ public class ProxyPageTest extends TestCase {
         proxy.setHostPort(FitNesseUtil.DEFAULT_PORT);
     }
 
+    @After
     public void tearDown() throws Exception {
         fitNesseUtil.stopFitnesse();
     }
 
+    @Test
     public void testConstructor() throws Exception {
         assertEquals("page one content", proxy.getData().getContent());
         assertEquals("PageOne", proxy.getName());
         assertEquals(true, proxy.getData().hasAttribute("Attr1"));
     }
 
+    @Test
     public void testHasChildren() throws Exception {
         assertEquals(false, proxy.hasChildPage("BlaH"));
         assertEquals(true, proxy.hasChildPage("ChildOne"));
         assertEquals(true, proxy.hasChildPage("ChildTwo"));
     }
 
+    @Test
     public void testGetChildrenOneAtATime() throws Exception {
         WikiPage child1 = proxy.getChildPage("ChildOne");
         assertEquals("child one", child1.getData().getContent());
@@ -59,6 +71,7 @@ public class ProxyPageTest extends TestCase {
         assertEquals("child two", child2.getData().getContent());
     }
 
+    @Test
     public void testGetAllChildren() throws Exception {
         List<?> children = proxy.getChildren();
         assertEquals(2, children.size());
@@ -68,6 +81,7 @@ public class ProxyPageTest extends TestCase {
         assertEquals(true, "ChildOne".equals(child.getName()) || "ChildTwo".equals(child.getName()));
     }
 
+    @Test
     public void testSetHostAndPort() throws Exception {
         List<WikiPage> children = proxy.getChildren();
         proxy.setTransientValues("a.new.host", ClockUtil.currentTimeInMillis());
@@ -83,6 +97,7 @@ public class ProxyPageTest extends TestCase {
         }
     }
 
+    @Test
     public void testCanFindNewChildOfAProxy() throws Exception {
         ProxyPage child1Proxy = (ProxyPage) proxy.getChildPage("ChildOne");
         assertNull(child1Proxy.getChildPage("ChildOneChild"));
@@ -91,6 +106,7 @@ public class ProxyPageTest extends TestCase {
         assertNotNull(child1Proxy.getChildPage("ChildOneChild"));
     }
 
+    @Test
     public void testHasSubpageCallsLoadChildrenNoMoreThanNeeded() throws Exception {
         proxy.loadChildren();
         ProxyPage.retrievalCount = 0;

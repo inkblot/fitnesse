@@ -11,6 +11,7 @@
     <property name="build.classes" location="${build}/classes"/>
     <property name="test.classes" location="${build}/test/classes"/>
     <property name="test.results" location="${build}/test/results"/>
+    <property name="test.reports" location="${build}/test/reports"/>
     <property name="integration" location="${build}/integration"/>
     <property name="integration.tests" location="${integration}/tests"/>
     <property name="lib" location="${basedir}/lib"/>
@@ -71,6 +72,7 @@
         <mkdir dir="${build.classes}/Resources"/>
         <mkdir dir="${test.classes}"/>
         <mkdir dir="${test.results}"/>
+        <mkdir dir="${test.reports}"/>
         <mkdir dir="${integration}"/>
         <mkdir dir="${integration.tests}"/>
         <mkdir dir="${dist}"/>
@@ -155,8 +157,8 @@
         </javac>
     </target>
 
-    <target name="test" depends="compile, build-properties, compile-tests">
-        <junit forkmode="once" fork="yes" printsummary="no" haltonfailure="yes" haltonerror="yes" dir="${build}">
+    <target name="run-tests" depends="compile, build-properties, compile-tests">
+        <junit forkmode="once" fork="yes" printsummary="yes" failureproperty="test.failed" dir="${build}">
             <classpath>
                 <pathelement path="${test.resources}"/>
                 <pathelement path="${test.classes}"/>
@@ -168,11 +170,24 @@
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <formatter type="xml" usefile="true"/>
-            <formatter type="plain" usefile="false"/>
             <batchtest todir="${test.results}">
                 <fileset dir="${test.classes}" includes="**/*Test.class"/>
             </batchtest>
         </junit>
+    </target>
+
+    <target name="test-report">
+        <junitreport todir="${test.reports}">
+            <fileset dir="${test.results}">
+                <include name="**/TEST-*.xml"/>
+            </fileset>
+            <report todir="${test.reports}"/>
+        </junitreport>
+        <fail if="test.failed" message="Tests failed"/>
+    </target>
+
+    <target name="test" depends="run-tests,test-report">
+        <fail if="test.failed" message="Tests failed"/>
     </target>
 
     <target name="copy-integration-tests" depends="init">

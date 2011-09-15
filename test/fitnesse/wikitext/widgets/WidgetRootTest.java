@@ -17,12 +17,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WidgetRootTest extends FitnesseBaseTestCase {
+    private FitNesseContext context;
     private WikiPage rootPage;
     private PageCrawler crawler;
 
     @Before
     public void setUp() throws Exception {
-        rootPage = InMemoryPage.makeRoot("RooT");
+        context = makeContext();
+        rootPage = context.root;
         crawler = rootPage.getPageCrawler();
     }
 
@@ -148,10 +150,9 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
 
     @Test
     public void testShouldHaveRootPathVariableAvailable() throws Exception {
-        FitNesseContext context = new FitNesseContext(rootPage, "/home/fitnesse");
         new FitNesse(context, false);
         WidgetRoot root = new WidgetRoot("", rootPage);
-        assertEquals("/home/fitnesse", root.getVariable("FITNESSE_ROOTPATH"));
+        assertEquals(getRootPath(), root.getVariable("FITNESSE_ROOTPATH"));
     }
 
     @Test

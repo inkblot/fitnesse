@@ -35,7 +35,7 @@ public class ImporterTestCase extends FitnesseBaseTestCase {
         crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
         crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
 
-        localContext = new FitNesseContext("RooT2");
+        localContext = makeContext("local");
         localRoot = localContext.root;
         pageOne = localRoot.addChildPage("PageOne");
         childPageOne = pageOne.addChildPage("ChildOne");

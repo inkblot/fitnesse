@@ -2,18 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import fitnesse.ComponentFactory;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import org.junit.After;
 import org.junit.Before;
 import util.FileUtil;
 
+import java.util.Properties;
+
 public abstract class UpdateTestCase extends FitnesseBaseTestCase {
-    public static final String testDir = "testDir";
     public static final String rootName = "RooT";
 
     protected WikiPage root;
@@ -26,10 +27,10 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
 
     @Before
     public final void beforeUpdateTest() throws Exception {
-        root = new FileSystemPage(testDir, rootName);
-        context = new FitNesseContext(root, testDir);
+        root = new FileSystemPage(getRootPath(), rootName);
+        context = new FitNesseContext(root, getRootPath());
 
-        FileUtil.makeDir(testDir);
+        FileUtil.makeDir(getRootPath());
         crawler = root.getPageCrawler();
 
         pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
@@ -38,11 +39,6 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
         updater = new UpdaterBase(context);
         update = makeUpdate();
 
-    }
-
-    @After
-    public final void afterUpdateTest() throws Exception {
-        FileUtil.deleteFileSystemDirectory(testDir);
     }
 
     protected Update makeUpdate() throws Exception {

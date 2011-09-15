@@ -110,15 +110,14 @@ public class TestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void testTestRunnerWithRootPathVariable() throws Exception {
-        String fitnesseRootpath = "/home/fitnesse";
-        FitNesseContext context = new FitNesseContext(InMemoryPage.makeRoot("RooT"), fitnesseRootpath);
+        FitNesseContext context = makeContext();
         new FitNesse(context, false);
 
         String specifiedPageText = "!define TEST_RUNNER (${FITNESSE_ROOTPATH}/rubyslim.rb)\n";
         WikiPage specifiedPage = makeTestPage(specifiedPageText);
 
         Descriptor myDescriptor = TestSystem.getDescriptor(specifiedPage.getData(), false);
-        assertEquals(fitnesseRootpath + "/rubyslim.rb", myDescriptor.testRunner);
+        assertEquals(getRootPath() + "/rubyslim.rb", myDescriptor.testRunner);
     }
 
 }

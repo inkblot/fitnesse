@@ -20,7 +20,6 @@ import static util.RegexAssertions.assertSubString;
 public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     private File updateList;
     private File updateDoNotCopyOver;
-    public static final String testDir = "testDir";
     public static final String rootName = "RooT";
 
     protected WikiPage root;
@@ -42,12 +41,12 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     }
 
     private void setTheContext() throws Exception {
-        root = new FileSystemPage(testDir, rootName);
-        context = new FitNesseContext(root, testDir);
+        root = new FileSystemPage(getRootPath(), rootName);
+        context = new FitNesseContext(root, getRootPath());
     }
 
     private void setTheRoot() throws Exception {
-        FileUtil.makeDir(testDir);
+        FileUtil.makeDir(getRootPath());
         crawler = root.getPageCrawler();
     }
 
@@ -114,7 +113,7 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
         updater.setFitNesseVersion(version);
         updater.testing = true;
 
-        File propertiesFile = new File("testDir/RooT/properties");
+        File propertiesFile = new File(getRootPath(), "RooT/properties");
         FileUtil.deleteFile(propertiesFile);
         assertFalse(propertiesFile.exists());
 
@@ -153,7 +152,6 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     @After
     public void tearDown() {
         FileUtil.deleteFileSystemDirectory("classes/Resources");
-        FileUtil.deleteFileSystemDirectory("testDir");
     }
 
     private class UpdateSpy implements Update {

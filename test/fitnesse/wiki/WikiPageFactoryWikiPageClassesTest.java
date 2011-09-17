@@ -2,7 +2,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Guice;
 import fitnesse.ComponentFactory;
-import fitnesse.wikitext.parser.SymbolProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

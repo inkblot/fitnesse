@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
 import fitnesse.ComponentFactory;
 import util.ClockUtil;
 import util.FileSystem;
@@ -17,11 +18,15 @@ public class InMemoryPage extends CommitingPage {
     protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
     protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
 
-    public InMemoryPage(String rootPath, String rootPageName, ComponentFactory factory) throws Exception {
+    public static WikiPage makeRoot(Injector injector, String rootPath, String rootPageName) {
+        return new InMemoryPage(rootPath, rootPageName, injector.getInstance(ComponentFactory.class));
+    }
+
+    public InMemoryPage(String rootPath, String rootPageName, ComponentFactory factory) {
         this(rootPageName, null);
     }
 
-    public InMemoryPage(String rootPath, String rootPageName, FileSystem fileSystem, ComponentFactory factory) throws Exception {
+    public InMemoryPage(String rootPath, String rootPageName, FileSystem fileSystem, ComponentFactory factory) {
         this(rootPageName, null);
     }
 

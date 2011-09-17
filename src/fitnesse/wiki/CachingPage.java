@@ -20,7 +20,7 @@ public abstract class CachingPage extends CommitingPage {
     private transient SoftReference<PageData> cachedData;
     private transient TimeMeasurement cachedTime;
 
-    public CachingPage(String name, WikiPage parent) throws Exception {
+    public CachingPage(String name, WikiPage parent) {
         super(name, parent);
         addExtention(new VirtualCouplingExtension(this));
     }

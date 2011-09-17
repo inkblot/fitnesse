@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
 import fitnesse.ComponentFactory;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import org.apache.commons.io.IOUtils;
@@ -21,7 +22,11 @@ public class FileSystemPage extends CachingPage {
     private final VersionsController versionsController;
     private CmSystem cmSystem = new CmSystem();
 
-    public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final ComponentFactory componentFactory) throws Exception {
+    public static WikiPage makeRoot(Injector injector, String rootPath, String rootPageName) throws IOException {
+        return new FileSystemPage(rootPath, rootPageName, injector.getInstance(FileSystem.class), injector.getInstance(ComponentFactory.class));
+    }
+
+    public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final ComponentFactory componentFactory) throws IOException {
         super(name, null);
         this.path = path;
 
@@ -253,7 +258,7 @@ public class FileSystemPage extends CachingPage {
         return this.versionsController.getRevisionData(this, versionName);
     }
 
-    private void createDirectoryIfNewPage(FileSystem fileSystem) throws Exception {
+    private void createDirectoryIfNewPage(FileSystem fileSystem) throws IOException {
         String pagePath = getFileSystemPath();
         if (!fileSystem.exists(pagePath)) {
             fileSystem.makeDirectory(pagePath);
@@ -285,33 +290,35 @@ public class FileSystemPage extends CachingPage {
     }
 
     class CmSystem {
-        public void update(String fileName) throws Exception {
+        public void update(String fileName) {
             invokeCmMethod("cmUpdate", fileName);
         }
 
 
-        public void edit(String fileName) throws Exception {
+        public void edit(String fileName) {
             invokeCmMethod("cmEdit", fileName);
         }
 
-        public void delete(String fileToBeDeleted) throws Exception {
+        public void delete(String fileToBeDeleted) {
             invokeCmMethod("cmDelete", fileToBeDeleted);
         }
 
-        public void preDelete(String fileToBeDeleted) throws Exception {
+        public void preDelete(String fileToBeDeleted) {
             invokeCmMethod("cmPreDelete", fileToBeDeleted);
         }
 
-        private void invokeCmMethod(String method, String newPagePath) throws Exception {
-            if (getCmSystemClassName() != null) {
-                try {
+        private void invokeCmMethod(String method, String newPagePath) {
+            String cmSystemClassName = null;
+            try {
+                cmSystemClassName = getCmSystemClassName();
+                if (cmSystemClassName != null) {
                     Class<?> cmSystem = Class.forName(getCmSystemClassName());
                     Method updateMethod = cmSystem.getMethod(method, String.class, String.class);
                     updateMethod.invoke(null, newPagePath, getCmSystemVariable());
-                } catch (Exception e) {
-                    System.err.println("Could not invoke static " + method + "(path,payload) of " + getCmSystemClassName());
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                System.err.println("Could not invoke static " + method + "(path,payload) of " + cmSystemClassName);
+                e.printStackTrace();
             }
         }
 

@@ -30,7 +30,7 @@ public class FileSystemPage extends CachingPage {
     }
 
     public FileSystemPage(final String path, final String name) throws Exception {
-        this(path, name, new DiskFileSystem(), new ComponentFactory());
+        this(path, name, new DiskFileSystem(), new ComponentFactory(path));
     }
 
     public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) throws Exception {

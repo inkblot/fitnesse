@@ -7,6 +7,7 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.wiki.FileSystemPage;
+import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesseMain.FitNesseMain;
@@ -42,6 +43,7 @@ public class FitNesseModule extends AbstractModule {
         bind(Properties.class).annotatedWith(Names.named(ComponentFactory.PROPERTIES_FILE)).toInstance(properties);
         bindAuthenticator();
         bindWikiPageClass();
+        bindFromProperty(VersionsController.class);
         install(new UtilModule());
     }
 
@@ -54,7 +56,7 @@ public class FitNesseModule extends AbstractModule {
                 bind(Authenticator.class).toInstance(new OneUserAuthenticator(values[0], values[1]));
             }
         } else {
-            bindFromProperty(Authenticator.class, properties);
+            bindFromProperty(Authenticator.class);
         }
     }
 
@@ -64,7 +66,7 @@ public class FitNesseModule extends AbstractModule {
                 .toInstance(getClassFromProperty(properties, WikiPage.class, FileSystemPage.class));
     }
 
-    private <T> void bindFromProperty(Class<T> bindingClass, Properties properties) {
+    private <T> void bindFromProperty(Class<T> bindingClass) {
         Class<? extends T> implClass = getClassFromProperty(properties, bindingClass, null);
         if (implClass != null) {
             bind(bindingClass).to(implClass);

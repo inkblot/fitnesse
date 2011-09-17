@@ -19,7 +19,9 @@ public class WikiPageFactory {
     private final FileSystem fileSystem;
 
     @Inject
-    public WikiPageFactory(FileSystem fileSystem, @Named(WikiPageFactory.WIKI_PAGE_CLASS) Class<? extends WikiPage> wikiPageClass, @Named(ComponentFactory.PROPERTIES_FILE) Properties properties) {
+    public WikiPageFactory(FileSystem fileSystem,
+                           @Named(WikiPageFactory.WIKI_PAGE_CLASS) Class<? extends WikiPage> wikiPageClass,
+                           @Named(ComponentFactory.PROPERTIES_FILE) Properties properties) {
         this.fileSystem = fileSystem;
         this.wikiPageClass = wikiPageClass;
         this.properties = properties;

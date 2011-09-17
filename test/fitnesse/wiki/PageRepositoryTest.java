@@ -34,7 +34,7 @@ public class PageRepositoryTest extends FitnesseBaseTestCase {
     @Before
     public void SetUp() throws Exception {
         pageRepository = new PageRepository(fileSystem);
-        rootPage = (FileSystemPage) wikiPageFactory.makeRootPage(".", "somepath", new ComponentFactory());
+        rootPage = (FileSystemPage) wikiPageFactory.makeRootPage(".", "somepath", injector.getInstance(ComponentFactory.class));
     }
 
     @Test

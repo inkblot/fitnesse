@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
@@ -21,6 +24,7 @@ import java.util.Properties;
 
 import static util.FileUtil.loadProperties;
 
+@Singleton
 public class ComponentFactory {
     private final String endl = System.getProperty("line.separator");
     public static final String PROPERTIES_FILE = "plugins.properties";
@@ -32,12 +36,13 @@ public class ComponentFactory {
     private final Properties properties;
     private final SymbolProvider symbolProvider;
 
-    public ComponentFactory() {
-        this(new Properties(), SymbolProvider.wikiParsingProvider);
+    public ComponentFactory(String propertiesLocation) {
+        this(loadProperties(new File(propertiesLocation, PROPERTIES_FILE)));
     }
 
-    public ComponentFactory(String propertiesLocation) {
-        this(loadProperties(new File(propertiesLocation, PROPERTIES_FILE)), SymbolProvider.wikiParsingProvider);
+    @Inject
+    public ComponentFactory(@Named(PROPERTIES_FILE) Properties properties) {
+        this(properties, SymbolProvider.wikiParsingProvider);
     }
 
     public ComponentFactory(Properties properties, SymbolProvider symbolProvider) {

@@ -1,7 +1,11 @@
 package fitnesse.wiki;
 
+import com.google.inject.ImplementedBy;
+import fitnesse.wiki.zip.ZipFileVersionsController;
+
 import java.util.Collection;
 
+@ImplementedBy(ZipFileVersionsController.class)
 public interface VersionsController {
     public PageData getRevisionData(FileSystemPage page, String label);
 

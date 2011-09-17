@@ -55,7 +55,7 @@ public class WikiPageFactoryWikiPageClassesTest {
     public void createRoot() throws Exception {
         Properties properties = new Properties();
         WikiPageFactory wikiPageFactory = new WikiPageFactory(new DiskFileSystem(), wikiPageClass, properties);
-        ComponentFactory componentFactory = new ComponentFactory(properties, SymbolProvider.wikiParsingProvider);
+        ComponentFactory componentFactory = new ComponentFactory(properties);
         assertNotNull(wikiPageFactory.makeRootPage(".", "RooT", componentFactory));
     }
 }

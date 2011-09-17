@@ -11,10 +11,8 @@ import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.SimpleAuthenticator;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.*;
+import fitnesse.wiki.zip.ZipFileVersionsController;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +22,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by IntelliJ IDEA.
@@ -99,5 +98,20 @@ public class FitNesseModuleTest {
         Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
         Class wikiPageClass = injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS)));
         assertEquals(wikiPageClass, InMemoryPage.class);
+    }
+
+    @Test
+    public void testShouldUseZipFileRevisionControllerAsDefault() {
+        Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
+        VersionsController defaultRevisionController = injector.getInstance(VersionsController.class);
+        assertEquals(ZipFileVersionsController.class, defaultRevisionController.getClass());
+    }
+
+    @Test
+    public void testShouldUseSpecifiedRevisionController() {
+        testProperties.setProperty(VersionsController.class.getSimpleName(), NullVersionsController.class.getName());
+        Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
+        VersionsController defaultRevisionController = injector.getInstance(VersionsController.class);
+        assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
     }
 }

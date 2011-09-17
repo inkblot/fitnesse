@@ -10,7 +10,6 @@ import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.wiki.*;
-import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.WidgetInterceptor;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.*;
@@ -141,20 +140,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         assertEquals("\tContent filter installed: " + SaveResponder.contentFilter.getClass().getName() + "\n", content);
         assertNotNull(SaveResponder.contentFilter);
         assertEquals(TestContentFilter.class, SaveResponder.contentFilter.getClass());
-    }
-
-    @Test
-    public void testShouldUseZipFileRevisionControllerAsDefault() {
-        VersionsController defaultRevisionController = factory.loadVersionsController();
-        assertEquals(ZipFileVersionsController.class, defaultRevisionController.getClass());
-    }
-
-    @Test
-    public void testShouldUseSpecifiedRevisionController() {
-        testProperties.setProperty(VersionsController.class.getSimpleName(), NullVersionsController.class.getName());
-
-        VersionsController defaultRevisionController = factory.loadVersionsController();
-        assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
     }
 
     public static class TestPageFactory extends HtmlPageFactory {

@@ -1,12 +1,14 @@
 package fitnesse;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import fitnesseMain.FitNesseMain;
 import util.FileUtil;
 import util.UtilModule;
@@ -52,30 +54,37 @@ public class FitNesseModule extends AbstractModule {
                 bind(Authenticator.class).toInstance(new OneUserAuthenticator(values[0], values[1]));
             }
         } else {
-            String authClassName = properties.getProperty(Authenticator.class.getSimpleName());
-            if (authClassName != null) {
-                try {
-                    Class<?> someClass = Class.forName(authClassName);
-                    if (Authenticator.class.isAssignableFrom(someClass)) {
-                        Class<? extends Authenticator> authenticatorClass = (Class<Authenticator>) someClass;
-                        bind(Authenticator.class).to(authenticatorClass);
-                    }
-                } catch (ClassNotFoundException e) {
-                    // ignore
-                }
-            }
+            bindFromProperty(Authenticator.class, properties);
         }
     }
 
     private void bindWikiPageClass() {
-        String wikiPageClassName = properties.getProperty(ComponentFactory.WIKI_PAGE_CLASS, FileSystemPage.class.getName());
-        try {
-            Class<?> wikiPageClass = Class.forName(wikiPageClassName);
-            if (WikiPage.class.isAssignableFrom(wikiPageClass)) {
-                bind(Class.class).annotatedWith(Names.named(ComponentFactory.WIKI_PAGE_CLASS)).toInstance(wikiPageClass);
-            }
-        } catch (ClassNotFoundException e) {
-            // ignore.  will cause binding exception
+        bind(new TypeLiteral<Class<? extends WikiPage>>(){})
+                .annotatedWith(Names.named(WikiPageFactory.WIKI_PAGE_CLASS))
+                .toInstance(getClassFromProperty(properties, WikiPage.class, FileSystemPage.class));
+    }
+
+    private <T> void bindFromProperty(Class<T> bindingClass, Properties properties) {
+        Class<? extends T> implClass = getClassFromProperty(properties, bindingClass, null);
+        if (implClass != null) {
+            bind(bindingClass).to(implClass);
         }
     }
+
+    private static <T> Class<? extends T> getClassFromProperty(Properties properties, Class<T> interfaceClass, Class<? extends T> defaultImplClass) {
+        String implClassName = properties.getProperty(interfaceClass.getSimpleName());
+        if (implClassName != null) {
+            try {
+                Class<?> someClass = Class.forName(implClassName);
+                if (interfaceClass.isAssignableFrom(someClass)) {
+                    //noinspection unchecked
+                    return (Class<? extends T>) someClass;
+                }
+            } catch (ClassNotFoundException e) {
+                // ignore
+            }
+        }
+        return defaultImplClass;
+    }
+
 }

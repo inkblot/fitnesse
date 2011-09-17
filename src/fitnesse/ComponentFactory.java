@@ -7,6 +7,7 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
 import fitnesse.wiki.VersionsController;
+import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
@@ -23,7 +24,6 @@ import static util.FileUtil.loadProperties;
 public class ComponentFactory {
     private final String endl = System.getProperty("line.separator");
     public static final String PROPERTIES_FILE = "plugins.properties";
-    public static final String WIKI_PAGE_CLASS = "WikiPage";
     public static final String PLUGINS = "Plugins";
     public static final String RESPONDERS = "Responders";
     public static final String SYMBOL_TYPES = "SymbolTypes";

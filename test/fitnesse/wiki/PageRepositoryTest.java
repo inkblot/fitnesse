@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import fitnesse.ComponentFactory;
 import fitnesse.FitnesseBaseTestCase;
-import fitnesse.WikiPageFactory;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileSystem;

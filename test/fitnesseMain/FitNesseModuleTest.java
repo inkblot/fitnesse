@@ -3,8 +3,8 @@ package fitnesseMain;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
-import fitnesse.ComponentFactory;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -13,6 +13,8 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -87,15 +89,15 @@ public class FitNesseModuleTest {
     @Test
     public void testWikiPageClassDefault() {
         Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
-        Class wikiPageClass = injector.getInstance(Key.get(Class.class, Names.named(ComponentFactory.WIKI_PAGE_CLASS)));
+        Class wikiPageClass = injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS)));
         assertEquals(wikiPageClass, FileSystemPage.class);
     }
 
     @Test
     public void testInMemoryWikiPageClass() {
-        testProperties.setProperty(ComponentFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        testProperties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
-        Class wikiPageClass = injector.getInstance(Key.get(Class.class, Names.named(ComponentFactory.WIKI_PAGE_CLASS)));
+        Class wikiPageClass = injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS)));
         assertEquals(wikiPageClass, InMemoryPage.class);
     }
 }

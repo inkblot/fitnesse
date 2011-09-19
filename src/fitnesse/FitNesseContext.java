@@ -8,7 +8,6 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +41,6 @@ public class FitNesseContext {
     public HtmlPageFactory htmlPageFactory = new HtmlPageFactory();
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
-
-    public FitNesseContext(String rootName) {
-        this(InMemoryPage.makeRoot(rootName), DEFAULT_PATH);
-    }
 
     public FitNesseContext(WikiPage root, String rootPath) {
         this.root = root;

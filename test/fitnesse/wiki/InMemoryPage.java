@@ -97,10 +97,6 @@ public class InMemoryPage extends CommitingPage {
         return new PageData(version);
     }
 
-    public int numberOfVersions() {
-        return versions.size() - 1;
-    }
-
     protected VersionInfo makeVersionInfo(PageData current, String name) throws Exception {
         String author = current.getAttribute(PageData.LAST_MODIFYING_USER);
         if (author == null)

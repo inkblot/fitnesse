@@ -60,16 +60,14 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
 
     private void removeOrphans(WikiPage context) throws Exception {
         for (WikiPagePath orphan : orphans) {
-            WikiPagePath path = orphan;
-            WikiPage wikiPage = crawler.getPage(context, path);
+            WikiPage wikiPage = crawler.getPage(context, orphan);
             if (wikiPage != null)
                 wikiPage.getParent().removeChildPage(wikiPage.getName());
         }
     }
 
     private void filterOrphans(WikiPage context) throws Exception {
-        for (WikiPagePath aPageCatalog : pageCatalog) {
-            WikiPagePath wikiPagePath = aPageCatalog;
+        for (WikiPagePath wikiPagePath : pageCatalog) {
             WikiPage unrecognizedPage = crawler.getPage(context, wikiPagePath);
             PageData data = unrecognizedPage.getData();
             WikiImportProperty importProps = WikiImportProperty.createFrom(data.getProperties());

@@ -3,6 +3,7 @@ package fitnesse.responders;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -28,7 +29,7 @@ public class ImporterTestCase extends FitnesseBaseTestCase {
 
     @Before
     public void beforeImportTest() throws Exception {
-        remoteContext = new FitNesseContext("RooT");
+        remoteContext = new FitNesseContext(InMemoryPage.makeRoot("RooT"), FitNesseContext.DEFAULT_PATH);
         remoteRoot = remoteContext.root;
         PageCrawler crawler = remoteRoot.getPageCrawler();
         crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");

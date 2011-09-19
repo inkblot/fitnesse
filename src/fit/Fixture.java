@@ -141,7 +141,7 @@ public class Fixture {
         for (; parameters != null; parameters = parameters.more)
             argumentList.add(parameters.text());
 
-        args = (String[]) argumentList.toArray(new String[0]);
+        args = argumentList.toArray(new String[argumentList.size()]);
     }
 
     public void doTable(Parse table) {
@@ -249,7 +249,7 @@ public class Fixture {
     }
 
     public static String camel(String name) {
-        StringBuffer b = new StringBuffer(name.length());
+        StringBuilder b = new StringBuilder(name.length());
         StringTokenizer t = new StringTokenizer(name);
         b.append(t.nextToken());
         while (t.hasMoreTokens()) {
@@ -331,8 +331,7 @@ public class Fixture {
 
     public static boolean hasParseMethod(Class<?> type) {
         try {
-            type.getMethod("parse", new Class<?>[]
-                    {String.class});
+            type.getMethod("parse", String.class);
             return true;
         } catch (NoSuchMethodException e) {
             return false;
@@ -340,11 +339,8 @@ public class Fixture {
     }
 
     public static Object callParseMethod(Class<?> type, String s) throws Exception {
-        Method parseMethod = type.getMethod("parse", new Class<?>[]
-                {String.class});
-        Object o = parseMethod.invoke(null, new Object[]
-                {s});
-        return o;
+        Method parseMethod = type.getMethod("parse", String.class);
+        return parseMethod.invoke(null, s);
     }
 
     // TODO-RcM I might be moving out of here. Can you help me find a home of my
@@ -385,11 +381,12 @@ public class Fixture {
         private Object parseCell() {
             try {
                 return typeAdapter.isRegex ? cell.text() : typeAdapter.parse(cell.text());
-            }
-            // Ignore parse exceptions, print non-parse exceptions,
-            // return null so that compareCellToResult tries relational matching.
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
+                // Ignore parse exceptions, print non-parse exceptions,
+                // return null so that compareCellToResult tries relational matching.
             } catch (ParseException e) {
+                // Ignore parse exceptions, print non-parse exceptions,
+                // return null so that compareCellToResult tries relational matching.
             } catch (Exception e) {
                 e.printStackTrace();
             }

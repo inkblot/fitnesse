@@ -16,13 +16,10 @@ import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
 import util.TodoException;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
-
-import static util.FileUtil.loadProperties;
 
 @Singleton
 public class ComponentFactory {
@@ -35,10 +32,6 @@ public class ComponentFactory {
 
     private final Properties properties;
     private final SymbolProvider symbolProvider;
-
-    public ComponentFactory(String propertiesLocation) {
-        this(loadProperties(new File(propertiesLocation, PROPERTIES_FILE)), SymbolProvider.wikiParsingProvider);
-    }
 
     @Inject
     public ComponentFactory(@Named(PROPERTIES_FILE) Properties properties, @Named(SymbolProvider.WIKI_PARSING) SymbolProvider symbolProvider) {

@@ -17,13 +17,6 @@ public class ZipFileVersionsController extends NullVersionsController {
         return new SimpleDateFormat("yyyyMMddHHmmss");
     }
 
-    public ZipFileVersionsController() {
-        this(new Properties());
-    }
-
-    public ZipFileVersionsController(final Properties properties) {
-    }
-
     public PageData getRevisionData(final FileSystemPage page, final String label) {
         final String filename = getFileSystemPath(page) + "/" + label + ".zip";
         final File file = new File(filename);
@@ -72,14 +65,6 @@ public class ZipFileVersionsController extends NullVersionsController {
             }
         }
         return versions;
-    }
-
-    public boolean isRevisionControlEnabled() {
-        return true;
-    }
-
-    public boolean isExternalRevisionControlEnabled() {
-        return false;
     }
 
     public VersionInfo makeVersion(final FileSystemPage page, final PageData data) {
@@ -247,7 +232,4 @@ public class ZipFileVersionsController extends NullVersionsController {
         return this.getClass().getSimpleName();
     }
 
-    public String getControllerName() {
-        return "Zipped Version History";
-    }
 }

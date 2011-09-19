@@ -1,20 +1,15 @@
 package fitnesse.wiki;
 
-import com.google.inject.Guice;
-import fitnesse.ComponentFactory;
-import fitnesse.wikitext.parser.SymbolProvider;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
+import com.google.inject.Module;
+import com.google.inject.TypeLiteral;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import util.Clock;
-import util.ClockUtil;
-import util.DiskFileSystem;
-import util.UtilModule;
 
 import java.util.List;
-import java.util.Properties;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
@@ -26,9 +21,10 @@ import static org.junit.Assert.assertNotNull;
  * Time: 10:41 AM
  */
 @RunWith(Parameterized.class)
-public class WikiPageFactoryWikiPageClassesTest {
+public class WikiPageFactoryWikiPageClassesTest extends FitnesseBaseTestCase {
 
     private final Class<? extends WikiPage> wikiPageClass;
+    private WikiPageFactory wikiPageFactory;
 
     @Parameterized.Parameters
     public static List parameters() {
@@ -41,21 +37,23 @@ public class WikiPageFactoryWikiPageClassesTest {
         this.wikiPageClass = wikiPageClass;
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-        Guice.createInjector(new UtilModule());
+    @Inject
+    public void inject(WikiPageFactory wikiPageFactory) {
+        this.wikiPageFactory = wikiPageFactory;
     }
 
-    @AfterClass
-    public static void tearDownClass() {
-        ClockUtil.inject((Clock) null);
+    @Override
+    protected Module getOverrideModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(new TypeLiteral<Class<? extends WikiPage>>(){}).toInstance(wikiPageClass);
+            }
+        };
     }
 
     @Test
     public void createRoot() throws Exception {
-        Properties properties = new Properties();
-        WikiPageFactory wikiPageFactory = new WikiPageFactory(new DiskFileSystem(), wikiPageClass, properties);
-        ComponentFactory componentFactory = new ComponentFactory(properties, SymbolProvider.wikiParsingProvider);
-        assertNotNull(wikiPageFactory.makeRootPage(".", "RooT", componentFactory));
+        assertNotNull(wikiPageFactory.makeRootPage(getRootPath(), "RooT"));
     }
 }

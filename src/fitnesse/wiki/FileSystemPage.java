@@ -3,7 +3,7 @@
 package fitnesse.wiki;
 
 import com.google.inject.Injector;
-import fitnesse.ComponentFactory;
+import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import org.apache.commons.io.IOUtils;
 import util.*;
@@ -23,19 +23,21 @@ public class FileSystemPage extends CachingPage {
     private CmSystem cmSystem = new CmSystem();
 
     public static WikiPage makeRoot(Injector injector, String rootPath, String rootPageName) throws IOException {
-        return new FileSystemPage(rootPath, rootPageName, injector.getInstance(FileSystem.class), injector.getInstance(ComponentFactory.class));
+        return new FileSystemPage(rootPath, rootPageName, injector.getInstance(FileSystem.class), injector.getInstance(VersionsController.class));
     }
 
-    public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final ComponentFactory componentFactory) throws IOException {
+    public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) throws IOException {
         super(name, null);
         this.path = path;
-
-        versionsController = componentFactory.loadVersionsController();
+        this.versionsController = versionsController;
         createDirectoryIfNewPage(fileSystem);
     }
 
+    /**
+     * Constructor only used in tests
+     */
     public FileSystemPage(final String path, final String name) throws Exception {
-        this(path, name, new DiskFileSystem(), new ComponentFactory(path));
+        this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
     }
 
     public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) throws Exception {
@@ -192,10 +194,6 @@ public class FileSystemPage extends CachingPage {
 
     public String getFileSystemPath() {
         return getParentFileSystemPath() + "/" + getName();
-    }
-
-    public String getAbsoluteFileSystemPath() {
-        return new File(getFileSystemPath()).getAbsolutePath();
     }
 
     private void loadAttributes(final PageData data) throws Exception {

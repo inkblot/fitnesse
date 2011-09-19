@@ -17,5 +17,4 @@ public interface VersionsController {
 
     public void prune(FileSystemPage page);
 
-    public boolean isExternalRevisionControlEnabled();
 }

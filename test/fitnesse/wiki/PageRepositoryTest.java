@@ -3,7 +3,6 @@ package fitnesse.wiki;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
-import fitnesse.ComponentFactory;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +33,7 @@ public class PageRepositoryTest extends FitnesseBaseTestCase {
     @Before
     public void SetUp() throws Exception {
         pageRepository = new PageRepository(fileSystem);
-        rootPage = (FileSystemPage) wikiPageFactory.makeRootPage(".", "somepath", injector.getInstance(ComponentFactory.class));
+        rootPage = (FileSystemPage) wikiPageFactory.makeRootPage(".", "somepath");
     }
 
     @Test

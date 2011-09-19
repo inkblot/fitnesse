@@ -1,40 +1,29 @@
 package fitnesse.wiki;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import fitnesse.ComponentFactory;
-import util.FileSystem;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Properties;
 
 @Singleton
 public class WikiPageFactory {
     public static final String WIKI_PAGE_CLASS = "WikiPage";
 
+    private Injector injector;
     private Class<? extends WikiPage> wikiPageClass;
-    private final Properties properties;
-    private final FileSystem fileSystem;
 
     @Inject
-    public WikiPageFactory(FileSystem fileSystem,
-                           @Named(WikiPageFactory.WIKI_PAGE_CLASS) Class<? extends WikiPage> wikiPageClass,
-                           @Named(ComponentFactory.PROPERTIES_FILE) Properties properties) {
-        this.fileSystem = fileSystem;
+    public WikiPageFactory(Injector injector,
+                           @Named(WikiPageFactory.WIKI_PAGE_CLASS) Class<? extends WikiPage> wikiPageClass) {
+        this.injector = injector;
         this.wikiPageClass = wikiPageClass;
-        this.properties = properties;
     }
 
-    public WikiPage makeRootPage(String rootPath, String rootPageName, ComponentFactory componentFactory) throws Exception {
-        try {
-            Constructor<?> constructorMethod = wikiPageClass.getConstructor(String.class, String.class, FileSystem.class, ComponentFactory.class);
-            return (WikiPage) constructorMethod.newInstance(rootPath, rootPageName, fileSystem, componentFactory);
-        } catch (NoSuchMethodException e) {
-            Method makeRootMethod = wikiPageClass.getMethod("makeRoot", Properties.class);
-            return (WikiPage) makeRootMethod.invoke(wikiPageClass, properties);
-        }
+    public WikiPage makeRootPage(String rootPath, String rootPageName) throws Exception {
+        Method makeRootMethod = wikiPageClass.getMethod("makeRoot", Injector.class, String.class, String.class);
+        return (WikiPage) makeRootMethod.invoke(wikiPageClass, injector, rootPath, rootPageName);
     }
 
     public Class<?> getWikiPageClass() {

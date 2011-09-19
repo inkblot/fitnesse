@@ -3,9 +3,7 @@
 package fitnesse.wiki;
 
 import com.google.inject.Injector;
-import fitnesse.ComponentFactory;
 import util.ClockUtil;
-import util.FileSystem;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,14 +17,10 @@ public class InMemoryPage extends CommitingPage {
     protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
 
     public static WikiPage makeRoot(Injector injector, String rootPath, String rootPageName) {
-        return new InMemoryPage(rootPath, rootPageName, injector.getInstance(ComponentFactory.class));
+        return new InMemoryPage(rootPageName);
     }
 
-    public InMemoryPage(String rootPath, String rootPageName, ComponentFactory factory) {
-        this(rootPageName, null);
-    }
-
-    public InMemoryPage(String rootPath, String rootPageName, FileSystem fileSystem, ComponentFactory factory) {
+    public InMemoryPage(String rootPageName) {
         this(rootPageName, null);
     }
 

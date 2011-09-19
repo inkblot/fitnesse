@@ -3,22 +3,27 @@
 package fitnesse.fixtures;
 
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPageFactory;
 import util.FileUtil;
-import util.UtilModule;
 
 import java.io.File;
+import java.util.Properties;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.*;
 
 public class SetUp extends Fixture {
     public SetUp() throws Exception {
-        Guice.createInjector(new UtilModule());
+        Properties properties = new Properties();
+        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        Injector injector = Guice.createInjector(new FitNesseModule(properties, null));
 
         //TODO - Inject the test listeners
         WikiImportTestEventListener.register();

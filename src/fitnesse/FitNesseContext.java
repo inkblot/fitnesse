@@ -23,6 +23,10 @@ public class FitNesseContext {
     public static final int DEFAULT_PORT = 80;
     public static final int DEFAULT_COMMAND_PORT = 9123;
     public static final int DEFAULT_VERSION_DAYS = 14;
+    public static final String RECENT_CHANGES_DATE_FORMAT = "kk:mm:ss EEE, MMM dd, yyyy";
+    public static final String RFC_COMPLIANT_DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
+
+    public static FitNesseContext globalContext;
 
     public final String rootPath;
     public final WikiPage root;
@@ -36,9 +40,6 @@ public class FitNesseContext {
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
     public Authenticator authenticator = new PromiscuousAuthenticator();
     public HtmlPageFactory htmlPageFactory = new HtmlPageFactory();
-    public static String recentChangesDateFormat = "kk:mm:ss EEE, MMM dd, yyyy";
-    public static String rfcCompliantDateFormat = "EEE, d MMM yyyy HH:mm:ss Z";
-    public static FitNesseContext globalContext;
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 

@@ -18,7 +18,7 @@ public class RecentChanges {
 
     private static SimpleDateFormat makeDateFormat() {
         //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-        return new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
+        return new SimpleDateFormat(FitNesseContext.RECENT_CHANGES_DATE_FORMAT);
     }
 
     public static void updateRecentChanges(PageData pageData) throws Exception {

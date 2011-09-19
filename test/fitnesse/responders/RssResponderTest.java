@@ -37,9 +37,9 @@ public class RssResponderTest extends ResponderTestCase {
 
     @Before
     public void setUp() throws Exception {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(FitNesseContext.RECENT_CHANGES_DATE_FORMAT);
         date = dateFormat.format(ClockUtil.currentDate());
-        SimpleDateFormat rfcDateFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
+        SimpleDateFormat rfcDateFormat = new SimpleDateFormat(FitNesseContext.RFC_COMPLIANT_DATE_FORMAT);
         rfcDate = rfcDateFormat.format(ClockUtil.currentDate());
         hostName = java.net.InetAddress.getLocalHost().getHostName();
         Locale.setDefault(Locale.US);
@@ -112,8 +112,8 @@ public class RssResponderTest extends ResponderTestCase {
 
     @Test
     public void testConvertDateFormat() throws Exception {
-        SimpleDateFormat oldFormat = new SimpleDateFormat(FitNesseContext.recentChangesDateFormat);
-        SimpleDateFormat newFormat = new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat);
+        SimpleDateFormat oldFormat = new SimpleDateFormat(FitNesseContext.RECENT_CHANGES_DATE_FORMAT);
+        SimpleDateFormat newFormat = new SimpleDateFormat(FitNesseContext.RFC_COMPLIANT_DATE_FORMAT);
         String inDate = oldFormat.format(ClockUtil.currentDate());
         String outDate = newFormat.format(ClockUtil.currentDate());
         RssResponder responder = new RssResponder();

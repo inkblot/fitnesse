@@ -158,8 +158,8 @@ public class RssResponder implements SecureResponder {
         Pattern timePattern = Pattern.compile("\\d*:\\d*:\\d* \\w*, \\w* \\d*, \\d*");
         Matcher m = timePattern.matcher(dateIn);
         if (m.matches())
-            return (new SimpleDateFormat(FitNesseContext.rfcCompliantDateFormat)).format((new SimpleDateFormat(
-                    FitNesseContext.recentChangesDateFormat)).parse(dateIn, new ParsePosition(0)));
+            return (new SimpleDateFormat(FitNesseContext.RFC_COMPLIANT_DATE_FORMAT)).format((new SimpleDateFormat(
+                    FitNesseContext.RECENT_CHANGES_DATE_FORMAT)).parse(dateIn, new ParsePosition(0)));
         else
             return dateIn;
     }

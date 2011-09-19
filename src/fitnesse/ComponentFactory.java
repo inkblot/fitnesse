@@ -37,15 +37,11 @@ public class ComponentFactory {
     private final SymbolProvider symbolProvider;
 
     public ComponentFactory(String propertiesLocation) {
-        this(loadProperties(new File(propertiesLocation, PROPERTIES_FILE)));
+        this(loadProperties(new File(propertiesLocation, PROPERTIES_FILE)), SymbolProvider.wikiParsingProvider);
     }
 
     @Inject
-    public ComponentFactory(@Named(PROPERTIES_FILE) Properties properties) {
-        this(properties, SymbolProvider.wikiParsingProvider);
-    }
-
-    public ComponentFactory(Properties properties, SymbolProvider symbolProvider) {
+    public ComponentFactory(@Named(PROPERTIES_FILE) Properties properties, @Named(SymbolProvider.WIKI_PARSING) SymbolProvider symbolProvider) {
         this.properties = properties;
         this.symbolProvider = symbolProvider;
     }

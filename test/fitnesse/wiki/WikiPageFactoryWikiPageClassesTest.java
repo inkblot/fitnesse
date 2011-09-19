@@ -2,6 +2,7 @@ package fitnesse.wiki;
 
 import com.google.inject.Guice;
 import fitnesse.ComponentFactory;
+import fitnesse.wikitext.parser.SymbolProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class WikiPageFactoryWikiPageClassesTest {
     public void createRoot() throws Exception {
         Properties properties = new Properties();
         WikiPageFactory wikiPageFactory = new WikiPageFactory(new DiskFileSystem(), wikiPageClass, properties);
-        ComponentFactory componentFactory = new ComponentFactory(properties);
+        ComponentFactory componentFactory = new ComponentFactory(properties, SymbolProvider.wikiParsingProvider);
         assertNotNull(wikiPageFactory.makeRootPage(".", "RooT", componentFactory));
     }
 }

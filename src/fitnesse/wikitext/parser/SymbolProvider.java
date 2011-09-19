@@ -5,12 +5,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class SymbolProvider {
+    public static final String REFACTORING = "refactoring";
     public static final SymbolProvider refactoringProvider = new SymbolProvider(new SymbolType[]{
             Alias.symbolType, SymbolType.OpenBracket, SymbolType.CloseBracket, Comment.symbolType, Image.symbolType,
             Literal.symbolType, Preformat.symbolType, Link.symbolType, Path.symbolType, WikiWord.symbolType,
             SymbolType.Newline, SymbolType.Whitespace
     });
 
+    public static final String WIKI_PARSING = "wikiParsing";
     public static final SymbolProvider wikiParsingProvider = new SymbolProvider(new SymbolType[]{
             Link.symbolType, new Table(), SymbolType.EndCell,
             new HashTable(), new HeaderLine(), Literal.symbolType, new Collapsible(),
@@ -28,15 +30,19 @@ public class SymbolProvider {
             SymbolType.Italic, SymbolType.Strike, new AnchorReference(), WikiWord.symbolType, SymbolType.EMail, SymbolType.Text,
     });
 
+    public static final String ALIAS_LINK = "aliasLink";
     public static final SymbolProvider aliasLinkProvider = new SymbolProvider(
             new SymbolType[]{SymbolType.CloseBracket, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
+    public static final String LINK_TARGET = "linkTarget";
     public static final SymbolProvider linkTargetProvider = new SymbolProvider(
             new SymbolType[]{Literal.symbolType, Variable.symbolType});
 
+    public static final String PATH_RULE = "pathRule";
     public static final SymbolProvider pathRuleProvider = new SymbolProvider(new SymbolType[]{
             Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 
+    public static final String LITERAL_TABLE = "literalTable";
     public static final SymbolProvider literalTableProvider = new SymbolProvider(
             new SymbolType[]{SymbolType.EndCell, SymbolType.Newline, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
 

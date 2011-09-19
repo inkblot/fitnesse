@@ -10,6 +10,7 @@ import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wikitext.parser.SymbolProviderModule;
 import fitnesseMain.FitNesseMain;
 import util.FileUtil;
 import util.UtilModule;
@@ -44,6 +45,7 @@ public class FitNesseModule extends AbstractModule {
         bindAuthenticator();
         bindWikiPageClass();
         bindFromProperty(VersionsController.class);
+        install(new SymbolProviderModule());
         install(new UtilModule());
     }
 

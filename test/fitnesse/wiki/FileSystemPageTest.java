@@ -3,10 +3,9 @@
 
 package fitnesse.wiki;
 
+import com.google.inject.Inject;
 import fitnesse.FitnesseBaseTestCase;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import util.ClockUtil;
 import util.FileUtil;
@@ -16,53 +15,42 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
 public class FileSystemPageTest extends FitnesseBaseTestCase {
-    private static final String defaultPath = "./teststorage";
-    private static final File base = new File(defaultPath);
-    private FileSystemPage root;
+    private WikiPage root;
     private PageCrawler crawler;
 
     private static List<String> cmMethodCalls = new ArrayList<String>();
 
-    @BeforeClass
-    public static void initialize() {
-        FileUtil.deleteFileSystemDirectory(base);
-        FileUtil.deleteFileSystemDirectory("RooT");
+    private WikiPageFactory wikiPageFactory;
+
+    @Inject
+    public void inject(WikiPageFactory wikiPageFactory) {
+        this.wikiPageFactory = wikiPageFactory;
     }
 
     @Before
     public void setUp() throws Exception {
         cmMethodCalls.clear();
-        FileUtil.deleteFileSystemDirectory(base);
-        createFileSystemDirectory(base);
-        root = new FileSystemPage(defaultPath, "RooT");
+        root = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
+        assertThat(root, instanceOf(FileSystemPage.class));
         crawler = root.getPageCrawler();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        FileUtil.deleteFileSystemDirectory(base);
-        FileUtil.deleteFileSystemDirectory("RooT");
-    }
-
-    public static void createFileSystemDirectory(File current) {
-        current.mkdir();
     }
 
     @Test
     public void testCreateBase() throws Exception {
         FileSystemPage levelA = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageA"), "");
-        assertEquals("./teststorage/RooT/PageA", levelA.getFileSystemPath());
-        assertTrue(new File(defaultPath + "/RooT/PageA").exists());
+        assertEquals(getRootPath() + "/RooT/PageA", levelA.getFileSystemPath());
+        assertTrue(new File(getRootPath() + "/RooT/PageA").exists());
     }
 
     @Test
     public void testTwoLevel() throws Exception {
         WikiPage levelA = crawler.addPage(root, PathParser.parse("PageA"));
         crawler.addPage(levelA, PathParser.parse("PageB"));
-        assertTrue(new File(defaultPath + "/RooT/PageA/PageB").exists());
+        assertTrue(new File(getRootPath() + "/RooT/PageA/PageB").exists());
     }
 
     @Test
@@ -97,7 +85,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
         crawler.addPage(root, PathParser.parse("AaAa"), "A content");
         crawler.addPage(root, PathParser.parse("BbBb"), "B content");
         crawler.addPage(root, PathParser.parse("CcCc"), "C content");
-        new File(defaultPath + "/root/someOtherDir").mkdir();
+        new File(new File(getRootPath(), "root"), "someOtherDir").mkdir();
         List<WikiPage> children = root.getChildren();
         assertEquals(3, children.size());
         for (WikiPage child : children) {
@@ -112,8 +100,8 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
         WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
         crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
         levelOne.removeChildPage("LevelTwo");
-        File fileOne = new File(defaultPath + "/RooT/LevelOne");
-        File fileTwo = new File(defaultPath + "/RooT/LevelOne/LevelTwo");
+        File fileOne = new File(getRootPath() + "/RooT/LevelOne");
+        File fileTwo = new File(getRootPath() + "/RooT/LevelOne/LevelTwo");
         assertTrue(fileOne.exists());
         assertFalse(fileTwo.exists());
     }
@@ -122,8 +110,8 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     public void testDelTree() throws Exception {
         WikiPage levelOne = crawler.addPage(root, PathParser.parse("LevelOne"));
         crawler.addPage(levelOne, PathParser.parse("LevelTwo"));
-        File childOne = new File(defaultPath + "/RooT/LevelOne");
-        File childTwo = new File(defaultPath + "/RooT/LevelOne/LevelTwo");
+        File childOne = new File(getRootPath() + "/RooT/LevelOne");
+        File childTwo = new File(getRootPath() + "/RooT/LevelOne/LevelTwo");
         assertTrue(childOne.exists());
         root.removeChildPage("LevelOne");
         assertFalse(childTwo.exists());
@@ -165,13 +153,16 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     @Test
     public void testCanFindExistingPages() throws Exception {
         crawler.addPage(root, PathParser.parse("FrontPage"), "front page");
-        WikiPage newRoot = new FileSystemPage(defaultPath, "RooT");
+        WikiPage newRoot = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
+        assertThat(newRoot, instanceOf(FileSystemPage.class));
         assertNotNull(newRoot.getChildPage("FrontPage"));
     }
 
     @Test
     public void testGetPath() throws Exception {
-        assertEquals(defaultPath + "/RooT", root.getFileSystemPath());
+        assertThat(root, instanceOf(FileSystemPage.class));
+        FileSystemPage fsRoot = (FileSystemPage) root;
+        assertEquals(getRootPath() + "/RooT", fsRoot.getFileSystemPath());
     }
 
     @Test
@@ -232,7 +223,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
         cmMethodCalls.clear();
         page.addChildPage("CreatedPage");
         assertEquals(1, cmMethodCalls.size());
-        assertEquals("update " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
+        assertEquals("update " + getRootPath() + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
     }
 
     @Test
@@ -240,7 +231,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
         WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest}");
         cmMethodCalls.clear();
         page.addChildPage("CreatedPage");
-        assertEquals("update " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest", cmMethodCalls.get(0));
+        assertEquals("update " + getRootPath() + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest", cmMethodCalls.get(0));
         assertEquals(1, cmMethodCalls.size());
     }
 
@@ -250,10 +241,10 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
         cmMethodCalls.clear();
         page.commit(page.getData());
         assertEquals(4, cmMethodCalls.size());
-        assertEquals("edit " + defaultPath + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
-        assertEquals("update " + defaultPath + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
-        assertEquals("edit " + defaultPath + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
-        assertEquals("update " + defaultPath + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(3));
+        assertEquals("edit " + getRootPath() + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
+        assertEquals("update " + getRootPath() + "/RooT/TestPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
+        assertEquals("edit " + getRootPath() + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
+        assertEquals("update " + getRootPath() + "/RooT/TestPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(3));
     }
 
     @Test
@@ -261,9 +252,9 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
         WikiPage page = crawler.addPage(root, PathParser.parse("TestPage"), "!define CM_SYSTEM {fitnesse.wiki.FileSystemPageTest xxx}");
         cmMethodCalls.clear();
         crawler.addPage(page, PathParser.parse("NewPage"), "raw content");
-        assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
-        assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
-        assertEquals("update " + defaultPath + "/RooT/TestPage/NewPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
+        assertEquals("update " + getRootPath() + "/RooT/TestPage/NewPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
+        assertEquals("update " + getRootPath() + "/RooT/TestPage/NewPage/content.txt|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
+        assertEquals("update " + getRootPath() + "/RooT/TestPage/NewPage/properties.xml|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(2));
         assertEquals(3, cmMethodCalls.size());
     }
 
@@ -274,7 +265,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
         cmMethodCalls.clear();
         page.removeChildPage("CreatedPage");
         assertEquals(2, cmMethodCalls.size());
-        assertEquals("preDelete " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
-        assertEquals("delete " + defaultPath + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
+        assertEquals("preDelete " + getRootPath() + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(0));
+        assertEquals("delete " + getRootPath() + "/RooT/TestPage/CreatedPage|fitnesse.wiki.FileSystemPageTest xxx", cmMethodCalls.get(1));
     }
 }

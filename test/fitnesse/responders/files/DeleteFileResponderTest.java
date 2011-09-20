@@ -22,13 +22,13 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() {
         request = new MockRequest();
-        context = makeContext("testdir");
-        assertTrue(new File(getRootPath(), "testdir").mkdir());
+        context = makeContext();
+        assertTrue(new File(getRootPath(), "RooT").mkdir());
     }
 
     @Test
     public void testDelete() throws Exception {
-        File file = new File(new File(getRootPath(), "testdir"), "testfile");
+        File file = new File(new File(getRootPath(), "RooT"), "testfile");
         assertTrue(file.createNewFile());
         DeleteFileResponder responder = new DeleteFileResponder();
         request.addInput("filename", "testfile");
@@ -41,7 +41,7 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testDeleteDirectory() throws Exception {
-        File dir = new File(new File(getRootPath(), "testdir"), "dir");
+        File dir = new File(new File(getRootPath(), "RooT"), "dir");
         assertTrue(dir.mkdir());
         File file = new File(dir, "testChildFile");
         assertTrue(file.createNewFile());

@@ -1,10 +1,12 @@
 package fitnesse.updates;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,13 +16,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
 public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     private File updateList;
     private File updateDoNotCopyOver;
-    public static final String rootName = "RooT";
 
     protected WikiPage root;
     protected Update update;
@@ -30,6 +32,13 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     protected FitNesseContext context;
     protected PageCrawler crawler;
     private boolean updateDone = false;
+
+    private WikiPageFactory wikiPageFactory;
+
+    @Inject
+    public void inject(WikiPageFactory wikiPageFactory) {
+        this.wikiPageFactory = wikiPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -41,7 +50,8 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     }
 
     private void setTheContext() throws Exception {
-        root = new FileSystemPage(getRootPath(), rootName);
+        root = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
+        assertThat(root, instanceOf(FileSystemPage.class));
         context = new FitNesseContext(root, getRootPath());
     }
 

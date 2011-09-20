@@ -21,7 +21,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext("testFitnesseRoot");
+        context = makeContext();
     }
 
     @Test

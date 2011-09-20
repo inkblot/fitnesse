@@ -21,7 +21,7 @@ public class RenameFileResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() {
         request = new MockRequest();
-        context = makeContext("testdir");
+        context = makeContext();
         FileUtil.makeDir(context.rootPagePath);
     }
 

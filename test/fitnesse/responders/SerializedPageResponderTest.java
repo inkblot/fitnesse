@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
@@ -16,46 +16,47 @@ import util.FileUtil;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.*;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
 public class SerializedPageResponderTest extends FitnesseBaseTestCase {
-    private static final String ROOT_PAGE = "TestRooT";
     private PageCrawler crawler;
     private WikiPage root;
     private MockRequest request;
     private FitNesseContext context;
 
+    private WikiPageFactory wikiPageFactory;
+
+    @Inject
+    public void inject(WikiPageFactory wikiPageFactory) {
+        this.wikiPageFactory = wikiPageFactory;
+    }
+
     @Before
     public void setUp() throws Exception {
-        context = makeContext(ROOT_PAGE);
+        context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        FileUtil.deleteFileSystemDirectory(ROOT_PAGE);
     }
 
     @Test
     public void testWithInMemory() throws Exception {
         Object obj = doSetUpWith("bones");
         doTestWith(obj);
-
     }
 
     @Test
     public void testWithFileSystem() throws Exception {
-        context = new FitNesseContext(new FileSystemPage(".", ROOT_PAGE), this.getRootPath());
+        wikiPageFactory.setWikiPageClass(FileSystemPage.class);
+        context = new FitNesseContext(wikiPageFactory.makeRootPage(getRootPath(), "RooT"), getRootPath());
         root = context.root;
+        assertThat(root, instanceOf(FileSystemPage.class));
         crawler = root.getPageCrawler();
         Object obj = doSetUpWith("bones");
-        FileUtil.deleteFileSystemDirectory(ROOT_PAGE);
+        FileUtil.deleteFileSystemDirectory("RooT");
         doTestWith(obj);
     }
 

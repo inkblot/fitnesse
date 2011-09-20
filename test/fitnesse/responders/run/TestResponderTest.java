@@ -65,13 +65,13 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        context = makeContext();
+        root = context.root;
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
         responder = new TestResponder();
         responder.setFastTest(true);
-        context = makeContext(root);
         receiver = new FitSocketReceiver(0, context.socketDealer);
         context.port = receiver.receiveSocket();
 

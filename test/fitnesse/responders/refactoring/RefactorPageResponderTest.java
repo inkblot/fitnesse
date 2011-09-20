@@ -24,7 +24,7 @@ public class RefactorPageResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext("root");
+        context = makeContext();
         root = context.root;
         PageCrawler crawler = root.getPageCrawler();
         String childPage = "ChildPage";

@@ -6,7 +6,6 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.http.*;
 import fitnesse.http.MockSocket;
-import fitnesse.wiki.InMemoryPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +27,9 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        InMemoryPage root = (InMemoryPage) InMemoryPage.makeRoot("RooT");
-        root.addChildPage("FrontPage");
+        context = makeContext();
+        context.root.addChildPage("FrontPage");
         socket = new MockSocket();
-        context = makeContext(root);
         expediter = new FitNesseExpediter(socket, context);
     }
 

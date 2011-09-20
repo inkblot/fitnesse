@@ -21,11 +21,10 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("TestDir");
-        crawler = root.getPageCrawler();
+        context = makeContext();
         pageOnePath = PathParser.parse("PageOne");
         pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
-        context = makeContext(root);
+        crawler = context.root.getPageCrawler();
         makeSampleFiles();
     }
 

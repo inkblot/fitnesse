@@ -24,7 +24,7 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext("testdir");
+        context = makeContext();
         FileUtil.makeDir(context.rootPagePath);
         FileUtil.makeDir(context.rootPagePath + "/files");
         testFile = FileUtil.createFile(context.rootPagePath + "/tempFile.txt", "test content");

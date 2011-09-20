@@ -2,7 +2,6 @@ package fitnesse;
 
 import com.google.inject.*;
 import fitnesse.responders.files.SampleFileUtility;
-import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.apache.commons.lang.StringUtils;
@@ -15,7 +14,9 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Properties;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static util.FileUtil.deleteFileSystemDirectory;
 
@@ -31,11 +32,9 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
     protected SampleFileUtility samples;
 
     protected final FitNesseContext makeContext() {
-        return makeContext("RooT");
-    }
-
-    protected final FitNesseContext makeContext(String rootName) {
-        return makeContext(InMemoryPage.makeRoot(rootName));
+        FitNesseContext context = makeContext(InMemoryPage.makeRoot("RooT"));
+        assertThat(context.root, instanceOf(InMemoryPage.class));
+        return context;
     }
 
     protected final FitNesseContext makeContext(WikiPage root) {
@@ -49,13 +48,6 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
         File rootPath = new File(System.getProperty("java.io.tmpdir"), getClass().getSimpleName());
         assertTrue(rootPath.exists() || rootPath.mkdirs());
         return rootPath.getAbsolutePath();
-    }
-
-    protected final void installUpdates() throws Exception {
-        assertNotNull(context);
-        assertTrue(new File(context.rootPagePath).mkdir());
-        UpdaterImplementation updater = new UpdaterImplementation(context);
-        updater.update();
     }
 
     protected final void makeSampleFiles() {

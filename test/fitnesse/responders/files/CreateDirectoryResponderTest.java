@@ -19,9 +19,9 @@ public class CreateDirectoryResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext("testdir");
-        assertTrue(new File(getRootPath(), "testdir").mkdir());
-        assertTrue(new File(new File(getRootPath(), "testdir"), "files").mkdir());
+        context = makeContext();
+        assertTrue(new File(getRootPath(), "RooT").mkdir());
+        assertTrue(new File(new File(getRootPath(), "RooT"), "files").mkdir());
     }
 
     @Test
@@ -33,7 +33,7 @@ public class CreateDirectoryResponderTest extends FitnesseBaseTestCase {
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File(new File(getRootPath(), "testdir"), "subdir");
+        File file = new File(new File(getRootPath(), "RooT"), "subdir");
         assertTrue(file.exists());
         assertTrue(file.isDirectory());
 

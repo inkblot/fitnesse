@@ -17,7 +17,7 @@ public class ReplacingFileUpdateTest extends UpdateTestCase {
     public final File sourceFile = new File(sourceFilename);
 
     public final String destDirName = "subDir";
-    public final String destPath = getRootPath() + "/" + UpdateTestCase.rootName + "/" + destDirName + "/testFile";
+    public final String destPath = getRootPath() + "/" + "RooT" + "/" + destDirName + "/testFile";
     public final File destFile = new File(destPath);
 
     @Before

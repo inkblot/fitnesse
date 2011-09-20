@@ -28,8 +28,8 @@ public class HistoryComparerResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setup() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
-        context = makeContext(root);
+        context = makeContext();
+        root = context.root;
         FIRST_FILE_PATH = context.rootPagePath + "/files/testResults/TestFolder/firstFakeFile"
                 .replace('/', File.separatorChar);
         SECOND_FILE_PATH = context.rootPagePath + "/files/testResults/TestFolder/secondFakeFile"

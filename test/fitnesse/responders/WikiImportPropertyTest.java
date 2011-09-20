@@ -112,7 +112,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
 
     public void pageRenderingSetUp() throws Exception {
-        context = makeContext("root");
+        context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
     }

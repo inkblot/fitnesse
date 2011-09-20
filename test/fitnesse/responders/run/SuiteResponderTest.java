@@ -62,7 +62,9 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         assertEquals(TEST_TIME, ClockUtil.currentDate());
 
         String suitePageName = "SuitePage";
-        root = InMemoryPage.makeRoot("RooT");
+        context = makeContext();
+        root = context.root;
+
         crawler = root.getPageCrawler();
         PageData data = root.getData();
         data.setContent(classpathWidgets());
@@ -76,7 +78,6 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         responder.turnOffChunking();
         responder.setFastTest(true);
         responder.page = suite;
-        context = makeContext(root);
 
         receiver = new FitSocketReceiver(0, context.socketDealer);
     }

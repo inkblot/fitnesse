@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Inject;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.After;
 import org.junit.Before;
@@ -10,9 +11,8 @@ import util.FileUtil;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.*;
 
 public class SymbolicPageTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
@@ -24,6 +24,13 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     private String pageTwoPath = "PageTwo";
     private String pageTwoContent = "page two";
     private WikiPage externalRoot;
+
+    private WikiPageFactory wikiPageFactory;
+
+    @Inject
+    public void inject(WikiPageFactory wikiPageFactory) {
+        this.wikiPageFactory = wikiPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -129,7 +136,8 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     private void CreateExternalRoot() throws Exception {
         FileUtil.createDir("testDir");
         FileUtil.createDir("testDir/ExternalRoot");
-        externalRoot = new FileSystemPage("testDir/ExternalRoot", "ExternalRoot");
+        externalRoot = wikiPageFactory.makeRootPage("testDir/ExternalRoot", "ExternalRoot");
+        assertThat(externalRoot, instanceOf(FileSystemPage.class));
         PageCrawler externalCrawler = externalRoot.getPageCrawler();
         WikiPage externalPageOne = externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
         externalCrawler.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");

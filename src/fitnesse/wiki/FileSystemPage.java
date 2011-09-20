@@ -26,16 +26,13 @@ public class FileSystemPage extends CachingPage {
         return new FileSystemPage(rootPath, rootPageName, injector.getInstance(FileSystem.class), injector.getInstance(VersionsController.class));
     }
 
-    public FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) throws IOException {
+    private FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) throws IOException {
         super(name, null);
         this.path = path;
         this.versionsController = versionsController;
         createDirectoryIfNewPage(fileSystem);
     }
 
-    /**
-     * Constructor only used in tests
-     */
     public FileSystemPage(final String path, final String name) throws Exception {
         this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
     }

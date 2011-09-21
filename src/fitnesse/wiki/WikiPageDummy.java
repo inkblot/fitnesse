@@ -12,8 +12,8 @@ import java.util.List;
 public class WikiPageDummy implements WikiPage {
     private static final long serialVersionUID = 1L;
 
-    public String name;
-    protected String location;
+    public final String name;
+    protected final String location;
     private PageData pageData;
     private WikiPage parent;
     protected WikiPage parentForVariables;
@@ -22,19 +22,19 @@ public class WikiPageDummy implements WikiPage {
     public WikiPageDummy(String name, String content, Injector injector) throws Exception {
         this.name = name;
         this.injector = injector;
-        pageData = new PageData(this, content);
+        this.pageData = new PageData(this, content);
+        this.location = null;
     }
 
     public WikiPageDummy(String location, Injector injector) {
         this.location = location;
         this.injector = injector;
-        name = "Default";
+        this.name = "Default";
+        this.pageData = null;
     }
 
     public WikiPageDummy(Injector injector) {
-        this.injector = injector;
-        location = null;
-        name = "Default";
+        this(null, injector);
     }
 
     public String getName() {

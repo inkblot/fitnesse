@@ -5,8 +5,8 @@ import util.FileSystem;
 
 public class ExternalSuitePage extends CachingPage {
     private static final long serialVersionUID = 1L;
-    private String path;
-    private FileSystem fileSystem;
+    private final String path;
+    private final FileSystem fileSystem;
 
     public ExternalSuitePage(String path, String name, WikiPage parent, FileSystem fileSystem, Injector injector) throws Exception {
         super(name, parent, injector);

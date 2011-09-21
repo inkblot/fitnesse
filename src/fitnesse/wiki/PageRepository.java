@@ -1,18 +1,13 @@
 package fitnesse.wiki;
 
 import fitnesse.wikitext.widgets.WikiWordWidget;
-import util.DiskFileSystem;
 import util.FileSystem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PageRepository {
-    private FileSystem fileSystem;
-
-    public PageRepository() {
-        fileSystem = new DiskFileSystem();
-    }
+    private final FileSystem fileSystem;
 
     public PageRepository(FileSystem fileSystem) {
         this.fileSystem = fileSystem;

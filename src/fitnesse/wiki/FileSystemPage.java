@@ -3,7 +3,6 @@
 package fitnesse.wiki;
 
 import com.google.inject.Injector;
-import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import org.apache.commons.io.IOUtils;
 import util.*;
@@ -20,7 +19,7 @@ public class FileSystemPage extends CachingPage {
 
     private final String path;
     private final VersionsController versionsController;
-    private CmSystem cmSystem = new CmSystem();
+    private final CmSystem cmSystem = new CmSystem();
 
     public static WikiPage makeRoot(Injector injector, String rootPath, String rootPageName) throws IOException {
         return new FileSystemPage(rootPath, rootPageName, injector.getInstance(FileSystem.class), injector.getInstance(VersionsController.class), injector);
@@ -31,10 +30,6 @@ public class FileSystemPage extends CachingPage {
         this.path = path;
         this.versionsController = versionsController;
         createDirectoryIfNewPage(fileSystem);
-    }
-
-    public FileSystemPage(final String path, final String name, Injector injector) throws Exception {
-        this(path, name, new DiskFileSystem(), new ZipFileVersionsController(), injector);
     }
 
     public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, Injector injector) throws Exception {
@@ -132,7 +127,7 @@ public class FileSystemPage extends CachingPage {
     @Override
     protected WikiPage createChildPage(final String name) throws Exception {
         //return new FileSystemPage(getFileSystemPath(), name, this, this.versionsController);
-        return new PageRepository().makeChildPage(name, this);
+        return new PageRepository(new DiskFileSystem()).makeChildPage(name, this);
     }
 
     private void loadContent(final PageData data) throws IOException {

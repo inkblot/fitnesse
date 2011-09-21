@@ -12,13 +12,17 @@ import util.MemoryFileSystem;
 import static org.junit.Assert.assertEquals;
 
 public class PageRepositoryTest extends FitnesseBaseTestCase {
-    @Inject
-    public FileSystem fileSystem;
-    @Inject
-    public WikiPageFactory wikiPageFactory;
-
     private PageRepository pageRepository;
     private FileSystemPage rootPage;
+
+    private FileSystem fileSystem;
+    private WikiPageFactory wikiPageFactory;
+
+    @Inject
+    public void inject(FileSystem fileSystem, WikiPageFactory wikiPageFactory) {
+        this.fileSystem = fileSystem;
+        this.wikiPageFactory = wikiPageFactory;
+    }
 
     @Override
     protected Module getOverrideModule() {

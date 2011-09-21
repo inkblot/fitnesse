@@ -21,11 +21,11 @@ public class PageRepository {
     public WikiPage makeChildPage(String name, FileSystemPage parent) throws Exception {
         String path = parent.getFileSystemPath() + "/" + name;
         if (hasContentChild(path)) {
-            return new FileSystemPage(name, parent, fileSystem);
+            return new FileSystemPage(name, parent, fileSystem, parent.getInjector());
         } else if (hasHtmlChild(path)) {
-            return new ExternalSuitePage(path, name, parent, fileSystem);
+            return new ExternalSuitePage(path, name, parent, fileSystem, parent.getInjector());
         } else {
-            return new FileSystemPage(name, parent, fileSystem);
+            return new FileSystemPage(name, parent, fileSystem, parent.getInjector());
         }
     }
 
@@ -50,10 +50,10 @@ public class PageRepository {
             String childPath = parent.getFileSystemPath() + "/" + child;
             if (child.endsWith(".html")) {
                 children.add(new ExternalTestPage(childPath,
-                        WikiWordWidget.makeWikiWord(child.replace(".html", "")), parent, fileSystem));
+                        WikiWordWidget.makeWikiWord(child.replace(".html", "")), parent, fileSystem, parent.getInjector()));
             } else if (hasHtmlChild(childPath)) {
                 children.add(new ExternalSuitePage(childPath,
-                        WikiWordWidget.makeWikiWord(child), parent, fileSystem));
+                        WikiWordWidget.makeWikiWord(child), parent, fileSystem, parent.getInjector()));
             }
         }
         return children;

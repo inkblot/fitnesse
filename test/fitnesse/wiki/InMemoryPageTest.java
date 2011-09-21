@@ -18,14 +18,14 @@ public class InMemoryPageTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         page1 = crawler.addPage(root, PathParser.parse("PageOne"), "page one");
         page2 = crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
     }
 
     @Test
-    public void testCommitUsesProperPageWhenCommitingFromOtherPage() throws Exception {
+    public void testCommitUsesProperPageWhenCommittingFromOtherPage() throws Exception {
         PageData data = page1.getData();
         page2.commit(data);
         data = page2.getData();

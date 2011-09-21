@@ -266,7 +266,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
 
     private void verifyVirtualIncludeNotFound(String optionAndPageName)
             throws Exception {
-        ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "localhost", 9999, PathParser.parse("RealPage.VirtualPage"));
+        ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "localhost", 9999, PathParser.parse("RealPage.VirtualPage"), injector);
         IncludeWidget widget = createIncludeWidget(virtualPage, optionAndPageName);
         String output = widget.render();
         assertHasRegexp("IncludedPage.* does not exist", output);
@@ -299,7 +299,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         crawler.addPage(root, childOfIncludingPagePath, "!include .AcceptanceTestPage.IncludedPage");
 
         String virtualWikiURL = FitNesseUtil.URL + "AcceptanceTestPage";
-        WikiPage alternateRoot = InMemoryPage.makeRoot("RooT");
+        WikiPage alternateRoot = InMemoryPage.makeRoot("RooT", injector);
         WikiPagePath virtualPagePath = PathParser.parse("VirtualPage");
         WikiPage virtualHost = crawler.addPage(alternateRoot, virtualPagePath, "virtual host\n!contents\n");
         VirtualCouplingExtensionTest.setVirtualWiki(virtualHost, virtualWikiURL);

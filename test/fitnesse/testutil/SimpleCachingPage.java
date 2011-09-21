@@ -2,19 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import com.google.inject.Injector;
 import fitnesse.wiki.CachingPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
 import util.ClockUtil;
 
-public class SimpleCachinePage extends CachingPage {
+public class SimpleCachingPage extends CachingPage {
     private static final long serialVersionUID = 1L;
 
     private PageData data;
 
-    public SimpleCachinePage(String name, WikiPage parent) throws Exception {
-        super(name, parent);
+    public SimpleCachingPage(String name, WikiPage parent, Injector injector) throws Exception {
+        super(name, parent, injector);
     }
 
     public boolean hasChildPage(String pageName) throws Exception {
@@ -22,7 +23,7 @@ public class SimpleCachinePage extends CachingPage {
     }
 
     protected WikiPage createChildPage(String name) throws Exception {
-        return new SimpleCachinePage(name, this);
+        return new SimpleCachingPage(name, this, getInjector());
     }
 
     protected void loadChildren() throws Exception {

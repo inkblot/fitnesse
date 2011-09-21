@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
+import com.google.inject.Injector;
 import fitnesse.wiki.*;
 
 import java.util.List;
@@ -9,8 +10,8 @@ import java.util.List;
 public class MockExtendableWikiPage extends ExtendableWikiPage {
     private static final long serialVersionUID = 1L;
 
-    public MockExtendableWikiPage(Extension e) {
-        super("blah", null);
+    public MockExtendableWikiPage(Extension e, Injector injector) {
+        super("blah", null, injector);
         addExtention(e);
     }
 

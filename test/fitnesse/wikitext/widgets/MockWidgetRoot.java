@@ -2,14 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import com.google.inject.Injector;
 import fitnesse.wiki.PagePointer;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.WidgetBuilder;
 
 public class MockWidgetRoot extends WidgetRoot {
-    public MockWidgetRoot() throws Exception {
-        super(null, new PagePointer(new WikiPageDummy("RooT"), new WikiPagePath()), WidgetBuilder.htmlWidgetBuilder);
+    public MockWidgetRoot(Injector injector) throws Exception {
+        super(null, new PagePointer(new WikiPageDummy("RooT", injector), new WikiPagePath()), WidgetBuilder.htmlWidgetBuilder);
     }
 
     protected void buildWidgets(String value) throws Exception {

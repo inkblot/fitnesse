@@ -44,7 +44,7 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         factory = new ResponderFactory("testDir");
         request = new MockRequest();
-        WikiPage root = InMemoryPage.makeRoot("root");
+        WikiPage root = InMemoryPage.makeRoot("root", injector);
         crawler = root.getPageCrawler();
     }
 
@@ -276,7 +276,7 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
 
     @Test
     public void testWillDisplayVirtualPages() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"));
         crawler.addPage(page1, PathParser.parse("ChildOne"), "child content");
         WikiPage page2 = crawler.addPage(root, PathParser.parse("PageTwo"));

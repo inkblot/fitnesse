@@ -25,7 +25,7 @@ public class LastModifiedWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "some text");
         widget = new LastModifiedWidget(new WidgetRoot(page), "!lastmodified");
     }

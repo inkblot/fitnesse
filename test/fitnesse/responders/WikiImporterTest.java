@@ -133,7 +133,7 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
 
     @Test
     public void testImportingWiki() throws Exception {
-        localRoot = InMemoryPage.makeRoot("LocalRoot");
+        localRoot = InMemoryPage.makeRoot("LocalRoot", injector);
         importer.importWiki(localRoot);
 
         assertEquals(2, localRoot.getChildren().size());

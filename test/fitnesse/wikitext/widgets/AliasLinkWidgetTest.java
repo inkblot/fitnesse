@@ -16,7 +16,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
     }
 
@@ -177,7 +177,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         // When a virtual page contains a link to a non-existent page, the ? should
         // issue an edit request to the remote machine
 
-        ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "host", 9999, PathParser.parse("RealPage.VirtualPage"));
+        ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "host", 9999, PathParser.parse("RealPage.VirtualPage"), injector);
         AliasLinkWidget widget = new AliasLinkWidget(new WidgetRoot(virtualPage), "[[link][NonExistentPage]]");
         assertEquals("link<a title=\"create page\" href=\"http://host:9999/RealPage.NonExistentPage?edit&amp;nonExistent=true\" target=\"NonExistentPage\">[?]</a>", widget.render());
     }

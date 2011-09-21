@@ -25,16 +25,16 @@ public class ImageWidgetTest extends WidgetTestCase {
 
     @Test
     public void testWidget() throws Exception {
-        ImageWidget widget = new ImageWidget(new MockWidgetRoot(), "http://host.com/file.jpg");
+        ImageWidget widget = new ImageWidget(new MockWidgetRoot(injector), "http://host.com/file.jpg");
         assertEquals("<img src=\"http://host.com/file.jpg\"/>", widget.render());
 
-        widget = new ImageWidget(new MockWidgetRoot(), "!img http://files/file.jpg");
+        widget = new ImageWidget(new MockWidgetRoot(injector), "!img http://files/file.jpg");
         assertEquals("<img src=\"/files/file.jpg\"/>", widget.render());
 
-        widget = new ImageWidget(new MockWidgetRoot(), "!img-l http://files/file.jpg");
+        widget = new ImageWidget(new MockWidgetRoot(injector), "!img-l http://files/file.jpg");
         assertEquals("<img src=\"/files/file.jpg\" class=\"left\"/>", widget.render());
 
-        widget = new ImageWidget(new MockWidgetRoot(), "!img /files/file.jpg");
+        widget = new ImageWidget(new MockWidgetRoot(injector), "!img /files/file.jpg");
         assertEquals("<img src=\"/files/file.jpg\"/>", widget.render());
     }
 
@@ -48,7 +48,7 @@ public class ImageWidgetTest extends WidgetTestCase {
     }
 
     private void checkWikiTextReconstruction(String original) throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("root");
+        WikiPage root = InMemoryPage.makeRoot("root", injector);
         WikiPage somePage = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"));
         ParentWidget widgetRoot = new WidgetRoot(somePage);
         ImageWidget widget = new ImageWidget(widgetRoot, original);

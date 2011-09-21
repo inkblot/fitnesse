@@ -13,10 +13,10 @@ public class CollapsibleTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesCollapsible() throws Exception {
-        ParserTestHelper.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Text, Newline]]]");
-        ParserTestHelper.assertParses("!* title\n\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Newline]]]");
-        ParserTestHelper.assertParses("!**\n**!", "SymbolList[Text, Newline, CloseCollapsible]");
-        ParserTestHelper.assertParses("!* title\n!path x\n**!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Path[SymbolList[Text]], Newline]]]");
+        ParserTestHelper.assertParses("!* title\ncontent\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Text, Newline]]]", injector);
+        ParserTestHelper.assertParses("!* title\n\n*!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Newline]]]", injector);
+        ParserTestHelper.assertParses("!**\n**!", "SymbolList[Text, Newline, CloseCollapsible]", injector);
+        ParserTestHelper.assertParses("!* title\n!path x\n**!", "SymbolList[Collapsible[SymbolList[Text], SymbolList[Path[SymbolList[Text]], Newline]]]", injector);
     }
 
     @Test

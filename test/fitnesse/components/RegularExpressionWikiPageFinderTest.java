@@ -31,7 +31,7 @@ public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase im
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
         childPage = crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"),

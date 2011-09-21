@@ -22,7 +22,7 @@ public class LiteralWidgetTest extends WidgetTestCase {
 
     @Test
     public void testWikiWordIsNotParsed() throws Exception {
-        ParentWidget root = new MockWidgetRoot();
+        ParentWidget root = new MockWidgetRoot(injector);
         root.defineLiteral("Bob");
         //Paren Literal: () -> ??
         LiteralWidget w = new LiteralWidget(root, "!lit?0?");

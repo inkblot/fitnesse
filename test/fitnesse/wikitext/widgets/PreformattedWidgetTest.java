@@ -2,15 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.WidgetBuilder;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class PreformattedWidgetTest extends TestCase {
+public class PreformattedWidgetTest extends FitnesseBaseTestCase {
+    @Test
     public void testRegexp() throws Exception {
         Pattern pattern = Pattern.compile(PreformattedWidget.REGEXP, Pattern.DOTALL);
         assertTrue("match1", pattern.matcher("{{{preformatted}}}").matches());
@@ -19,29 +24,34 @@ public class PreformattedWidgetTest extends TestCase {
         assertTrue("match4", pattern.matcher("{{{\npreformatted\n}}}").matches());
     }
 
+    @Test
     public void testHtml() throws Exception {
-        PreformattedWidget widget = new PreformattedWidget(new MockWidgetRoot(), "{{{preformatted text}}}");
+        PreformattedWidget widget = new PreformattedWidget(new MockWidgetRoot(injector), "{{{preformatted text}}}");
         assertEquals("<pre>preformatted text</pre>", widget.render());
     }
 
+    @Test
     public void testMultiLine() throws Exception {
-        PreformattedWidget widget = new PreformattedWidget(new MockWidgetRoot(), "{{{\npreformatted text\n}}}");
+        PreformattedWidget widget = new PreformattedWidget(new MockWidgetRoot(injector), "{{{\npreformatted text\n}}}");
         assertEquals("<pre><br/>preformatted text<br/></pre>", widget.render());
     }
 
+    @Test
     public void testAsWikiText() throws Exception {
-        PreformattedWidget widget = new PreformattedWidget(new MockWidgetRoot(), "{{{preformatted text}}}");
+        PreformattedWidget widget = new PreformattedWidget(new MockWidgetRoot(injector), "{{{preformatted text}}}");
         assertEquals("{{{preformatted text}}}", widget.asWikiText());
     }
 
+    @Test
     public void testThatLiteralsWorkInPreformattedText() throws Exception {
-        ParentWidget root = new WidgetRoot("{{{abc !-123-! xyz}}}", new WikiPageDummy(), WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget root = new WidgetRoot("{{{abc !-123-! xyz}}}", new WikiPageDummy(injector), WidgetBuilder.htmlWidgetBuilder);
         String text = root.render();
         assertEquals("<pre>abc 123 xyz</pre>", text);
     }
 
+    @Test
     public void testThatVariablesWorkInPreformattedText() throws Exception {
-        ParentWidget root = new WidgetRoot("!define X {123}\n{{{abc ${X} xyz}}}", new WikiPageDummy(), WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget root = new WidgetRoot("!define X {123}\n{{{abc ${X} xyz}}}", new WikiPageDummy(injector), WidgetBuilder.htmlWidgetBuilder);
         String text = root.render();
         assertSubString("<pre>abc 123 xyz</pre>", text);
     }

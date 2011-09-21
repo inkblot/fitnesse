@@ -18,14 +18,14 @@ public class VirtualWikiWidgetTest extends WidgetTestCase {
     @Test
     public void testPieces() throws Exception {
         String text = "!virtualwiki " + FitNesseUtil.URL + "SomePage.ChildPage";
-        VirtualWikiWidget widget = new VirtualWikiWidget(new MockWidgetRoot(), text);
+        VirtualWikiWidget widget = new VirtualWikiWidget(new MockWidgetRoot(injector), text);
         assertEquals(FitNesseUtil.URL + "SomePage.ChildPage", widget.getRemoteUrl());
     }
 
     @Test
     public void testHtml() throws Exception {
         String text = "!virtualwiki " + FitNesseUtil.URL + "SomePage.ChildPage";
-        VirtualWikiWidget widget = new VirtualWikiWidget(new MockWidgetRoot(), text);
+        VirtualWikiWidget widget = new VirtualWikiWidget(new MockWidgetRoot(injector), text);
         String html = widget.render();
         assertHasRegexp("deprecated", html);
     }

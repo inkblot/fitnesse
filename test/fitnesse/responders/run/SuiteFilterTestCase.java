@@ -3,19 +3,20 @@
  */
 package fitnesse.responders.run;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SuiteFilterTestCase {
+public class SuiteFilterTestCase extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         PageData data = root.getData();
         root.commit(data);

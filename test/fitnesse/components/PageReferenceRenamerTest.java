@@ -21,7 +21,7 @@ public class PageReferenceRenamerTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         subWiki = crawler.addPage(root, PathParser.parse("SubWiki"), "");
         subWiki_pageTwo = crawler.addPage(subWiki, PathParser.parse("PageTwo"), "");

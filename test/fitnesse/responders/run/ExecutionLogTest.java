@@ -22,7 +22,7 @@ public class ExecutionLogTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         testPage = root.addChildPage("TestPage");
         runner = new MockCommandRunner("some command", 123);
         log = new ExecutionLog(testPage, runner);
@@ -117,7 +117,7 @@ public class ExecutionLogTest extends FitnesseBaseTestCase {
 
     @Test
     public void testExecutionReport_Ok() throws Exception {
-        WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
+        WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location", injector);
         MockCommandRunner mockCommandRunner = new MockCommandRunner();
         ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
         ExecutionStatus result;
@@ -134,7 +134,7 @@ public class ExecutionLogTest extends FitnesseBaseTestCase {
 
     @Test
     public void testExecutionReport_Output() throws Exception {
-        WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
+        WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location", injector);
         MockCommandRunner mockCommandRunner = new MockCommandRunner();
         mockCommandRunner.setOutput("I wrote something here");
         ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
@@ -152,7 +152,7 @@ public class ExecutionLogTest extends FitnesseBaseTestCase {
 
     @Test
     public void testExecutionReport_Error() throws Exception {
-        WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location");
+        WikiPageDummy wikiPageDummy = new WikiPageDummy("This.Is.Not.A.Real.Location", injector);
         MockCommandRunner mockCommandRunner = new MockCommandRunner();
         ExecutionLog executionLog = new ExecutionLog(wikiPageDummy, mockCommandRunner);
         executionLog.addException(new RuntimeException("I messed up"));

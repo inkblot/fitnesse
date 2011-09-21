@@ -23,7 +23,7 @@ public class TestHtmlFormatterTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         page = root.addChildPage("NewPage");
         page.getData().setContent("page content here");
         FitNesseContext context = makeContext();

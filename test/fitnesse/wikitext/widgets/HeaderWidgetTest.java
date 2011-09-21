@@ -2,11 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.Test;
 
 import java.util.regex.Pattern;
 
-public class HeaderWidgetTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class HeaderWidgetTest extends FitnesseBaseTestCase {
+    @Test
     public void testRegexp() throws Exception {
         assertTrue(Pattern.matches(HeaderWidget.REGEXP, "!1 some text\n"));
         assertTrue(Pattern.matches(HeaderWidget.REGEXP, "!2 \n"));
@@ -19,16 +24,18 @@ public class HeaderWidgetTest extends TestCase {
         assertTrue(!Pattern.matches(HeaderWidget.REGEXP, "!7 text\n"));
     }
 
+    @Test
     public void testGetSize() throws Exception {
         for (int i = 1; i <= 6; i++) {
-            HeaderWidget widget = new HeaderWidget(new MockWidgetRoot(), "!" + i + " text \n");
+            HeaderWidget widget = new HeaderWidget(new MockWidgetRoot(injector), "!" + i + " text \n");
             assertEquals(i, widget.size());
         }
     }
 
+    @Test
     public void testHtml() throws Exception {
         for (int i = 1; i <= 6; i++) {
-            HeaderWidget widget = new HeaderWidget(new MockWidgetRoot(), "!" + i + " some text \n");
+            HeaderWidget widget = new HeaderWidget(new MockWidgetRoot(injector), "!" + i + " some text \n");
             assertEquals("<h" + i + ">some text</h" + i + ">", widget.render());
         }
     }

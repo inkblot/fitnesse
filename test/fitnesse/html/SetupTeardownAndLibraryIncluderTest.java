@@ -21,7 +21,7 @@ public class SetupTeardownAndLibraryIncluderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         testPage = addPage("TestPage", "!define TEST_SYSTEM {slim}\n" + "the content");
         addPage("SetUp", "setup");

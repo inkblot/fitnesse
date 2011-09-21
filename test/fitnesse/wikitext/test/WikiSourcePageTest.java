@@ -16,7 +16,7 @@ public class WikiSourcePageTest extends FitnesseBaseTestCase {
 
     @Test
     public void getsChildren() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage page = root.makePage("PageOne");
         root.makePage(page, "PageTwo");
         root.makePage(page, "PageThree");
@@ -31,7 +31,7 @@ public class WikiSourcePageTest extends FitnesseBaseTestCase {
 
     @Test
     public void getsVirtualChildren() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage page = root.makePage("PageOne");
         root.makePage(page, "PageTwo");
         root.makePage(page, "PageThree");
@@ -63,14 +63,14 @@ public class WikiSourcePageTest extends FitnesseBaseTestCase {
 
     @Test
     public void getsUrlForPage() throws Exception {
-        WikiPage test = new TestRoot().makePage("MyPage");
+        WikiPage test = new TestRoot(injector).makePage("MyPage");
         assertEquals("WikiPath", new WikiSourcePage(test).makeUrl("WikiPath"));
     }
 
     @Test
     public void getsUrlForProxyPage() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
-        ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "host", 9999, PathParser.parse("RealPage.VirtualPage"));
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
+        ProxyPage virtualPage = new ProxyPage("VirtualPage", root, "host", 9999, PathParser.parse("RealPage.VirtualPage"), injector);
         assertEquals("http://host:9999/RealPage.WikiPath", new WikiSourcePage(virtualPage).makeUrl("WikiPath"));
     }
 }

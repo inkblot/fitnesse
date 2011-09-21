@@ -1,5 +1,6 @@
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,7 +8,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-public class PlainTextTableWidgetTest {
+public class PlainTextTableWidgetTest extends FitnesseBaseTestCase {
     private Pattern pattern;
 
     @Before
@@ -73,7 +74,7 @@ public class PlainTextTableWidgetTest {
     }
 
     private void render(String widgetText, String html) throws Exception {
-        PlainTextTableWidget widget = new PlainTextTableWidget(new MockWidgetRoot(), widgetText);
+        PlainTextTableWidget widget = new PlainTextTableWidget(new MockWidgetRoot(injector), widgetText);
         assertEquals(html, widget.render().replaceAll("\n", "").replaceAll("\r", ""));
     }
 }

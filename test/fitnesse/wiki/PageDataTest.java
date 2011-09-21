@@ -24,14 +24,14 @@ public class PageDataTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         page = crawler.addPage(root, PathParser.parse("PagE"), "some content");
     }
 
     @Test
     public void testVariablePreprocessing() throws Exception {
-        PageData d = new PageData(InMemoryPage.makeRoot("RooT"), "!define x {''italic''}\n${x}\n");
+        PageData d = new PageData(InMemoryPage.makeRoot("RooT", injector), "!define x {''italic''}\n${x}\n");
         String preprocessedText = d.getContent();
         assertHasRegexp("''italic''", preprocessedText);
     }
@@ -39,7 +39,7 @@ public class PageDataTest extends FitnesseBaseTestCase {
     @Test
     public void testVariablesRenderedFirst() throws Exception {
         String text = "!define x {''italics''}\n${x}";
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), text);
         String html = page.getData().getHtml();
         assertHasRegexp("''italics''", html);
@@ -49,7 +49,7 @@ public class PageDataTest extends FitnesseBaseTestCase {
     @Test
     public void testVariablesWithinVariablesAreResolved() throws Exception {
         String text = "!define x {b}\n!define y (a${x}c)\n${y}";
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), text);
         String html = page.getData().getHtml();
         assertHasRegexp("abc", html);
@@ -60,14 +60,14 @@ public class PageDataTest extends FitnesseBaseTestCase {
 
     @Test
     public void testThatSpecialCharsAreNotEscapedTwice() throws Exception {
-        PageData d = new PageData(new WikiPageDummy(), "<b>");
+        PageData d = new PageData(new WikiPageDummy(injector), "<b>");
         String html = d.getHtml();
         assertEquals("&lt;b&gt;", html);
     }
 
     @Test
     public void testLiteral() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage page = crawler.addPage(root, PathParser.parse("LiteralPage"), "!-literal-!");
         String renderedContent = page.getData().getHtml();
         assertHasRegexp("literal", renderedContent);
@@ -76,7 +76,7 @@ public class PageDataTest extends FitnesseBaseTestCase {
 
     @Test
     public void testClasspath() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!path 123\n!path abc\n");
         List<?> paths = page.getData().getClasspaths();
         assertTrue(paths.contains("123"));
@@ -85,7 +85,7 @@ public class PageDataTest extends FitnesseBaseTestCase {
 
     @Test
     public void testClasspathWithVariable() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
 
         WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!define PATH {/my/path}\n!path ${PATH}.jar");
         List<?> paths = page.getData().getClasspaths();
@@ -102,7 +102,7 @@ public class PageDataTest extends FitnesseBaseTestCase {
 
     @Test
     public void testClasspathWithVariableDefinedInIncludedPage() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         crawler.addPage(root, PathParser.parse("VariablePage"), "!define PATH {/my/path}\n");
 
         WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), "!include VariablePage\n!path ${PATH}.jar");
@@ -112,7 +112,7 @@ public class PageDataTest extends FitnesseBaseTestCase {
 
     @Test
     public void testVariableIgnoredInParentPreformatted() throws Exception {  //--variables in parent preformatted blocks must not recognize !define widgets.
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage parent = crawler.addPage(root, PathParser.parse("VariablePage"), "{{{\n!define SOMEVAR {A VALUE}\n}}}\n");
         WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "${SOMEVAR}\n");
         String renderedContent = child.getData().getHtml();
@@ -121,7 +121,7 @@ public class PageDataTest extends FitnesseBaseTestCase {
 
     @Test
     public void testGetCrossReferences() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage page = crawler.addPage(root, PathParser.parse("PageName"), "!see XrefPage\r\n");
         List<?> xrefs = page.getData().getXrefPages();
         assertEquals("XrefPage", xrefs.get(0));

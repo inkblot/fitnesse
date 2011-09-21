@@ -33,12 +33,10 @@ public class SerializedPageResponder implements SecureResponder {
             PageXmlizer pageXmlizer = new PageXmlizer();
             pageXmlizer.addPageCondition(xmlizePageCondition);
             Document doc = pageXmlizer.xmlize(page);
-            SimpleResponse response = makeResponseWithxml(doc);
-            return response;
+            return makeResponseWithxml(doc);
         } else if ("data".equals(request.getInput("type"))) {
             Document doc = new PageXmlizer().xmlize(page.getData());
-            SimpleResponse response = makeResponseWithxml(doc);
-            return response;
+            return makeResponseWithxml(doc);
         } else {
             Object object = getObjectToSerialize(request, page);
             byte[] bytes = serializeToBytes(object);
@@ -62,14 +60,13 @@ public class SerializedPageResponder implements SecureResponder {
     private Object getObjectToSerialize(Request request, WikiPage page) throws Exception {
         Object object;
         if ("bones".equals(request.getInput("type")))
-            object = new ProxyPage(page);
+            object = new ProxyPage(page, page.getInjector());
         else if ("meat".equals(request.getInput("type"))) {
             PageData originalData = page.getData();
             if (request.hasInput("version"))
                 originalData = page.getDataVersion((String) request.getInput("version"));
-            PageData data = new PageData(originalData);
 
-            object = data;
+            object = new PageData(originalData);
         } else
             throw new Exception("Improper use of proxy retrieval");
         return object;
@@ -78,8 +75,7 @@ public class SerializedPageResponder implements SecureResponder {
     private WikiPage getRequestedPage(Request request, FitNesseContext context) throws Exception {
         String resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
-        WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
-        return page;
+        return context.root.getPageCrawler().getPage(context.root, path);
     }
 
     private SimpleResponse responseWith(byte[] bytes) {
@@ -94,8 +90,7 @@ public class SerializedPageResponder implements SecureResponder {
         ObjectOutputStream os = new ObjectOutputStream(byteStream);
         os.writeObject(object);
         os.close();
-        byte[] bytes = byteStream.toByteArray();
-        return bytes;
+        return byteStream.toByteArray();
     }
 
     public SecureOperation getSecureOperation() {

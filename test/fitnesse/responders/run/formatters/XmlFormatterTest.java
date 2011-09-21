@@ -44,7 +44,6 @@ public class XmlFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void makeFileName() throws Exception {
-        XmlFormatter formatter = new XmlFormatter(null, null, null);
         TestSummary summary = new TestSummary(1, 2, 3, 4);
         assertEquals(
                 "20090413152143_1_2_3_4.xml",
@@ -54,7 +53,7 @@ public class XmlFormatterTest extends FitnesseBaseTestCase {
     @Test
     public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
         FitNesseContext context = mock(FitNesseContext.class);
-        WikiPageDummy page = new WikiPageDummy("name", "content");
+        WikiPageDummy page = new WikiPageDummy("name", "content", injector);
         page.getData().setAttribute(PageData.PropertySUITES, "tag1");
         WriterFactory writerFactory = mock(WriterFactory.class);
         final TestResult testResult = new TestResult();
@@ -93,7 +92,7 @@ public class XmlFormatterTest extends FitnesseBaseTestCase {
     @Test
     public void allTestingCompleteShouldSetTotalRunTime() throws Exception {
         FitNesseContext context = mock(FitNesseContext.class);
-        WikiPage page = new WikiPageDummy("name", "content");
+        WikiPage page = new WikiPageDummy("name", "content", injector);
         WriterFactory writerFactory = mock(WriterFactory.class);
         XmlFormatter formatter = new XmlFormatter(context, page, writerFactory) {
             @Override

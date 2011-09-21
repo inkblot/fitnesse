@@ -27,8 +27,8 @@ public class ParentWidgetTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        rootPage = InMemoryPage.makeRoot("RooT");
-        parent = new MockParentWidget(new MockWidgetRoot());
+        rootPage = InMemoryPage.makeRoot("RooT", injector);
+        parent = new MockParentWidget(new MockWidgetRoot(injector));
     }
 
     @Test

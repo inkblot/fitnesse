@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,8 +12,8 @@ public abstract class ExtendableWikiPage extends BaseWikiPage {
 
     private Map<String, Extension> extensions = new HashMap<String, Extension>();
 
-    public ExtendableWikiPage(String name, WikiPage parent) {
-        super(name, parent);
+    public ExtendableWikiPage(String name, WikiPage parent, Injector injector) {
+        super(name, parent, injector);
     }
 
     protected void addExtention(Extension extension) {

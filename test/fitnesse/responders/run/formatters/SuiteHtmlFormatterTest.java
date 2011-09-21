@@ -123,10 +123,10 @@ public class SuiteHtmlFormatterTest extends FitnesseBaseTestCase {
     public void testTotalTimingShouldAppearInSummary() throws Exception {
         TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
         TimeMeasurement timeMeasurement = newConstantElapsedTimeMeasurement(666);
-        formatter.page = new WikiPageDummy();
+        formatter.page = new WikiPageDummy(injector);
         formatter.writeHead("test");
         formatter.announceNumberTestsToRun(1);
-        WikiPageDummy firstPage = new WikiPageDummy("page1", "content");
+        WikiPageDummy firstPage = new WikiPageDummy("page1", "content", injector);
         formatter.newTestStarted(firstPage, timeMeasurement.start());
         formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), timeMeasurement.stop());
         formatter.allTestingComplete(totalTimeMeasurement.stop());
@@ -138,11 +138,11 @@ public class SuiteHtmlFormatterTest extends FitnesseBaseTestCase {
         TimeMeasurement totalTimeMeasurement = newConstantElapsedTimeMeasurement(900).start();
         TimeMeasurement firstTimeMeasurement = newConstantElapsedTimeMeasurement(670);
         TimeMeasurement secondTimeMeasurement = newConstantElapsedTimeMeasurement(890);
-        formatter.page = new WikiPageDummy();
+        formatter.page = new WikiPageDummy(injector);
         formatter.writeHead("test");
         formatter.announceNumberTestsToRun(2);
-        WikiPageDummy firstPage = new WikiPageDummy("page1", "content");
-        WikiPageDummy secondPage = new WikiPageDummy("page2", "content");
+        WikiPageDummy firstPage = new WikiPageDummy("page1", "content", injector);
+        WikiPageDummy secondPage = new WikiPageDummy("page2", "content", injector);
         formatter.newTestStarted(firstPage, firstTimeMeasurement.start());
         formatter.testComplete(firstPage, new TestSummary(1, 2, 3, 4), firstTimeMeasurement.stop());
         formatter.newTestStarted(secondPage, secondTimeMeasurement.start());

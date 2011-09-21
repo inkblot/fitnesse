@@ -2,13 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import junit.framework.TestCase;
+import fitnesse.FitnesseBaseTestCase;
+import org.junit.Test;
 
-public class ListItemWidgetTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class ListItemWidgetTest extends FitnesseBaseTestCase {
+    @Test
     public void testHtml() throws Exception {
-        ListItemWidget widget = new ListItemWidget(new MockWidgetRoot(), "some text", 0);
+        ListItemWidget widget = new ListItemWidget(new MockWidgetRoot(injector), "some text", 0);
         assertEquals("<li>some text</li>\n", widget.render());
-        widget = new ListItemWidget(new MockWidgetRoot(), "some text", 3);
+        widget = new ListItemWidget(new MockWidgetRoot(injector), "some text", 3);
         assertEquals("\t\t\t<li>some text</li>\n", widget.render());
     }
 }

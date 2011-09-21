@@ -1,13 +1,14 @@
 package fitnesse.wikitext.test;
 
+import com.google.inject.Injector;
 import fitnesse.wiki.*;
 
 public class TestRoot {
     public WikiPage root;
     private PageCrawler crawler;
 
-    public TestRoot() throws Exception {
-        root = InMemoryPage.makeRoot("root");
+    public TestRoot(Injector injector) throws Exception {
+        root = InMemoryPage.makeRoot("root", injector);
         crawler = root.getPageCrawler();
     }
 

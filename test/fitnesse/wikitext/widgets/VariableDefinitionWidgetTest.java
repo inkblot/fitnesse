@@ -24,7 +24,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
     }
 
@@ -119,7 +119,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
 
     @Test
     public void testDefinePrecedingClasspath() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         PageData data = root.getData();
         String content = "!define SOME_VARIABLE {Variable #1}\n!path c:\\dotnet\\*.dll";
         data.setContent(content);
@@ -131,7 +131,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
 
     @Test
     public void testNoExtraLineBreakInHtml() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         PageData data = root.getData();
         String content = "!define SOME_VARIABLE {Variable #1}\n!define ANOTHER_VARIABLE {Variable #2}";
         data.setContent(content);
@@ -141,25 +141,25 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
 
     @Test
     public void testBraceAsWikiText() throws Exception {
-        VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x {1}\n");
+        VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(injector), "!define x {1}\n");
         assertEquals("!define x {1}", widget.asWikiText());
     }
 
     @Test
     public void testParenAsWikiText() throws Exception {
-        VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x (1)\n");
+        VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(injector), "!define x (1)\n");
         assertEquals("!define x (1)", widget.asWikiText());
     }
 
     @Test
     public void testBracketAsWikiText() throws Exception {
-        VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x [1]\n");
+        VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(injector), "!define x [1]\n");
         assertEquals("!define x [1]", widget.asWikiText());
     }
 
     @Test
     public void testParentAndBraceAsWikeText() throws Exception {
-        VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(), "!define x ({1})\n");
+        VariableDefinitionWidget widget = new VariableDefinitionWidget(new MockWidgetRoot(injector), "!define x ({1})\n");
         assertEquals("!define x ({1})", widget.asWikiText());
     }
 }

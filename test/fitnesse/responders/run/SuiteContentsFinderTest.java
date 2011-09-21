@@ -24,7 +24,7 @@ public class SuiteContentsFinderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         PageData data = root.getData();
         root.commit(data);

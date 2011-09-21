@@ -32,10 +32,10 @@ public class TestFormatterTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         context = makeContext();
         response = mock(ChunkedResponse.class);
-        testPage = new WikiPageDummy("testPage", "testContent");
+        testPage = new WikiPageDummy("testPage", "testContent", injector);
         writerFactory = mock(XmlFormatter.WriterFactory.class);
 
-        this.page = new WikiPageDummy("page", "content");
+        this.page = new WikiPageDummy("page", "content", injector);
         right = new TestSummary(1, 0, 0, 0);
         wrong = new TestSummary(0, 1, 0, 0);
         exception = new TestSummary(0, 0, 0, 1);

@@ -6,7 +6,7 @@ import org.junit.Test;
 public class EMailTest extends FitnesseBaseTestCase {
     @Test
     public void parsesEMail() throws Exception {
-        ParserTestHelper.assertParses("bob@bl.org", "SymbolList[EMail]");
+        ParserTestHelper.assertParses("bob@bl.org", "SymbolList[EMail]", injector);
     }
 
     @Test

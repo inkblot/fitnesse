@@ -1,5 +1,6 @@
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wikitext.WikiWidget;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -11,8 +12,8 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-public class HashWidgetTest {
-    private final String HTML_FOR_ABCD_HASH = "<table class=\"hash_table\">" +
+public class HashWidgetTest extends FitnesseBaseTestCase {
+    private static final String HTML_FOR_ABCD_HASH = "<table class=\"hash_table\">" +
             "\\s*<tr class=\"hash_row\">" +
             "\\s*<td class=\"hash_key\">" +
             "\\s*a" +
@@ -30,7 +31,7 @@ public class HashWidgetTest {
             "\\s*</td>" +
             "\\s*</tr>" +
             "\\s*</table>";
-    private final String HTML_FOR_AB_HASH = "<table class=\"hash_table\">" +
+    private static final String HTML_FOR_AB_HASH = "<table class=\"hash_table\">" +
             "\\s*<tr class=\"hash_row\">" +
             "\\s*<td class=\"hash_key\">" +
             "\\s*a" +
@@ -55,7 +56,7 @@ public class HashWidgetTest {
 
     @Test
     public void testConstruction() throws Exception {
-        HashWidget widget = new HashWidget(new MockWidgetRoot(), "!{a:b,c:d}");
+        HashWidget widget = new HashWidget(new MockWidgetRoot(injector), "!{a:b,c:d}");
         assertEquals(2, widget.numberOfChildren());
         assertEquals(2, widget.numberOfKeys());
         List<String> keys = widget.getKeys();
@@ -71,31 +72,31 @@ public class HashWidgetTest {
 
     @Test
     public void testHtml() throws Exception {
-        HashWidget widget = new HashWidget(new MockWidgetRoot(), "!{a:b,c:d}");
+        HashWidget widget = new HashWidget(new MockWidgetRoot(injector), "!{a:b,c:d}");
         assertThat(widget.render(), matches(HTML_FOR_ABCD_HASH));
     }
 
     @Test
     public void commalessHtml() throws Exception {
-        HashWidget widget = new HashWidget(new MockWidgetRoot(), "!{a:b c:d}");
+        HashWidget widget = new HashWidget(new MockWidgetRoot(injector), "!{a:b c:d}");
         assertThat(widget.render(), matches(HTML_FOR_ABCD_HASH));
     }
 
     @Test
     public void onePairHash() throws Exception {
-        HashWidget widget = new HashWidget(new MockWidgetRoot(), "!{a:b}");
+        HashWidget widget = new HashWidget(new MockWidgetRoot(injector), "!{a:b}");
         assertThat(widget.render(), matches(HTML_FOR_AB_HASH));
     }
 
     @Test
     public void withLotsOfSpaces() throws Exception {
-        HashWidget widget = new HashWidget(new MockWidgetRoot(), "!{ a :  b ,    c :   d   }");
+        HashWidget widget = new HashWidget(new MockWidgetRoot(injector), "!{ a :  b ,    c :   d   }");
         assertThat(widget.render(), matches(HTML_FOR_ABCD_HASH));
     }
 
     @Test
     public void degenerateHash() throws Exception {
-        HashWidget widget = new HashWidget(new MockWidgetRoot(), "!{ }");
+        HashWidget widget = new HashWidget(new MockWidgetRoot(injector), "!{ }");
         assertThat(widget.render(), matches(
                 "<table class=\"hash_table\">" +
                         "\\s*</table>"));
@@ -104,7 +105,7 @@ public class HashWidgetTest {
 
     @Test
     public void multiLineHash() throws Exception {
-        HashWidget widget = new HashWidget(new MockWidgetRoot(), "!{\n a :  b ,  \n  c :   d   \n}");
+        HashWidget widget = new HashWidget(new MockWidgetRoot(injector), "!{\n a :  b ,  \n  c :   d   \n}");
         assertThat(widget.render(), matches(HTML_FOR_ABCD_HASH));
     }
 

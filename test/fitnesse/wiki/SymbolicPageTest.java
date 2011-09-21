@@ -34,12 +34,12 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         String pageOneContent = "page one";
         pageOne = crawler.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
         pageTwo = crawler.addPage(root, PathParser.parse(pageTwoPath), pageTwoContent);
-        symPage = new SymbolicPage("SymPage", pageTwo, pageOne);
+        symPage = new SymbolicPage("SymPage", pageTwo, pageOne, injector);
     }
 
     @After
@@ -143,7 +143,7 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
         externalCrawler.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");
         externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageTwo"), "external page two");
 
-        symPage = new SymbolicPage("SymPage", externalRoot, pageOne);
+        symPage = new SymbolicPage("SymPage", externalRoot, pageOne, injector);
     }
 
     @Test

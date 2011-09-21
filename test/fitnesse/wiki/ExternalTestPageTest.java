@@ -28,6 +28,6 @@ public class ExternalTestPageTest extends FitnesseBaseTestCase {
         FileSystem fileSystem = new MemoryFileSystem();
         String path = directory + "/" + name;
         fileSystem.makeFile(path, content);
-        return new ExternalTestPage(path, name, null, fileSystem);
+        return new ExternalTestPage(path, name, null, fileSystem, injector);
     }
 }

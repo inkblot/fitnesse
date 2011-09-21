@@ -15,8 +15,8 @@ public class AnchorReferenceTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesAnchors() throws Exception {
-        ParserTestHelper.assertParses(".#anchorName", "SymbolList[AnchorReference[Text]]");
-        ParserTestHelper.assertParses(".# anchorName", "SymbolList[Text, Whitespace, Text]");
+        ParserTestHelper.assertParses(".#anchorName", "SymbolList[AnchorReference[Text]]", injector);
+        ParserTestHelper.assertParses(".# anchorName", "SymbolList[Text, Whitespace, Text]", injector);
     }
 
     @Test

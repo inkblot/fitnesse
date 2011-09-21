@@ -16,7 +16,7 @@ public class NoteWidgetTest extends WidgetTestCase {
 
     @Test
     public void test() throws Exception {
-        WikiWidget widget = new NoteWidget(new MockWidgetRoot(), "!note some note");
+        WikiWidget widget = new NoteWidget(new MockWidgetRoot(injector), "!note some note");
         assertEquals("<span class=\"note\">some note</span>", widget.render());
     }
 

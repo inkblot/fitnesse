@@ -28,7 +28,7 @@ public class WikiTextTranslatorTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         page = crawler.addPage(root, PathParser.parse("WidgetRoot"));
     }
@@ -48,39 +48,39 @@ public class WikiTextTranslatorTest extends FitnesseBaseTestCase {
     public void testHtmlEscape() throws Exception {
         String wikiText = "<h1>this \"&\" that</h1>";
         String html = "&lt;h1&gt;this \"&amp;\" that&lt;/h1&gt;";
-        assertEquals(html, translate(wikiText, new WikiPageDummy()));
+        assertEquals(html, translate(wikiText, new WikiPageDummy(injector)));
     }
 
     @Test
     public void testTableHtml() throws Exception {
         String wikiText = "|this|is|a|table|\n|that|has|four|columns|\n";
-        assertEquals(expectedHtmlFromWikiText, translate(wikiText, new WikiPageDummy()));
+        assertEquals(expectedHtmlFromWikiText, translate(wikiText, new WikiPageDummy(injector)));
     }
 
     @Test
     public void testTableHtmlStripsTrailingWhiteSpaceFromLines() throws Exception {
         String wikiText = "|this|is|a|table|\t\n|that|has|four|columns|  \n";
-        assertEquals(expectedHtmlFromWikiText, translate(wikiText, new WikiPageDummy()));
+        assertEquals(expectedHtmlFromWikiText, translate(wikiText, new WikiPageDummy(injector)));
     }
 
     @Test
     public void testTableBlankLinesConvertedToBreaks() throws Exception {
         String wikiText1 = "|this|is|a|table|\t\n|that|has|four|columns|  \n\n  \n\t\n\t";
-        assertEquals(expectedHtmlFromWikiText + "<br/><br/><br/>\t", translate(wikiText1, new WikiPageDummy()));
+        assertEquals(expectedHtmlFromWikiText + "<br/><br/><br/>\t", translate(wikiText1, new WikiPageDummy(injector)));
         String wikiText2 = "|this|is|a|table|\t\n|that|has|four|columns|  \n\n  \n\t\n\t\n";
-        assertEquals(expectedHtmlFromWikiText + "<br/><br/><br/><br/>", translate(wikiText2, new WikiPageDummy()));
+        assertEquals(expectedHtmlFromWikiText + "<br/><br/><br/><br/>", translate(wikiText2, new WikiPageDummy(injector)));
         String wikiText3 = "|this|is|a|table|\t\n|that|has|four|columns|  \n\n  \n\t\n\t\n\n";
-        assertEquals(expectedHtmlFromWikiText + "<br/><br/><br/><br/><br/>", translate(wikiText3, new WikiPageDummy()));
+        assertEquals(expectedHtmlFromWikiText + "<br/><br/><br/><br/><br/>", translate(wikiText3, new WikiPageDummy(injector)));
     }
 
     @Test
     public void testBlankLinesConvertedToBreaks() throws Exception {
         String wikiText1 = "\n  \n\t\n\t";
-        assertEquals("<br/><br/><br/>\t", translate(wikiText1, new WikiPageDummy()));
+        assertEquals("<br/><br/><br/>\t", translate(wikiText1, new WikiPageDummy(injector)));
         String wikiText2 = "\n  \n\t\n\t\n";
-        assertEquals("<br/><br/><br/><br/>", translate(wikiText2, new WikiPageDummy()));
+        assertEquals("<br/><br/><br/><br/>", translate(wikiText2, new WikiPageDummy(injector)));
         String wikiText3 = "\n  \n\t\n\t\n";
-        assertEquals("<br/><br/><br/><br/>", translate(wikiText3, new WikiPageDummy()));
+        assertEquals("<br/><br/><br/><br/>", translate(wikiText3, new WikiPageDummy(injector)));
     }
 
     private static String translate(String value, WikiPage source) throws Exception {

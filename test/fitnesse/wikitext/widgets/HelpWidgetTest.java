@@ -22,7 +22,7 @@ public class HelpWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "some text");
         pageNoHelp = root.getPageCrawler().addPage(root, PathParser.parse("NoHelp"), "some text too");
         PageData data = page.getData();

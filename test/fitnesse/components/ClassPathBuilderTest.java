@@ -22,7 +22,7 @@ public class ClassPathBuilderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         builder = new ClassPathBuilder();
         somePagePath = PathParser.parse("SomePage");
@@ -55,7 +55,7 @@ public class ClassPathBuilderTest extends FitnesseBaseTestCase {
         String pageContent = "This is some content\n" +
                 "!path aPath\n" +
                 "end of conent\n";
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), pageContent);
         String path = builder.getClasspath(page);
         assertEquals("aPath", path);
@@ -63,7 +63,7 @@ public class ClassPathBuilderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testGetClassPathMultiLevel() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         crawler.addPage(root, PathParser.parse("ProjectOne"),
                 "!path path2\n" +
                         "!path path 3");
@@ -77,7 +77,7 @@ public class ClassPathBuilderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testLinearClassPath() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage superPage = crawler.addPage(root, PathParser.parse("SuperPage"), "!path superPagePath");
         WikiPage subPage = crawler.addPage(superPage, PathParser.parse("SubPage"), "!path subPagePath");
         String cp = builder.getClasspath(subPage);

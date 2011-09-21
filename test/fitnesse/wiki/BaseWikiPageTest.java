@@ -20,7 +20,7 @@ public class BaseWikiPageTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        BaseWikiPage root = (BaseWikiPage) InMemoryPage.makeRoot("RooT");
+        BaseWikiPage root = (BaseWikiPage) InMemoryPage.makeRoot("RooT", injector);
         root.addChildPage("LinkedPage");
         linkingPage = root.addChildPage("LinkingPage");
         linkingPage.addChildPage("ChildPage");

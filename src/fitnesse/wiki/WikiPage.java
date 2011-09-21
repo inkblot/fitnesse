@@ -3,6 +3,8 @@
 
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -46,6 +48,8 @@ public interface WikiPage extends Serializable, Comparable<Object> {
     public String getHelpText() throws Exception;
 
     public List<WikiPageAction> getActions() throws Exception;
+
+    Injector getInjector();
 }
 
 

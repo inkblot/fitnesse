@@ -20,7 +20,7 @@ public class VirtualEnabledPageCrawlerTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         target = crawler.addPage(root, PathParser.parse("TargetPage"));

@@ -77,7 +77,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
             String host = proxy.getHost();
             int port = proxy.getHostPort();
             try {
-                ProxyPage remoteIncludedPage = new ProxyPage("RemoteIncludedPage", null, host, port, pagePath);
+                ProxyPage remoteIncludedPage = new ProxyPage("RemoteIncludedPage", null, host, port, pagePath, includedPage.getInjector());
                 return remoteIncludedPage.getData().getContent();
             } catch (Exception e) {
                 return "!meta '''Remote page " + host + ":" + port + "/" + pageName + " does not exist.'''";

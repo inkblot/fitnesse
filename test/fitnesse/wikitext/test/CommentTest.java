@@ -12,8 +12,8 @@ public class CommentTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesComments() throws Exception {
-        ParserTestHelper.assertParses("# comment\n", "SymbolList[Comment[Text]]");
-        ParserTestHelper.assertParses("# comment", "SymbolList[Comment[Text]]");
+        ParserTestHelper.assertParses("# comment\n", "SymbolList[Comment[Text]]", injector);
+        ParserTestHelper.assertParses("# comment", "SymbolList[Comment[Text]]", injector);
     }
 
     @Test

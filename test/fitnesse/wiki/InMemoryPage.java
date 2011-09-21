@@ -17,15 +17,15 @@ public class InMemoryPage extends CommitingPage {
     protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
 
     public static WikiPage makeRoot(Injector injector, String rootPath, String rootPageName) {
-        return new InMemoryPage(rootPageName);
+        return new InMemoryPage(rootPageName, injector);
     }
 
-    public InMemoryPage(String rootPageName) {
-        this(rootPageName, null);
+    public InMemoryPage(String rootPageName, Injector injector) {
+        this(rootPageName, null, injector);
     }
 
-    protected InMemoryPage(String name, WikiPage parent) {
-        super(name, parent);
+    protected InMemoryPage(String name, WikiPage parent, Injector injector) {
+        super(name, parent, injector);
         addExtention(new VirtualCouplingExtension(this));
         versions.put(currentVersionName, new PageData(this, ""));
     }
@@ -36,12 +36,12 @@ public class InMemoryPage extends CommitingPage {
         return page;
     }
 
-    public static WikiPage makeRoot(String name) {
-        return new InMemoryPage(name, null);
+    public static WikiPage makeRoot(String name, Injector injector) {
+        return new InMemoryPage(name, null, injector);
     }
 
     protected WikiPage createChildPage(String name) throws Exception {
-        BaseWikiPage newPage = new InMemoryPage(name, this);
+        BaseWikiPage newPage = new InMemoryPage(name, this, getInjector());
         children.put(newPage.getName(), newPage);
         return newPage;
     }

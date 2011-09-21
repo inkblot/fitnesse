@@ -17,7 +17,7 @@ public class WikiWordTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = new TestRoot();
+        root = new TestRoot(injector);
         pageOne = root.makePage("PageOne");
         pageOneTwo = root.makePage(pageOne, "PageOne2");
         pageOneTwoThree = root.makePage(pageOneTwo, "PageThree");

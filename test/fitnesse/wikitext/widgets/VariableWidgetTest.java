@@ -20,7 +20,7 @@ public class VariableWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("root");
+        root = InMemoryPage.makeRoot("root", injector);
         crawler = root.getPageCrawler();
         WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"));
         widgetRoot = new WidgetRoot("", page);

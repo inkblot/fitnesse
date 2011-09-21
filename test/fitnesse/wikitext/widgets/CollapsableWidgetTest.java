@@ -38,7 +38,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
 
     @Test
     public void testRender() throws Exception {
-        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
+        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(injector), "!* title\ncontent\n*!");
         String html = widget.render();
         assertSubString("title", html);
         assertSubString("content", html);
@@ -50,23 +50,23 @@ public class CollapsableWidgetTest extends WidgetTestCase {
     //invisible: Test invisible too
     @Test
     public void testExpandedOrCollapsedOrInvisible() throws Exception {
-        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
+        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(injector), "!* title\ncontent\n*!");
         assertTrue(widget.expanded);
         assertFalse(widget.invisible);
 
-        widget = new CollapsableWidget(new MockWidgetRoot(), "!*> title\ncontent\n*!");
+        widget = new CollapsableWidget(new MockWidgetRoot(injector), "!*> title\ncontent\n*!");
         assertFalse(widget.expanded);
         assertFalse(widget.invisible);
 
         //invisible: Test invisible flags
-        widget = new CollapsableWidget(new MockWidgetRoot(), "!*< title\ncontent\n*!");
+        widget = new CollapsableWidget(new MockWidgetRoot(injector), "!*< title\ncontent\n*!");
         assertFalse(widget.expanded);
         assertTrue(widget.invisible);
     }
 
     @Test
     public void testRenderCollapsedSection() throws Exception {
-        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!*> title\ncontent\n*!");
+        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(injector), "!*> title\ncontent\n*!");
         String html = widget.render();
         assertSubString("class=\"hidden\"", html);
         assertNotSubString("class=\"collapsable\"", html);
@@ -76,7 +76,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
     //invisible: Test invisible class
     @Test
     public void testRenderInvisibleSection() throws Exception {
-        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!*< title\ncontent\n*!\n");
+        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(injector), "!*< title\ncontent\n*!\n");
         String html = widget.render();
         assertSubString("class=\"invisible\"", html);
         assertNotSubString("class=\"collapsable\"", html);
@@ -86,7 +86,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
     public void testTwoCollapsableSections() throws Exception {
         String text = "!* section1\nsection1 content\n*!\n" +
                 "!* section2\nsection2 content\n*!\n";
-        ParentWidget widgetRoot = new WidgetRoot(text, new WikiPageDummy());
+        ParentWidget widgetRoot = new WidgetRoot(text, new WikiPageDummy(injector));
         String html = widgetRoot.render();
         assertSubString("<span class=\"meta\">section1", html);
         assertSubString("<span class=\"meta\">section2", html);
@@ -95,14 +95,14 @@ public class CollapsableWidgetTest extends WidgetTestCase {
     @Test
     public void testEatsNewlineAtEnd() throws Exception {
         String text = "!* section1\nsection1 content\n*!\n";
-        ParentWidget widgetRoot = new WidgetRoot(text, new WikiPageDummy());
+        ParentWidget widgetRoot = new WidgetRoot(text, new WikiPageDummy(injector));
         String html = widgetRoot.render();
         assertNotSubString("<br/>", html);
     }
 
     @Test
     public void testMakeCollapsableSection() throws Exception {
-        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot());
+        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(injector));
         HtmlTag outerTag = widget.makeCollapsableSection(new RawHtml("title"), new RawHtml("content"));
         assertEquals("div", outerTag.tagName());
         assertEquals("collapse_rim", outerTag.getAttribute("class"));
@@ -129,8 +129,8 @@ public class CollapsableWidgetTest extends WidgetTestCase {
     @Test
     public void testWeirdBugThatUncleBobEncountered() throws Exception {
         try {
-            new CollapsableWidget(new MockWidgetRoot(), "!* Title\n * list element\n*!\n");
-            new CollapsableWidget(new MockWidgetRoot(), "!* Title\n * list element\r\n*!\n");
+            new CollapsableWidget(new MockWidgetRoot(injector), "!* Title\n * list element\n*!\n");
+            new CollapsableWidget(new MockWidgetRoot(injector), "!* Title\n * list element\r\n*!\n");
         } catch (Exception e) {
             e.printStackTrace();
             fail("no exception expected." + e.getMessage());
@@ -139,14 +139,14 @@ public class CollapsableWidgetTest extends WidgetTestCase {
 
     @Test
     public void testEditLinkSuppressedWhenWidgetBuilderConstructorIsUsed() throws Exception {
-        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), "!* title\ncontent\n*!");
+        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(injector), "!* title\ncontent\n*!");
         String html = widget.render();
         assertDoesNotHaveRegexp("^.*href.*edit.*$", html);
     }
 
     @Test
     public void testEditLinkIncludedWhenOtherConstructorsAreUsed() throws Exception {
-        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(), new MockWidgetRoot(),
+        CollapsableWidget widget = new CollapsableWidget(new MockWidgetRoot(injector), new MockWidgetRoot(injector),
                 "title", "!* title\ncontent\n*!", "include", false);
         String html = widget.render();
         assertHasRegexp("^.*href.*edit.*$", html);

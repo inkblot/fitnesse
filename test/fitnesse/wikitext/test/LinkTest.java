@@ -14,7 +14,7 @@ public class LinkTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesLinks() throws Exception {
-        ParserTestHelper.assertParses("http://mysite.org", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("http://mysite.org", "SymbolList[Link[SymbolList[Text]]]", injector);
     }
 
     @Test

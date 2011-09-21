@@ -21,7 +21,7 @@ public class StrikeWidgetTest extends WidgetTestCase {
     @Test
     public void testOutput() throws Exception {
         StrikeWidget widget =
-                new StrikeWidget(new MockWidgetRoot(), "--some text--");
+                new StrikeWidget(new MockWidgetRoot(injector), "--some text--");
         assertEquals(1, widget.numberOfChildren());
         WikiWidget child = widget.nextChild();
         assertEquals(TextWidget.class, child.getClass());
@@ -31,7 +31,7 @@ public class StrikeWidgetTest extends WidgetTestCase {
 
     @Test
     public void testEmbeddedDashInStrikedText() throws Exception {
-        StrikeWidget widget = new StrikeWidget(new MockWidgetRoot(), "--embedded-dash--");
+        StrikeWidget widget = new StrikeWidget(new MockWidgetRoot(injector), "--embedded-dash--");
         assertEquals(1, widget.numberOfChildren());
         WikiWidget child = widget.nextChild();
         assertEquals(TextWidget.class, child.getClass());

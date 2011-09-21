@@ -28,7 +28,7 @@ public class PathTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesVariableInPath() throws Exception {
-        WikiPage page = new TestRoot().makePage("TestPage", "!define x {stuff}\n!path ${x}y\n");
+        WikiPage page = new TestRoot(injector).makePage("TestPage", "!define x {stuff}\n!path ${x}y\n");
         ParserTestHelper.assertTranslatesTo(page,
                 "<span class=\"meta\">variable defined: x=stuff</span>" + HtmlElement.endl +
                         ParserTestHelper.newLineRendered + "<span class=\"meta\">classpath: stuffy</span>" + ParserTestHelper.newLineRendered);
@@ -36,7 +36,7 @@ public class PathTest extends FitnesseBaseTestCase {
 
     @Test
     public void findsDefinitions() throws Exception {
-        WikiPage page = new TestRoot().makePage("TestPage", "!path stuff\n!note and\n!path nonsense");
+        WikiPage page = new TestRoot(injector).makePage("TestPage", "!path stuff\n!note and\n!path nonsense");
         List<String> paths = new Paths(new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page)))).getPaths(ParserTestHelper.parse(page));
         assertEquals(2, paths.size());
         assertEquals("stuff", paths.get(0));

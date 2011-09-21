@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
 import fitnesse.http.ResponseParser;
 import util.ClockUtil;
 
@@ -22,24 +23,24 @@ public class ProxyPage extends CachingPage implements Serializable {
     public ResponseParser parser;
     private long lastLoadChildrenTime = 0;
 
-    public ProxyPage(WikiPage original) throws Exception {
-        super(original.getName(), null);
+    public ProxyPage(WikiPage original, Injector injector) throws Exception {
+        super(original.getName(), null, injector);
         realPath = original.getPageCrawler().getFullPath(original);
 
         List<WikiPage> children = original.getChildren();
         for (WikiPage page : children) {
-            ProxyPage child = new ProxyPage(page);
+            ProxyPage child = new ProxyPage(page, injector);
             child.parent = this;
             this.children.put(child.getName(), child);
         }
     }
 
-    protected ProxyPage(String name, WikiPage parent) throws Exception {
-        super(name, parent);
+    protected ProxyPage(String name, WikiPage parent, Injector injector) throws Exception {
+        super(name, parent, injector);
     }
 
-    public ProxyPage(String name, WikiPage parent, String host, int port, WikiPagePath path) throws Exception {
-        super(name, parent);
+    public ProxyPage(String name, WikiPage parent, String host, int port, WikiPagePath path, Injector injector) throws Exception {
+        super(name, parent, injector);
         this.host = host;
         hostPort = port;
         realPath = path;
@@ -58,7 +59,7 @@ public class ProxyPage extends CachingPage implements Serializable {
 
     protected WikiPage createChildPage(String name) throws Exception {
         WikiPagePath childPath = realPath.copy().addNameToEnd(name);
-        return new ProxyPage(name, this, host, getHostPort(), childPath);
+        return new ProxyPage(name, this, host, getHostPort(), childPath, getInjector());
     }
 
     protected void loadChildren() throws Exception {

@@ -34,7 +34,7 @@ public class CompositePageFinderTestCase extends FitnesseBaseTestCase {
     @Before
     public void init() throws Exception {
         delegate = mock(PageFinder.class);
-        page = InMemoryPage.makeRoot("RooT");
+        page = InMemoryPage.makeRoot("RooT", injector);
         crawler = page.getPageCrawler();
         pageOne = crawler.addPage(page, PathParser.parse("PageOne"), "this is page one ^ChildPage");
         pageTwo = crawler.addPage(page, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");

@@ -15,19 +15,19 @@ public class IncludeTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesIncludes() throws Exception {
-        assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord, Meta[Text]], Newline]");
-        assertParses("|!include PageTwo|\n", "SymbolList[Table[SymbolList[SymbolList[Include[Text, WikiWord, Meta[Text]]]]]]");
-        assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-        assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-        assertParses("!include <PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-        assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord, Meta[Text]], Text]");
-        assertParses("!include -setup PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
-        assertParses("!include -teardown PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]");
+        assertParses("!include PageTwo\n", "SymbolList[Include[Text, WikiWord, Meta[Text]], Newline]", injector);
+        assertParses("|!include PageTwo|\n", "SymbolList[Table[SymbolList[SymbolList[Include[Text, WikiWord, Meta[Text]]]]]]", injector);
+        assertParses("!include PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]", injector);
+        assertParses("!include -c PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]", injector);
+        assertParses("!include <PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]", injector);
+        assertParses("!include <PageTwo>", "SymbolList[Include[Text, WikiWord, Meta[Text]], Text]", injector);
+        assertParses("!include -setup PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]", injector);
+        assertParses("!include -teardown PageTwo", "SymbolList[Include[Text, WikiWord, Meta[Text]]]", injector);
     }
 
     @Test
     public void translatesIncludedSibling() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage currentPage = root.makePage("PageOne", "!include PageTwo");
         root.makePage("PageTwo", "page ''two''");
 
@@ -40,7 +40,7 @@ public class IncludeTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesIncludeWithChildReference() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage currentPage = root.makePage("PageOne", "!include PageTwo");
         WikiPage pageTwo = root.makePage("PageTwo", ">PageTwoChild");
         root.makePage(pageTwo, "PageTwoChild", "stuff");
@@ -50,7 +50,7 @@ public class IncludeTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesRelativeInclude() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage currentPage = root.makePage("PageOne", "!include >PageOneChild");
         root.makePage(currentPage, "PageOneChild", "stuff");
         String result = ParserTestHelper.translateTo(currentPage);
@@ -59,7 +59,7 @@ public class IncludeTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesNestedRelativeInclude() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage currentPage = root.makePage("PageOne", "!include >PageOneChild");
         WikiPage pageOneChild = root.makePage(currentPage, "PageOneChild", "!include >PageOneGrandChild");
         root.makePage(pageOneChild, "PageOneGrandChild", "stuff");
@@ -107,7 +107,7 @@ public class IncludeTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesCollapsed() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage includingPage = root.makePage("PageOne", "!include -c PageTwo");
         root.makePage("PageTwo", "two");
 
@@ -118,7 +118,7 @@ public class IncludeTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesSeamless() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage includingPage = root.makePage("PageOne", "!include -seamless PageTwo");
         root.makePage("PageTwo", "two");
 
@@ -127,7 +127,7 @@ public class IncludeTest extends FitnesseBaseTestCase {
 
     @Test
     public void doesNotIncludeParent() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage parent = root.makePage("ParentPage", "stuff");
         WikiPage currentPage = root.makePage(parent, "PageOne", "!include <ParentPage");
         ParserTestHelper.assertTranslatesTo(currentPage,

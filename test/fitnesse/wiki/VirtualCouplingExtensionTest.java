@@ -5,7 +5,7 @@ package fitnesse.wiki;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.testutil.SimpleCachinePage;
+import fitnesse.testutil.SimpleCachingPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -92,7 +92,7 @@ public class VirtualCouplingExtensionTest extends FitnesseBaseTestCase {
     public void testGetChildrenOnlyAsksOnce() throws Exception {
         CachingPage.cacheTime = 10000;
         ProxyPage.retrievalCount = 0;
-        SimpleCachinePage page = new SimpleCachinePage("RooT", null);
+        SimpleCachingPage page = new SimpleCachingPage("RooT", null, injector);
         setVirtualWiki(page, FitNesseUtil.URL + "PageTwo");
         VirtualCouplingExtension extension = (VirtualCouplingExtension) page.getExtension(VirtualCouplingExtension.NAME);
         extension.getVirtualCoupling().getChildren();

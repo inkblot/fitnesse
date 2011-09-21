@@ -29,7 +29,7 @@ public abstract class QueryTableTestCase extends SlimBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("root");
+        root = InMemoryPage.makeRoot("root", injector);
         instructions = new ArrayList<Object>();
         queryTableHeader =
                 "|" + tableType() + ":fixture|argument|\n" +

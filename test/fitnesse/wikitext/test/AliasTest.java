@@ -13,9 +13,9 @@ public class AliasTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesAliases() throws Exception {
-        ParserTestHelper.assertParses("[[tag][PageOne]]", "SymbolList[Alias[SymbolList[Text], SymbolList[Text]]]");
-        ParserTestHelper.assertParses("[[PageOne][PageOne]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[Text]]]");
-        ParserTestHelper.assertParses("[[PageOne][PageOne?edit]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[Text]]]");
+        ParserTestHelper.assertParses("[[tag][PageOne]]", "SymbolList[Alias[SymbolList[Text], SymbolList[Text]]]", injector);
+        ParserTestHelper.assertParses("[[PageOne][PageOne]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[Text]]]", injector);
+        ParserTestHelper.assertParses("[[PageOne][PageOne?edit]]", "SymbolList[Alias[SymbolList[WikiWord], SymbolList[Text]]]", injector);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class AliasTest extends FitnesseBaseTestCase {
 
     @Test
     public void evaluatesVariablesInLink() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage page = root.makePage("PageOne", "[[tag][PageTwo${x}]]");
         root.makePage("PageTwo3", "hi");
         ParserTestHelper.assertTranslatesTo(page, new TestVariableSource("x", "3"), link("tag", "PageTwo3"));

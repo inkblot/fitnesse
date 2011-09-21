@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,8 +47,8 @@ public class PageXmlizer {
         return document;
     }
 
-    public PageData deXmlizeData(Document document) throws Exception {
-        PageData data = new PageData(new WikiPageDummy());
+    public PageData deXmlizeData(Document document, Injector injector) throws Exception {
+        PageData data = new PageData(new WikiPageDummy(injector));
         Element dataElement = document.getDocumentElement();
 
         String content = XmlUtil.getLocalTextValue(dataElement, "content");
@@ -66,8 +67,7 @@ public class PageXmlizer {
     }
 
     private boolean pageMeetsConditions(WikiPage page) throws Exception {
-        for (Iterator<XmlizePageCondition> iterator = pageConditions.iterator(); iterator.hasNext(); ) {
-            XmlizePageCondition xmlizePageCondition = iterator.next();
+        for (XmlizePageCondition xmlizePageCondition : pageConditions) {
             if (!xmlizePageCondition.canBeXmlized(page))
                 return false;
         }
@@ -95,8 +95,7 @@ public class PageXmlizer {
         List<WikiPage> children = page.getChildren();
         Collections.sort(children);
 
-        for (Iterator<WikiPage> iterator = children.iterator(); iterator.hasNext(); ) {
-            WikiPage child = iterator.next();
+        for (WikiPage child : children) {
             addPageXmlToElement(document, childrenElement, child);
         }
         pageElement.appendChild(childrenElement);

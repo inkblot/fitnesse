@@ -16,7 +16,7 @@ public class TextIgnoringWidgetRootTest extends FitnesseBaseTestCase {
     @Test
     public void testNoTextWidgetAreCreated() throws Exception {
         String text = "Here is some text with '''bold''' and ''italics''.";
-        WikiPageDummy page = new WikiPageDummy("SomePage", text);
+        WikiPageDummy page = new WikiPageDummy("SomePage", text, injector);
         ParentWidget root = new TextIgnoringWidgetRoot(text, page, WidgetBuilder.htmlWidgetBuilder);
         List<?> widgets = root.getChildren();
         assertEquals(2, widgets.size());

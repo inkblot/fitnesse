@@ -19,7 +19,7 @@ public class WidgetBuilderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        mockSource = new WikiPageDummy();
+        mockSource = new WikiPageDummy(injector);
     }
 
     @Test
@@ -181,7 +181,7 @@ public class WidgetBuilderTest extends FitnesseBaseTestCase {
     @Test
     public void testNullPointerError() throws Exception {
         String wikiText = "''\nsome text that should be in italics\n''";
-        ParentWidget root = new WidgetRoot(wikiText, new WikiPageDummy());
+        ParentWidget root = new WidgetRoot(wikiText, new WikiPageDummy(injector));
 
         try {
             root.render();
@@ -205,7 +205,7 @@ public class WidgetBuilderTest extends FitnesseBaseTestCase {
             buffer.append("|'''bold'''|''italic''|!c centered|\n");
 
         try {
-            ParentWidget root = new WidgetRoot(buffer.toString(), new WikiPageDummy());
+            ParentWidget root = new WidgetRoot(buffer.toString(), new WikiPageDummy(injector));
             root.render();
         } catch (StackOverflowError e) {
             fail("Got error with big table: " + e);
@@ -234,7 +234,7 @@ public class WidgetBuilderTest extends FitnesseBaseTestCase {
     public void testConcurrentAddWidgets() throws Exception {
         WidgetBuilder widgetBuilder = new WidgetBuilder(new Class[]{BoldWidget.class});
         String text = "'''bold text'''";
-        ParentWidget parent = new BoldWidget(new MockWidgetRoot(), "'''bold text'''");
+        ParentWidget parent = new BoldWidget(new MockWidgetRoot(injector), "'''bold text'''");
         AtomicBoolean failFlag = new AtomicBoolean();
         failFlag.set(false);
 

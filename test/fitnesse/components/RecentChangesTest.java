@@ -23,7 +23,7 @@ public class RecentChangesTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        rootPage = InMemoryPage.makeRoot("RooT");
+        rootPage = InMemoryPage.makeRoot("RooT", injector);
         newPage = rootPage.addChildPage("SomeNewPage");
         page1 = rootPage.addChildPage("PageOne");
         page2 = rootPage.addChildPage("PageTwo");

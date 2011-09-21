@@ -103,7 +103,7 @@ public class TestSystemTest extends FitnesseBaseTestCase {
     }
 
     WikiPage makeTestPage(String pageText) throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         return crawler.addPage(root, PathParser.parse("TestPage"), pageText);
     }

@@ -39,7 +39,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
         fitNesseUtil = new FitNesseUtil();
         fitNesseUtil.startFitnesse(context);
 
-        proxy = new ProxyPage(original);
+        proxy = new ProxyPage(original, injector);
         proxy.setTransientValues("localhost", ClockUtil.currentTimeInMillis());
         proxy.setHostPort(FitNesseUtil.DEFAULT_PORT);
     }

@@ -15,9 +15,9 @@ public class ContentsTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesContents() throws Exception {
-        ParserTestHelper.assertParses("!contents -f -g", "SymbolList[Contents[Text, Text]]");
-        ParserTestHelper.assertParses("!contents hi", "SymbolList[Text, Whitespace, Text]");
-        ParserTestHelper.assertParses("!contents ]", "SymbolList[Text, Whitespace, CloseBracket]");
+        ParserTestHelper.assertParses("!contents -f -g", "SymbolList[Contents[Text, Text]]", injector);
+        ParserTestHelper.assertParses("!contents hi", "SymbolList[Text, Whitespace, Text]", injector);
+        ParserTestHelper.assertParses("!contents ]", "SymbolList[Text, Whitespace, CloseBracket]", injector);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ContentsTest extends FitnesseBaseTestCase {
     }
 
     private WikiPage makePages() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage pageOne = root.makePage("PageOne");
         WikiPage pageTwo = root.makePage(pageOne, "PageTwo", "!contents");
         WikiPage pageTwoChild = root.makePage(pageTwo, "PageTwoChild");

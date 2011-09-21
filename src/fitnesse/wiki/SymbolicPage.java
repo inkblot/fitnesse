@@ -2,7 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import java.util.Iterator;
+import com.google.inject.Injector;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,8 +14,8 @@ public class SymbolicPage extends BaseWikiPage {
 
     private WikiPage realPage;
 
-    public SymbolicPage(String name, WikiPage realPage, WikiPage parent) {
-        super(name, parent);
+    public SymbolicPage(String name, WikiPage realPage, WikiPage parent, Injector injector) {
+        super(name, parent, injector);
         this.realPage = realPage;
     }
 
@@ -33,7 +34,7 @@ public class SymbolicPage extends BaseWikiPage {
     protected WikiPage getNormalChildPage(String name) throws Exception {
         WikiPage childPage = realPage.getChildPage(name);
         if (childPage != null && !(childPage instanceof SymbolicPage))
-            childPage = new SymbolicPage(name, childPage, this);
+            childPage = new SymbolicPage(name, childPage, this, getInjector());
         return childPage;
     }
 
@@ -43,7 +44,7 @@ public class SymbolicPage extends BaseWikiPage {
         WikiPage start = (path.isRelativePath()) ? getRealPage().getParent() : getRealPage();
         WikiPage page = getPageCrawler().getPage(start, path);
         if (page != null)
-            page = new SymbolicPage(linkName, page, this);
+            page = new SymbolicPage(linkName, page, this, getInjector());
         return page;
     }
 
@@ -52,14 +53,13 @@ public class SymbolicPage extends BaseWikiPage {
     }
 
     public List<WikiPage> getNormalChildren() throws Exception {
-        List<?> children = realPage.getChildren();
+        List<WikiPage> children = realPage.getChildren();
         List<WikiPage> symChildren = new LinkedList<WikiPage>();
         //...Intentionally exclude symbolic links on symbolic pages
         //   to prevent infinite cyclic symbolic references.
         //TODO: -AcD- we need a better cyclic infinite recursion algorithm here.
-        for (Iterator<?> iterator = children.iterator(); iterator.hasNext(); ) {
-            WikiPage child = (WikiPage) iterator.next();
-            symChildren.add(new SymbolicPage(child.getName(), child, this));
+        for (WikiPage child : children) {
+            symChildren.add(new SymbolicPage(child.getName(), child, this, getInjector()));
         }
         return symChildren;
     }

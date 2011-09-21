@@ -22,7 +22,7 @@ public class EvaluatorWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("root");
+        WikiPage root = InMemoryPage.makeRoot("root", injector);
         crawler = root.getPageCrawler();
 
         String content = "!define ONE {1}\n"

@@ -1,5 +1,6 @@
 package fitnesse.wikitext.test;
 
+import com.google.inject.Injector;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 
@@ -103,8 +104,8 @@ public class ParserTestHelper {
         return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page), page.getContent()).parse());
     }
 
-    public static void assertParses(String input, String expected) throws Exception {
-        WikiPage page = new TestRoot().makePage("TestPage", input);
+    public static void assertParses(String input, String expected, Injector injector) throws Exception {
+        WikiPage page = new TestRoot(injector).makePage("TestPage", input);
         Symbol result = parse(page, input);
         assertEquals(expected, serialize(result));
     }

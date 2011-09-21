@@ -2,14 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.MockExtendableWikiPage;
 import fitnesse.testutil.SimpleExtension;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class ExtendableWikiPageTest extends TestCase {
+import static org.junit.Assert.*;
+
+public class ExtendableWikiPageTest extends FitnesseBaseTestCase {
+    @Test
     public void testAddExtention() throws Exception {
         Extension e = new SimpleExtension();
-        WikiPage page = new MockExtendableWikiPage(e);
+        WikiPage page = new MockExtendableWikiPage(e, injector);
 
         assertFalse(page.hasExtension("blah"));
         assertEquals(null, page.getExtension("blah"));

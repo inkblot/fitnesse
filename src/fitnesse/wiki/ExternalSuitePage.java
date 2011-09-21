@@ -1,5 +1,6 @@
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
 import util.FileSystem;
 
 public class ExternalSuitePage extends CachingPage {
@@ -7,8 +8,8 @@ public class ExternalSuitePage extends CachingPage {
     private String path;
     private FileSystem fileSystem;
 
-    public ExternalSuitePage(String path, String name, WikiPage parent, FileSystem fileSystem) throws Exception {
-        super(name, parent);
+    public ExternalSuitePage(String path, String name, WikiPage parent, FileSystem fileSystem, Injector injector) throws Exception {
+        super(name, parent, injector);
         this.path = path;
         this.fileSystem = fileSystem;
     }

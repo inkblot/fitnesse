@@ -12,10 +12,10 @@ public class AnchorNameTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesAnchors() throws Exception {
-        ParserTestHelper.assertParses("!anchor name", "SymbolList[AnchorName[Text]]");
-        ParserTestHelper.assertParses("!anchor 1234", "SymbolList[AnchorName[Text]]");
-        ParserTestHelper.assertParses("!anchor @#$@#%", "SymbolList[Text, Whitespace, Text]");
-        ParserTestHelper.assertParses("!anchorname", "SymbolList[Text]");
+        ParserTestHelper.assertParses("!anchor name", "SymbolList[AnchorName[Text]]", injector);
+        ParserTestHelper.assertParses("!anchor 1234", "SymbolList[AnchorName[Text]]", injector);
+        ParserTestHelper.assertParses("!anchor @#$@#%", "SymbolList[Text, Whitespace, Text]", injector);
+        ParserTestHelper.assertParses("!anchorname", "SymbolList[Text]", injector);
     }
 
     @Test

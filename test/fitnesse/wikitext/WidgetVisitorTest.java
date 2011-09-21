@@ -32,7 +32,7 @@ public class WidgetVisitorTest extends FitnesseBaseTestCase implements WidgetVis
     @Before
     public void setUp() throws Exception {
         visits.clear();
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
     }
 
     @Test

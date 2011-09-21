@@ -28,7 +28,7 @@ public class PageXmlizerTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         xmlizer = new PageXmlizer();
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
     }
 
@@ -237,7 +237,7 @@ public class PageXmlizerTest extends FitnesseBaseTestCase {
         data.setContent("this is some content.");
         WikiPageProperties properties = data.getProperties();
 
-        PageData receivedData = xmlizer.deXmlizeData(xmlizer.xmlize(data));
+        PageData receivedData = xmlizer.deXmlizeData(xmlizer.xmlize(data), injector);
         assertNotSame(data, receivedData);
 
         assertEquals("this is some content.", receivedData.getContent());

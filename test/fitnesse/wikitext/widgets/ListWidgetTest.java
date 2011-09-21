@@ -15,7 +15,7 @@ public class ListWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        widgetRoot = new MockWidgetRoot();
+        widgetRoot = new MockWidgetRoot(injector);
     }
 
     @Test

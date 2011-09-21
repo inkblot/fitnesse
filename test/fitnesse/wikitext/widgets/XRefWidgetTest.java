@@ -27,7 +27,7 @@ public class XRefWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"));
         WikiPage child = root.getPageCrawler().addPage(page, PathParser.parse("SomeChild"));
         /*child2*/

@@ -81,7 +81,7 @@ public class WikiPagePathTest extends FitnesseBaseTestCase {
 
     @Test
     public void testConstructorWithPage() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         WikiPagePath abcdPath = PathParser.parse("AaA.BbB.CcC.DdD");
         WikiPagePath grandchildPath = PathParser.parse("PageOne.ChildOne.GrandChildOne");

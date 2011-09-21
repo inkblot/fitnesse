@@ -25,7 +25,7 @@ public class SuiteSpecificationRunnerTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         String suitePageName = "SuitePage";
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child");
         WikiPage child = crawler.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");

@@ -20,7 +20,7 @@ public class CompositeExecutionLogTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         testPage = root.addChildPage("TestPage");
         runner = new MockCommandRunner("some command", 123);
         log = new CompositeExecutionLog(testPage);

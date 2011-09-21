@@ -28,7 +28,7 @@ public class PageCrawlerTest extends FitnesseBaseTestCase implements TraversalLi
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = new PageCrawlerImpl();
 
         page1Path = PathParser.parse("PageOne");

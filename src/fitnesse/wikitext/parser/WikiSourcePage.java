@@ -107,7 +107,7 @@ public class WikiSourcePage implements SourcePage {
                     String host = proxy.getHost();
                     int port = proxy.getHostPort();
                     try {
-                        ProxyPage remoteIncludedPage = new ProxyPage("RemoteIncludedPage", null, host, port, pagePath);
+                        ProxyPage remoteIncludedPage = new ProxyPage("RemoteIncludedPage", null, host, port, pagePath, page.getInjector());
                         return new Maybe<SourcePage>(new WikiSourcePage(remoteIncludedPage));
                     } catch (Exception e) {
                         return Maybe.nothingBecause("Remote page \" + host + \":\" + port + \"/\" + pageName + \" does not exist.\n");

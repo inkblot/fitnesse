@@ -29,14 +29,14 @@ public class ImporterTestCase extends FitnesseBaseTestCase {
 
     @Before
     public void beforeImportTest() throws Exception {
-        remoteContext = new FitNesseContext(InMemoryPage.makeRoot("RooT"), FitNesseContext.DEFAULT_PATH);
+        remoteContext = new FitNesseContext(InMemoryPage.makeRoot("RooT", injector), FitNesseContext.DEFAULT_PATH);
         remoteRoot = remoteContext.root;
         PageCrawler crawler = remoteRoot.getPageCrawler();
         crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
         crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
         crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
 
-        localContext = makeContext(InMemoryPage.makeRoot("local"));
+        localContext = makeContext(InMemoryPage.makeRoot("local", injector));
         localRoot = localContext.root;
         pageOne = localRoot.addChildPage("PageOne");
         childPageOne = pageOne.addChildPage("ChildOne");

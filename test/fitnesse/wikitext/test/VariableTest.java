@@ -23,7 +23,7 @@ public class VariableTest extends FitnesseBaseTestCase {
     }
 
     private void assertTranslatesVariable(String variable, String expected) throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {y}\n" + variable);
+        WikiPage pageOne = new TestRoot(injector).makePage("PageOne", "!define x {y}\n" + variable);
         ParserTestHelper.assertTranslatesTo(pageOne,
                 "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl +
                         ParserTestHelper.newLineRendered + expected);
@@ -31,22 +31,22 @@ public class VariableTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesVariableContents() throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {''y''}\n|${x}|\n");
+        WikiPage pageOne = new TestRoot(injector).makePage("PageOne", "!define x {''y''}\n|${x}|\n");
         String result = ParserTestHelper.translateTo(pageOne);
-        assertTrue(result.indexOf("<i>y</i>") >= 0);
+        assertTrue(result.contains("<i>y</i>"));
     }
 
     @Test
     public void translatesVariableContentsInLiteralTable() throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {''y''}\n!|${x}|\n");
+        WikiPage pageOne = new TestRoot(injector).makePage("PageOne", "!define x {''y''}\n!|${x}|\n");
         String result = ParserTestHelper.translateTo(pageOne);
-        assertTrue(result.indexOf("<i>y</i>") < 0);
+        assertTrue(!result.contains("<i>y</i>"));
         assertTrue(result.indexOf("''y''", result.indexOf("table")) >= 0);
     }
 
     @Test
     public void evaluatesVariablesAtCurrentLocation() throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {y}\n${x}\n!define x {z}\n${x}");
+        WikiPage pageOne = new TestRoot(injector).makePage("PageOne", "!define x {y}\n${x}\n!define x {z}\n${x}");
         ParserTestHelper.assertTranslatesTo(pageOne,
                 "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl + ParserTestHelper.newLineRendered
                         + "y" + ParserTestHelper.newLineRendered
@@ -56,7 +56,7 @@ public class VariableTest extends FitnesseBaseTestCase {
 
     @Test
     public void evaluatesNestedVariableDefinition() throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {y}\n!define z {${x}}\n${z}");
+        WikiPage pageOne = new TestRoot(injector).makePage("PageOne", "!define x {y}\n!define z {${x}}\n${z}");
         ParserTestHelper.assertTranslatesTo(pageOne,
                 "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl + ParserTestHelper.newLineRendered
                         + "<span class=\"meta\">variable defined: z=${x}</span>" + HtmlElement.endl + ParserTestHelper.newLineRendered
@@ -65,7 +65,7 @@ public class VariableTest extends FitnesseBaseTestCase {
 
     @Test
     public void evaluatesForwardNestedVariableDefinition() throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define z {${x}}\n!define x {y}\n${z}");
+        WikiPage pageOne = new TestRoot(injector).makePage("PageOne", "!define z {${x}}\n!define x {y}\n${z}");
         ParserTestHelper.assertTranslatesTo(pageOne,
                 "<span class=\"meta\">variable defined: z=${x}</span>" + HtmlElement.endl + ParserTestHelper.newLineRendered +
                         "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl + ParserTestHelper.newLineRendered +
@@ -74,7 +74,7 @@ public class VariableTest extends FitnesseBaseTestCase {
 
     @Test
     public void evaluatesEmptyNestedVariableDefinition() throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne", "!define x {}\n!define z {${x}}\n${z}");
+        WikiPage pageOne = new TestRoot(injector).makePage("PageOne", "!define x {}\n!define z {${x}}\n${z}");
         ParserTestHelper.assertTranslatesTo(pageOne,
                 "<span class=\"meta\">variable defined: x=</span>" + HtmlElement.endl + ParserTestHelper.newLineRendered +
                         "<span class=\"meta\">variable defined: z=${x}</span>" + HtmlElement.endl + ParserTestHelper.newLineRendered);
@@ -82,7 +82,7 @@ public class VariableTest extends FitnesseBaseTestCase {
 
     @Test
     public void evaluatesVariablesFromParent() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage parent = root.makePage("PageOne", "!define x {y}\n");
         WikiPage child = root.makePage(parent, "PageTwo");
         ParserTestHelper.assertTranslatesTo(child, "${x}", "y");
@@ -90,7 +90,7 @@ public class VariableTest extends FitnesseBaseTestCase {
 
     @Test
     public void evaluatesVariablesFromParentInCurrentContext() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage parent = root.makePage("PageOne", "!define x {${y}}\n");
         WikiPage child = root.makePage(parent, "PageTwo", "!define y {stuff}\n${x}");
         assertTrue(ParserTestHelper.translateTo(child).endsWith("stuff"));
@@ -98,7 +98,7 @@ public class VariableTest extends FitnesseBaseTestCase {
 
     @Test
     public void evaluatesVariablesFromInclude() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage includer = root.makePage("PageOne", "!include -seamless PageTwo\n${x}");
         root.makePage("PageTwo", "!define x {y}");
         ParserTestHelper.assertTranslatesTo(includer, "<span class=\"meta\">variable defined: x=y</span>" + HtmlElement.endl +

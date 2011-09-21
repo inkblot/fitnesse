@@ -16,7 +16,7 @@ public class MetaWidgetTest extends WidgetTestCase {
 
     @Test
     public void testItalicWidgetRendersHtmlItalics() throws Exception {
-        MetaWidget widget = new MetaWidget(new MockWidgetRoot(), "!meta text");
+        MetaWidget widget = new MetaWidget(new MockWidgetRoot(injector), "!meta text");
         assertEquals("<span class=\"meta\">text</span>", widget.render());
     }
 

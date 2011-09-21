@@ -33,10 +33,10 @@ public class JavaFormatterTest extends FitnesseBaseTestCase {
     }
 
     private WikiPageDummy buildNestedTestPage() throws Exception {
-        WikiPageDummy wp = new WikiPageDummy("ChildTest", null);
-        WikiPageDummy parent = new WikiPageDummy("ParentTest", null);
+        WikiPageDummy wp = new WikiPageDummy("ChildTest", null, injector);
+        WikiPageDummy parent = new WikiPageDummy("ParentTest", null, injector);
         wp.setParent(parent);
-        parent.setParent(new WikiPageDummy("root"));
+        parent.setParent(new WikiPageDummy("root", injector));
         return wp;
     }
 
@@ -61,8 +61,8 @@ public class JavaFormatterTest extends FitnesseBaseTestCase {
     public void writeSummary_WritesSummaryOfTestExecutions() throws Exception {
         TimeMeasurement timeMeasurement = new TimeMeasurement().start();
         jf.testComplete(buildNestedTestPage(), new TestSummary(5, 6, 7, 8), timeMeasurement.stop());
-        WikiPageDummy secondPage = new WikiPageDummy("SecondPage", null);
-        secondPage.setParent(new WikiPageDummy("root", null));
+        WikiPageDummy secondPage = new WikiPageDummy("SecondPage", null, injector);
+        secondPage.setParent(new WikiPageDummy("root", null, injector));
         jf.testComplete(secondPage, new TestSummary(11, 12, 13, 14), timeMeasurement.stop());
         jf.writeSummary("SummaryPageName");
         verify(mockResultsRepository).open("SummaryPageName");
@@ -74,8 +74,8 @@ public class JavaFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void testComplete_clones_TestSummary_Objects() throws Exception {
-        WikiPageDummy secondPage = new WikiPageDummy("SecondPage", null);
-        secondPage.setParent(new WikiPageDummy("root", null));
+        WikiPageDummy secondPage = new WikiPageDummy("SecondPage", null, injector);
+        secondPage.setParent(new WikiPageDummy("root", null, injector));
 
         TestSummary ts = new TestSummary(5, 6, 7, 8);
         TimeMeasurement timeMeasurement = new TimeMeasurement().start();

@@ -14,7 +14,7 @@ public class PlainTextTableTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesPlainTextTables() throws Exception {
-        ParserTestHelper.assertParses("![\nstuff\n]!", "SymbolList[PlainTextTable[SymbolList[SymbolList[Text]]]]");
+        ParserTestHelper.assertParses("![\nstuff\n]!", "SymbolList[PlainTextTable[SymbolList[SymbolList[Text]]]]", injector);
     }
 
     @Test

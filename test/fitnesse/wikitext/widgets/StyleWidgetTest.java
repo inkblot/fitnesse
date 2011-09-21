@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 
 import java.util.regex.Pattern;
@@ -9,7 +10,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.*;
 
 
-public class StyleWidgetTest {
+public class StyleWidgetTest extends FitnesseBaseTestCase {
     @Test
     public void parenRegexp() throws Exception {
         String r = StyleWidget.ParenFormat.REGEXP;
@@ -42,25 +43,25 @@ public class StyleWidgetTest {
 
     @Test
     public void parenFormatHtml() throws Exception {
-        StyleWidget widget = new StyleWidget.ParenFormat(new MockWidgetRoot(), "!style_myStyle(wow zap)");
+        StyleWidget widget = new StyleWidget.ParenFormat(new MockWidgetRoot(injector), "!style_myStyle(wow zap)");
         assertEquals("<span class=\"myStyle\">wow zap</span>", widget.render());
     }
 
     @Test
     public void BracketFormatHtml() throws Exception {
-        StyleWidget widget = new StyleWidget.BracketFormat(new MockWidgetRoot(), "!style_myStyle[wow zap]");
+        StyleWidget widget = new StyleWidget.BracketFormat(new MockWidgetRoot(injector), "!style_myStyle[wow zap]");
         assertEquals("<span class=\"myStyle\">wow zap</span>", widget.render());
     }
 
     @Test
     public void bracketFormWithParen() throws Exception {
-        StyleWidget widget = new StyleWidget.BracketFormat(new MockWidgetRoot(), "!style_myStyle[)]");
+        StyleWidget widget = new StyleWidget.BracketFormat(new MockWidgetRoot(injector), "!style_myStyle[)]");
         assertEquals("<span class=\"myStyle\">)</span>", widget.render());
     }
 
     @Test
     public void BraceFormatHtml() throws Exception {
-        StyleWidget widget = new StyleWidget.BraceFormat(new MockWidgetRoot(), "!style_myStyle{wow zap}");
+        StyleWidget widget = new StyleWidget.BraceFormat(new MockWidgetRoot(injector), "!style_myStyle{wow zap}");
         assertEquals("<span class=\"myStyle\">wow zap</span>", widget.render());
     }
 

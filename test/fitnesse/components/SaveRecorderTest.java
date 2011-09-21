@@ -17,7 +17,7 @@ public class SaveRecorderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         somePage = crawler.addPage(root, PathParser.parse("SomePage"), "some page");
     }

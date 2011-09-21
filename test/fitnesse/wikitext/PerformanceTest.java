@@ -35,7 +35,7 @@ public class PerformanceTest extends FitnesseBaseTestCase {
 
     private void runNewParser(String input) throws Exception {
         long start = System.currentTimeMillis();
-        WikiPage page = new TestRoot().makePage("NewTest");
+        WikiPage page = new TestRoot(injector).makePage("NewTest");
         //String result = ParserTest.translateTo(new TestRoot().makePage("NewTest"), pageContent);
         Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
         System.out.println(System.currentTimeMillis() - start);

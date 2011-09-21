@@ -8,9 +8,9 @@ import org.junit.Test;
 public class HelpTest extends FitnesseBaseTestCase {
     @Test
     public void parsesHelp() throws Exception {
-        ParserTestHelper.assertParses("!help", "SymbolList[Help]");
-        ParserTestHelper.assertParses("!help -editable", "SymbolList[Help]");
-        ParserTestHelper.assertParses("!help -garbage", "SymbolList[Help, Whitespace, Text]");
+        ParserTestHelper.assertParses("!help", "SymbolList[Help]", injector);
+        ParserTestHelper.assertParses("!help -editable", "SymbolList[Help]", injector);
+        ParserTestHelper.assertParses("!help -garbage", "SymbolList[Help, Whitespace, Text]", injector);
     }
 
     @Test
@@ -22,7 +22,7 @@ public class HelpTest extends FitnesseBaseTestCase {
     }
 
     private void assertTranslates(String expected, String content, String property) throws Exception {
-        WikiPage pageWithHelp = new TestRoot().makePage("TestHelp", content);
+        WikiPage pageWithHelp = new TestRoot(injector).makePage("TestHelp", content);
         PageData pageData = pageWithHelp.getData();
         pageData.setAttribute(property, "help me");
         pageWithHelp.commit(pageData);

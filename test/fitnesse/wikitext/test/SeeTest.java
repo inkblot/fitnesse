@@ -13,13 +13,13 @@ public class SeeTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesSees() throws Exception {
-        ParserTestHelper.assertParses("!see SomeStuff", "SymbolList[See[WikiWord]]");
-        ParserTestHelper.assertParses("!see ya", "SymbolList[Text, Whitespace, Text]");
+        ParserTestHelper.assertParses("!see SomeStuff", "SymbolList[See[WikiWord]]", injector);
+        ParserTestHelper.assertParses("!see ya", "SymbolList[Text, Whitespace, Text]", injector);
     }
 
     @Test
     public void translatesSees() throws Exception {
-        TestRoot root = new TestRoot();
+        TestRoot root = new TestRoot(injector);
         WikiPage page = root.makePage("PageOne", "!see PageTwo");
         root.makePage("PageTwo", "hi");
         ParserTestHelper.assertTranslatesTo(page, "<b>See: <a href=\"PageTwo\">PageTwo</a></b>");

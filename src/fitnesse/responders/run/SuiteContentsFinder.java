@@ -37,8 +37,8 @@ public class SuiteContentsFinder {
         if (testPageList.isEmpty()) {
             String name = new WikiPagePath(pageToRun).toString();
             WikiPageDummy dummy = new WikiPageDummy("",
-                    "|Comment|\n|No test found with " + suiteFilter.toString() + " in subwiki !-" + name + "-!!|\n"
-            );
+                    "|Comment|\n|No test found with " + suiteFilter.toString() + " in subwiki !-" + name + "-!!|\n",
+                    wikiRootPage.getInjector());
             dummy.setParent(wikiRootPage);
             testPageList.add(dummy);
         }

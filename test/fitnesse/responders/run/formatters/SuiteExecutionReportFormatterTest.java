@@ -20,7 +20,7 @@ public class SuiteExecutionReportFormatterTest extends FitnesseBaseTestCase {
     @Test
     public void testCompleteShouldSetRunTimeForCurrentReference() throws Exception {
         FitNesseContext context = mock(FitNesseContext.class);
-        WikiPage page = new WikiPageDummy("name", "content");
+        WikiPage page = new WikiPageDummy("name", "content", injector);
         SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
 
         TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
@@ -41,7 +41,7 @@ public class SuiteExecutionReportFormatterTest extends FitnesseBaseTestCase {
     @Test
     public void allTestingCompleteShouldSetTotalRunTimeOnReport() throws Exception {
         FitNesseContext context = mock(FitNesseContext.class);
-        WikiPage page = new WikiPageDummy("name", "content");
+        WikiPage page = new WikiPageDummy("name", "content", injector);
         SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
 
         TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
@@ -58,7 +58,7 @@ public class SuiteExecutionReportFormatterTest extends FitnesseBaseTestCase {
     @Test
     public void testCompleteShouldSetFailedCount() throws Exception {
         FitNesseContext context = mock(FitNesseContext.class);
-        WikiPage page = new WikiPageDummy("name", "content");
+        WikiPage page = new WikiPageDummy("name", "content", injector);
         SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
 
         TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);

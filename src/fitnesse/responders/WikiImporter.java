@@ -133,7 +133,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
     protected void importRemotePageContent(WikiPage localPage) throws Exception {
         try {
             Document doc = getXmlDocument("data");
-            PageData remoteData = new PageXmlizer().deXmlizeData(doc);
+            PageData remoteData = new PageXmlizer().deXmlizeData(doc, localPage.getInjector());
 
             WikiPageProperties remoteProps = remoteData.getProperties();
             remoteProps.remove("Edit");

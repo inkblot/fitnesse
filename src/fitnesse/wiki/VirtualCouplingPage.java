@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,5 +107,10 @@ public class VirtualCouplingPage implements WikiPage {
 
     public List<WikiPageAction> getActions() throws Exception {
         return null;
+    }
+
+    @Override
+    public Injector getInjector() {
+        return hostPage.getInjector();
     }
 }

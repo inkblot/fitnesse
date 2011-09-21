@@ -24,7 +24,7 @@ public class TitleWikiPageFinderTest extends FitnesseBaseTestCase implements Sea
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
         crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"), "PageChild is a child of PageOne");

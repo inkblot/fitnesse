@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
 import util.EnvironmentVariableTool;
 import util.FileUtil;
 
@@ -15,9 +16,11 @@ public abstract class BaseWikiPage implements WikiPage {
     protected String name;
     protected WikiPage parent;
     protected WikiPage parentForVariables;
+    private transient final Injector injector;
 
-    protected BaseWikiPage(String name, WikiPage parent) {
+    protected BaseWikiPage(String name, WikiPage parent, Injector injector) {
         this.name = name;
+        this.injector = injector;
         this.parent = this.parentForVariables = parent;
     }
 
@@ -77,8 +80,8 @@ public abstract class BaseWikiPage implements WikiPage {
             if (!file.exists())
                 FileUtil.makeDir(file.getPath());
             if (file.isDirectory()) {
-                WikiPage externalRoot = new FileSystemPage(parentDirectory.getPath(), file.getName());
-                return new SymbolicPage(linkName, externalRoot, this);
+                WikiPage externalRoot = FileSystemPage.makeRoot(getInjector(), parentDirectory.getPath(), file.getName());
+                return new SymbolicPage(linkName, externalRoot, this, getInjector());
             }
         }
         return null;
@@ -89,7 +92,7 @@ public abstract class BaseWikiPage implements WikiPage {
         WikiPage start = (path.isRelativePath()) ? getParent() : this;  //TODO -AcD- a better way?
         WikiPage page = getPageCrawler().getPage(start, path);
         if (page != null)
-            page = new SymbolicPage(linkName, page, this);
+            page = new SymbolicPage(linkName, page, this, getInjector());
         return page;
     }
 
@@ -194,5 +197,9 @@ public abstract class BaseWikiPage implements WikiPage {
     public String getHelpText() throws Exception {
         String helpText = getData().getAttribute(PageData.PropertyHELP);
         return ((helpText == null) || (helpText.length() == 0)) ? null : helpText;
+    }
+
+    public Injector getInjector() {
+        return injector;
     }
 }

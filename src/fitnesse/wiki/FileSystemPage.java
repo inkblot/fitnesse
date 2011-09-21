@@ -23,22 +23,22 @@ public class FileSystemPage extends CachingPage {
     private CmSystem cmSystem = new CmSystem();
 
     public static WikiPage makeRoot(Injector injector, String rootPath, String rootPageName) throws IOException {
-        return new FileSystemPage(rootPath, rootPageName, injector.getInstance(FileSystem.class), injector.getInstance(VersionsController.class));
+        return new FileSystemPage(rootPath, rootPageName, injector.getInstance(FileSystem.class), injector.getInstance(VersionsController.class), injector);
     }
 
-    private FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController) throws IOException {
-        super(name, null);
+    private FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController, Injector injector) throws IOException {
+        super(name, null, injector);
         this.path = path;
         this.versionsController = versionsController;
         createDirectoryIfNewPage(fileSystem);
     }
 
-    public FileSystemPage(final String path, final String name) throws Exception {
-        this(path, name, new DiskFileSystem(), new ZipFileVersionsController());
+    public FileSystemPage(final String path, final String name, Injector injector) throws Exception {
+        this(path, name, new DiskFileSystem(), new ZipFileVersionsController(), injector);
     }
 
-    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem) throws Exception {
-        super(name, parent);
+    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, Injector injector) throws Exception {
+        super(name, parent, injector);
         path = parent.getFileSystemPath();
         versionsController = parent.versionsController;
         createDirectoryIfNewPage(fileSystem);

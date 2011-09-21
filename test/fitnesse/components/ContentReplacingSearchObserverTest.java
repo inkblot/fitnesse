@@ -55,7 +55,7 @@ public class ContentReplacingSearchObserverTest extends FitnesseBaseTestCase {
     }
 
     private WikiPage createPageWithContent(String pageContent) throws Exception {
-        WikiPage wikiPage = InMemoryPage.makeRoot("wikiPage");
+        WikiPage wikiPage = InMemoryPage.makeRoot("wikiPage", injector);
         PageData pageData = wikiPage.getData();
         pageData.setContent(pageContent);
         wikiPage.commit(pageData);

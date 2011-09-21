@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 public class PageCreatorTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
-        FitnesseFixtureContext.root = InMemoryPage.makeRoot("root");
+        FitnesseFixtureContext.root = InMemoryPage.makeRoot("root", injector);
     }
 
     @Test

@@ -43,14 +43,14 @@ public class DefineTest extends FitnesseBaseTestCase {
     }
 
     private void assertDefinesValue(String input, String name, String definedValue) throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne", input);
+        WikiPage pageOne = new TestRoot(injector).makePage("PageOne", input);
         ParsingPage page = new ParsingPage(new WikiSourcePage(pageOne));
         Parser.make(page, input).parse();
         assertEquals(definedValue, page.findVariable(name).getValue());
     }
 
     private void assertTranslatesDefine(String input, String definition) throws Exception {
-        WikiPage pageOne = new TestRoot().makePage("PageOne");
+        WikiPage pageOne = new TestRoot(injector).makePage("PageOne");
         ParserTestHelper.assertTranslatesTo(pageOne, input,
                 "<span class=\"meta\">variable defined: " + definition + "</span>" + HtmlElement.endl);
     }

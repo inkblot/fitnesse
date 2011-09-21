@@ -9,7 +9,7 @@ public class MockingPageCrawler implements PageCrawlerDeadEndStrategy {
     }
 
     public static WikiPage createMockPage(String pageName, WikiPage context) throws Exception {
-        WikiPageDummy pageDummy = new WikiPageDummy(pageName, "");
+        WikiPageDummy pageDummy = new WikiPageDummy(pageName, "", context.getInjector());
         pageDummy.setParent(context);
         return pageDummy;
     }

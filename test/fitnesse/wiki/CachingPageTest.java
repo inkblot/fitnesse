@@ -4,7 +4,7 @@
 package fitnesse.wiki;
 
 import fitnesse.FitnesseBaseTestCase;
-import fitnesse.testutil.SimpleCachinePage;
+import fitnesse.testutil.SimpleCachingPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class CachingPageTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = new SimpleCachinePage("RooT", null);
+        root = new SimpleCachingPage("RooT", null, injector);
         crawler = root.getPageCrawler();
         pageOnePath = PathParser.parse(".PageOne");
         childOnePath = PathParser.parse(".PageOne.ChildOne");
@@ -29,7 +29,7 @@ public class CachingPageTest extends FitnesseBaseTestCase {
     @Test
     public void testCreate() throws Exception {
         String alpha = "AlphaAlpha";
-        WikiPage root = InMemoryPage.makeRoot("root");
+        WikiPage root = InMemoryPage.makeRoot("root", injector);
         assertFalse(root.hasChildPage(alpha));
 
         crawler.addPage(root, PathParser.parse(alpha), "content");
@@ -126,7 +126,7 @@ public class CachingPageTest extends FitnesseBaseTestCase {
 
     @Test
     public void testEquals() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "content");
         assertEquals(pageOne, pageOne);
 

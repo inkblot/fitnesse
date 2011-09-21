@@ -32,7 +32,7 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
     protected SampleFileUtility samples;
 
     protected final FitNesseContext makeContext() {
-        FitNesseContext context = makeContext(InMemoryPage.makeRoot("RooT"));
+        FitNesseContext context = makeContext(InMemoryPage.makeRoot("RooT", injector));
         assertThat(context.root, instanceOf(InMemoryPage.class));
         return context;
     }

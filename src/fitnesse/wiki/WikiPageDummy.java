@@ -3,6 +3,7 @@
 
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
 import util.ClockUtil;
 
 import java.util.ArrayList;
@@ -16,18 +17,22 @@ public class WikiPageDummy implements WikiPage {
     private PageData pageData;
     private WikiPage parent;
     protected WikiPage parentForVariables;
+    private final Injector injector;
 
-    public WikiPageDummy(String name, String content) throws Exception {
+    public WikiPageDummy(String name, String content, Injector injector) throws Exception {
         this.name = name;
+        this.injector = injector;
         pageData = new PageData(this, content);
     }
 
-    public WikiPageDummy(String location) {
+    public WikiPageDummy(String location, Injector injector) {
         this.location = location;
+        this.injector = injector;
         name = "Default";
     }
 
-    public WikiPageDummy() {
+    public WikiPageDummy(Injector injector) {
+        this.injector = injector;
         location = null;
         name = "Default";
     }
@@ -114,5 +119,10 @@ public class WikiPageDummy implements WikiPage {
 
     public List<WikiPageAction> getActions() throws Exception {
         return null;
+    }
+
+    @Override
+    public Injector getInjector() {
+        return injector;
     }
 }

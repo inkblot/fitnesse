@@ -12,7 +12,7 @@ public class PreProcessorLiteralWidgetTest extends WidgetTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root = new MockWidgetRoot();
+        root = new MockWidgetRoot(injector);
     }
 
     protected String getRegexp() {

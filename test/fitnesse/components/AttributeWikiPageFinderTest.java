@@ -27,7 +27,7 @@ public class AttributeWikiPageFinderTest extends FitnesseBaseTestCase implements
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT");
+        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         searcher = new AttributeWikiPageFinder(this, Arrays.asList(TEST),
                 new HashMap<String, Boolean>(), new ArrayList<String>());

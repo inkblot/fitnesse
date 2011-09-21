@@ -3,6 +3,7 @@
 
 package fitnesse.wiki;
 
+import com.google.inject.Injector;
 import util.TimeMeasurement;
 
 import java.lang.ref.SoftReference;
@@ -20,8 +21,8 @@ public abstract class CachingPage extends CommitingPage {
     private transient SoftReference<PageData> cachedData;
     private transient TimeMeasurement cachedTime;
 
-    public CachingPage(String name, WikiPage parent) {
-        super(name, parent);
+    public CachingPage(String name, WikiPage parent, Injector injector) {
+        super(name, parent, injector);
         addExtention(new VirtualCouplingExtension(this));
     }
 

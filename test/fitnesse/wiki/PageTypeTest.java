@@ -46,7 +46,7 @@ public class PageTypeTest extends FitnesseBaseTestCase {
     }
 
     private WikiPage createDefaultPage() throws Exception {
-        return InMemoryPage.makeRoot("RooT");
+        return InMemoryPage.makeRoot("RooT", injector);
     }
 
     @Test

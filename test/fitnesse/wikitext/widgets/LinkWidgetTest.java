@@ -23,27 +23,27 @@ public class LinkWidgetTest extends WidgetTestCase {
 
     @Test
     public void testHtml() throws Exception {
-        LinkWidget widget = new LinkWidget(new MockWidgetRoot(), "http://host.com/file.html");
+        LinkWidget widget = new LinkWidget(new MockWidgetRoot(injector), "http://host.com/file.html");
         assertEquals("<a href=\"http://host.com/file.html\">http://host.com/file.html</a>", widget.render());
 
-        widget = new LinkWidget(new MockWidgetRoot(), "http://files/somePage");
+        widget = new LinkWidget(new MockWidgetRoot(injector), "http://files/somePage");
         assertEquals("<a href=\"/files/somePage\">http://files/somePage</a>", widget.render());
 
-        widget = new LinkWidget(new MockWidgetRoot(), "http://www.objectmentor.com");
+        widget = new LinkWidget(new MockWidgetRoot(injector), "http://www.objectmentor.com");
         assertEquals("<a href=\"http://www.objectmentor.com\">http://www.objectmentor.com</a>", widget.render());
     }
 
     @Test
     public void testAsWikiText() throws Exception {
         final String LINK_TEXT = "http://xyz.com";
-        LinkWidget widget = new LinkWidget(new MockWidgetRoot(), LINK_TEXT);
+        LinkWidget widget = new LinkWidget(new MockWidgetRoot(injector), LINK_TEXT);
         assertEquals(LINK_TEXT, widget.asWikiText());
     }
 
     @Test
     public void testHttpsLink() throws Exception {
         String link = "https://link.com";
-        LinkWidget widget = new LinkWidget(new MockWidgetRoot(), link);
+        LinkWidget widget = new LinkWidget(new MockWidgetRoot(injector), link);
         assertEquals("<a href=\"https://link.com\">https://link.com</a>", widget.render());
         assertEquals(link, widget.asWikiText());
     }
@@ -51,7 +51,7 @@ public class LinkWidgetTest extends WidgetTestCase {
     @Test
     public void testLinkWikiWithVariable() throws Exception {
         String text = "!define HOST {somehost}\nhttp://www.${HOST}.com\n";
-        ParentWidget root = new WidgetRoot(text, new WikiPageDummy());
+        ParentWidget root = new WidgetRoot(text, new WikiPageDummy(injector));
         assertSubString("<a href=\"http://www.somehost.com\">http://www.somehost.com</a>", root.render());
         assertEquals(text, root.asWikiText());
     }

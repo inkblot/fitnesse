@@ -11,11 +11,11 @@ public class ImageTest extends FitnesseBaseTestCase {
 
     @Test
     public void parsesImages() throws Exception {
-        ParserTestHelper.assertParses("!img name", "SymbolList[Link[SymbolList[Text]]]");
-        ParserTestHelper.assertParses("!img http://name", "SymbolList[Link[SymbolList[Text]]]");
-        ParserTestHelper.assertParses("!imgx name", "SymbolList[Text, Whitespace, Text]");
-        ParserTestHelper.assertParses("!img-l name", "SymbolList[Link[SymbolList[Text]]]");
-        ParserTestHelper.assertParses("!img-r name", "SymbolList[Link[SymbolList[Text]]]");
+        ParserTestHelper.assertParses("!img name", "SymbolList[Link[SymbolList[Text]]]", injector);
+        ParserTestHelper.assertParses("!img http://name", "SymbolList[Link[SymbolList[Text]]]", injector);
+        ParserTestHelper.assertParses("!imgx name", "SymbolList[Text, Whitespace, Text]", injector);
+        ParserTestHelper.assertParses("!img-l name", "SymbolList[Link[SymbolList[Text]]]", injector);
+        ParserTestHelper.assertParses("!img-r name", "SymbolList[Link[SymbolList[Text]]]", injector);
     }
 
     @Test

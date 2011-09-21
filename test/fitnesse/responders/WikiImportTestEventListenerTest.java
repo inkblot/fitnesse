@@ -31,7 +31,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         standardOutAndErrorRecorder = new StandardOutAndErrorRecorder();
 
-        WikiPage root = InMemoryPage.makeRoot("RooT");
+        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         pageOne = root.addChildPage("PageOne");
         childOne = pageOne.addChildPage("ChildOne");
         childTwo = pageOne.addChildPage("ChildTwo");

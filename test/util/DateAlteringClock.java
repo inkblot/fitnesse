@@ -6,8 +6,6 @@ import java.util.Date;
  * Use an instance of this class to rebase the Date
  * reported by Clock.currentTimeInMillis()/currentDate()
  * or measured by a new TimeMeasurement().
- *
- * @see ClockUtil#restoreDefaultClock()
  */
 public class DateAlteringClock extends Clock {
     private long rebaseToTime;

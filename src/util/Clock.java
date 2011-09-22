@@ -14,7 +14,7 @@ public abstract class Clock {
 
     public abstract long currentClockTimeInMillis();
 
-    Date currentClockDate() {
+    public Date currentClockDate() {
         return new Date(currentClockTimeInMillis());
     }
 

@@ -1,7 +1,8 @@
 package fitnesse.wiki.zip;
 
+import com.google.inject.Inject;
 import fitnesse.wiki.*;
-import util.ClockUtil;
+import util.Clock;
 import util.StreamReader;
 
 import java.io.*;
@@ -13,6 +14,14 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 public class ZipFileVersionsController extends NullVersionsController {
+
+    private final Clock clock;
+
+    @Inject
+    public ZipFileVersionsController(Clock clock) {
+        this.clock = clock;
+    }
+
     public static SimpleDateFormat dateFormat() {
         return new SimpleDateFormat("yyyyMMddHHmmss");
     }
@@ -74,7 +83,7 @@ public class ZipFileVersionsController extends NullVersionsController {
         final VersionInfo version = makeVersionInfo(data);
 
         if (filesToZip.size() == 0) {
-            return new VersionInfo("first_commit", "", ClockUtil.currentDate());
+            return new VersionInfo("first_commit", "", clock.currentClockDate());
         }
         ZipOutputStream zos = null;
         try {

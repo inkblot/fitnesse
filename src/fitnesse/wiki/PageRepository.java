@@ -16,11 +16,11 @@ public class PageRepository {
     public WikiPage makeChildPage(String name, FileSystemPage parent) throws Exception {
         String path = parent.getFileSystemPath() + "/" + name;
         if (hasContentChild(path)) {
-            return new FileSystemPage(name, parent, fileSystem, parent.getInjector());
+            return new FileSystemPage(name, parent, fileSystem, parent.getClock(), parent.getInjector());
         } else if (hasHtmlChild(path)) {
             return new ExternalSuitePage(path, name, parent, fileSystem, parent.getInjector());
         } else {
-            return new FileSystemPage(name, parent, fileSystem, parent.getInjector());
+            return new FileSystemPage(name, parent, fileSystem, parent.getClock(), parent.getInjector());
         }
     }
 

@@ -3,7 +3,7 @@
 package fitnesse.wiki;
 
 import com.google.inject.Injector;
-import util.ClockUtil;
+import util.Clock;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,6 +16,8 @@ public class InMemoryPage extends CommitingPage {
     protected Map<String, PageData> versions = new ConcurrentHashMap<String, PageData>();
     protected Map<String, WikiPage> children = new ConcurrentHashMap<String, WikiPage>();
 
+    private transient final Clock clock;
+
     public static WikiPage makeRoot(Injector injector, String rootPath, String rootPageName) {
         return new InMemoryPage(rootPageName, injector);
     }
@@ -26,6 +28,7 @@ public class InMemoryPage extends CommitingPage {
 
     protected InMemoryPage(String name, WikiPage parent, Injector injector) {
         super(name, parent, injector);
+        clock = injector.getInstance(Clock.class);
         addExtention(new VirtualCouplingExtension(this));
         versions.put(currentVersionName, new PageData(this, ""));
     }
@@ -77,7 +80,7 @@ public class InMemoryPage extends CommitingPage {
 
     public void doCommit(PageData newData) throws Exception {
         newData.setWikiPage(this);
-        newData.getProperties().setLastModificationTime(ClockUtil.currentDate());
+        newData.getProperties().setLastModificationTime(clock.currentClockDate());
         versions.put(currentVersionName, newData);
     }
 

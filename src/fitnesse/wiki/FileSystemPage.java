@@ -20,23 +20,26 @@ public class FileSystemPage extends CachingPage {
     private final String path;
     private final VersionsController versionsController;
     private final CmSystem cmSystem = new CmSystem();
+    private transient final Clock clock;
 
     public static WikiPage makeRoot(Injector injector, String rootPath, String rootPageName) throws IOException {
-        return new FileSystemPage(rootPath, rootPageName, injector.getInstance(FileSystem.class), injector.getInstance(VersionsController.class), injector);
+        return new FileSystemPage(rootPath, rootPageName, injector.getInstance(FileSystem.class), injector.getInstance(VersionsController.class), injector, injector.getInstance(Clock.class));
     }
 
-    private FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController, Injector injector) throws IOException {
+    private FileSystemPage(final String path, final String name, final FileSystem fileSystem, final VersionsController versionsController, Injector injector, Clock clock) throws IOException {
         super(name, null, injector);
         this.path = path;
         this.versionsController = versionsController;
         createDirectoryIfNewPage(fileSystem);
+        this.clock = clock;
     }
 
-    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, Injector injector) throws Exception {
+    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, Clock clock, Injector injector) throws Exception {
         super(name, parent, injector);
         path = parent.getFileSystemPath();
         versionsController = parent.versionsController;
         createDirectoryIfNewPage(fileSystem);
+        this.clock = clock;
     }
 
     @Override
@@ -208,7 +211,7 @@ public class FileSystemPage extends CachingPage {
         if (file.exists()) {
             lastModifiedTime = file.lastModified();
         } else {
-            lastModifiedTime = ClockUtil.currentTimeInMillis();
+            lastModifiedTime = getClock().currentClockTimeInMillis();
         }
         return lastModifiedTime;
     }
@@ -277,6 +280,10 @@ public class FileSystemPage extends CachingPage {
         } catch (final Exception e) {
             return super.toString();
         }
+    }
+
+    public Clock getClock() {
+        return clock;
     }
 
     class CmSystem {

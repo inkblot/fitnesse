@@ -168,16 +168,17 @@ public class TimeMeasurementTest extends FitnesseBaseTestCase {
     @Test
     public void alteringGlobalClockShouldNotAffectExistingTimeMeasurement() throws Exception {
         TimeMeasurement timeMeasurement = new TimeMeasurement();
+        final Clock systemClock = injector.getInstance(Clock.class);
+        assertThat(systemClock, instanceOf(SystemClock.class));
         inject(new AbstractModule() {
             @Override
             protected void configure() {
-                bind(Clock.class).toInstance(new DateAlteringClock(ClockUtil.currentDate()).freeze());
+                bind(Clock.class).toInstance(new DateAlteringClock(systemClock.currentClockDate()).freeze());
             }
         });
 
-        TimeMeasurement frozentTimeMeasurement = new TimeMeasurement().start();
+        TimeMeasurement frozenTimeMeasurement = new TimeMeasurement().start();
         timeMeasurement.start();
-        SystemClock systemClock = new SystemClock();
         long before = 0, after = 0;
         while (before == after) {
             after = systemClock.currentClockTimeInMillis();
@@ -185,7 +186,7 @@ public class TimeMeasurementTest extends FitnesseBaseTestCase {
                 before = after;
             }
         }
-        assertThat(frozentTimeMeasurement.elapsed(), is(0L));
+        assertThat(frozenTimeMeasurement.elapsed(), is(0L));
         assertThat(timeMeasurement.elapsed(), is(not(0L)));
     }
 }

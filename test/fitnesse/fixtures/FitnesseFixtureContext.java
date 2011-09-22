@@ -7,6 +7,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.WikiPage;
+import util.Clock;
 
 public class FitnesseFixtureContext {
     public static WikiPage root;
@@ -16,4 +17,5 @@ public class FitnesseFixtureContext {
     public static String baseDir = "build/temp";
     public static FitNesseContext context;
     public static FitNesse fitnesse;
+    public static Clock clock;
 }

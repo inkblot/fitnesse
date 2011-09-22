@@ -4,10 +4,11 @@
 package fitnesse.wiki;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
-import util.ClockUtil;
+import util.Clock;
 import util.FileUtil;
 
 import java.io.File;
@@ -25,10 +26,12 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     private static List<String> cmMethodCalls = new ArrayList<String>();
 
     private WikiPageFactory wikiPageFactory;
+    private Provider<Clock> clockProvider;
 
     @Inject
-    public void inject(WikiPageFactory wikiPageFactory) {
+    public void inject(WikiPageFactory wikiPageFactory, Provider<Clock> clockProvider) {
         this.wikiPageFactory = wikiPageFactory;
+        this.clockProvider = clockProvider;
     }
 
     @Before
@@ -169,7 +172,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     public void testLastModifiedTime() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "some text");
         page.commit(page.getData());
-        long now = ClockUtil.currentTimeInMillis();
+        long now = clockProvider.get().currentClockTimeInMillis();
         Date lastModified = page.getData().getProperties().getLastModificationTime();
         assertTrue(now - lastModified.getTime() <= 5000);
     }

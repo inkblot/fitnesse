@@ -2,10 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
-import util.ClockUtil;
+import util.Clock;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -39,6 +41,13 @@ public class WikiPagePropertiesTest extends FitnesseBaseTestCase {
                     tab + "<VirtualWiki>http://someurl</VirtualWiki>" + endl +
                     "</properties>" + endl;
     static String[] sampleXmlFragments = sampleXml.split("\t*" + endl);
+
+    private Provider<Clock> clockProvider;
+
+    @Inject
+    public void inject(Provider<Clock> clockProvider) {
+        this.clockProvider = clockProvider;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -110,7 +119,7 @@ public class WikiPagePropertiesTest extends FitnesseBaseTestCase {
     public void testLastModificationTime() throws Exception {
         SimpleDateFormat format = WikiPageProperty.getTimeFormat();
         WikiPageProperties props = new WikiPageProperties();
-        assertEquals(format.format(ClockUtil.currentDate()), format.format(props.getLastModificationTime()));
+        assertEquals(format.format(clockProvider.get().currentClockDate()), format.format(props.getLastModificationTime()));
         Date date = format.parse("20040101000001");
         props.setLastModificationTime(date);
         assertEquals("20040101000001", props.get(PageData.PropertyLAST_MODIFIED));

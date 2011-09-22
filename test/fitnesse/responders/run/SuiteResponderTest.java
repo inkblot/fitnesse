@@ -3,7 +3,9 @@
 package fitnesse.responders.run;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
@@ -47,6 +49,13 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
             "|string|get string arg?|\n" +
             "|wow|wow|\n";
 
+    private Provider<Clock> clockProvider;
+
+    @Inject
+    public void inject(Provider<Clock> clockProvider) {
+        this.clockProvider = clockProvider;
+    }
+
     @Override
     protected Module getOverrideModule() {
         return new AbstractModule() {
@@ -59,7 +68,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        assertEquals(TEST_TIME, ClockUtil.currentDate());
+        assertEquals(TEST_TIME, clockProvider.get().currentClockDate());
 
         String suitePageName = "SuitePage";
         context = makeContext();
@@ -98,7 +107,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     public void tearDown() throws Exception {
         receiver.close();
         FitNesseUtil.destroyTestContext();
-        assertEquals(TEST_TIME, ClockUtil.currentDate());
+        assertEquals(TEST_TIME, clockProvider.get().currentClockDate());
     }
 
     private String runSuite() throws Exception {

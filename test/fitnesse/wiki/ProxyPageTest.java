@@ -2,13 +2,15 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import util.ClockUtil;
+import util.Clock;
 
 import java.util.List;
 
@@ -21,6 +23,13 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
     public WikiPage child1;
     private PageCrawler crawler;
     private FitNesseUtil fitNesseUtil;
+
+    private Provider<Clock> clockProvider;
+
+    @Inject
+    public void inject(Provider<Clock> clockProvider) {
+        this.clockProvider = clockProvider;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -40,7 +49,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
         fitNesseUtil.startFitnesse(context);
 
         proxy = new ProxyPage(original, injector);
-        proxy.setTransientValues("localhost", ClockUtil.currentTimeInMillis());
+        proxy.setTransientValues("localhost", clockProvider.get().currentClockTimeInMillis());
         proxy.setHostPort(FitNesseUtil.DEFAULT_PORT);
     }
 
@@ -84,7 +93,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
     @Test
     public void testSetHostAndPort() throws Exception {
         List<WikiPage> children = proxy.getChildren();
-        proxy.setTransientValues("a.new.host", ClockUtil.currentTimeInMillis());
+        proxy.setTransientValues("a.new.host", clockProvider.get().currentClockTimeInMillis());
         proxy.setHostPort(123);
 
         assertEquals("a.new.host", proxy.getHost());

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.SimpleResponse;
@@ -13,7 +15,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import util.ClockUtil;
+import util.Clock;
 import util.XmlUtil;
 
 import java.text.SimpleDateFormat;
@@ -30,6 +32,13 @@ public class RssResponderTest extends ResponderTestCase {
     private String rfcDate;
     private String hostName;
 
+    private Provider<Clock> clockProvider;
+
+    @Inject
+    public void inject(Provider<Clock> clockProvider) {
+        this.clockProvider = clockProvider;
+    }
+
     // Return an instance of the Responder being tested.
     protected Responder responderInstance() {
         return new RssResponder();
@@ -38,9 +47,9 @@ public class RssResponderTest extends ResponderTestCase {
     @Before
     public void setUp() throws Exception {
         SimpleDateFormat dateFormat = new SimpleDateFormat(FitNesseContext.RECENT_CHANGES_DATE_FORMAT);
-        date = dateFormat.format(ClockUtil.currentDate());
+        date = dateFormat.format(clockProvider.get().currentClockDate());
         SimpleDateFormat rfcDateFormat = new SimpleDateFormat(FitNesseContext.RFC_COMPLIANT_DATE_FORMAT);
-        rfcDate = rfcDateFormat.format(ClockUtil.currentDate());
+        rfcDate = rfcDateFormat.format(clockProvider.get().currentClockDate());
         hostName = java.net.InetAddress.getLocalHost().getHostName();
         Locale.setDefault(Locale.US);
     }
@@ -114,8 +123,8 @@ public class RssResponderTest extends ResponderTestCase {
     public void testConvertDateFormat() throws Exception {
         SimpleDateFormat oldFormat = new SimpleDateFormat(FitNesseContext.RECENT_CHANGES_DATE_FORMAT);
         SimpleDateFormat newFormat = new SimpleDateFormat(FitNesseContext.RFC_COMPLIANT_DATE_FORMAT);
-        String inDate = oldFormat.format(ClockUtil.currentDate());
-        String outDate = newFormat.format(ClockUtil.currentDate());
+        String inDate = oldFormat.format(clockProvider.get().currentClockDate());
+        String outDate = newFormat.format(clockProvider.get().currentClockDate());
         RssResponder responder = new RssResponder();
         String convertedDate = responder.convertDateFormat(inDate);
         assertEquals(convertedDate, outDate);
@@ -124,7 +133,7 @@ public class RssResponderTest extends ResponderTestCase {
     @Test
     public void testBadDateFormat() throws Exception {
         SimpleDateFormat oldFormat = new SimpleDateFormat("h:mm:ss a EEE MMM dd, yyyy");
-        String inDate = oldFormat.format(ClockUtil.currentDate());
+        String inDate = oldFormat.format(clockProvider.get().currentClockDate());
         RssResponder responder = new RssResponder();
         String convertedDate = responder.convertDateFormat(inDate);
         assertEquals(convertedDate, inDate);

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
@@ -14,6 +16,7 @@ import fitnesse.wiki.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import util.Clock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -27,6 +30,13 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
     public Responder responder;
     private PageCrawler crawler;
     private FitNesseContext context;
+
+    private Provider<Clock> clockProvider;
+
+    @Inject
+    public void inject(Provider<Clock> clockProvider) {
+        this.clockProvider = clockProvider;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -117,7 +127,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
 
         request.setResource(simplePageName);
         request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
-        request.addInput(EditResponder.TIME_STAMP, "" + (SaveRecorder.timeStamp() - 10000));
+        request.addInput(EditResponder.TIME_STAMP, "" + (clockProvider.get().currentClockTimeInMillis() - 10000));
         request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
@@ -132,14 +142,14 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         String newContent = "some new Content work damn you!";
         request.setResource(pageName);
         request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent);
-        request.addInput(EditResponder.TIME_STAMP, "" + SaveRecorder.timeStamp());
+        request.addInput(EditResponder.TIME_STAMP, "" + clockProvider.get().currentClockTimeInMillis());
         request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
         Response response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
 
         request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent + " Ok I'm working now");
-        request.addInput(EditResponder.TIME_STAMP, "" + SaveRecorder.timeStamp());
+        request.addInput(EditResponder.TIME_STAMP, "" + clockProvider.get().currentClockTimeInMillis());
         response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
     }

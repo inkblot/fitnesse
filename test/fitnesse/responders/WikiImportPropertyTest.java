@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
@@ -13,7 +15,7 @@ import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
-import util.ClockUtil;
+import util.Clock;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +28,13 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private WikiImportProperty property;
     private WikiPage page;
     private FitNesseContext context;
+
+    private Provider<Clock> clockProvider;
+
+    @Inject
+    public void inject(Provider<Clock> clockProvider) {
+        this.clockProvider = clockProvider;
+    }
 
     @Before
     public void setUp() {
@@ -64,7 +73,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     @Test
     public void testLastUpdated() throws Exception {
         SimpleDateFormat format = WikiPageProperty.getTimeFormat();
-        Date date = ClockUtil.currentDate();
+        Date date = clockProvider.get().currentClockDate();
         property.setLastRemoteModificationTime(date);
 
         assertEquals(format.format(date), format.format(property.getLastRemoteModificationTime()));
@@ -83,7 +92,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
         rawImportProperty.set("IsRoot");
         rawImportProperty.set("AutoUpdate");
         rawImportProperty.set("Source", "some source");
-        Date date = ClockUtil.currentDate();
+        Date date = clockProvider.get().currentClockDate();
         rawImportProperty.set("LastRemoteModification", WikiPageProperty.getTimeFormat().format(date));
 
         WikiImportProperty importProperty = WikiImportProperty.createFrom(property);

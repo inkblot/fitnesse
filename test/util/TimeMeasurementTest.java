@@ -3,7 +3,10 @@
 package util;
 
 import com.google.inject.AbstractModule;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Module;
+import com.google.inject.Provider;
+import fitnesse.BaseInjectedTestCase;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,34 +15,55 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TimeMeasurementTest extends FitnesseBaseTestCase {
-    private Clock mockedClock;
+public class TimeMeasurementTest extends BaseInjectedTestCase {
+    private Clock clock;
+
+    @Override
+    protected Module[] getBaseModules() {
+        return new Module[]{new UtilModule(),
+                new AbstractModule() {
+                    @Override
+                    protected void configure() {
+                        bind(Clock.class).toProvider(new Provider<Clock>() {
+                            @Override
+                            public Clock get() {
+                                return clock;
+                            }
+                        });
+                    }
+                }};
+    }
 
     @Before
     public void mockClock() {
-        mockedClock = mock(SystemClock.class);
+        clock = mock(SystemClock.class);
+    }
+
+    @After
+    public void tearDown() {
+        clock = null;
     }
 
     @Test
     public void timeMeasurementShouldStartAtClockTime() throws Exception {
-        TimeMeasurement measurement = new TimeMeasurement(mockedClock);
-        when(mockedClock.currentClockTimeInMillis()).thenReturn(-2L);
+        TimeMeasurement measurement = new TimeMeasurement(clock);
+        when(clock.currentClockTimeInMillis()).thenReturn(-2L);
         measurement.start();
         assertThat(measurement.startedAt(), is(-2L));
     }
 
     @Test
     public void elapsedTimeShouldReferenceClockTimeWhenNotStopped() throws Exception {
-        TimeMeasurement measurement = new TimeMeasurement(mockedClock);
-        when(mockedClock.currentClockTimeInMillis()).thenReturn(-3L, -1L);
+        TimeMeasurement measurement = new TimeMeasurement(clock);
+        when(clock.currentClockTimeInMillis()).thenReturn(-3L, -1L);
         measurement.start();
         assertThat(measurement.elapsed(), is(2L));
     }
 
     @Test
     public void stopShouldReferenceClockTime() throws Exception {
-        TimeMeasurement measurement = new TimeMeasurement(mockedClock);
-        when(mockedClock.currentClockTimeInMillis()).thenReturn(-7L, -4L);
+        TimeMeasurement measurement = new TimeMeasurement(clock);
+        when(clock.currentClockTimeInMillis()).thenReturn(-7L, -4L);
         measurement.start();
         measurement.stop();
         assertThat(measurement.stoppedAt(), is(-4L));
@@ -47,8 +71,8 @@ public class TimeMeasurementTest extends FitnesseBaseTestCase {
 
     @Test
     public void stopShouldFreezeElapsedTime() throws Exception {
-        TimeMeasurement measurement = new TimeMeasurement(mockedClock);
-        when(mockedClock.currentClockTimeInMillis()).thenReturn(-9L, -8L, -6L);
+        TimeMeasurement measurement = new TimeMeasurement(clock);
+        when(clock.currentClockTimeInMillis()).thenReturn(-9L, -8L, -6L);
         measurement.start();
         measurement.stop();
         assertThat(measurement.elapsed(), is(1L));
@@ -70,8 +94,8 @@ public class TimeMeasurementTest extends FitnesseBaseTestCase {
 
     @Test
     public void callingStopMultipleTimesShouldHaveNoEffect() throws Exception {
-        TimeMeasurement measurement = new TimeMeasurement(mockedClock);
-        when(mockedClock.currentClockTimeInMillis()).thenReturn(-13L, -12L, -11L);
+        TimeMeasurement measurement = new TimeMeasurement(clock);
+        when(clock.currentClockTimeInMillis()).thenReturn(-13L, -12L, -11L);
         measurement.start();
         measurement.stop();
         measurement.stop();
@@ -80,8 +104,8 @@ public class TimeMeasurementTest extends FitnesseBaseTestCase {
 
     @Test
     public void stopStartShouldResetTheStartedAndStoppedAtTimes() throws Exception {
-        TimeMeasurement measurement = new TimeMeasurement(mockedClock);
-        when(mockedClock.currentClockTimeInMillis()).thenReturn(-17L, -16L, -15L, -14L);
+        TimeMeasurement measurement = new TimeMeasurement(clock);
+        when(clock.currentClockTimeInMillis()).thenReturn(-17L, -16L, -15L, -14L);
         measurement.start();
         assertThat(measurement.startedAt(), is(-17L));
         measurement.stop();
@@ -94,8 +118,8 @@ public class TimeMeasurementTest extends FitnesseBaseTestCase {
 
     @Test
     public void stopStartShouldAffectElapsedTimeCalculations() throws Exception {
-        TimeMeasurement measurement = new TimeMeasurement(mockedClock);
-        when(mockedClock.currentClockTimeInMillis()).thenReturn(-25L, -24L, -23L, -21L, -21L, -19L, -18L);
+        TimeMeasurement measurement = new TimeMeasurement(clock);
+        when(clock.currentClockTimeInMillis()).thenReturn(-25L, -24L, -23L, -21L, -21L, -19L, -18L);
         measurement.start();
         measurement.stop();
         assertThat(measurement.elapsed(), is(1L));
@@ -110,8 +134,8 @@ public class TimeMeasurementTest extends FitnesseBaseTestCase {
 
     @Test
     public void callingStartMultipleTimesShouldResetStartedAtAndElapsed() throws Exception {
-        TimeMeasurement measurement = new TimeMeasurement(mockedClock);
-        when(mockedClock.currentClockTimeInMillis()).thenReturn(-30L, -29L, -29L, -28L, -27L);
+        TimeMeasurement measurement = new TimeMeasurement(clock);
+        when(clock.currentClockTimeInMillis()).thenReturn(-30L, -29L, -29L, -28L, -27L);
         measurement.start();
         assertThat(measurement.startedAt(), is(-30L));
         measurement.start();
@@ -167,16 +191,10 @@ public class TimeMeasurementTest extends FitnesseBaseTestCase {
 
     @Test
     public void alteringGlobalClockShouldNotAffectExistingTimeMeasurement() throws Exception {
+        final Clock systemClock = new SystemClock();
+        clock = systemClock;
         TimeMeasurement timeMeasurement = new TimeMeasurement();
-        final Clock systemClock = injector.getInstance(Clock.class);
-        assertThat(systemClock, instanceOf(SystemClock.class));
-        inject(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(Clock.class).toInstance(new DateAlteringClock(systemClock.currentClockDate()).freeze());
-            }
-        });
-
+        clock = new DateAlteringClock(clock.currentClockDate()).freeze();
         TimeMeasurement frozenTimeMeasurement = new TimeMeasurement().start();
         timeMeasurement.start();
         long before = 0, after = 0;

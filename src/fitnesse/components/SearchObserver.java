@@ -4,6 +4,8 @@ package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
+
 public interface SearchObserver {
-    public void hit(WikiPage page) throws Exception;
+    public void hit(WikiPage page) throws IOException;
 }

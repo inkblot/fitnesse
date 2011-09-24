@@ -2,6 +2,7 @@ package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class AndPageFinder implements CompositePageFinder {
         delegates.add(finder);
     }
 
-    public List<WikiPage> search(WikiPage page) throws Exception {
+    public List<WikiPage> search(WikiPage page) throws IOException {
         List<WikiPage> results = null;
         for (PageFinder pageFinder : delegates) {
             if (results == null) {

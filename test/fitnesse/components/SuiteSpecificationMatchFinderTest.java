@@ -73,7 +73,7 @@ public class SuiteSpecificationMatchFinderTest extends FitnesseBaseTestCase impl
         assertPagesFound("TestPageOne", "ChildPage");
     }
 
-    public void hit(WikiPage page) throws Exception {
+    public void hit(WikiPage page) {
         hits.add(page);
     }
 

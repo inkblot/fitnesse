@@ -21,7 +21,7 @@ public class AttributeWikiPageFinderTest extends FitnesseBaseTestCase implements
 
     private List<WikiPage> hits = new ArrayList<WikiPage>();
 
-    public void hit(WikiPage page) throws Exception {
+    public void hit(WikiPage page) {
         hits.add(page);
     }
 

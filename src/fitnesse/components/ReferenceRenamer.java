@@ -6,6 +6,8 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 
+import java.io.IOException;
+
 public abstract class ReferenceRenamer implements TraversalListener, SymbolTreeWalker {
     protected WikiPage root;
     protected WikiPage currentPage;
@@ -14,11 +16,11 @@ public abstract class ReferenceRenamer implements TraversalListener, SymbolTreeW
         this.root = root;
     }
 
-    public void renameReferences() throws Exception {
+    public void renameReferences() throws IOException {
         root.getPageCrawler().traverse(root, this);
     }
 
-    public void processPage(WikiPage currentPage) throws Exception {
+    public void processPage(WikiPage currentPage) throws IOException {
         PageData data = currentPage.getData();
         String content = data.getContent();
 

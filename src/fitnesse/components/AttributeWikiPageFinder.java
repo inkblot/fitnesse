@@ -5,6 +5,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +55,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
         this(observer, pageTypes, attributes, splitSuitesIntoArray(suites));
     }
 
-    protected boolean pageMatches(WikiPage page) throws Exception {
+    protected boolean pageMatches(WikiPage page) throws IOException {
 
         if (!meetsSetUpTearDownConditions(page)) {
             return false;
@@ -78,7 +79,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
         return suitesMatchInput(pageData, suites);
     }
 
-    private boolean meetsSetUpTearDownConditions(WikiPage page) throws Exception {
+    private boolean meetsSetUpTearDownConditions(WikiPage page) {
 
         if (attributes.containsKey("SetUp") && attributes.containsKey("TearDown")) {
             Boolean setupWanted = attributes.get("SetUp");
@@ -103,16 +104,15 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
         return true;
     }
 
-    private boolean isTearDownPage(WikiPage page) throws Exception {
+    private boolean isTearDownPage(WikiPage page) {
         return tearDownPageNames.contains(page.getName());
     }
 
-    private boolean isSetUpPage(WikiPage page) throws Exception {
+    private boolean isSetUpPage(WikiPage page) {
         return setUpPageNames.contains(page.getName());
     }
 
-    private boolean pageIsOfRequestedPageType(WikiPage page,
-                                              List<PageType> requestedPageTypesEnum) throws Exception {
+    private boolean pageIsOfRequestedPageType(WikiPage page, List<PageType> requestedPageTypesEnum) throws IOException {
         PageType pageType = PageType.fromWikiPage(page);
 
         return (requestedPageTypesEnum.contains(pageType));
@@ -123,7 +123,7 @@ public class AttributeWikiPageFinder extends WikiPageFinder {
         return attributeSet == inputValueOn;
     }
 
-    private boolean suitesMatchInput(PageData pageData, List<String> suites) throws Exception {
+    private boolean suitesMatchInput(PageData pageData, List<String> suites) {
         if (suites == null)
             return true;
 

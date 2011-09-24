@@ -6,7 +6,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
-import java.util.Iterator;
+import java.io.IOException;
 
 public class MockWikiImporter extends WikiImporter {
     public static String mockContent = "mock importer content";
@@ -19,19 +19,20 @@ public class MockWikiImporter extends WikiImporter {
             setMockContent(localPage);
     }
 
-    private void setMockContent(WikiPage localPage) throws Exception {
+    private void setMockContent(WikiPage localPage) throws IOException {
         PageData data = localPage.getData();
         data.setContent(mockContent);
         localPage.commit(data);
     }
 
-    public void importWiki(WikiPage page) throws Exception {
+    public void importWiki(WikiPage page) throws IOException {
         PageCrawler pageCrawler = page.getPageCrawler();
-        for (Iterator<?> iterator = page.getChildren().iterator(); iterator.hasNext(); )
-            pageCrawler.traverse((WikiPage) iterator.next(), this);
+        for (WikiPage wikiPage : page.getChildren()) {
+            pageCrawler.traverse(wikiPage, this);
+        }
     }
 
-    public void processPage(WikiPage page) throws Exception {
+    public void processPage(WikiPage page) throws IOException {
         setMockContent(page);
     }
 }

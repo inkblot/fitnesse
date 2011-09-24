@@ -4,6 +4,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiWordReference;
 import fitnesse.wikitext.parser.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +20,10 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, P
         this.observer = observer;
     }
 
-    public void hit(WikiPage referencingPage) throws Exception {
+    public void hit(WikiPage referencingPage) {
     }
 
-    public void processPage(WikiPage currentPage) throws Exception {
+    public void processPage(WikiPage currentPage) throws IOException {
         this.currentPage = currentPage;
         String content = currentPage.getData().getContent();
         Symbol syntaxTree = Parser.make(
@@ -33,7 +34,7 @@ public class WhereUsedPageFinder implements TraversalListener, SearchObserver, P
         syntaxTree.walkPreOrder(this);
     }
 
-    public List<WikiPage> search(WikiPage page) throws Exception {
+    public List<WikiPage> search(WikiPage page) throws IOException {
         hits.clear();
         subjectPage.getPageCrawler().traverse(page, this);
         return hits;

@@ -136,7 +136,7 @@ public class PageCrawlerImpl implements PageCrawler {
             return getRoot(page.getParent());
     }
 
-    public void traverse(WikiPage context, TraversalListener listener) throws Exception {
+    public void traverse(WikiPage context, TraversalListener listener) throws IOException {
         if (context.getClass() == SymbolicPage.class)
             return;
         //TODO MdM Catch any exception thrown by the following and add the page name to the Exception message.
@@ -180,7 +180,7 @@ public class PageCrawlerImpl implements PageCrawler {
         return null;
     }
 
-    public static List<WikiPage> getAllUncles(String uncleName, WikiPage nephew) throws Exception {
+    public static List<WikiPage> getAllUncles(String uncleName, WikiPage nephew) throws IOException {
         List<WikiPage> uncles = new ArrayList<WikiPage>();
         List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(nephew);
         for (WikiPage ancestor : ancestors) {

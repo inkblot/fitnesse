@@ -4,6 +4,8 @@ package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
+
 public interface TraversalListener {
-    public void processPage(WikiPage page) throws Exception;
+    public void processPage(WikiPage page) throws IOException;
 }

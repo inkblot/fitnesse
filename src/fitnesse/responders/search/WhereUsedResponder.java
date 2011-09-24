@@ -4,14 +4,16 @@ package fitnesse.responders.search;
 
 import fitnesse.components.WhereUsedPageFinder;
 
+import java.io.IOException;
+
 public class WhereUsedResponder extends ResultResponder {
 
-    protected void startSearching() throws Exception {
+    protected void startSearching() throws IOException {
         super.startSearching();
         new WhereUsedPageFinder(page, this).search(root);
     }
 
-    protected String getTitle() throws Exception {
+    protected String getTitle() {
         return "Where Used Results";
     }
 

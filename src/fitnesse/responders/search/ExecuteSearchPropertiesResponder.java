@@ -7,6 +7,7 @@ import fitnesse.components.PageFinder;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageType;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -86,12 +87,12 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     }
 
     @Override
-    protected String getTitle() throws Exception {
+    protected String getTitle() {
         return "Search Page Properties Results";
     }
 
     @Override
-    protected void startSearching() throws Exception {
+    protected void startSearching() throws IOException {
         super.startSearching();
         List<PageType> pageTypes = getPageTypesFromInput(request);
         Map<String, Boolean> attributes = getAttributesFromInput(request);

@@ -18,7 +18,7 @@ public interface PageCrawler {
 
     WikiPagePath getFullPath(WikiPage page);
 
-    WikiPage addPage(WikiPage context, WikiPagePath path, String content) throws Exception;
+    WikiPage addPage(WikiPage context, WikiPagePath path, String content) throws IOException;
 
     WikiPage addPage(WikiPage context, WikiPagePath path) throws IOException;
 
@@ -28,9 +28,9 @@ public interface PageCrawler {
 
     WikiPage getRoot(WikiPage page);
 
-    void traverse(WikiPage root, TraversalListener pageCrawlerTest) throws Exception;
+    void traverse(WikiPage root, TraversalListener pageCrawlerTest) throws IOException;
 
-    WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws Exception;
+    WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws IOException;
 
-    WikiPage findAncestorWithName(WikiPage page, String name) throws Exception;
+    WikiPage findAncestorWithName(WikiPage page, String name);
 }

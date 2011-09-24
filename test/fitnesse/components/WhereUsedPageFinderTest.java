@@ -24,7 +24,7 @@ public class WhereUsedPageFinderTest extends FitnesseBaseTestCase implements Sea
     private List<WikiPage> hits = new ArrayList<WikiPage>();
     private PageCrawler crawler;
 
-    public void hit(WikiPage page) throws Exception {
+    public void hit(WikiPage page) {
         hits.add(page);
     }
 

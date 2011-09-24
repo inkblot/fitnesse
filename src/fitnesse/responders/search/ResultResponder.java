@@ -15,6 +15,7 @@ import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
+import java.io.IOException;
 import java.io.StringWriter;
 
 public abstract class ResultResponder extends ChunkingResponder implements
@@ -83,24 +84,30 @@ public abstract class ResultResponder extends ChunkingResponder implements
         return "/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/";
     }
 
-    public void hit(WikiPage page) throws Exception {
+    public void hit(WikiPage page) throws IOException {
         hits++;
         response.add(createSearchResultsEntry(page));
     }
 
-    private String createSearchResultsEntry(WikiPage result) throws Exception {
+    private String createSearchResultsEntry(WikiPage result) throws IOException {
         VelocityContext velocityContext = new VelocityContext();
 
         StringWriter writer = new StringWriter();
 
-        Template template = VelocityFactory.getVelocityEngine().getTemplate("fitnesse/templates/searchResultsEntry.vm");
+        try {
+            Template template = VelocityFactory.getVelocityEngine().getTemplate("fitnesse/templates/searchResultsEntry.vm");
 
-        velocityContext.put("resultsRow", getRow());
-        velocityContext.put("result", result);
+            velocityContext.put("resultsRow", getRow());
+            velocityContext.put("result", result);
 
-        template.merge(velocityContext, writer);
+            template.merge(velocityContext, writer);
 
-        return writer.toString();
+            return writer.toString();
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
     }
 
     private int nextRow = 0;
@@ -109,9 +116,9 @@ public abstract class ResultResponder extends ChunkingResponder implements
         return (nextRow++ % 2) + 1;
     }
 
-    protected abstract String getTitle() throws Exception;
+    protected abstract String getTitle();
 
-    protected void startSearching() throws Exception {
+    protected void startSearching() throws IOException {
         hits = 0;
     }
 

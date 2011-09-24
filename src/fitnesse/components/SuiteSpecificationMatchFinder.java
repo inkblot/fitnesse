@@ -2,6 +2,7 @@ package fitnesse.components;
 
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +16,7 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
         this.contentRegEx = contentRegEx;
     }
 
-    protected boolean pageMatches(WikiPage page) throws Exception {
+    protected boolean pageMatches(WikiPage page) throws IOException {
         if (!nullOrEmpty(titleRegEx) && !nullOrEmpty(contentRegEx))
             return patternMatches(titleRegEx, page.getName()) && patternMatches(contentRegEx, page.getData().getContent());
         else {
@@ -28,7 +29,7 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
         }
     }
 
-    private boolean patternMatches(String regEx, String subject) throws Exception {
+    private boolean patternMatches(String regEx, String subject) {
         if (!nullOrEmpty(regEx)) {
             Pattern pattern = Pattern.compile(regEx, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(subject);

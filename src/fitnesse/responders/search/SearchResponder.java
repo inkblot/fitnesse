@@ -5,6 +5,7 @@ package fitnesse.responders.search;
 import fitnesse.components.RegularExpressionWikiPageFinder;
 import fitnesse.components.TitleWikiPageFinder;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
@@ -26,11 +27,11 @@ public class SearchResponder extends ResultResponder {
             return "Content";
     }
 
-    protected String getTitle() throws Exception {
+    protected String getTitle() {
         return getSearchType() + " Search Results for '" + getSearchString() + "'";
     }
 
-    protected void startSearching() throws Exception {
+    protected void startSearching() throws IOException {
         super.startSearching();
         String searchString = getSearchString();
         if (!"".equals(searchString)) {

@@ -7,11 +7,13 @@ import fitnesse.components.SearchObserver;
 import fitnesse.responders.search.ResultResponder;
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
+
 public class SearchReplaceResponder extends ResultResponder {
 
     private SearchObserver observer;
 
-    protected String getTitle() throws Exception {
+    protected String getTitle() {
         return String.format("Replacing matching content \"%s\" with content \"%s\"",
                 getSearchString(), getReplacementString());
     }
@@ -24,12 +26,12 @@ public class SearchReplaceResponder extends ResultResponder {
         return (String) request.getInput("searchString");
     }
 
-    public void hit(WikiPage page) throws Exception {
+    public void hit(WikiPage page) throws IOException {
         observer.hit(page);
         super.hit(page);
     }
 
-    protected void startSearching() throws Exception {
+    protected void startSearching() throws IOException {
         super.startSearching();
         String searchString = getSearchString();
         String replacementString = getReplacementString();

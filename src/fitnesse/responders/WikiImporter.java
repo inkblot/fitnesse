@@ -9,6 +9,7 @@ import fitnesse.wiki.*;
 import org.w3c.dom.Document;
 import util.XmlUtil;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -58,7 +59,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
             removeOrphans(page);
     }
 
-    private void removeOrphans(WikiPage context) throws Exception {
+    private void removeOrphans(WikiPage context) throws IOException {
         for (WikiPagePath orphan : orphans) {
             WikiPage wikiPage = crawler.getPage(context, orphan);
             if (wikiPage != null)
@@ -66,7 +67,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
         }
     }
 
-    private void filterOrphans(WikiPage context) throws Exception {
+    private void filterOrphans(WikiPage context) throws IOException {
         for (WikiPagePath wikiPagePath : pageCatalog) {
             WikiPage unrecognizedPage = crawler.getPage(context, wikiPagePath);
             PageData data = unrecognizedPage.getData();
@@ -78,7 +79,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
         }
     }
 
-    private void catalogLocalTree(WikiPage page) throws Exception {
+    private void catalogLocalTree(WikiPage page) throws IOException {
         crawler = page.getPageCrawler();
         contextPath = crawler.getFullPath(page);
         pageCatalog = new HashSet<WikiPagePath>();
@@ -110,7 +111,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
             importRemotePageContent(childPage);
     }
 
-    private void configureAutoUpdateSetting(WikiImportProperty importProps, PageData data, WikiPage childPage) throws Exception {
+    private void configureAutoUpdateSetting(WikiImportProperty importProps, PageData data, WikiPage childPage) throws IOException {
         if (importProps.isAutoUpdate() != autoUpdateSetting) {
             importProps.setAutoUpdate(autoUpdateSetting);
             importProps.addTo(data.getProperties());
@@ -126,7 +127,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
             configureAutoUpdateSetting(importProps, data, page);
     }
 
-    private WikiPagePath relativePath(WikiPage childPage) throws Exception {
+    private WikiPagePath relativePath(WikiPage childPage) {
         return crawler.getFullPath(childPage).subtractFromFront(contextPath);
     }
 
@@ -262,7 +263,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
         return orphans;
     }
 
-    public void processPage(WikiPage page) throws Exception {
+    public void processPage(WikiPage page) throws IOException {
         WikiPagePath relativePath = relativePath(page);
         pageCatalog.add(relativePath);
     }

@@ -12,11 +12,9 @@ public class TitleWikiPageFinder extends WikiPageFinder {
     }
 
     @Override
-    protected boolean pageMatches(WikiPage page) throws Exception {
+    protected boolean pageMatches(WikiPage page) {
         String content = page.getName().toLowerCase();
-
-        boolean matches = content.indexOf(searchString) != -1;
-        return matches;
+        return content.contains(searchString);
     }
 
 }

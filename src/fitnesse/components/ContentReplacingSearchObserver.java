@@ -3,6 +3,7 @@ package fitnesse.components;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class ContentReplacingSearchObserver implements SearchObserver {
@@ -16,7 +17,7 @@ public class ContentReplacingSearchObserver implements SearchObserver {
         this.replacement = replacement;
     }
 
-    public void hit(WikiPage page) throws Exception {
+    public void hit(WikiPage page) throws IOException {
         PageData pageData = page.getData();
         String replacedContent = searchPattern.matcher(pageData.getContent()).replaceAll(replacement);
 

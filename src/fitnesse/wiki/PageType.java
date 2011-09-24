@@ -1,5 +1,7 @@
 package fitnesse.wiki;
 
+import java.io.IOException;
+
 import static fitnesse.wiki.PageData.SUITE_SETUP_NAME;
 import static fitnesse.wiki.PageData.SUITE_TEARDOWN_NAME;
 
@@ -37,7 +39,7 @@ public enum PageType {
 
     }
 
-    public static PageType fromWikiPage(WikiPage page) throws Exception {
+    public static PageType fromWikiPage(WikiPage page) throws IOException {
         PageData data = page.getData();
         if (data.hasAttribute("Suite")) {
             return SUITE;

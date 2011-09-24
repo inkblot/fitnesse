@@ -14,37 +14,37 @@ public class SimpleCachingPage extends CachingPage {
 
     private PageData data;
 
-    public SimpleCachingPage(String name, WikiPage parent, Injector injector) throws Exception {
+    public SimpleCachingPage(String name, WikiPage parent, Injector injector) {
         super(name, parent, injector);
     }
 
-    public boolean hasChildPage(String pageName) throws Exception {
+    public boolean hasChildPage(String pageName) {
         return hasCachedSubpage(pageName);
     }
 
-    protected WikiPage createChildPage(String name) throws Exception {
+    protected WikiPage createChildPage(String name) {
         return new SimpleCachingPage(name, this, getInjector());
     }
 
-    protected void loadChildren() throws Exception {
+    protected void loadChildren() {
     }
 
-    protected PageData makePageData() throws Exception {
+    protected PageData makePageData() {
         if (data == null)
             return new PageData(this, "some content");
         else
             return new PageData(data);
     }
 
-    protected VersionInfo makeVersion() throws Exception {
+    protected VersionInfo makeVersion() {
         return new VersionInfo("abc", "Jon", ClockUtil.currentDate());
     }
 
-    protected void doCommit(PageData data) throws Exception {
+    protected void doCommit(PageData data) {
         this.data = data;
     }
 
-    public PageData getDataVersion(String versionName) throws Exception {
+    public PageData getDataVersion(String versionName) {
         return new PageData(this, "content from version " + versionName);
     }
 }

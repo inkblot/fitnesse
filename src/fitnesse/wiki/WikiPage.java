@@ -5,6 +5,7 @@ package fitnesse.wiki;
 
 import com.google.inject.Injector;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,42 +13,42 @@ import java.util.List;
 public interface WikiPage extends Serializable, Comparable<Object> {
     public WikiPage getParent();
 
-    public WikiPage getParentForVariables() throws Exception;
+    public WikiPage getParentForVariables() throws IOException;
 
     public void setParentForVariables(WikiPage parent);
 
-    public WikiPage addChildPage(String name) throws Exception;
+    public WikiPage addChildPage(String name) throws IOException;
 
-    public boolean hasChildPage(String name) throws Exception;
+    public boolean hasChildPage(String name) throws IOException;
 
-    public WikiPage getChildPage(String name) throws Exception;
+    public WikiPage getChildPage(String name) throws IOException;
 
-    public void removeChildPage(String name) throws Exception;
+    public void removeChildPage(String name);
 
-    public List<WikiPage> getChildren() throws Exception;
+    public List<WikiPage> getChildren() throws IOException;
 
     public String getName();
 
-    public PageData getData() throws Exception;
+    public PageData getData() throws IOException;
 
-    public PageData getDataVersion(String versionName) throws Exception;
+    public PageData getDataVersion(String versionName) throws IOException;
 
-    public VersionInfo commit(PageData data) throws Exception;
+    public VersionInfo commit(PageData data) throws IOException;
 
     public PageCrawler getPageCrawler();
 
-    public WikiPage getHeaderPage() throws Exception;
+    public WikiPage getHeaderPage() throws IOException;
 
-    public WikiPage getFooterPage() throws Exception;
+    public WikiPage getFooterPage() throws IOException;
 
     //TODO Delete these method alone with ProxyPage when the time is right.
     public boolean hasExtension(String extensionName);
 
     public Extension getExtension(String extensionName);
 
-    public String getHelpText() throws Exception;
+    public String getHelpText() throws IOException;
 
-    public List<WikiPageAction> getActions() throws Exception;
+    public List<WikiPageAction> getActions() throws IOException;
 
     Injector getInjector();
 }

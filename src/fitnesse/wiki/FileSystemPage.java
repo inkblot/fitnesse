@@ -34,7 +34,7 @@ public class FileSystemPage extends CachingPage {
         this.clock = clock;
     }
 
-    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, Clock clock, Injector injector) throws Exception {
+    public FileSystemPage(final String name, final FileSystemPage parent, final FileSystem fileSystem, Clock clock, Injector injector) throws IOException {
         super(name, parent, injector);
         path = parent.getFileSystemPath();
         versionsController = parent.versionsController;
@@ -43,7 +43,7 @@ public class FileSystemPage extends CachingPage {
     }
 
     @Override
-    public void removeChildPage(final String name) throws Exception {
+    public void removeChildPage(final String name) {
         super.removeChildPage(name);
         String pathToDelete = getFileSystemPath() + "/" + name;
         final File fileToBeDeleted = new File(pathToDelete);
@@ -53,7 +53,7 @@ public class FileSystemPage extends CachingPage {
     }
 
     @Override
-    public boolean hasChildPage(final String pageName) throws Exception {
+    public boolean hasChildPage(final String pageName) throws IOException {
         final File f = new File(getFileSystemPath() + "/" + pageName);
         if (f.exists()) {
             addChildPage(pageName);
@@ -62,7 +62,7 @@ public class FileSystemPage extends CachingPage {
         return false;
     }
 
-    protected synchronized void saveContent(String content) throws Exception {
+    protected synchronized void saveContent(String content) throws IOException {
         if (content == null) {
             return;
         }
@@ -97,8 +97,7 @@ public class FileSystemPage extends CachingPage {
         }
     }
 
-    protected synchronized void saveAttributes(final WikiPageProperties attributes)
-            throws Exception {
+    protected synchronized void saveAttributes(final WikiPageProperties attributes) throws IOException {
         OutputStream output = null;
         String propertiesFilePath = "<unknown>";
         try {
@@ -110,7 +109,12 @@ public class FileSystemPage extends CachingPage {
             WikiPageProperties propertiesToSave = new WikiPageProperties(attributes);
             removeAlwaysChangingProperties(propertiesToSave);
             propertiesToSave.save(output);
-        } catch (final Exception e) {
+        } catch (final IOException e) {
+            System.err.println("Failed to save properties file: \""
+                    + propertiesFilePath + "\" (exception: " + e + ").");
+            e.printStackTrace();
+            throw e;
+        } catch (final RuntimeException e) {
             System.err.println("Failed to save properties file: \""
                     + propertiesFilePath + "\" (exception: " + e + ").");
             e.printStackTrace();
@@ -128,7 +132,7 @@ public class FileSystemPage extends CachingPage {
     }
 
     @Override
-    protected WikiPage createChildPage(final String name) throws Exception {
+    protected WikiPage createChildPage(final String name) throws IOException {
         //return new FileSystemPage(getFileSystemPath(), name, this, this.versionsController);
         return new PageRepository(new DiskFileSystem()).makeChildPage(name, this);
     }
@@ -149,7 +153,7 @@ public class FileSystemPage extends CachingPage {
     }
 
     @Override
-    protected void loadChildren() throws Exception {
+    protected void loadChildren() throws IOException {
         final File thisDir = new File(getFileSystemPath());
         if (thisDir.exists()) {
             final String[] subFiles = thisDir.list();
@@ -191,7 +195,7 @@ public class FileSystemPage extends CachingPage {
         return getParentFileSystemPath() + "/" + getName();
     }
 
-    private void loadAttributes(final PageData data) throws Exception {
+    private void loadAttributes(final PageData data) {
         final File file = new File(getFileSystemPath() + propertiesFilename);
         if (file.exists()) {
             try {
@@ -232,14 +236,14 @@ public class FileSystemPage extends CachingPage {
     }
 
     @Override
-    public void doCommit(final PageData data) throws Exception {
+    public void doCommit(final PageData data) throws IOException {
         saveContent(data.getContent());
         saveAttributes(data.getProperties());
         this.versionsController.prune(this);
     }
 
     @Override
-    protected PageData makePageData() throws Exception {
+    protected PageData makePageData() throws IOException {
         final PageData pagedata = new PageData(this);
         loadContent(pagedata);
         loadAttributes(pagedata);
@@ -247,7 +251,7 @@ public class FileSystemPage extends CachingPage {
         return pagedata;
     }
 
-    public PageData getDataVersion(final String versionName) throws Exception {
+    public PageData getDataVersion(final String versionName) {
         return this.versionsController.getRevisionData(this, versionName);
     }
 
@@ -260,16 +264,16 @@ public class FileSystemPage extends CachingPage {
     }
 
     @Override
-    protected VersionInfo makeVersion() throws Exception {
+    protected VersionInfo makeVersion() throws IOException {
         final PageData data = getData();
         return makeVersion(data);
     }
 
-    protected VersionInfo makeVersion(final PageData data) throws Exception {
+    protected VersionInfo makeVersion(final PageData data) {
         return this.versionsController.makeVersion(this, data);
     }
 
-    protected void removeVersion(final String versionName) throws Exception {
+    protected void removeVersion(final String versionName) {
         this.versionsController.removeVersion(this, versionName);
     }
 

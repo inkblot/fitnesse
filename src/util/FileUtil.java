@@ -103,12 +103,12 @@ public class FileUtil {
         }
     }
 
-    public static String getFileContent(String path) throws Exception {
+    public static String getFileContent(String path) throws IOException {
         File input = new File(path);
         return getFileContent(input);
     }
 
-    public static String getFileContent(File input) throws Exception {
+    public static String getFileContent(File input) throws IOException {
         return new String(getFileBytes(input));
     }
 
@@ -124,7 +124,7 @@ public class FileUtil {
         }
     }
 
-    public static LinkedList<String> getFileLines(String filename) throws Exception {
+    public static LinkedList<String> getFileLines(String filename) throws IOException {
         return getFileLines(new File(filename));
     }
 

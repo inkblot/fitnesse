@@ -4,21 +4,23 @@ package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
 
+import java.io.IOException;
+
 //TODO after extracting the WikiPageModel... rethink this class.  Lots of these methods might be able to go back into WikiPAge.
 public interface PageCrawler {
-    WikiPage getPage(WikiPage context, WikiPagePath path) throws Exception;
+    WikiPage getPage(WikiPage context, WikiPagePath path) throws IOException;
 
     void setDeadEndStrategy(PageCrawlerDeadEndStrategy strategy);
 
-    boolean pageExists(WikiPage context, WikiPagePath path) throws Exception;
+    boolean pageExists(WikiPage context, WikiPagePath path) throws IOException;
 
-    WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath) throws Exception;
+    WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath);
 
-    WikiPagePath getFullPath(WikiPage page) throws Exception;
+    WikiPagePath getFullPath(WikiPage page);
 
     WikiPage addPage(WikiPage context, WikiPagePath path, String content) throws Exception;
 
-    WikiPage addPage(WikiPage context, WikiPagePath path) throws Exception;
+    WikiPage addPage(WikiPage context, WikiPagePath path) throws IOException;
 
     String getRelativeName(WikiPage base, WikiPage page);
 

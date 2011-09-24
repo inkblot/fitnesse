@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.IOException;
+
 //TODO rename me
 public class VirtualEnabledPageCrawler implements PageCrawlerDeadEndStrategy {
-    public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) throws Exception {
+    public WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) throws IOException {
         String name = restOfPath.getFirst();
         restOfPath = restOfPath.getRest();
         if (context.hasExtension(VirtualCouplingExtension.NAME)) {

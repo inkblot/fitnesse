@@ -2,10 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class WikiPageUtil {
-    public static LinkedList<WikiPage> getAncestorsOf(WikiPage page) throws Exception {
+    public static LinkedList<WikiPage> getAncestorsOf(WikiPage page) {
         PageCrawler crawler = page.getPageCrawler();
         LinkedList<WikiPage> ancestors = new LinkedList<WikiPage>();
         WikiPage parent = page;
@@ -17,13 +18,13 @@ public class WikiPageUtil {
         return ancestors;
     }
 
-    public static LinkedList<WikiPage> getAncestorsStartingWith(WikiPage page) throws Exception {
+    public static LinkedList<WikiPage> getAncestorsStartingWith(WikiPage page) {
         LinkedList<WikiPage> ancestors = getAncestorsOf(page);
         ancestors.addFirst(page);
         return ancestors;
     }
 
-    public static void setPageContents(WikiPage page, String pageContents) throws Exception {
+    public static void setPageContents(WikiPage page, String pageContents) throws IOException {
         PageData pageData = page.getData();
         pageData.setContent(pageContents);
         page.commit(pageData);

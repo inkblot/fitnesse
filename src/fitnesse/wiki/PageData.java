@@ -14,6 +14,7 @@ import util.ClockUtil;
 import util.Maybe;
 import util.StringUtil;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -96,7 +97,7 @@ public class PageData implements Serializable {
         setContent(content);
     }
 
-    public PageData(PageData data) throws Exception {
+    public PageData(PageData data) {
         this(data.getWikiPage(), data.content);
         properties = new WikiPageProperties(data.properties);
         versions.addAll(data.versions);
@@ -157,23 +158,23 @@ public class PageData implements Serializable {
         }
     }
 
-    public WikiPageProperties getProperties() throws Exception {
+    public WikiPageProperties getProperties() {
         return properties;
     }
 
-    public String getAttribute(String key) throws Exception {
+    public String getAttribute(String key) {
         return properties.get(key);
     }
 
-    public void removeAttribute(String key) throws Exception {
+    public void removeAttribute(String key)  {
         properties.remove(key);
     }
 
-    public void setAttribute(String key, String value) throws Exception {
+    public void setAttribute(String key, String value)  {
         properties.set(key, value);
     }
 
-    public void setAttribute(String key) throws Exception {
+    public void setAttribute(String key)  {
         properties.set(key);
     }
 
@@ -185,7 +186,7 @@ public class PageData implements Serializable {
         this.properties = properties;
     }
 
-    public String getContent() throws Exception {
+    public String getContent() {
         return StringUtil.stripCarriageReturns(content);
     }
 
@@ -196,16 +197,16 @@ public class PageData implements Serializable {
     }
 
     /* this is the public entry to page parse and translate */
-    public String getHtml() throws Exception {
+    public String getHtml() {
         return translateToHtml(getSyntaxTree());
     }
 
-    public String getHeaderPageHtml() throws Exception {
+    public String getHeaderPageHtml() throws IOException {
         WikiPage header = wikiPage.getHeaderPage();
         return header == null ? "" : header.getData().getHtml();
     }
 
-    public String getFooterPageHtml() throws Exception {
+    public String getFooterPageHtml() throws IOException {
         WikiPage footer = wikiPage.getFooterPage();
         return footer == null ? "" : footer.getData().getHtml();
     }
@@ -217,17 +218,17 @@ public class PageData implements Serializable {
         return new HtmlTranslator(null, parsingPage).translate(Parser.make(parsingPage, "${" + name + "}", variableDefinitionSymbolProvider).parse());
     }
 
-    public Symbol getSyntaxTree() throws Exception {
+    public Symbol getSyntaxTree() {
         parsePageContent();
         return contentSyntaxTree;
     }
 
-    public ParsingPage getParsingPage() throws Exception {
+    public ParsingPage getParsingPage() {
         parsePageContent();
         return parsingPage;
     }
 
-    private void parsePageContent() throws Exception {
+    private void parsePageContent() {
         if (contentSyntaxTree == null) {
             parsingPage = new ParsingPage(new WikiSourcePage(wikiPage));
             contentSyntaxTree = Parser.make(parsingPage, getContent()).parse();
@@ -254,7 +255,7 @@ public class PageData implements Serializable {
         return wikiPage;
     }
 
-    public List<String> getClasspaths() throws Exception {
+    public List<String> getClasspaths() {
         Symbol tree = getSyntaxTree();
         return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage)).getPaths(tree);
         //return getTextOfWidgets(classpathWidgetBuilder);
@@ -286,7 +287,7 @@ public class PageData implements Serializable {
         versions.addAll(newVersions);
     }
 
-    public boolean isEmpty() throws Exception {
+    public boolean isEmpty() {
         return getContent() == null || getContent().length() == 0;
     }
 }

@@ -14,5 +14,5 @@ public interface FileSystem {
 
     String[] list(String path);
 
-    String getContent(String path) throws Exception;
+    String getContent(String path) throws IOException;
 }

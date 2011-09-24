@@ -25,8 +25,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
     }
 
     public WikiPagePath(String[] names) {
-        for (int i = 0; i < names.length; i++)
-            addNameToEnd(names[i]);
+        for (String name : names) addNameToEnd(name);
     }
 
     @SuppressWarnings("unchecked")
@@ -38,10 +37,10 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
     }
 
     public WikiPagePath copy() {
-        return (WikiPagePath) clone();
+        return clone();
     }
 
-    public WikiPagePath(WikiPage page) throws Exception {
+    public WikiPagePath(WikiPage page) {
         PageCrawler crawler = page.getPageCrawler();
         while (!crawler.isRoot(page)) {
             names.addFirst(page.getName());
@@ -60,7 +59,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
     }
 
     public String getFirst() {
-        return isEmpty() ? null : (String) names.get(0);
+        return isEmpty() ? null : names.get(0);
     }
 
     public WikiPagePath addNameToEnd(String name) {
@@ -83,7 +82,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
     }
 
     public String last() {
-        return (String) (names.size() == 0 ? null : names.get(names.size() - 1));
+        return names.size() == 0 ? null : names.get(names.size() - 1);
     }
 
     public List<String> getNames() {

@@ -6,6 +6,7 @@ import fitnesse.wikitext.parser.SourcePage;
 import fitnesse.wikitext.parser.WikiSourcePage;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class WikiSourcePageTest extends FitnesseBaseTestCase {
             this.mockVirtualPage = mockVirtualPage;
         }
 
-        public List<WikiPage> getChildren() throws Exception {
+        public List<WikiPage> getChildren() throws IOException {
             return mockVirtualPage.getChildren();
         }
     }

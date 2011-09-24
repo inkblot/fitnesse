@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.IOException;
+
 public interface PageCrawlerDeadEndStrategy {
-    WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) throws Exception;
+    WikiPage getPageAfterDeadEnd(WikiPage context, WikiPagePath restOfPath, PageCrawler crawler) throws IOException;
 }

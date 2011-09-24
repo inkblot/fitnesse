@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import com.google.inject.Injector;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,7 @@ public class VirtualCouplingPage implements WikiPage {
         this.hostPage = hostPage;
     }
 
-    public VirtualCouplingPage(WikiPage hostPage, WikiPage proxy) throws Exception {
+    public VirtualCouplingPage(WikiPage hostPage, WikiPage proxy) throws IOException {
         this.hostPage = hostPage;
         List<WikiPage> proxyChildren = proxy.getChildren();
         for (WikiPage child : proxyChildren) {
@@ -28,11 +29,11 @@ public class VirtualCouplingPage implements WikiPage {
         }
     }
 
-    public boolean hasChildPage(String pageName) throws Exception {
+    public boolean hasChildPage(String pageName) {
         return children.containsKey(pageName);
     }
 
-    public PageData getData() throws Exception {
+    public PageData getData() throws IOException {
         return hostPage.getData();
     }
 
@@ -40,14 +41,14 @@ public class VirtualCouplingPage implements WikiPage {
         return 0;
     }
 
-    public WikiPage addChildPage(String name) throws Exception {
+    public WikiPage addChildPage(String name) {
         return null;
     }
 
-    public void removeChildPage(String name) throws Exception {
+    public void removeChildPage(String name) {
     }
 
-    public PageData getDataVersion(String versionName) throws Exception {
+    public PageData getDataVersion(String versionName) {
         return null;
     }
 
@@ -59,7 +60,7 @@ public class VirtualCouplingPage implements WikiPage {
         hostPage.setParentForVariables(parent);
     }
 
-    public WikiPage getParentForVariables() throws Exception {
+    public WikiPage getParentForVariables() throws IOException {
         return hostPage.getParentForVariables();
     }
 
@@ -67,17 +68,17 @@ public class VirtualCouplingPage implements WikiPage {
         return hostPage.getName();
     }
 
-    public WikiPage getChildPage(String name) throws Exception {
+    public WikiPage getChildPage(String name) throws IOException {
         WikiPage subpage = children.get(name);
         if (subpage == null) subpage = hostPage.getChildPage(name);
         return subpage;
     }
 
-    public List<WikiPage> getChildren() throws Exception {
+    public List<WikiPage> getChildren() throws IOException {
         return new ArrayList<WikiPage>(children.values());
     }
 
-    public VersionInfo commit(PageData data) throws Exception {
+    public VersionInfo commit(PageData data) {
         return null;
     }
 
@@ -93,19 +94,19 @@ public class VirtualCouplingPage implements WikiPage {
         return hostPage.getPageCrawler();
     }
 
-    public WikiPage getHeaderPage() throws Exception {
+    public WikiPage getHeaderPage() {
         return null;
     }
 
-    public WikiPage getFooterPage() throws Exception {
+    public WikiPage getFooterPage() {
         return null;
     }
 
-    public String getHelpText() throws Exception {
+    public String getHelpText() {
         return "Virtual coupling help text";
     }
 
-    public List<WikiPageAction> getActions() throws Exception {
+    public List<WikiPageAction> getActions() {
         return null;
     }
 

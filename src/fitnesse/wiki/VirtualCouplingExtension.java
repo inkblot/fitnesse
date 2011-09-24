@@ -4,6 +4,8 @@ package fitnesse.wiki;
 
 import fitnesse.responders.ErrorResponder;
 
+import java.io.IOException;
+
 public class VirtualCouplingExtension implements Extension {
     private static final long serialVersionUID = 1L;
 
@@ -29,18 +31,18 @@ public class VirtualCouplingExtension implements Extension {
         virtualCoupling = new NullVirtualCouplingPage(hostPage);
     }
 
-    public WikiPage getVirtualCoupling() throws Exception {
+    public WikiPage getVirtualCoupling() throws IOException {
         detectAndLoadVirtualChildren();
         return virtualCoupling;
     }
 
-    protected void detectAndLoadVirtualChildren() throws Exception {
+    protected void detectAndLoadVirtualChildren() throws IOException {
         PageData data = hostPage.getData();
         if (data.hasAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE))
             loadVirtualChildren(data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE));
     }
 
-    public void loadVirtualChildren(String url) throws Exception {
+    public void loadVirtualChildren(String url) throws IOException {
         try {
             ProxyPage proxy = ProxyPage.retrievePage(url);
             virtualCoupling = new VirtualCouplingPage(hostPage, proxy);

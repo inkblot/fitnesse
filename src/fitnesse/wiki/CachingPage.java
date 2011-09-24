@@ -6,6 +6,7 @@ package fitnesse.wiki;
 import com.google.inject.Injector;
 import util.TimeMeasurement;
 
+import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,37 +27,37 @@ public abstract class CachingPage extends CommitingPage {
         addExtention(new VirtualCouplingExtension(this));
     }
 
-    public abstract boolean hasChildPage(String pageName) throws Exception;
+    public abstract boolean hasChildPage(String pageName) throws IOException;
 
-    protected abstract WikiPage createChildPage(String name) throws Exception;
+    protected abstract WikiPage createChildPage(String name) throws IOException;
 
-    protected abstract void loadChildren() throws Exception;
+    protected abstract void loadChildren() throws IOException;
 
-    protected abstract PageData makePageData() throws Exception;
+    protected abstract PageData makePageData() throws IOException;
 
-    public WikiPage addChildPage(String name) throws Exception {
+    public WikiPage addChildPage(String name) throws IOException {
         WikiPage page = createChildPage(name);
         children.put(name, page);
         return page;
     }
 
     @Override
-    public List<WikiPage> getNormalChildren() throws Exception {
+    public List<WikiPage> getNormalChildren() throws IOException {
         loadChildren();
         return getCachedChildren();
     }
 
-    public List<WikiPage> getCachedChildren() throws Exception {
+    public List<WikiPage> getCachedChildren() {
         return new ArrayList<WikiPage>(children.values());
     }
 
-    public void removeChildPage(String name) throws Exception {
+    public void removeChildPage(String name) {
         if (hasCachedSubpage(name))
             children.remove(name);
     }
 
     @Override
-    public WikiPage getNormalChildPage(String name) throws Exception {
+    public WikiPage getNormalChildPage(String name) throws IOException {
         if (hasCachedSubpage(name) || hasChildPage(name))
             return children.get(name);
         else
@@ -67,7 +68,7 @@ public abstract class CachingPage extends CommitingPage {
         return children.containsKey(name);
     }
 
-    public PageData getData() throws Exception {
+    public PageData getData() throws IOException {
         if (cachedDataExpired()) {
             PageData data = makePageData();
             setCachedData(data);
@@ -75,30 +76,30 @@ public abstract class CachingPage extends CommitingPage {
         return new PageData(getCachedData());
     }
 
-    private boolean cachedDataExpired() throws Exception {
+    private boolean cachedDataExpired() {
         return getCachedData() == null || cachedTime.elapsed() >= cacheTime;
     }
 
-    public void dumpExpiredCachedData() throws Exception {
+    public void dumpExpiredCachedData() {
         if (cachedDataExpired())
             clearCache();
     }
 
     @Override
-    public VersionInfo commit(PageData data) throws Exception {
+    public VersionInfo commit(PageData data) throws IOException {
         VersionInfo versionInfo = super.commit(data);
         setCachedData(makePageData());
         return versionInfo;
     }
 
-    private void setCachedData(PageData data) throws Exception {
+    private void setCachedData(PageData data) {
         if (cachedData != null)
             cachedData.clear();
         cachedData = new SoftReference<PageData>(data);
         cachedTime = new TimeMeasurement().start();
     }
 
-    public PageData getCachedData() throws Exception {
+    public PageData getCachedData() {
         if (cachedData != null)
             return cachedData.get();
         else

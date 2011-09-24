@@ -3,17 +3,17 @@
 package fitnesse.wiki;
 
 import fitnesse.wikitext.Utils;
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import util.ClockUtil;
-import util.XmlUtil;
-import util.XmlWriter;
+import util.*;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.*;
 
 public class WikiPageProperties extends WikiPageProperty implements Serializable {
@@ -36,7 +36,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
         loadFromRootElement(rootElement);
     }
 
-    public WikiPageProperties(WikiPageProperties that) throws Exception {
+    public WikiPageProperties(WikiPageProperties that) {
         if (that != null) {
             if (that.children != null) {
                 children = new HashMap<String, WikiPageProperty>(that.children);
@@ -79,7 +79,7 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
         }
     }
 
-    public void save(OutputStream outputStream) throws Exception {
+    public void save(OutputStream outputStream) {
         Document document;
         XmlWriter writer = null;
         try {
@@ -88,11 +88,10 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
 
             writer = new XmlWriter(outputStream);
             writer.write(document);
+        } catch (Exception e) {
+            throw new TodoException(e);
         } finally {
-            if (writer != null) {
-                writer.flush();
-                writer.close();
-            }
+            IOUtils.closeQuietly(writer);
         }
     }
 
@@ -138,12 +137,17 @@ public class WikiPageProperties extends WikiPageProperty implements Serializable
         return s.toString();
     }
 
-    public Date getLastModificationTime() throws Exception {
+    public Date getLastModificationTime() {
         String dateStr = get(PageData.PropertyLAST_MODIFIED);
-        if (dateStr == null)
+        if (dateStr == null) {
             return ClockUtil.currentDate();
-        else
-            return getTimeFormat().parse(dateStr);
+        } else {
+            try {
+                return getTimeFormat().parse(dateStr);
+            } catch (ParseException e) {
+                throw new ImpossibleException("A date formatted and parsed by FitNesse should parse fine", e);
+            }
+        }
     }
 
     public void setLastModificationTime(Date date) {

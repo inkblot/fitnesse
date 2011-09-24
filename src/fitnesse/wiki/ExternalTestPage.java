@@ -3,43 +3,45 @@ package fitnesse.wiki;
 import com.google.inject.Injector;
 import util.FileSystem;
 
+import java.io.IOException;
+
 public class ExternalTestPage extends CachingPage {
     private static final long serialVersionUID = 1L;
     private FileSystem fileSystem;
     private String path;
 
-    public ExternalTestPage(String path, String name, WikiPage parent, FileSystem fileSystem, Injector injector) throws Exception {
+    public ExternalTestPage(String path, String name, WikiPage parent, FileSystem fileSystem, Injector injector) {
         super(name, parent, injector);
         this.path = path;
         this.fileSystem = fileSystem;
     }
 
     @Override
-    protected VersionInfo makeVersion() throws Exception {
+    protected VersionInfo makeVersion() {
         return null;
     }
 
     @Override
-    protected void doCommit(PageData data) throws Exception {
+    protected void doCommit(PageData data) {
     }
 
     @Override
-    public boolean hasChildPage(String pageName) throws Exception {
+    public boolean hasChildPage(String pageName) {
         return false;
     }
 
     @Override
-    protected WikiPage createChildPage(String name) throws Exception {
+    protected WikiPage createChildPage(String name) {
         return null;
     }
 
     @Override
-    protected void loadChildren() throws Exception {
+    protected void loadChildren() {
 
     }
 
     @Override
-    protected PageData makePageData() throws Exception {
+    protected PageData makePageData() throws IOException {
         PageData pageData = new PageData(this);
         String content = fileSystem.getContent(path);
         pageData.setContent("!-" + content + "-!");
@@ -53,7 +55,7 @@ public class ExternalTestPage extends CachingPage {
         return pageData;
     }
 
-    public PageData getDataVersion(String versionName) throws Exception {
+    public PageData getDataVersion(String versionName) {
         return null;
     }
 }

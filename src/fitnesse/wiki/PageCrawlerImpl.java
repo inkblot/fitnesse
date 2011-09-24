@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import fitnesse.components.TraversalListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class PageCrawlerImpl implements PageCrawler {
     protected PageCrawlerImpl() {
     }
 
-    public WikiPage getPage(WikiPage context, WikiPagePath path) throws Exception {
+    public WikiPage getPage(WikiPage context, WikiPagePath path) throws IOException {
         if (path == null)
             return null;
 
@@ -44,7 +45,7 @@ public class PageCrawlerImpl implements PageCrawler {
         return path.isAbsolute() && path.isEmpty();
     }
 
-    protected WikiPage getPageAfterDeadEnd(WikiPage context, String first, WikiPagePath rest) throws Exception {
+    protected WikiPage getPageAfterDeadEnd(WikiPage context, String first, WikiPagePath rest) throws IOException {
         rest.addNameToFront(first);
         if (deadEndStrategy != null)
             return deadEndStrategy.getPageAfterDeadEnd(context, rest, this);
@@ -56,11 +57,11 @@ public class PageCrawlerImpl implements PageCrawler {
         deadEndStrategy = strategy;
     }
 
-    public boolean pageExists(WikiPage context, WikiPagePath path) throws Exception {
+    public boolean pageExists(WikiPage context, WikiPagePath path) throws IOException {
         return getPage(context, path) != null;
     }
 
-    public WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath) throws Exception {
+    public WikiPagePath getFullPathOfChild(WikiPage parent, WikiPagePath childPath) {
         WikiPagePath fullPathOfChild;
         if (childPath.isAbsolute())
             fullPathOfChild = childPath.relativePath();
@@ -71,11 +72,11 @@ public class PageCrawlerImpl implements PageCrawler {
         return fullPathOfChild;
     }
 
-    public WikiPagePath getFullPath(WikiPage page) throws Exception {
+    public WikiPagePath getFullPath(WikiPage page) {
         return new WikiPagePath(page);
     }
 
-    public WikiPage addPage(WikiPage context, WikiPagePath path, String content) throws Exception {
+    public WikiPage addPage(WikiPage context, WikiPagePath path, String content) throws IOException {
         WikiPage page = addPage(context, path);
         if (page != null) {
             PageData data = new PageData(page);
@@ -85,11 +86,11 @@ public class PageCrawlerImpl implements PageCrawler {
         return page;
     }
 
-    public WikiPage addPage(WikiPage context, WikiPagePath path) throws Exception {
+    public WikiPage addPage(WikiPage context, WikiPagePath path) throws IOException {
         return getOrMakePage(context, path.getNames());
     }
 
-    private WikiPage getOrMakePage(WikiPage context, List<?> namePieces) throws Exception {
+    private WikiPage getOrMakePage(WikiPage context, List<?> namePieces) throws IOException {
         String first = (String) namePieces.get(0);
         List<?> rest = namePieces.subList(1, namePieces.size());
         WikiPage current;
@@ -113,7 +114,7 @@ public class PageCrawlerImpl implements PageCrawler {
     }
 
     //TODO this doesn't belong here
-    public static WikiPage getClosestInheritedPage(String pageName, WikiPage context) throws Exception {
+    public static WikiPage getClosestInheritedPage(String pageName, WikiPage context) throws IOException {
         List<WikiPage> ancestors = WikiPageUtil.getAncestorsStartingWith(context);
         for (WikiPage ancestor : ancestors) {
             WikiPage namedPage = ancestor.getChildPage(pageName);
@@ -152,7 +153,7 @@ public class PageCrawlerImpl implements PageCrawler {
     It was a gross error to have the whole wiki know that references
     were relative to the parent instead of the page.
     */
-    public WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws Exception {
+    public WikiPage getSiblingPage(WikiPage page, WikiPagePath pathRelativeToSibling) throws IOException {
         PageCrawler crawler = page.getPageCrawler();
         if (pathRelativeToSibling.isSubPagePath()) {
             WikiPagePath relativePath = new WikiPagePath(pathRelativeToSibling);

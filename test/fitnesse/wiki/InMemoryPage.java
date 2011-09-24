@@ -33,7 +33,7 @@ public class InMemoryPage extends CommitingPage {
         versions.put(currentVersionName, new PageData(this, ""));
     }
 
-    public WikiPage addChildPage(String name) throws Exception {
+    public WikiPage addChildPage(String name) {
         WikiPage page = createChildPage(name);
         children.put(name, page);
         return page;
@@ -43,13 +43,13 @@ public class InMemoryPage extends CommitingPage {
         return new InMemoryPage(name, null, injector);
     }
 
-    protected WikiPage createChildPage(String name) throws Exception {
+    protected WikiPage createChildPage(String name) {
         BaseWikiPage newPage = new InMemoryPage(name, this, getInjector());
         children.put(newPage.getName(), newPage);
         return newPage;
     }
 
-    public void removeChildPage(String name) throws Exception {
+    public void removeChildPage(String name) {
         children.remove(name);
     }
 
@@ -57,7 +57,7 @@ public class InMemoryPage extends CommitingPage {
         return children.containsKey(pageName);
     }
 
-    protected VersionInfo makeVersion() throws Exception {
+    protected VersionInfo makeVersion() {
         PageData current = getDataVersion(currentVersionName);
 
         String name = String.valueOf(VersionInfo.nextId());
@@ -66,7 +66,7 @@ public class InMemoryPage extends CommitingPage {
         return version;
     }
 
-    protected WikiPage getNormalChildPage(String name) throws Exception {
+    protected WikiPage getNormalChildPage(String name) {
         return children.get(name);
     }
 
@@ -74,17 +74,17 @@ public class InMemoryPage extends CommitingPage {
         return new LinkedList<WikiPage>(children.values());
     }
 
-    public PageData getData() throws Exception {
+    public PageData getData() {
         return new PageData(getDataVersion(currentVersionName));
     }
 
-    public void doCommit(PageData newData) throws Exception {
+    public void doCommit(PageData newData) {
         newData.setWikiPage(this);
         newData.getProperties().setLastModificationTime(clock.currentClockDate());
         versions.put(currentVersionName, newData);
     }
 
-    public PageData getDataVersion(String versionName) throws Exception {
+    public PageData getDataVersion(String versionName) {
         PageData version = versions.get(versionName);
         if (version == null)
             throw new NoSuchVersionException("There is no version '" + versionName + "'");
@@ -100,7 +100,7 @@ public class InMemoryPage extends CommitingPage {
         return new PageData(version);
     }
 
-    protected VersionInfo makeVersionInfo(PageData current, String name) throws Exception {
+    protected VersionInfo makeVersionInfo(PageData current, String name) {
         String author = current.getAttribute(PageData.LAST_MODIFYING_USER);
         if (author == null)
             author = "";

@@ -6,6 +6,7 @@ import com.google.inject.Injector;
 import fitnesse.http.ResponseParser;
 import util.ClockUtil;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -23,7 +24,7 @@ public class ProxyPage extends CachingPage implements Serializable {
     public ResponseParser parser;
     private long lastLoadChildrenTime = 0;
 
-    public ProxyPage(WikiPage original, Injector injector) throws Exception {
+    public ProxyPage(WikiPage original, Injector injector) throws IOException {
         super(original.getName(), null, injector);
         realPath = original.getPageCrawler().getFullPath(original);
 
@@ -35,18 +36,18 @@ public class ProxyPage extends CachingPage implements Serializable {
         }
     }
 
-    protected ProxyPage(String name, WikiPage parent, Injector injector) throws Exception {
+    protected ProxyPage(String name, WikiPage parent, Injector injector) {
         super(name, parent, injector);
     }
 
-    public ProxyPage(String name, WikiPage parent, String host, int port, WikiPagePath path, Injector injector) throws Exception {
+    public ProxyPage(String name, WikiPage parent, String host, int port, WikiPagePath path, Injector injector) {
         super(name, parent, injector);
         this.host = host;
         hostPort = port;
         realPath = path;
     }
 
-    public static ProxyPage retrievePage(String urlString) throws Exception {
+    public static ProxyPage retrievePage(String urlString) throws IOException {
         retrievalCount++;
         URL url = new URL(urlString + "?responder=proxy&type=bones");
         ProxyPage page = (ProxyPage) getObjectFromUrl(url);
@@ -57,12 +58,12 @@ public class ProxyPage extends CachingPage implements Serializable {
         return page;
     }
 
-    protected WikiPage createChildPage(String name) throws Exception {
+    protected WikiPage createChildPage(String name) throws IOException {
         WikiPagePath childPath = realPath.copy().addNameToEnd(name);
         return new ProxyPage(name, this, host, getHostPort(), childPath, getInjector());
     }
 
-    protected void loadChildren() throws Exception {
+    protected void loadChildren() throws IOException {
         if (cacheTime <= (ClockUtil.currentTimeInMillis() - lastLoadChildrenTime)) {
             ProxyPage page = retrievePage(getThisPageUrl());
             children.clear();
@@ -83,7 +84,7 @@ public class ProxyPage extends CachingPage implements Serializable {
         return url.toString();
     }
 
-    public boolean hasChildPage(String pageName) throws Exception {
+    public boolean hasChildPage(String pageName) throws IOException {
         if (children.containsKey(pageName))
             return true;
         else {
@@ -117,11 +118,11 @@ public class ProxyPage extends CachingPage implements Serializable {
         return hostPort;
     }
 
-    public PageData getMeat() throws Exception {
+    public PageData getMeat() throws IOException {
         return getMeat(null);
     }
 
-    public PageData getMeat(String versionName) throws Exception {
+    public PageData getMeat(String versionName) throws IOException {
         StringBuilder urlString = new StringBuilder(getThisPageUrl());
         urlString.append("?responder=proxy&type=meat");
         if (versionName != null)
@@ -133,7 +134,7 @@ public class ProxyPage extends CachingPage implements Serializable {
         return data;
     }
 
-    private static Object getObjectFromUrl(URL url) throws Exception {
+    private static Object getObjectFromUrl(URL url) throws IOException {
         Object obj;
         InputStream is = null;
         ObjectInputStream ois = null;
@@ -142,6 +143,8 @@ public class ProxyPage extends CachingPage implements Serializable {
             ois = new ObjectInputStream(is);
             obj = ois.readObject();
             return obj;
+        } catch (ClassNotFoundException e) {
+            throw new IOException(e);
         } finally {
             if (is != null)
                 is.close();
@@ -150,11 +153,11 @@ public class ProxyPage extends CachingPage implements Serializable {
         }
     }
 
-    protected PageData makePageData() throws Exception {
+    protected PageData makePageData() throws IOException {
         return getMeat();
     }
 
-    public PageData getDataVersion(String versionName) throws Exception {
+    public PageData getDataVersion(String versionName) throws IOException {
         PageData data = getMeat(versionName);
         if (data == null)
             throw new NoSuchVersionException("There is no version '" + versionName + "'");
@@ -163,10 +166,10 @@ public class ProxyPage extends CachingPage implements Serializable {
 
     //TODO-MdM these are not needed
     // We expect this to go away when we do the checkout model
-    protected VersionInfo makeVersion() throws Exception {
+    protected VersionInfo makeVersion() {
         return null;
     }
 
-    protected void doCommit(PageData data) throws Exception {
+    protected void doCommit(PageData data) {
     }
 }

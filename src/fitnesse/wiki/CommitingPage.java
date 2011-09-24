@@ -4,6 +4,8 @@ package fitnesse.wiki;
 
 import com.google.inject.Injector;
 
+import java.io.IOException;
+
 public abstract class CommitingPage extends ExtendableWikiPage {
     private static final long serialVersionUID = 1L;
 
@@ -11,11 +13,11 @@ public abstract class CommitingPage extends ExtendableWikiPage {
         super(name, parent, injector);
     }
 
-    protected abstract VersionInfo makeVersion() throws Exception;
+    protected abstract VersionInfo makeVersion() throws IOException;
 
-    protected abstract void doCommit(PageData data) throws Exception;
+    protected abstract void doCommit(PageData data) throws IOException;
 
-    public VersionInfo commit(PageData data) throws Exception {
+    public VersionInfo commit(PageData data) throws IOException {
         VersionInfo previousVersion = makeVersion();
         doCommit(data);
         return previousVersion;

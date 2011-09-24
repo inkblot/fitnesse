@@ -4,6 +4,7 @@ package fitnesse.wiki;
 
 import com.google.inject.Injector;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,15 +24,15 @@ public class SymbolicPage extends BaseWikiPage {
         return realPage;
     }
 
-    public WikiPage addChildPage(String name) throws Exception {
+    public WikiPage addChildPage(String name) throws IOException  {
         return realPage.addChildPage(name);
     }
 
-    public boolean hasChildPage(String name) throws Exception {
+    public boolean hasChildPage(String name) throws IOException {
         return realPage.hasChildPage(name);
     }
 
-    protected WikiPage getNormalChildPage(String name) throws Exception {
+    protected WikiPage getNormalChildPage(String name) throws IOException {
         WikiPage childPage = realPage.getChildPage(name);
         if (childPage != null && !(childPage instanceof SymbolicPage))
             childPage = new SymbolicPage(name, childPage, this, getInjector());
@@ -39,7 +40,7 @@ public class SymbolicPage extends BaseWikiPage {
     }
 
     @Override
-    protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) throws Exception {
+    protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) throws IOException {
         WikiPagePath path = PathParser.parse(linkPath);
         WikiPage start = (path.isRelativePath()) ? getRealPage().getParent() : getRealPage();
         WikiPage page = getPageCrawler().getPage(start, path);
@@ -48,11 +49,11 @@ public class SymbolicPage extends BaseWikiPage {
         return page;
     }
 
-    public void removeChildPage(String name) throws Exception {
+    public void removeChildPage(String name) {
         realPage.removeChildPage(name);
     }
 
-    public List<WikiPage> getNormalChildren() throws Exception {
+    public List<WikiPage> getNormalChildren() throws IOException {
         List<WikiPage> children = realPage.getChildren();
         List<WikiPage> symChildren = new LinkedList<WikiPage>();
         //...Intentionally exclude symbolic links on symbolic pages
@@ -64,19 +65,19 @@ public class SymbolicPage extends BaseWikiPage {
         return symChildren;
     }
 
-    public PageData getData() throws Exception {
+    public PageData getData() throws IOException {
         PageData data = realPage.getData();
         data.setWikiPage(this);
         return data;
     }
 
-    public PageData getDataVersion(String versionName) throws Exception {
+    public PageData getDataVersion(String versionName) throws IOException {
         PageData data = realPage.getDataVersion(versionName);
         data.setWikiPage(this);
         return data;
     }
 
-    public VersionInfo commit(PageData data) throws Exception {
+    public VersionInfo commit(PageData data) throws IOException {
         return realPage.commit(data);
     }
 

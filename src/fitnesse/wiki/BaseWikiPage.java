@@ -7,6 +7,7 @@ import util.EnvironmentVariableTool;
 import util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +45,9 @@ public abstract class BaseWikiPage implements WikiPage {
         return parentForVariables == null ? this : parentForVariables;
     }
 
-    protected abstract List<WikiPage> getNormalChildren() throws Exception;
+    protected abstract List<WikiPage> getNormalChildren() throws IOException;
 
-    public List<WikiPage> getChildren() throws Exception {
+    public List<WikiPage> getChildren() throws IOException {
         List<WikiPage> children = getNormalChildren();
         WikiPageProperties props = getData().getProperties();
         WikiPageProperty symLinksProperty = props.getProperty(SymbolicPage.PROPERTY_NAME);
@@ -60,7 +61,7 @@ public abstract class BaseWikiPage implements WikiPage {
         return children;
     }
 
-    private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) throws Exception {
+    private WikiPage createSymbolicPage(WikiPageProperty symLinkProperty, String linkName) throws IOException {
         if (symLinkProperty == null)
             return null;
         String linkPath = symLinkProperty.get(linkName);
@@ -72,7 +73,7 @@ public abstract class BaseWikiPage implements WikiPage {
             return createInternalSymbolicPage(linkPath, linkName);
     }
 
-    private WikiPage createExternalSymbolicLink(String linkPath, String linkName) throws Exception {
+    private WikiPage createExternalSymbolicLink(String linkPath, String linkName) throws IOException {
         String fullPagePath = EnvironmentVariableTool.replace(linkPath.substring(7));
         File file = new File(fullPagePath);
         File parentDirectory = file.getParentFile();
@@ -87,7 +88,7 @@ public abstract class BaseWikiPage implements WikiPage {
         return null;
     }
 
-    protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) throws Exception {
+    protected WikiPage createInternalSymbolicPage(String linkPath, String linkName) throws IOException {
         WikiPagePath path = PathParser.parse(linkPath);
         WikiPage start = (path.isRelativePath()) ? getParent() : this;  //TODO -AcD- a better way?
         WikiPage page = getPageCrawler().getPage(start, path);
@@ -96,24 +97,24 @@ public abstract class BaseWikiPage implements WikiPage {
         return page;
     }
 
-    protected abstract WikiPage getNormalChildPage(String name) throws Exception;
+    protected abstract WikiPage getNormalChildPage(String name) throws IOException;
 
-    public WikiPage getChildPage(String name) throws Exception {
+    public WikiPage getChildPage(String name) throws IOException {
         WikiPage page = getNormalChildPage(name);
         if (page == null)
             page = createSymbolicPage(getData().getProperties().getProperty(SymbolicPage.PROPERTY_NAME), name);
         return page;
     }
 
-    public WikiPage getHeaderPage() throws Exception {
+    public WikiPage getHeaderPage() throws IOException {
         return PageCrawlerImpl.getClosestInheritedPage("PageHeader", this);
     }
 
-    public WikiPage getFooterPage() throws Exception {
+    public WikiPage getFooterPage() throws IOException {
         return PageCrawlerImpl.getClosestInheritedPage("PageFooter", this);
     }
 
-    public List<WikiPageAction> getActions() throws Exception {
+    public List<WikiPageAction> getActions() throws IOException {
         WikiPagePath localPagePath = getPageCrawler().getFullPath(this);
         String localPageName = PathParser.render(localPagePath);
         String localOrRemotePageName = localPageName;
@@ -126,7 +127,7 @@ public abstract class BaseWikiPage implements WikiPage {
         return makeActions(localPageName, localOrRemotePageName, newWindowIfRemote);
     }
 
-    private List<WikiPageAction> makeActions(String localPageName, String localOrRemotePageName, boolean newWindowIfRemote) throws Exception {
+    private List<WikiPageAction> makeActions(String localPageName, String localOrRemotePageName, boolean newWindowIfRemote) throws IOException {
         PageData pageData = getData();
         List<WikiPageAction> actions = new ArrayList<WikiPageAction>();
         addActionForAttribute("Test", pageData, localPageName, newWindowIfRemote, null, null, actions);
@@ -194,7 +195,7 @@ public abstract class BaseWikiPage implements WikiPage {
         }
     }
 
-    public String getHelpText() throws Exception {
+    public String getHelpText() throws IOException {
         String helpText = getData().getAttribute(PageData.PropertyHELP);
         return ((helpText == null) || (helpText.length() == 0)) ? null : helpText;
     }

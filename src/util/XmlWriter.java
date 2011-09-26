@@ -6,6 +6,8 @@ import org.w3c.dom.*;
 
 import java.io.*;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class XmlWriter extends Writer {
     private static String endl = System.getProperty("line.separator");
 
@@ -99,7 +101,7 @@ public class XmlWriter extends Writer {
     }
 
     public void write(String value) throws IOException {
-        if (value == null || "".equals(value)) {
+        if (isEmpty(value)) {
             return;
         }
         isNewLine = endl.equals(value);

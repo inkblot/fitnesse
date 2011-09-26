@@ -16,6 +16,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.*;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 // TODO-RcM Figure out how to make me smaller.
 public class Fixture {
     public Map<String, Object> summary = new HashMap<String, Object>();
@@ -280,7 +282,7 @@ public class Fixture {
 
     public void check(Parse cell, TypeAdapter a) {
         String text = cell.text();
-        if (text.equals(""))
+        if (isEmpty(text))
             handleBlankCell(cell, a);
         else if (a == null)
             ignore(cell);

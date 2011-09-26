@@ -6,6 +6,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class UpdateFileList {
     private ArrayList<String> mainDirectories;
     private String updateListContent;
@@ -133,7 +135,7 @@ public class UpdateFileList {
     }
 
     public File createDoNotUpdateList() {
-        if (updateDoNotCopyOverContent.equals(""))
+        if (isEmpty(updateDoNotCopyOverContent))
             for (String dirName : mainDirectories)
                 addFilePathsToList(dirName);
 

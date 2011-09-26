@@ -9,6 +9,8 @@ import fitnesse.wikitext.WikiWidget;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 //created by Jason Sypher
 
 public class LastModifiedWidget extends WikiWidget {
@@ -32,16 +34,14 @@ public class LastModifiedWidget extends WikiWidget {
         PageData data = getWikiPage().getData();
         String formattedDate = formatDate(data.getProperties().getLastModificationTime());
         String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
-        if (user == null || "".equals(user))
+        if (isEmpty(user))
             return HtmlUtil.metaText("Last modified anonymously on " + formattedDate);
         else
             return HtmlUtil.metaText("Last modified by " + user + " on " + formattedDate);
     }
 
     public static String formatDate(Date date) {
-        String formattedDate = makeDateFormat().format(date) + " at " + makeTimeFormat().format(date);
-
-        return formattedDate;
+        return makeDateFormat().format(date) + " at " + makeTimeFormat().format(date);
     }
 
 }

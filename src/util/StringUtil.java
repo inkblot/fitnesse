@@ -13,7 +13,7 @@ public class StringUtil {
             return "";
 
         Iterator<?> i = strings.iterator();
-        StringBuffer joined = new StringBuffer((String) i.next());
+        StringBuilder joined = new StringBuilder((String) i.next());
 
         while (i.hasNext()) {
             String eachLine = (String) i.next();
@@ -31,16 +31,12 @@ public class StringUtil {
         return combinedList.toArray(new String[combinedList.size()]);
     }
 
-    public static boolean isBlank(String resource) {
-        return "".equals(resource);
-    }
-
     public static String trimNonNullString(String original) {
         return original != null ? original.trim() : original;
     }
 
     public static String replaceAll(String original, String target, String replacement) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         int fromIndex = 0;
         while (true) {
             int foundIndex = original.indexOf(target, fromIndex);

@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.LITERAL;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class SearchResponder extends ResultResponder {
 
@@ -34,7 +35,7 @@ public class SearchResponder extends ResultResponder {
     protected void startSearching() throws IOException {
         super.startSearching();
         String searchString = getSearchString();
-        if (!"".equals(searchString)) {
+        if (isNotEmpty(searchString)) {
             String searchType = getSearchType();
             if ("Title".equals(searchType))
                 new TitleWikiPageFinder(searchString, this).search(root);

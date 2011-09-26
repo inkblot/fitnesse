@@ -11,6 +11,8 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class FileSystemPage extends CachingPage {
     private static final long serialVersionUID = 1L;
 
@@ -328,7 +330,7 @@ public class FileSystemPage extends CachingPage {
             if (cmSystemVariable == null)
                 return null;
             String cmSystemClassName = cmSystemVariable.split(" ")[0].trim();
-            if (cmSystemClassName == null || cmSystemClassName.equals(""))
+            if (isEmpty(cmSystemClassName))
                 return null;
 
             return cmSystemClassName;

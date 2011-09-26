@@ -19,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Set;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class HistoryComparerResponder implements Responder {
     public HistoryComparer comparer;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -100,13 +102,13 @@ public class HistoryComparerResponder implements Responder {
                 if (setFileNames(key))
                     return false;
         }
-        return !(firstFileName.equals("") || secondFileName.equals(""));
+        return !(isEmpty(firstFileName) || isEmpty(secondFileName));
     }
 
     private boolean setFileNames(String key) {
-        if (firstFileName.equals(""))
+        if (isEmpty(firstFileName))
             firstFileName = key.substring(key.indexOf("_") + 1);
-        else if (secondFileName.equals(""))
+        else if (isEmpty(secondFileName))
             secondFileName = key.substring(key.indexOf("_") + 1);
         else
             return true;

@@ -7,10 +7,10 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ClockUtil;
-import util.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -110,7 +110,7 @@ public class FitNesseExpediter implements ResponseSender {
 
     public Response createGoodResponse(Request request) throws Exception {
         Response response;
-        if (StringUtil.isBlank(request.getResource()) && StringUtil.isBlank(request.getQueryString()))
+        if (StringUtils.isEmpty(request.getResource()) && StringUtils.isEmpty(request.getQueryString()))
             request.setResource("FrontPage");
         Responder responder = context.responderFactory.makeResponder(request);
         responder = context.authenticator.authenticate(context, request, responder);

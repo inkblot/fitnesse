@@ -6,6 +6,8 @@ import eg.bowling.Bowling;
 import eg.bowling.BowlingGame;
 import fitnesse.fixtures.TableFixture;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class ScoreGame extends TableFixture {
     private Bowling game;
 
@@ -46,12 +48,11 @@ public class ScoreGame extends TableFixture {
             return SPARE;
         else if (rollText.equals("X"))
             return STRIKE;
-        else if (rollText.equals(""))
+        else if (isEmpty(rollText))
             return BLANK;
         else {
             try {
-                int pins = Integer.parseInt(rollText);
-                return pins;
+                return Integer.parseInt(rollText);
             } catch (NumberFormatException e) {
                 return ERROR;
             }

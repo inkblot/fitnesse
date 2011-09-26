@@ -108,7 +108,11 @@
     </target>
 
     <target name="create-update-lists" depends="compile, -copy-wiki-resources">
-        <java classpath="${build.classes}" classname="fitnesse.updates.UpdateFileList" failonerror="true">
+        <java classname="fitnesse.updates.UpdateFileList" failonerror="true">
+            <classpath>
+                <pathelement path="${build.classes}"/>
+                <fileset dir="${lib.runtime}" includes="*.jar"/>
+            </classpath>
             <arg value="-baseDirectory:${build.classes}/Resources"/>
             <arg value="-updateList:${build.classes}/Resources/updateList"/>
             <arg value="-doNotCopyList:${build.classes}/Resources/updateDoNotCopyOverList"/>

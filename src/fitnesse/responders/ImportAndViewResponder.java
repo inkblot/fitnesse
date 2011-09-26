@@ -11,13 +11,15 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
     private WikiPage page;
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         String resource = request.getResource();
 
-        if ("".equals(resource))
+        if (isEmpty(resource))
             resource = "FrontPage";
 
         loadPage(resource, context);

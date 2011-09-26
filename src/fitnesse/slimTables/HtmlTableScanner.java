@@ -15,12 +15,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class HtmlTableScanner implements TableScanner {
     private List<Table> tables = new ArrayList<Table>();
     private NodeList htmlTree;
 
     public HtmlTableScanner(String page) throws ParserException {
-        if (page == null || page.equals(""))
+        if (isEmpty(page))
             page = "<i>This page intentionally left blank.</i>";
 
         Parser parser = new Parser(new Lexer(new Page(page)));
@@ -60,7 +62,7 @@ public class HtmlTableScanner implements TableScanner {
     }
 
     public String toWikiText() {
-        StringBuffer b = new StringBuffer();
+        StringBuilder b = new StringBuilder();
         for (Table t : tables) {
             b.append("\n");
             for (int row = 0; row < t.getRowCount(); row++) {

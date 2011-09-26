@@ -18,6 +18,8 @@ import org.apache.velocity.VelocityContext;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public abstract class ResultResponder extends ChunkingResponder implements
         SearchObserver, SecureResponder {
     private int hits;
@@ -45,7 +47,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
         if (page == null)
             page = context.root.getPageCrawler().getPage(context.root, PathParser.parse("FrontPage"));
         velocityContext.put("hits", hits);
-        if (request.getQueryString() == null || request.getQueryString().equals(""))
+        if (isEmpty(request.getQueryString()))
             velocityContext.put("request", request.getBody());
         else
             velocityContext.put("request", request.getQueryString());

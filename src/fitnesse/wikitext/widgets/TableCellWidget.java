@@ -5,6 +5,8 @@ package fitnesse.wikitext.widgets;
 import fitnesse.html.HtmlTag;
 import fitnesse.wikitext.WidgetBuilder;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class TableCellWidget extends ParentWidget {
     @SuppressWarnings("unused")
 
@@ -32,7 +34,7 @@ public class TableCellWidget extends ParentWidget {
         if (computeColSpan().length() > 0) {
             cellTag.addAttribute("colspan", computeColSpan());
         }
-        if (childHtml().equals(""))
+        if (isEmpty(childHtml()))
             cellTag.add("&nbsp;"); // Some browsers don't like empty table cells.
         else
             cellTag.add(childHtml());

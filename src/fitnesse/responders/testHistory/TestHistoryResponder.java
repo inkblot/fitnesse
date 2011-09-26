@@ -13,6 +13,8 @@ import org.apache.velocity.VelocityContext;
 
 import java.io.File;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class TestHistoryResponder implements SecureResponder {
     private File resultsDirectory;
     private boolean generateNullResponseForTest;
@@ -39,7 +41,7 @@ public class TestHistoryResponder implements SecureResponder {
     }
 
     private String makePageTitle(String pageName) {
-        return "".equals(pageName) ?
+        return isEmpty(pageName) ?
                 "Test History" :
                 "Test History for " + pageName;
     }

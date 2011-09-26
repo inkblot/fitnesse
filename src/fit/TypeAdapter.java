@@ -7,10 +7,12 @@ package fit;
 // Released under the terms of the GNU General Public License version 2 or later.
 
 import java.lang.reflect.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.regex.Pattern;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableSet;
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class TypeAdapter {
     public Object target;
@@ -111,7 +113,7 @@ public class TypeAdapter {
     }
 
     public boolean equals(Object a, Object b) {
-        boolean isEqual = false;
+        boolean isEqual;
 
         if (isRegex)
             isEqual = Pattern.matches(a.toString(), b.toString());
@@ -127,7 +129,7 @@ public class TypeAdapter {
     public String toString(Object o) {
         if (o == null) {
             return "null";
-        } else if (o instanceof String && ((String) o).equals(""))
+        } else if (o instanceof String && isEmpty((String) o))
             return "blank";
         else
             return o.toString();
@@ -165,49 +167,49 @@ public class TypeAdapter {
 
     static class ByteAdapter extends ClassByteAdapter {
         public void set(Object i) throws IllegalAccessException {
-            field.setByte(target, ((Byte) i).byteValue());
+            field.setByte(target, (Byte) i);
         }
     }
 
     static class ClassByteAdapter extends TypeAdapter {
         public Object parse(String s) {
-            return ("null".equals(s)) ? null : new Byte(Byte.parseByte(s));
+            return ("null".equals(s)) ? null : Byte.parseByte(s);
         }
     }
 
     static class ShortAdapter extends ClassShortAdapter {
         public void set(Object i) throws IllegalAccessException {
-            field.setShort(target, ((Short) i).shortValue());
+            field.setShort(target, (Short) i);
         }
     }
 
     static class ClassShortAdapter extends TypeAdapter {
         public Object parse(String s) {
-            return ("null".equals(s)) ? null : new Short(Short.parseShort(s));
+            return ("null".equals(s)) ? null : Short.parseShort(s);
         }
     }
 
     static class IntAdapter extends ClassIntegerAdapter {
         public void set(Object i) throws IllegalAccessException {
-            field.setInt(target, ((Integer) i).intValue());
+            field.setInt(target, (Integer) i);
         }
     }
 
     static class ClassIntegerAdapter extends TypeAdapter {
         public Object parse(String s) {
-            return ("null".equals(s)) ? null : new Integer(Integer.parseInt(s));
+            return ("null".equals(s)) ? null : Integer.parseInt(s);
         }
     }
 
     static class LongAdapter extends ClassLongAdapter {
         public void set(Long i) throws IllegalAccessException {
-            field.setLong(target, i.longValue());
+            field.setLong(target, i);
         }
     }
 
     static class ClassLongAdapter extends TypeAdapter {
         public Object parse(String s) {
-            return ("null".equals(s)) ? null : new Long(Long.parseLong(s));
+            return ("null".equals(s)) ? null : Long.parseLong(s);
         }
     }
 
@@ -217,13 +219,13 @@ public class TypeAdapter {
         }
 
         public Object parse(String s) {
-            return ("null".equals(s)) ? null : new Float(Float.parseFloat(s));
+            return ("null".equals(s)) ? null : Float.parseFloat(s);
         }
     }
 
     static class ClassFloatAdapter extends TypeAdapter {
         public Object parse(String s) {
-            return ("null".equals(s)) ? null : new Float(Float.parseFloat(s));
+            return ("null".equals(s)) ? null : Float.parseFloat(s);
         }
     }
 
@@ -233,31 +235,31 @@ public class TypeAdapter {
         }
 
         public Object parse(String s) {
-            return new Double(Double.parseDouble(s));
+            return Double.parseDouble(s);
         }
     }
 
     static class ClassDoubleAdapter extends TypeAdapter {
         public Object parse(String s) {
-            return ("null".equals(s)) ? null : new Double(Double.parseDouble(s));
+            return ("null".equals(s)) ? null : Double.parseDouble(s);
         }
     }
 
     static class CharAdapter extends ClassCharacterAdapter {
         public void set(Object i) throws IllegalAccessException {
-            field.setChar(target, ((Character) i).charValue());
+            field.setChar(target, (Character) i);
         }
     }
 
     static class ClassCharacterAdapter extends TypeAdapter {
         public Object parse(String s) {
-            return ("null".equals(s)) ? null : new Character(s.charAt(0));
+            return ("null".equals(s)) ? null : s.charAt(0);
         }
     }
 
     static class BooleanAdapter extends ClassBooleanAdapter {
         public void set(Object i) throws IllegalAccessException {
-            field.setBoolean(target, ((Boolean) i).booleanValue());
+            field.setBoolean(target, (Boolean) i);
         }
     }
 
@@ -265,17 +267,8 @@ public class TypeAdapter {
         public Object parse(String s) {
             if ("null".equals(s)) return null;
             String ls = s.toLowerCase();
-            if (ls.equals("true"))
-                return new Boolean(true);
-            if (ls.equals("yes"))
-                return new Boolean(true);
-            if (ls.equals("1"))
-                return new Boolean(true);
-            if (ls.equals("y"))
-                return new Boolean(true);
-            if (ls.equals("+"))
-                return new Boolean(true);
-            return new Boolean(false);
+            final Set<String> truth = unmodifiableSet(new HashSet<String>(asList("true", "yes", "1", "y", "+")));
+            return truth.contains(ls);
         }
     }
 
@@ -302,7 +295,7 @@ public class TypeAdapter {
             if (o == null)
                 return "";
             int length = Array.getLength(o);
-            StringBuffer b = new StringBuffer(5 * length);
+            StringBuilder b = new StringBuilder(5 * length);
             for (int i = 0; i < length; i++) {
                 b.append(componentAdapter.toString(Array.get(o, i)));
                 if (i < (length - 1)) {
@@ -336,8 +329,7 @@ public class TypeAdapter {
         }
 
         public Object parse(String s) throws Exception {
-            return parseMethod.invoke(null, new Object[]
-                    {s});
+            return parseMethod.invoke(null, s);
         }
 
         protected Object clone() {
@@ -360,8 +352,7 @@ public class TypeAdapter {
         }
 
         public Object parse(String s) throws Exception {
-            return parseMethod.invoke(delegate, new Object[]
-                    {s});
+            return parseMethod.invoke(delegate, s);
         }
 
         protected Object clone() {

@@ -6,6 +6,8 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class SuiteXmlFormatter extends XmlFormatter {
 
     private TestSummary xmlPageCounts = new TestSummary();
@@ -27,7 +29,7 @@ public class SuiteXmlFormatter extends XmlFormatter {
             throws Exception {
         PageCrawler pageCrawler = getPage().getPageCrawler();
         String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
-        if ("".equals(relativeName))
+        if (isEmpty(relativeName))
             relativeName = String.format("(%s)", testPage.getName());
         processTestResults(relativeName, testSummary, timeMeasurement);
 

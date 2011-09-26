@@ -20,12 +20,14 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class ResponderFactory {
     private final String rootPath;
@@ -110,7 +112,7 @@ public class ResponderFactory {
         if (usingResponderKey(responderKey))
             responder = lookupResponder(responderKey, responder);
         else {
-            if (StringUtil.isBlank(resource))
+            if (StringUtils.isEmpty(resource))
                 responder = new WikiPageResponder();
             else if (resource.startsWith("files/") || resource.equals("files"))
                 responder = FileResponder.makeResponder(request, rootPath);
@@ -144,6 +146,6 @@ public class ResponderFactory {
     }
 
     private boolean usingResponderKey(String responderKey) {
-        return !("".equals(responderKey) || responderKey == null);
+        return isNotEmpty(responderKey);
     }
 }

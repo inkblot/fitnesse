@@ -4,8 +4,9 @@ package fitnesse.runner;
 
 import fitnesse.responders.run.TestSummary;
 
-import java.io.InputStream;
 import java.io.PrintStream;
+
+import static org.apache.commons.lang.StringUtils.isBlank;
 
 //TODO MDM Rename to VerboseResultHandler
 public class StandardResultHandler implements ResultHandler {
@@ -32,7 +33,7 @@ public class StandardResultHandler implements ResultHandler {
 
     private String pageDescription(PageResult result) {
         String description = result.title();
-        if ("".equals(description))
+        if (isBlank(description))
             description = "The test";
         return description;
     }
@@ -43,11 +44,4 @@ public class StandardResultHandler implements ResultHandler {
         output.println("Assertions: " + testSummary);
     }
 
-    public int getByteCount() {
-        return 0;
-    }
-
-    public InputStream getResultStream() throws Exception {
-        return null;
-    }
 }

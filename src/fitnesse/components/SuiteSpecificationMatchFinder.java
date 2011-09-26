@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 public class SuiteSpecificationMatchFinder extends WikiPageFinder {
     private String titleRegEx;
     private String contentRegEx;
@@ -17,20 +19,15 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
     }
 
     protected boolean pageMatches(WikiPage page) throws IOException {
-        if (!nullOrEmpty(titleRegEx) && !nullOrEmpty(contentRegEx))
+        if (isNotEmpty(titleRegEx) && isNotEmpty(contentRegEx))
             return patternMatches(titleRegEx, page.getName()) && patternMatches(contentRegEx, page.getData().getContent());
         else {
-            if (patternMatches(titleRegEx, page.getName()))
-                return true;
-            if (patternMatches(contentRegEx, page.getData().getContent()))
-                return true;
-
-            return false;
+            return patternMatches(titleRegEx, page.getName()) || patternMatches(contentRegEx, page.getData().getContent());
         }
     }
 
     private boolean patternMatches(String regEx, String subject) {
-        if (!nullOrEmpty(regEx)) {
+        if (isNotEmpty(regEx)) {
             Pattern pattern = Pattern.compile(regEx, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(subject);
             if (matcher.find())
@@ -39,7 +36,4 @@ public class SuiteSpecificationMatchFinder extends WikiPageFinder {
         return false;
     }
 
-    private boolean nullOrEmpty(String regEx) {
-        return regEx == null || regEx.equals("");
-    }
 }

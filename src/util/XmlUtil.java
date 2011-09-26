@@ -11,6 +11,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 public class XmlUtil {
     private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
@@ -92,7 +94,7 @@ public class XmlUtil {
     }
 
     public static void addTextNode(Document document, Element element, String tagName, String value) {
-        if (value != null && !(value.equals(""))) {
+        if (isNotEmpty(value)) {
             Element titleElement = document.createElement(tagName);
             Text titleText = document.createTextNode(value);
             titleElement.appendChild(titleText);
@@ -101,7 +103,7 @@ public class XmlUtil {
     }
 
     public static void addCdataNode(Document document, Element element, String tagName, String value) {
-        if (value != null && !(value.equals(""))) {
+        if (isNotEmpty(value)) {
             Element titleElement = document.createElement(tagName);
             CDATASection cData = document.createCDATASection(value);
             titleElement.appendChild(cData);

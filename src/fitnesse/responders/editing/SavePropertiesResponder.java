@@ -15,9 +15,10 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class SavePropertiesResponder implements SecureResponder {
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -44,8 +45,7 @@ public class SavePropertiesResponder implements SecureResponder {
         attrs.addAll(Arrays.asList(PageData.NON_SECURITY_ATTRIBUTES));
         attrs.addAll(Arrays.asList(PageData.SECURITY_ATTRIBUTES));
 
-        for (Iterator<String> i = attrs.iterator(); i.hasNext(); ) {
-            String attribute = i.next();
+        for (String attribute : attrs) {
             if (isChecked(request, attribute))
                 data.setAttribute(attribute);
             else
@@ -61,7 +61,7 @@ public class SavePropertiesResponder implements SecureResponder {
                 extension.resetVirtualCoupling();
             }
         }
-        if ("".equals(value) || value == null)
+        if (isEmpty(value))
             data.removeAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE);
         else
             data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, value);
@@ -84,8 +84,7 @@ public class SavePropertiesResponder implements SecureResponder {
         types.addAll(Arrays.asList(PageData.PAGE_TYPE_ATTRIBUTES));
         data.setAttribute(pageType);
 
-        for (Iterator<String> i = types.iterator(); i.hasNext(); ) {
-            String type = i.next();
+        for (String type : types) {
             if (!pageType.equals(type))
                 data.removeAttribute(type);
         }

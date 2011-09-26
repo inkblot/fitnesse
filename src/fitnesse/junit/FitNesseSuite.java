@@ -20,6 +20,8 @@ import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Properties;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 public class FitNesseSuite extends ParentRunner<String> {
 
     private Injector injector;
@@ -155,10 +157,10 @@ public class FitNesseSuite extends ParentRunner<String> {
         if (outputDirAnnotation == null) {
             throw new InitializationError("There must be a @OutputDir annotation");
         }
-        if (!"".equals(outputDirAnnotation.value())) {
+        if (isNotEmpty(outputDirAnnotation.value())) {
             return outputDirAnnotation.value();
         }
-        if (!"".equals(outputDirAnnotation.systemProperty())) {
+        if (isNotEmpty(outputDirAnnotation.systemProperty())) {
             String baseDir = System.getProperty(outputDirAnnotation.systemProperty());
             File outputDir = new File(baseDir, outputDirAnnotation.pathExtension());
             return outputDir.getAbsolutePath();
@@ -178,7 +180,7 @@ public class FitNesseSuite extends ParentRunner<String> {
             return 0;
         }
         int lport = portAnnotation.value();
-        if (!"".equals(portAnnotation.systemProperty())) {
+        if (isNotEmpty(portAnnotation.systemProperty())) {
             lport = Integer.getInteger(portAnnotation.systemProperty(), lport);
         }
         return lport;

@@ -6,6 +6,8 @@ import util.StringUtil;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class WikiWordReference {
     private WikiPage currentPage;
     private String wikiWord;
@@ -53,7 +55,7 @@ public class WikiWordReference {
             if (referenceTail.length() > 0)
                 childPortionOfReference += referenceTail;
             String newQualifiedName;
-            if ("".equals(newParentName))
+            if (isEmpty(newParentName))
                 newQualifiedName = "." + childPortionOfReference;
             else
                 newQualifiedName = "." + newParentName + "." + childPortionOfReference;

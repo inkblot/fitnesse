@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class WikiWordWidget extends TextWidget implements PageReferencer {
     public static final String SINGLE_WIKIWORD_REGEXP = "\\b[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+";
     public static final String REGEXP = "(?:[<>^.])?(?:" + SINGLE_WIKIWORD_REGEXP + "[.]?)+\\b";
@@ -51,7 +53,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     }
 
     private String makeLinkToNonExistentWikiPage(String qualifiedName) {
-        StringBuffer html = new StringBuffer();
+        StringBuilder html = new StringBuilder();
         html.append(Utils.escapeHTML(getText()));
         html.append("<a title=\"create page\" href=\"").append(qualifiedName);
         html.append("?edit&nonExistent=true");
@@ -108,7 +110,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
             if (referenceTail.length() > 0)
                 childPortionOfReference += referenceTail;
             String newQualifiedName;
-            if ("".equals(newParentName))
+            if (isEmpty(newParentName))
                 newQualifiedName = "." + childPortionOfReference;
             else
                 newQualifiedName = "." + newParentName + "." + childPortionOfReference;
@@ -143,8 +145,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
         int branchPoint = findBranchPoint(parentPath.getNames(), renamedPathToReferent.getNames());
         List<String> referentPath = renamedPathToReferent.getNames();
         List<String> referentPathAfterBranchPoint = referentPath.subList(branchPoint, referentPath.size());
-        String newRawReference = "<" + StringUtil.join(referentPathAfterBranchPoint, ".");
-        return newRawReference;
+        return "<" + StringUtil.join(referentPathAfterBranchPoint, ".");
     }
 
     private static int findBranchPoint(List<String> list1, List<String> list2) {
@@ -156,11 +157,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     }
 
     static boolean refersTo(String qualifiedReference, String qualifiedTarget) {
-        if (qualifiedReference.equals(qualifiedTarget))
-            return true;
-        if (qualifiedReference.startsWith(qualifiedTarget + "."))
-            return true;
-        return false;
+        return qualifiedReference.equals(qualifiedTarget) || qualifiedReference.startsWith(qualifiedTarget + ".");
     }
 
     private String getQualifiedWikiWord() throws Exception {
@@ -173,7 +170,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
     }
 
     private String rename(String oldQualifiedName, String newPageName) {
-        String newQualifiedName = oldQualifiedName;
+        String newQualifiedName;
 
         int lastDotIndex = oldQualifiedName.lastIndexOf(".");
         if (lastDotIndex < 1)

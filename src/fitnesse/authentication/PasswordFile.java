@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 public class PasswordFile {
     private File passwordFile;
     private Map<String, String> passwordMap = new HashMap<String, String>();
@@ -54,7 +56,7 @@ public class PasswordFile {
 
     private void loadPasswords(LinkedList<String> lines) {
         for (String line : lines) {
-            if (!"".equals(line)) {
+            if (isNotEmpty(line)) {
                 String[] tokens = line.split(":");
                 passwordMap.put(tokens[0], tokens[1]);
             }

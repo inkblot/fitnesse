@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 public class ResponseParser {
     private int status;
     private String body;
@@ -49,7 +51,7 @@ public class ResponseParser {
 
     private void parseHeaders() throws IOException {
         String line = input.readLine();
-        while (!"".equals(line)) {
+        while (isNotEmpty(line)) {
             Matcher match = headerPattern.matcher(line);
             if (match.find()) {
                 String key = match.group(1);

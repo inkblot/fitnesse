@@ -21,6 +21,7 @@ import java.util.Set;
 import static fitnesse.wiki.PageData.*;
 import static fitnesse.wiki.PageType.SUITE;
 import static fitnesse.wiki.PageType.TEST;
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class PropertiesResponder implements SecureResponder {
     private WikiPage page;
@@ -104,7 +105,7 @@ public class PropertiesResponder implements SecureResponder {
     private HtmlTag makeLastModifiedTag() throws Exception {
         HtmlTag tag = HtmlUtil.makeDivTag("right");
         String username = pageData.getAttribute(LAST_MODIFYING_USER);
-        if (username == null || "".equals(username))
+        if (isEmpty(username))
             tag.use("Last modified anonymously");
         else
             tag.use("Last modified by " + username);

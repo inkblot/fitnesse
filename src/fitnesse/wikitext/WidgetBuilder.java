@@ -13,6 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 @SuppressWarnings("unchecked")
 public class WidgetBuilder {
     public static WidgetBuilder htmlWidgetBuilder = new WidgetBuilder(
@@ -94,12 +96,12 @@ public class WidgetBuilder {
         try {
             if (firstMatch != null) {
                 String preString = value.substring(0, firstMatch.matchPosition());
-                if (!"".equals(preString) && includeTextWidgets) {
+                if (isNotEmpty(preString) && includeTextWidgets) {
                     new TextWidget(parent, preString);
                 }
                 firstMatch.constructWidget(parent, interceptors);
                 String postString = value.substring(firstMatch.matchEnd());
-                if (!postString.equals("")) {
+                if (isNotEmpty(postString)) {
                     addChildWidgets(postString, parent, includeTextWidgets);
                 }
             } else if (includeTextWidgets)
@@ -107,11 +109,6 @@ public class WidgetBuilder {
         } finally {
             widgetDataArraylock.unlock();
         }
-    }
-
-    public Class<?> findWidgetClassMatching(String value) {
-        WidgetMatch firstMatch = findFirstMatch(value);
-        return firstMatch == null ? null : firstMatch.getWidgetClass();
     }
 
     private WidgetMatch findFirstMatch(String value) {
@@ -126,10 +123,6 @@ public class WidgetBuilder {
             }
         }
         return firstMatch;
-    }
-
-    public void addInterceptor(WidgetInterceptor interceptor) {
-        interceptors.add(interceptor);
     }
 
     private static class WidgetMatcher {
@@ -185,10 +178,6 @@ public class WidgetBuilder {
 
         public boolean matchIsBefore(WidgetMatch aMatch) {
             return matchPosition() < aMatch.matchPosition();
-        }
-
-        public Class<?> getWidgetClass() {
-            return widgetClass;
         }
 
         private WikiWidget constructWidget(ParentWidget parent, List<WidgetInterceptor> interceptors) {

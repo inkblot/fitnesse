@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 public class SuiteFilter {
     final private SuiteTagMatcher notMatchTags;
     final private SuiteTagMatcher matchTags;
@@ -28,7 +30,7 @@ public class SuiteFilter {
 
 
     SuiteFilter(String matchingTags, String mustNotMatchTags, String startWithTest) {
-        this.startWithTest = (!"".equals(startWithTest)) ? startWithTest : null;
+        this.startWithTest = isNotEmpty(startWithTest) ? startWithTest : null;
 
         matchTags = new SuiteTagMatcher(matchingTags, true);
         notMatchTags = new SuiteTagMatcher(mustNotMatchTags, false);

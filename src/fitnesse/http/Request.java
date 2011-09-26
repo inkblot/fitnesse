@@ -13,6 +13,8 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 public class Request {
     private static final Pattern requestLinePattern = Pattern
             .compile("(\\p{Upper}+?) ([^\\s]+)");
@@ -74,7 +76,7 @@ public class Request {
             throws Exception {
         HashMap<String, Object> headers = new HashMap<String, Object>();
         String line = reader.readLine();
-        while (!"".equals(line)) {
+        while (isNotEmpty(line)) {
             Matcher match = headerPattern.matcher(line);
             if (match.find()) {
                 String key = match.group(1);

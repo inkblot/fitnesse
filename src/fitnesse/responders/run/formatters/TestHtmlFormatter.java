@@ -11,15 +11,17 @@ import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.*;
 import util.TimeMeasurement;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public abstract class TestHtmlFormatter extends BaseFormatter {
     private HtmlPageFactory pageFactory;
     private TestSummary assertionCounts = new TestSummary();
     private CompositeExecutionLog log = null;
     private HtmlPage htmlPage = null;
-    private boolean wasInterupted = false;
+    private boolean wasInterrupted = false;
     protected TimeMeasurement latestTestTime;
 
-    private static String TESTING_INTERUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
+    private static final String TESTING_INTERRUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
     public TestHtmlFormatter(FitNesseContext context, final WikiPage page,
                              final HtmlPageFactory pageFactory) throws Exception {
@@ -85,7 +87,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     protected String getRelativeName(WikiPage testPage) throws Exception {
         PageCrawler pageCrawler = getPage().getPageCrawler();
         String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
-        if ("".equals(relativeName)) {
+        if (isEmpty(relativeName)) {
             relativeName = String.format("(%s)", testPage.getName());
         }
         return relativeName;
@@ -165,7 +167,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     }
 
     protected String cssClassFor(TestSummary testSummary) {
-        if (testSummary.getWrong() > 0 || wasInterupted)
+        if (testSummary.getWrong() > 0 || wasInterrupted)
             return "fail";
         else if (testSummary.getExceptions() > 0
                 || testSummary.getRight() + testSummary.getIgnores() == 0)
@@ -191,7 +193,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     }
 
     public String testSummary() throws Exception {
-        String summaryContent = (wasInterupted) ? TESTING_INTERUPTED : "";
+        String summaryContent = (wasInterrupted) ? TESTING_INTERRUPTED : "";
         summaryContent += makeSummaryContent();
         HtmlTag script = HtmlUtil.makeReplaceElementScript("test-summary", summaryContent);
         script.add("document.getElementById(\"test-summary\").className = \""
@@ -228,7 +230,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
     @Override
     public void errorOccured() {
-        wasInterupted = true;
+        wasInterrupted = true;
         latestTestTime = null;
         super.errorOccured();
     }

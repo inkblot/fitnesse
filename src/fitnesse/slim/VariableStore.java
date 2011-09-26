@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class VariableStore {
     private static final Pattern SYMBOL_PATTERN = Pattern.compile("\\$([a-zA-Z]\\w*)");
     private Map<String, MethodExecutionResult> variables = new HashMap<String, MethodExecutionResult>();
@@ -56,7 +58,7 @@ public class VariableStore {
     public String replaceSymbolsInString(String arg) {
         int startingPosition = 0;
         while (true) {
-            if ("".equals(arg) || null == arg) {
+            if (isEmpty(arg)) {
                 break;
             }
             symbolMatcher = SYMBOL_PATTERN.matcher(arg);

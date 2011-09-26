@@ -10,11 +10,12 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public class AddChildPageResponder implements SecureResponder {
     private WikiPage currentPage;
     private PageCrawler crawler;
     private String childName;
-    private WikiPagePath currentPagePath;
     private WikiPagePath childPath;
     private String childContent;
     private String pageType;
@@ -30,7 +31,7 @@ public class AddChildPageResponder implements SecureResponder {
         else if (nameIsInvalid(childName))
             return errorResponse(context, request);
         else {
-            return createChildPageAndMakeResponse(request);
+            return createChildPageAndMakeResponse();
         }
     }
 
@@ -38,7 +39,7 @@ public class AddChildPageResponder implements SecureResponder {
         childName = (String) request.getInput("name");
         childName = childName == null ? "null" : childName;
         childPath = PathParser.parse(childName);
-        currentPagePath = PathParser.parse(request.getResource());
+        WikiPagePath currentPagePath = PathParser.parse(request.getResource());
         crawler = context.root.getPageCrawler();
         currentPage = crawler.getPage(context.root, currentPagePath);
         childContent = (String) request.getInput("content");
@@ -49,8 +50,8 @@ public class AddChildPageResponder implements SecureResponder {
             pageType = "Default";
     }
 
-    private Response createChildPageAndMakeResponse(Request request) throws Exception {
-        createChildPage(request);
+    private Response createChildPageAndMakeResponse() throws Exception {
+        createChildPage();
         SimpleResponse response = new SimpleResponse();
         WikiPagePath fullPathOfCurrentPage = crawler.getFullPath(currentPage);
         response.redirect(fullPathOfCurrentPage.toString());
@@ -58,14 +59,10 @@ public class AddChildPageResponder implements SecureResponder {
     }
 
     private boolean nameIsInvalid(String name) {
-        if (name.equals(""))
-            return true;
-        if (!WikiWordWidget.isSingleWikiWord(name))
-            return true;
-        return false;
+        return isEmpty(name) || !WikiWordWidget.isSingleWikiWord(name);
     }
 
-    private void createChildPage(Request request) throws Exception {
+    private void createChildPage() throws Exception {
         WikiPage childPage = crawler.addPage(currentPage, childPath, childContent);
         setTestAndSuiteAttributes(childPage);
     }

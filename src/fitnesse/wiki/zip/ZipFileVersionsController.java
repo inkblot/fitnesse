@@ -13,6 +13,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 public class ZipFileVersionsController extends NullVersionsController {
 
     private final Clock clock;
@@ -221,7 +223,7 @@ public class ZipFileVersionsController extends NullVersionsController {
             time = data.getProperties().getLastModificationTime();
             String versionName = VersionInfo.nextId() + "-" + dateFormat().format(time);
             final String user = data.getAttribute(PageData.LAST_MODIFYING_USER);
-            if (user != null && !"".equals(user)) {
+            if (isNotEmpty(user)) {
                 versionName = user + "-" + versionName;
             }
 

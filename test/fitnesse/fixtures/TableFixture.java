@@ -6,6 +6,8 @@ import fit.Fixture;
 import fit.Parse;
 import fit.exception.FitFailureException;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public abstract class TableFixture extends Fixture {
     protected Parse firstRow;
 
@@ -27,7 +29,7 @@ public abstract class TableFixture extends Fixture {
     }
 
     protected boolean blank(int row, int column) {
-        return getText(row, column).equals("");
+        return isEmpty(getText(row, column));
     }
 
     protected void wrong(int row, int column) {
@@ -49,7 +51,7 @@ public abstract class TableFixture extends Fixture {
     protected int getInt(int row, int column) {
         int i = 0;
         String text = getText(row, column);
-        if (text.equals("")) {
+        if (isEmpty(text)) {
             ignore(row, column);
             return 0;
         }

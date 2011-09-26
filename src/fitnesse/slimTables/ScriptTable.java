@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+
 public class ScriptTable extends SlimTable {
     private static final String SEQUENTIAL_ARGUMENT_PROCESSING_SUFFIX = ";";
     private Matcher symbolAssignmentMatcher;
@@ -70,7 +72,7 @@ public class ScriptTable extends SlimTable {
         String symbolName = symbolAssignmentMatcher.group(1);
         addExpectation(new SymbolAssignmentExpectation(symbolName, getInstructionTag(), 0, row));
         String actionName = getActionNameStartingAt(1, lastCol, row);
-        if (!actionName.equals("")) {
+        if (isNotEmpty(actionName)) {
             String[] args = getArgumentsStartingAt(1 + 1, lastCol, row);
             callAndAssign(symbolName, "scriptTableActor", actionName, args);
         }
@@ -84,7 +86,7 @@ public class ScriptTable extends SlimTable {
     private void action(int row) {
         int lastCol = table.getColumnCountInRow(row) - 1;
         String actionName = getActionNameStartingAt(0, lastCol, row);
-        String[] args = getArgumentsStartingAt(0 + 1, lastCol, row);
+        String[] args = getArgumentsStartingAt(1, lastCol, row);
         ScenarioTable scenario = getTestContext().getScenario(Disgracer.disgraceClassName(actionName));
         if (scenario != null) {
             scenario.call(args, this, row);
@@ -166,7 +168,7 @@ public class ScriptTable extends SlimTable {
     }
 
     private String getActionNameStartingAt(int startingCol, int endingCol, int row) {
-        StringBuffer actionName = new StringBuffer();
+        StringBuilder actionName = new StringBuilder();
         actionName.append(table.getCellContents(startingCol, row));
         int actionNameCol = startingCol + 2;
         while (actionNameCol <= endingCol &&

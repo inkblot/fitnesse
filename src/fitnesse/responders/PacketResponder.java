@@ -20,6 +20,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.*;
+
 public class PacketResponder implements SecureResponder {
     private SimpleResponse response;
     private WikiPage page;
@@ -73,7 +75,7 @@ public class PacketResponder implements SecureResponder {
             if (indent >= 0) {
                 String name = rowList.get(indent);
                 String value = rowList.size() > (indent + 1) ? rowList.get(indent + 1) : "";
-                if (null == value || "".equals(value)) {
+                if (isEmpty(value)) {
                     JSONObject parent = new JSONObject();
                     parents[indent].put(name, parent);
                     parents[indent + 1] = parent;
@@ -87,7 +89,7 @@ public class PacketResponder implements SecureResponder {
 
     private int getIndent(List<String> rowList) {
         for (int indent = 0; indent < rowList.size(); indent++) {
-            if ("".equals(rowList.get(indent)) == false)
+            if (isNotEmpty(rowList.get(indent)))
                 return indent;
         }
         return -1;

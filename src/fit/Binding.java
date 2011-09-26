@@ -13,6 +13,8 @@ import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
+
 public abstract class Binding {
     private static Pattern regexMethodPattern = Pattern.compile("(.+)(?:\\?\\?|!!)");
     private static Pattern methodPattern = Pattern.compile("(.+)(?:\\(\\)|\\?|!)");
@@ -110,8 +112,7 @@ public abstract class Binding {
     private static Field findField(Fixture fixture, String simpleName) {
         Field[] fields = fixture.getTargetClass().getFields();
         Field field = null;
-        for (int i = 0; i < fields.length; i++) {
-            Field possibleField = fields[i];
+        for (Field possibleField : fields) {
             if (simpleName.equals(possibleField.getName().toLowerCase())) {
                 field = possibleField;
                 break;
@@ -123,8 +124,7 @@ public abstract class Binding {
     private static Method findMethod(Fixture fixture, String simpleName) {
         Method[] methods = fixture.getTargetClass().getMethods();
         Method method = null;
-        for (int i = 0; i < methods.length; i++) {
-            Method possibleMethod = methods[i];
+        for (Method possibleMethod : methods) {
             if (simpleName.equals(possibleMethod.getName().toLowerCase())) {
                 method = possibleMethod;
                 break;
@@ -174,7 +174,7 @@ public abstract class Binding {
 
     public static class SetBinding extends Binding {
         public void doCell(Fixture fixture, Parse cell) throws Throwable {
-            if ("".equals(cell.text()))
+            if (isEmpty(cell.text()))
                 fixture.handleBlankCell(cell, adapter);
             adapter.set(adapter.parse(cell.text()));
         }

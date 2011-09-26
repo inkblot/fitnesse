@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.*;
 
@@ -157,7 +158,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
         List<?> childTags = new LinkedList<Object>(tag.childTags);
         for (Iterator<?> iterator = childTags.iterator(); iterator.hasNext(); ) {
             HtmlElement element = (HtmlElement) iterator.next();
-            if ("".equals(element.html().trim()))
+            if (isEmpty(element.html().trim()))
                 iterator.remove();
         }
         return childTags;

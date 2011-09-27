@@ -108,17 +108,16 @@ public class MergeResponder implements Responder {
     }
 
     private String addHiddenAttributes() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         if (request.hasInput(PageData.PAGE_TYPE_ATTRIBUTE)) {
             String pageType = (String) request.getInput(PageData.PAGE_TYPE_ATTRIBUTE);
-            buffer.append("<input type=\"hidden\" name=\""
-                    + PageData.PAGE_TYPE_ATTRIBUTE + "\" value=\"" + pageType
-                    + "\" checked=\"checked\">");
+            buffer.append("<input type=\"hidden\" name=\"").append(PageData.PAGE_TYPE_ATTRIBUTE)
+                    .append("\" value=\"").append(pageType).append("\" checked=\"checked\">");
         }
         for (int i = 0; i < PageData.NON_SECURITY_ATTRIBUTES.length; i++) {
             String attribute = PageData.NON_SECURITY_ATTRIBUTES[i];
             if (request.hasInput(attribute))
-                buffer.append("<input type=\"hidden\" name=\"" + attribute + "\" value=\"On\">");
+                buffer.append("<input type=\"hidden\" name=\"").append(attribute).append("\" value=\"On\">");
         }
         return buffer.toString();
     }

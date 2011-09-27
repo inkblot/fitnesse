@@ -16,7 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
-import java.util.Iterator;
 import java.util.List;
 
 public class WikiImportingResponder extends ChunkingResponder implements SecureResponder, WikiImporterClient {
@@ -26,10 +25,6 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     public PageData data;
 
     private WikiImporter importer = new WikiImporter();
-
-    public void setImporter(WikiImporter importer) {
-        this.importer = importer;
-    }
 
     protected void doSending() throws Exception {
         data = page.getData();
@@ -194,8 +189,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
             tail.add("Orphans:");
             tail.add(HtmlUtil.HR);
 
-            for (Iterator<WikiPagePath> iterator = orphans.iterator(); iterator.hasNext(); ) {
-                WikiPagePath path = iterator.next();
+            for (WikiPagePath path : orphans) {
                 HtmlTag row = alternatingRow();
                 row.add(PathParser.render(path));
                 tail.add(row);
@@ -206,7 +200,6 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
 
     private HtmlPage makeHtml() throws Exception {
         HtmlPage html = context.htmlPageFactory.newPage();
-        html = context.htmlPageFactory.newPage();
         String title = "Wiki Import";
         if (isUpdate)
             title += " Update";

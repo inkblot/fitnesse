@@ -17,7 +17,6 @@ This responder is a test rig for SlimTestSystemTest, which makes sure that the S
 responders in general.
 */
 public abstract class SlimResponder extends WikiPageResponder implements TestSystemListener {
-    private boolean slimOpen = false;
     ExecutionLog log;
     private boolean fastTest = false;
     SlimTestSystem testSystem;
@@ -44,7 +43,7 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
     }
 
     boolean slimOpen() {
-        return slimOpen;
+        return false;
     }
 
     public PageData getTestResults() {
@@ -66,8 +65,8 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
     }
 
     public void exceptionOccurred(Throwable e) {
-        //todo remove sout
-        System.err.println("SlimResponder.exceptionOcurred:" + e.getMessage());
+        //todo remove std out
+        System.err.println("SlimResponder.exceptionOccurred:" + e.getMessage());
     }
 
     public String getCommandLine() {

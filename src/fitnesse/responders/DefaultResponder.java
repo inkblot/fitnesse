@@ -22,7 +22,7 @@ public class DefaultResponder extends BasicResponder {
     }
 
     private String content() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("This is the DefaultResponder page.<br/>");
         buffer.append("Because you can see this page something has gone wrong.<br/>");
         buffer.append("If you continue to get this page, please let us know how.<br/>");

@@ -19,11 +19,12 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TestResponder extends ChunkingResponder implements SecureResponder {
-    private static LinkedList<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
+    private static Collection<TestEventListener> eventListeners = new LinkedList<TestEventListener>();
     protected PageData data;
     protected CompositeFormatter formatters;
     private boolean isClosed = false;
@@ -92,8 +93,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     protected Writer makeResponseWriter() {
         return new Writer() {
-            public void write(char[] cbuf, int off, int len) {
-                String fragment = new String(cbuf, off, len);
+            public void write(char[] buf, int off, int len) {
+                String fragment = new String(buf, off, len);
                 try {
                     response.add(fragment.getBytes());
                 } catch (Exception e) {
@@ -169,12 +170,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         return fastTest;
     }
 
-    public void addToResponse(byte[] output) throws Exception {
-        if (!isClosed()) {
-            response.add(output);
-        }
-    }
-
     public void addToResponse(String output) throws Exception {
         if (!isClosed()) {
             response.add(output);
@@ -195,14 +190,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
             response.closeChunks();
             response.addTrailingHeader("Exit-Code", String.valueOf(exitCode));
             response.closeTrailer();
-            response.close();
-        }
-    }
-
-    void closeHtmlResponse() throws Exception {
-        if (!isClosed()) {
-            setClosed();
-            response.closeChunks();
             response.close();
         }
     }

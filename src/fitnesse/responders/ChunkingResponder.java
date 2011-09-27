@@ -80,13 +80,6 @@ public abstract class ChunkingResponder implements Responder {
         }
     }
 
-    protected String getRenderedPath() {
-        if (path != null)
-            return PathParser.render(path);
-        else
-            return request.getResource();
-    }
-
     protected class RespondingRunnable implements Runnable {
         public void run() {
             while (!response.isReadyToSend()) {

@@ -13,19 +13,18 @@ import fitnesse.http.SimpleResponse;
 import java.io.File;
 
 public class RenameFileResponder implements SecureResponder {
-    private String resource;
     String newFilename;
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         Response response = new SimpleResponse();
-        resource = request.getResource();
+        String resource = request.getResource();
         String filename = (String) request.getInput("filename");
         newFilename = (String) request.getInput("newName");
         newFilename = newFilename.trim();
 
-        String pathname = context.rootPagePath + "/" + resource;
-        File file = new File(pathname + filename);
-        file.renameTo(new File(pathname + newFilename));
+        String path = context.rootPagePath + "/" + resource;
+        File file = new File(path + filename);
+        file.renameTo(new File(path + newFilename));
         response.redirect("/" + resource);
         return response;
     }

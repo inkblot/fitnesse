@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 public class RssResponder implements SecureResponder {
     protected Element channelElement;
-    private String resource;
     private WikiPage contextPage;
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -33,13 +32,12 @@ public class RssResponder implements SecureResponder {
         contextPage = getContextPage(request, context);
         WikiPage recentChangesPage = context.root.getChildPage("RecentChanges");
         buildItemReportIfRecentChangesExists(recentChangesPage, rssDocument, request.getResource());
-        SimpleResponse response = responseFrom(rssDocument);
-        return response;
+        return responseFrom(rssDocument);
     }
 
     private WikiPage getContextPage(Request request, FitNesseContext context)
             throws Exception {
-        resource = request.getResource();
+        String resource = request.getResource();
         PageCrawler pageCrawler = context.root.getPageCrawler();
         WikiPagePath resourcePath = PathParser.parse(resource);
         return pageCrawler.getPage(context.root, resourcePath);
@@ -74,8 +72,7 @@ public class RssResponder implements SecureResponder {
     protected String[] convertPageToArrayOfLines(WikiPage page) throws Exception {
         PageData data = page.getData();
         String recentChanges = data.getContent();
-        String[] lines = recentChanges.split("\n");
-        return lines;
+        return recentChanges.split("\n");
     }
 
     protected boolean shouldReportItem(String resource, String title) {
@@ -90,8 +87,7 @@ public class RssResponder implements SecureResponder {
 
         String description = makeDescription(author, pubDate);
         XmlUtil.addTextNode(rssDocument, itemElement1, "description", description);
-        Element itemElement = itemElement1;
-        channelElement.appendChild(itemElement);
+        channelElement.appendChild(itemElement1);
     }
 
     protected void makeNodes(Document rssDocument, Element itemElement1, String title, String author, String pubDate) {
@@ -139,8 +135,7 @@ public class RssResponder implements SecureResponder {
         XmlWriter writer = new XmlWriter(os);
         writer.write(rssDocument);
         writer.close();
-        byte[] bytes = os.toByteArray();
-        return bytes;
+        return os.toByteArray();
     }
 
     private Document buildRssHeader() throws Exception {

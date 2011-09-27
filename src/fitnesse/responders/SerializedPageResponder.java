@@ -33,10 +33,10 @@ public class SerializedPageResponder implements SecureResponder {
             PageXmlizer pageXmlizer = new PageXmlizer();
             pageXmlizer.addPageCondition(xmlizePageCondition);
             Document doc = pageXmlizer.xmlize(page);
-            return makeResponseWithxml(doc);
+            return makeResponseWithXml(doc);
         } else if ("data".equals(request.getInput("type"))) {
             Document doc = new PageXmlizer().xmlize(page.getData());
-            return makeResponseWithxml(doc);
+            return makeResponseWithXml(doc);
         } else {
             Object object = getObjectToSerialize(request, page);
             byte[] bytes = serializeToBytes(object);
@@ -44,8 +44,8 @@ public class SerializedPageResponder implements SecureResponder {
         }
     }
 
-    private SimpleResponse makeResponseWithxml(Document doc) throws Exception {
-        //TODO MdM Shoudl probably use a StreamedResponse
+    private SimpleResponse makeResponseWithXml(Document doc) throws Exception {
+        //TODO MdM Should probably use a StreamedResponse
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         XmlWriter xmlWriter = new XmlWriter(output);
         xmlWriter.write(doc);

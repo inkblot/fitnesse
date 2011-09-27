@@ -31,7 +31,7 @@ public class UnauthorizedResponder implements Responder {
         group.add("<p>The requested resource: ");
         group.add(makeSimpleTag("b", request.getResource()));
         group.add(" is restricted.");
-        group.add("<p> Either your credientials were not supplied or they didn't match the criteria to access this resource.");
+        group.add("<p> Either your credentials were not supplied or they didn't match the criteria to access this resource.");
         group.add(HtmlUtil.HR);
         group.add(makeSimpleTag("address", "FitNesse"));
         return group;

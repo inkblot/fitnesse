@@ -27,11 +27,6 @@ public class WikiPageResponder implements SecureResponder {
     public WikiPageResponder() {
     }
 
-    public WikiPageResponder(WikiPage page) throws Exception {
-        this.page = page;
-        pageData = page.getData();
-    }
-
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         loadPage(request.getResource(), context);
         if (page == null)
@@ -50,14 +45,14 @@ public class WikiPageResponder implements SecureResponder {
     }
 
     private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
-        if (dontCreateNonExistentPage(request))
+        if (doNotCreateNonExistentPage(request))
             return new NotFoundResponder().makeResponse(context, request);
         return new EditResponder().makeResponseForNonExistentPage(context, request);
     }
 
-    private boolean dontCreateNonExistentPage(Request request) {
-        String dontCreate = (String) request.getInput("dontCreatePage");
-        return dontCreate != null && (dontCreate.length() == 0 || Boolean.parseBoolean(dontCreate));
+    private boolean doNotCreateNonExistentPage(Request request) {
+        String doNotCreate = (String) request.getInput("dontCreatePage");
+        return doNotCreate != null && (doNotCreate.length() == 0 || Boolean.parseBoolean(doNotCreate));
     }
 
     private SimpleResponse makePageResponse(FitNesseContext context) throws Exception {

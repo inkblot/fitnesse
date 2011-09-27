@@ -21,7 +21,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
     protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception {
         PageCrawler crawler = context.root.getPageCrawler();
 
-        newParentName = getNameofNewParent(request);
+        newParentName = getNameOfNewParent(request);
         if (newParentName == null)
             return false;
 
@@ -31,7 +31,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
         return (newParentPage != null);
     }
 
-    private static String getNameofNewParent(Request request) {
+    private static String getNameOfNewParent(Request request) {
         String newParentName = (String) request.getInput("newLocation");
         if (".".equals(newParentName)) {
             return "";

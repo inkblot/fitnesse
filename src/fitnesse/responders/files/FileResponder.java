@@ -74,10 +74,6 @@ public class FileResponder implements Responder {
         }
     }
 
-    String getResource() {
-        return resource;
-    }
-
     private boolean isNotModified(Request request) {
         if (request.hasHeader("If-Modified-Since")) {
             String queryDateString = (String) request.getHeader("If-Modified-Since");
@@ -109,8 +105,8 @@ public class FileResponder implements Responder {
         try  // remove milliseconds
         {
             lastModifiedDate = SimpleResponse.makeStandardHttpDateFormat().parse(lastModifiedDateString);
-        } catch (java.text.ParseException jtpe) {
-            jtpe.printStackTrace();
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
         }
     }
 

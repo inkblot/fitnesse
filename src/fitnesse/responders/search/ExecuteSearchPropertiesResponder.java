@@ -56,12 +56,12 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     protected Map<String, Boolean> getAttributesFromInput(Request request) {
         Map<String, Boolean> attributes = new LinkedHashMap<String, Boolean>();
 
-        getListboxAttributesFromRequest(request, ACTION, SEARCH_ACTION_ATTRIBUTES,
+        getListBoxAttributesFromRequest(request, ACTION, SEARCH_ACTION_ATTRIBUTES,
                 attributes);
-        getListboxAttributesFromRequest(request, SECURITY, SECURITY_ATTRIBUTES,
+        getListBoxAttributesFromRequest(request, SECURITY, SECURITY_ATTRIBUTES,
                 attributes);
 
-        getListboxAttributesFromRequest(request, SPECIAL, SPECIAL_ATTRIBUTES,
+        getListBoxAttributesFromRequest(request, SPECIAL, SPECIAL_ATTRIBUTES,
                 attributes);
 
         // this is an ugly renaming we need to make
@@ -72,7 +72,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
         return attributes;
     }
 
-    private void getListboxAttributesFromRequest(Request request,
+    private void getListBoxAttributesFromRequest(Request request,
                                                  String inputAttributeName, String[] attributeList,
                                                  Map<String, Boolean> attributes) {
         String requested = (String) request.getInput(inputAttributeName);

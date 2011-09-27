@@ -34,14 +34,10 @@ public class StopTestResponder extends BasicResponder {
     }
 
     public String getDetails(FitNesseContext context) {
-        String details = "";
         if (testId != null) {
-            details = "Attempting to stop single test or suite..." + HtmlUtil.BRtag;
-            details += context.runningTestingTracker.stopProcess(testId);
+            return "Attempting to stop single test or suite..." + HtmlUtil.BRtag + context.runningTestingTracker.stopProcess(testId);
         } else {
-            details = "Attempting to stop all running test processes..." + HtmlUtil.BRtag;
-            details += context.runningTestingTracker.stopAllProcesses();
+            return "Attempting to stop all running test processes..." + HtmlUtil.BRtag + context.runningTestingTracker.stopAllProcesses();
         }
-        return details;
     }
 }

@@ -38,8 +38,8 @@ public class DeleteConfirmationResponder implements SecureResponder {
     }
 
     private HtmlTag makeConfirmationHTML(String filename, FitNesseContext context) throws Exception {
-        String pathname = context.rootPagePath + "/" + resource + filename;
-        File file = new File(pathname);
+        String path = context.rootPagePath + "/" + resource + filename;
+        File file = new File(path);
         boolean isDir = file.isDirectory();
 
         TagGroup group = new TagGroup();

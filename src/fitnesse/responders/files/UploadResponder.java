@@ -10,6 +10,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
+import org.apache.commons.io.IOUtils;
 import util.FileUtil;
 
 import java.io.*;
@@ -45,8 +46,8 @@ public class UploadResponder implements SecureResponder {
                 output = new BufferedOutputStream(new FileOutputStream(file));
                 FileUtil.copyBytes(input, output);
             } finally {
-                input.close();
-                output.close();
+                IOUtils.closeQuietly(input);
+                IOUtils.closeQuietly(output);
                 uploadedFile.delete();
             }
         }

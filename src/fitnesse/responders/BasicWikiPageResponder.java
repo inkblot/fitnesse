@@ -28,8 +28,7 @@ public abstract class BasicWikiPageResponder extends BasicResponder {
 
     private WikiPage getRequestedPage(Request request, FitNesseContext context) throws Exception {
         WikiPagePath path = PathParser.parse(request.getResource());
-        WikiPage requestedPage = context.root.getPageCrawler().getPage(context.root, path);
-        return requestedPage;
+        return context.root.getPageCrawler().getPage(context.root, path);
     }
 
     protected abstract String contentFrom(WikiPage requestedPage) throws Exception;

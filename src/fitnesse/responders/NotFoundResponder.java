@@ -36,7 +36,7 @@ public class NotFoundResponder implements Responder {
 
     private String makeRightColumn(String name) throws Exception {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("The requested resource: <i>" + name + "</i> was not found.");
+        buffer.append("The requested resource: <i>").append(name).append("</i> was not found.");
         if (Pattern.matches(WikiWordWidget.REGEXP, name)) {
             makeCreateThisPageWithButton(name, buffer);
         }

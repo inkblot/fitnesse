@@ -82,7 +82,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     }
 
     @Test
-    public void testErrorOccured() throws Exception {
+    public void testErrorOccurred() throws Exception {
         importerFactory.mockWikiImporter.fail = true;
         addImportPropertyToPage(pageOne, false, true);
 

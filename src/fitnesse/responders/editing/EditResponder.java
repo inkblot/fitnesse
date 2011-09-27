@@ -76,17 +76,13 @@ public class EditResponder implements SecureResponder {
         return pageData.getContent();
     }
 
-    public String makeHtml(String resource, FitNesseContext context) throws Exception {
-        return doMakeHtml(resource, context, false);
-    }
-
     private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage)
             throws Exception {
         HtmlPage html = context.htmlPageFactory.newPage();
         String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
         html.title.use(title + resource + ":");
 
-        html.body.addAttribute("onload", "document.f." + CONTENT_INPUT_NAME + ".focus()");
+        html.body.addAttribute("onLoad", "document.f." + CONTENT_INPUT_NAME + ".focus()");
         HtmlTag header = makeHeader(resource, title);
         html.header.use(header);
         html.main.use(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));

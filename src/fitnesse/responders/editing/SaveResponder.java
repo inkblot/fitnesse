@@ -85,8 +85,7 @@ public class SaveResponder implements SecureResponder {
         if (!request.hasInput(EditResponder.TIME_STAMP))
             return 0;
         String editTimeStampString = (String) request.getInput(EditResponder.TIME_STAMP);
-        long editTimeStamp = Long.parseLong(editTimeStampString);
-        return editTimeStamp;
+        return Long.parseLong(editTimeStampString);
     }
 
     private WikiPage getPage(String resource, FitNesseContext context) throws Exception {

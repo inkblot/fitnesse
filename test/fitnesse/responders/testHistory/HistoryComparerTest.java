@@ -49,7 +49,7 @@ public class HistoryComparerTest extends FitnesseBaseTestCase {
 
     @Test
     public void shouldBeAbleToHandleANonexistentFile() throws Exception {
-        //todo this just tests the mock, not the actual comparer.
+        //todo this just tests the mock, not the actual comparator.
         String content = comparer.getFileContent("TestFolder/TestFile");
         assertNull(content);
     }

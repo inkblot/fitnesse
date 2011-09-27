@@ -22,7 +22,7 @@ import java.util.Set;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class HistoryComparerResponder implements Responder {
-    public HistoryComparer comparer;
+    public HistoryComparer comparator;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(
             TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
     private VelocityContext velocityContext;
@@ -35,17 +35,17 @@ public class HistoryComparerResponder implements Responder {
     private FitNesseContext context;
 
     public HistoryComparerResponder(HistoryComparer historyComparer) {
-        comparer = historyComparer;
+        comparator = historyComparer;
     }
 
     public HistoryComparerResponder() {
-        comparer = new HistoryComparer();
+        comparator = new HistoryComparer();
     }
 
     public Response makeResponse(FitNesseContext context, Request request)
             throws Exception {
         this.context = context;
-        initializeReponseComponents(request);
+        initializeResponseComponents(request);
         if (!getFileNameFromRequest(request))
             return makeErrorResponse(context, request,
                     "Compare Failed because the wrong number of Input Files were given. "
@@ -62,7 +62,7 @@ public class HistoryComparerResponder implements Responder {
 
     private Response makeResponseFromComparison(FitNesseContext context,
                                                 Request request) throws Exception {
-        if (comparer.compare(firstFilePath, secondFilePath))
+        if (comparator.compare(firstFilePath, secondFilePath))
             return makeValidResponse();
         else {
             String message = String.format("These files could not be compared."
@@ -76,9 +76,9 @@ public class HistoryComparerResponder implements Responder {
                 || ((new File(secondFilePath)).exists());
     }
 
-    private void initializeReponseComponents(Request request) throws IOException {
-        if (comparer == null)
-            comparer = new HistoryComparer();
+    private void initializeResponseComponents(Request request) throws IOException {
+        if (comparator == null)
+            comparator = new HistoryComparer();
         velocityContext = new VelocityContext();
         velocityContext.put("pageTitle", makePageTitle(request.getResource()));
     }
@@ -120,12 +120,12 @@ public class HistoryComparerResponder implements Responder {
         if (!testing) {
             velocityContext.put("firstFileName", dateFormat.parse(firstFileName));
             velocityContext.put("secondFileName", dateFormat.parse(secondFileName));
-            velocityContext.put("completeMatch", comparer.allTablesMatch());
-            velocityContext.put("comparer", comparer);
+            velocityContext.put("completeMatch", comparator.allTablesMatch());
+            velocityContext.put("comparer", comparator);
         }
-        velocityContext.put("resultContent", comparer.getResultContent());
-        velocityContext.put("firstTables", comparer.firstTableResults);
-        velocityContext.put("secondTables", comparer.secondTableResults);
+        velocityContext.put("resultContent", comparator.getResultContent());
+        velocityContext.put("firstTables", comparator.firstTableResults);
+        velocityContext.put("secondTables", comparator.secondTableResults);
         velocityContext.put("count", count);
         String velocityTemplate = "fitnesse/templates/compareHistory.vm";
         Template template = VelocityFactory.getVelocityEngine().getTemplate(

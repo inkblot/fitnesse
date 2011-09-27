@@ -19,7 +19,6 @@ public class VersionSelectionResponder implements SecureResponder {
     private WikiPage page;
     private List<VersionInfo> versions;
     private List<String> ageStrings;
-    private PageData pageData;
     private String resource;
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -30,12 +29,11 @@ public class VersionSelectionResponder implements SecureResponder {
         if (page == null)
             return new NotFoundResponder().makeResponse(context, request);
 
-        pageData = page.getData();
+        PageData pageData = page.getData();
         versions = getVersionsList(pageData);
         ageStrings = new ArrayList<String>();
         Date now = new GregorianCalendar().getTime();
-        for (Iterator<VersionInfo> iterator = versions.iterator(); iterator.hasNext(); ) {
-            VersionInfo version = iterator.next();
+        for (VersionInfo version : versions) {
             ageStrings.add(howLongAgoString(now, version.getCreationTime()));
         }
 
@@ -80,7 +78,7 @@ public class VersionSelectionResponder implements SecureResponder {
     private HtmlTag makeVersionRow(int index) {
         VersionInfo version = versions.get(index);
         HtmlTag input = HtmlUtil.makeInputTag("radio", "version", version.getName());
-        return makeRow("td", input, version.getName(), version.getAuthor(), ageStrings.get(index).toString());
+        return makeRow("td", input, version.getName(), version.getAuthor(), ageStrings.get(index));
     }
 
     private HtmlTag makeRow(String cellType, HtmlElement input, String name, String author, String age) {

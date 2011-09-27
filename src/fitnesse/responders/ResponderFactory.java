@@ -12,7 +12,7 @@ import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
 import fitnesse.responders.search.WhereUsedResponder;
-import fitnesse.responders.testHistory.HistoryComparerResponder;
+import fitnesse.responders.testHistory.HistoryComparatorResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
 import fitnesse.responders.testHistory.PurgeHistoryResponder;
 import fitnesse.responders.testHistory.TestHistoryResponder;
@@ -79,7 +79,7 @@ public class ResponderFactory {
         addResponder("pageHistory", PageHistoryResponder.class);
         addResponder("addChild", AddChildPageResponder.class);
         addResponder("purgeHistory", PurgeHistoryResponder.class);
-        addResponder("compareHistory", HistoryComparerResponder.class);
+        addResponder("compareHistory", HistoryComparatorResponder.class);
         addResponder("replace", SearchReplaceResponder.class);
     }
 

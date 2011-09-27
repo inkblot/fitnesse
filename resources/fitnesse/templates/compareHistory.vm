@@ -27,7 +27,7 @@
   </tr>
   #set ($matched = "Match")
 #foreach($result in $resultContent)
-   #set($score = $comparer.findScoreByFirstTableIndexAsStringAsPercent($count))
+   #set($score = $comparator.findScoreByFirstTableIndexAsStringAsPercent($count))
   <tr>
     #if($result.equals("pass"))
       #set($matched = "Match. Score: " + $score + "%")

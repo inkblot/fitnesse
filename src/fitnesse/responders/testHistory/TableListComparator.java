@@ -6,16 +6,17 @@ import fitnesse.slimTables.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
-import static fitnesse.responders.testHistory.HistoryComparer.MatchedPair;
+import static fitnesse.responders.testHistory.HistoryComparator.MatchedPair;
 
-public class TableListComparer {
+public class TableListComparator {
     private HtmlTableScanner leftHandScanner;
     private HtmlTableScanner rightHandScanner;
-    protected ArrayList<MatchedPair> tableMatches;
+    protected final List<MatchedPair> tableMatches;
 
 
-    public TableListComparer(HtmlTableScanner leftHandScanner, HtmlTableScanner rightHandScanner) {
+    public TableListComparator(HtmlTableScanner leftHandScanner, HtmlTableScanner rightHandScanner) {
         this.leftHandScanner = leftHandScanner;
         this.rightHandScanner = rightHandScanner;
         tableMatches = new ArrayList<MatchedPair>();
@@ -40,11 +41,11 @@ public class TableListComparer {
     }
 
     double compareTables(Table table1, Table table2) {
-        return new TableComparer(table1, table2).compareRowsOfTables();
+        return new TableComparator(table1, table2).compareRowsOfTables();
     }
 
     public boolean theTablesMatch(double score) {
-        return score >= HistoryComparer.MIN_MATCH_SCORE;
+        return score >= HistoryComparator.MIN_MATCH_SCORE;
     }
 
     public void saveMatch(int leftTableIndex, int rightTableIndex, double score) {
@@ -95,13 +96,13 @@ public class TableListComparer {
         });
     }
 
-    static class TableComparer {
+    static class TableComparator {
         private Table table1;
         private Table table2;
         private int table1rows;
         private int table2rows;
 
-        public TableComparer(Table table1, Table table2) {
+        public TableComparator(Table table1, Table table2) {
             this.table1 = table1;
             this.table2 = table2;
             table1rows = table1.getRowCount();

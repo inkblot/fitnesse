@@ -14,7 +14,7 @@ import fitnesse.responders.search.ExecuteSearchPropertiesResponder;
 import fitnesse.responders.search.SearchFormResponder;
 import fitnesse.responders.search.SearchResponder;
 import fitnesse.responders.search.WhereUsedResponder;
-import fitnesse.responders.testHistory.HistoryComparerResponder;
+import fitnesse.responders.testHistory.HistoryComparatorResponder;
 import fitnesse.responders.testHistory.PageHistoryResponder;
 import fitnesse.responders.testHistory.PurgeHistoryResponder;
 import fitnesse.responders.testHistory.TestHistoryResponder;
@@ -328,7 +328,7 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     }
 
     @Test
-    public void testHistoryComparerResponder() throws Exception {
-        assertResponderTypeMatchesInput("compareHistory", HistoryComparerResponder.class);
+    public void testHistoryComparatorResponder() throws Exception {
+        assertResponderTypeMatchesInput("compareHistory", HistoryComparatorResponder.class);
     }
 }

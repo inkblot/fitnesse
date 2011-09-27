@@ -21,8 +21,8 @@ import java.util.Set;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
-public class HistoryComparerResponder implements Responder {
-    public HistoryComparer comparator;
+public class HistoryComparatorResponder implements Responder {
+    public HistoryComparator comparator;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(
             TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
     private VelocityContext velocityContext;
@@ -34,12 +34,12 @@ public class HistoryComparerResponder implements Responder {
 
     private FitNesseContext context;
 
-    public HistoryComparerResponder(HistoryComparer historyComparer) {
-        comparator = historyComparer;
+    public HistoryComparatorResponder(HistoryComparator historyComparator) {
+        comparator = historyComparator;
     }
 
-    public HistoryComparerResponder() {
-        comparator = new HistoryComparer();
+    public HistoryComparatorResponder() {
+        comparator = new HistoryComparator();
     }
 
     public Response makeResponse(FitNesseContext context, Request request)
@@ -78,7 +78,7 @@ public class HistoryComparerResponder implements Responder {
 
     private void initializeResponseComponents(Request request) throws IOException {
         if (comparator == null)
-            comparator = new HistoryComparer();
+            comparator = new HistoryComparator();
         velocityContext = new VelocityContext();
         velocityContext.put("pageTitle", makePageTitle(request.getResource()));
     }
@@ -121,7 +121,7 @@ public class HistoryComparerResponder implements Responder {
             velocityContext.put("firstFileName", dateFormat.parse(firstFileName));
             velocityContext.put("secondFileName", dateFormat.parse(secondFileName));
             velocityContext.put("completeMatch", comparator.allTablesMatch());
-            velocityContext.put("comparer", comparator);
+            velocityContext.put("comparator", comparator);
         }
         velocityContext.put("resultContent", comparator.getResultContent());
         velocityContext.put("firstTables", comparator.firstTableResults);

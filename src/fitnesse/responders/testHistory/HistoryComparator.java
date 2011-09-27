@@ -6,26 +6,26 @@ import org.htmlparser.util.ParserException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
-public class HistoryComparer {
+public class HistoryComparator {
     // min for match is .8 content score + .2 topology bonus.
     static final double MIN_MATCH_SCORE = .8;
     static final double MAX_MATCH_SCORE = 1.2;
-    static ArrayList<String> resultContent;
 
     private static final String blankTable = "<table><tr><td></td></tr></table>";
 
     private HtmlTableScanner firstScanner;
     private HtmlTableScanner secondScanner;
-    private TableListComparer comparer;
 
     String firstFileContent = "";
     String secondFileContent = "";
 
-    ArrayList<String> firstTableResults;
-    ArrayList<String> secondTableResults;
+    private final List<String> resultContent = new ArrayList<String>();
+    List<String> firstTableResults;
+    List<String> secondTableResults;
+    List<MatchedPair> matchedTables;
 
-    ArrayList<MatchedPair> matchedTables;
 
     public String getFileContent(String filePath) {
         try {
@@ -94,12 +94,12 @@ public class HistoryComparer {
     }
 
     public boolean grabAndCompareTablesFromHtml() throws ParserException {
-        initializeComparerHelpers();
+        initializeComparatorHelpers();
         if (firstScanner.getTableCount() == 0 || secondScanner.getTableCount() == 0)
             return false;
-        comparer = new TableListComparer(firstScanner, secondScanner);
-        comparer.compareAllTables();
-        matchedTables = comparer.tableMatches;
+        TableListComparator comparator = new TableListComparator(firstScanner, secondScanner);
+        comparator.compareAllTables();
+        matchedTables = comparator.tableMatches;
         getTableTextFromScanners();
         lineUpTheTables();
         addBlanksToUnmatchingRows();
@@ -107,9 +107,8 @@ public class HistoryComparer {
         return true;
     }
 
-    private void initializeComparerHelpers() throws ParserException {
+    private void initializeComparatorHelpers() throws ParserException {
         matchedTables = new ArrayList<MatchedPair>();
-        resultContent = new ArrayList<String>();
         firstScanner = new HtmlTableScanner(firstFileContent);
         secondScanner = new HtmlTableScanner(secondFileContent);
     }
@@ -238,7 +237,7 @@ public class HistoryComparer {
             for (MatchedPair match : matchedTables)
                 if (match.first == i && match.matchScore >= 1.19)
                     result = "pass";
-            resultContent.add(result);
+            getResultContent().add(result);
 
         }
     }
@@ -250,7 +249,7 @@ public class HistoryComparer {
         secondFileContent = content == null ? "" : content;
     }
 
-    public ArrayList<String> getResultContent() {
+    public List<String> getResultContent() {
         return resultContent;
     }
 
@@ -274,7 +273,7 @@ public class HistoryComparer {
         }
 
         public boolean equals(Object obj) {
-            return this.equals((MatchedPair) (obj));
+            return obj instanceof MatchedPair && this.equals((MatchedPair) (obj));
         }
 
         public boolean equals(MatchedPair match) {

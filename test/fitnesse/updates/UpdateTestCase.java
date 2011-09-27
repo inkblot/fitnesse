@@ -33,7 +33,7 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
     public final void beforeUpdateTest() throws Exception {
         root = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
         assertThat(root, instanceOf(FileSystemPage.class));
-        context = new FitNesseContext(root, getRootPath());
+        context = new FitNesseContext(root, getRootPath(), injector);
 
         FileUtil.makeDir(getRootPath());
         crawler = root.getPageCrawler();

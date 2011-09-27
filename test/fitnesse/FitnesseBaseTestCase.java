@@ -39,7 +39,7 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     protected final FitNesseContext makeContext(WikiPage root) {
         if (context == null) {
-            context = new FitNesseContext(root, getRootPath());
+            context = new FitNesseContext(root, getRootPath(), injector);
         }
         return context;
     }

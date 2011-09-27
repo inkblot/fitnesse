@@ -15,7 +15,6 @@ public class UpdaterTest extends UpdateTestCase {
 
     @Before
     public void setUp() throws Exception {
-        UpdaterImplementation.testing = true;
         crawler.addPage(root, PathParser.parse("PageOne"));
     }
 

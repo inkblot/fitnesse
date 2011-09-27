@@ -2,6 +2,9 @@ package fitnesse.updates;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Updater;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.Arrays;
@@ -9,11 +12,12 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 public class UpdaterBase implements Updater {
+    private static final Logger logger = LoggerFactory.getLogger(UpdaterBase.class);
     public FitNesseContext context;
     public Properties rootProperties;
     public Update[] updates;
 
-    public UpdaterBase(FitNesseContext context) throws Exception {
+    public UpdaterBase(FitNesseContext context) throws IOException {
         this.context = context;
         rootProperties = loadProperties();
     }
@@ -22,7 +26,7 @@ public class UpdaterBase implements Updater {
         return rootProperties;
     }
 
-    public Properties loadProperties() throws Exception {
+    public Properties loadProperties() throws IOException {
         Properties properties = new Properties();
         File propFile = getPropertiesFile();
         if (propFile.exists()) {
@@ -31,32 +35,34 @@ public class UpdaterBase implements Updater {
                 is = new FileInputStream(propFile);
                 properties.load(is);
             } finally {
-                if (is != null)
-                    is.close();
+                IOUtils.closeQuietly(is);
             }
         }
         return properties;
     }
 
-    private File getPropertiesFile() throws Exception {
+    private File getPropertiesFile() {
         String filename = context.rootPagePath + "/properties";
         return new File(filename);
     }
 
-    public void saveProperties() throws Exception {
+    public void saveProperties() throws IOException {
         OutputStream os = null;
         File propFile = null;
         try {
             propFile = getPropertiesFile();
             os = new FileOutputStream(propFile);
             writeProperties(os);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             String fileName = (propFile != null) ? propFile.getAbsolutePath() : "<unknown>";
-            System.err.println("Filed to save properties file: \"" + fileName + "\". (exception: " + e + ")");
+            logger.error("Failed to save properties file: \"" + fileName + "\"", e);
+            throw e;
+        } catch (IOException e) {
+            String fileName = (propFile != null) ? propFile.getAbsolutePath() : "<unknown>";
+            logger.error("Failed to save properties file: \"" + fileName + "\"", e);
             throw e;
         } finally {
-            if (os != null)
-                os.close();
+            IOUtils.closeQuietly(os);
         }
     }
 
@@ -66,7 +72,7 @@ public class UpdaterBase implements Updater {
         awriter = new BufferedWriter(new OutputStreamWriter(OutputStream, "8859_1"));
         awriter.write("#FitNesse properties");
         awriter.newLine();
-        Object[] keys = rootProperties.keySet().toArray(new Object[0]);
+        Object[] keys = rootProperties.keySet().toArray(new Object[rootProperties.keySet().size()]);
         Arrays.sort(keys);
         for (Enumeration<Object> enumeration = rootProperties.keys(); enumeration
                 .hasMoreElements(); ) {
@@ -78,31 +84,26 @@ public class UpdaterBase implements Updater {
         awriter.flush();
     }
 
-    public void update() throws Exception {
+    public void update() throws IOException {
         Update[] updates = getUpdates();
-        for (int i = 0; i < updates.length; i++) {
-            Update update = updates[i];
+        for (Update update : updates) {
             if (update.shouldBeApplied())
                 performUpdate(update);
         }
         saveProperties();
     }
 
-    private void performUpdate(Update update) throws Exception {
+    private void performUpdate(Update update) {
         try {
-            print(update.getMessage());
+            logger.info(update.getMessage());
             update.doUpdate();
         } catch (Exception e) {
-            print("\n\t" + e + "\n");
+            logger.error("Could not perform update", e);
         }
     }
 
-    private Update[] getUpdates() throws Exception {
+    private Update[] getUpdates() {
         return updates;
     }
 
-    private void print(String message) {
-        if (!UpdaterImplementation.testing)
-            System.out.print(message);
-    }
 }

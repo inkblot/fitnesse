@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Injector;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
@@ -27,6 +28,7 @@ public class FitNesseContext {
 
     public static FitNesseContext globalContext;
 
+    private final Injector injector;
     public final String rootPath;
     public final WikiPage root;
     public final String rootPagePath;
@@ -42,9 +44,10 @@ public class FitNesseContext {
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
-    public FitNesseContext(WikiPage root, String rootPath) {
+    public FitNesseContext(WikiPage root, String rootPath, Injector injector) {
         this.root = root;
         this.rootPath = rootPath;
+        this.injector = injector;
         String absolutePath = new File(this.rootPath).getAbsolutePath();
         if (!absolutePath.equals(this.rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());

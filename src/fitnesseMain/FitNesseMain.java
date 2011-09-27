@@ -53,7 +53,7 @@ public class FitNesseMain {
         new PluginsClassLoader().addPluginsToClassLoader();
         WikiPageFactory wikiPageFactory = injector.getInstance(WikiPageFactory.class);
         WikiPage root = wikiPageFactory.makeRootPage(arguments.getRootPath(), arguments.getRootDirectory());
-        FitNesseContext context = new FitNesseContext(root, arguments.getRootPath());
+        FitNesseContext context = new FitNesseContext(root, arguments.getRootPath(), injector);
         context.port = arguments.getPort();
         context.authenticator = injector.getInstance(Authenticator.class);
 

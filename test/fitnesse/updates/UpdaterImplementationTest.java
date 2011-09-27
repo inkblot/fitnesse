@@ -52,7 +52,7 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     private void setTheContext() throws Exception {
         root = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
         assertThat(root, instanceOf(FileSystemPage.class));
-        context = new FitNesseContext(root, getRootPath());
+        context = new FitNesseContext(root, getRootPath(), injector);
     }
 
     private void setTheRoot() throws Exception {
@@ -121,7 +121,6 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     public void updatesShouldBeRunIfCurrentVersionNotAlreadyUpdated() throws Exception {
         String version = "TestVersion";
         updater.setFitNesseVersion(version);
-        updater.testing = true;
 
         File propertiesFile = new File(getRootPath(), "RooT/properties");
         FileUtil.deleteFile(propertiesFile);
@@ -173,11 +172,11 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
             return "test";
         }
 
-        public boolean shouldBeApplied() throws Exception {
+        public boolean shouldBeApplied() {
             return true;
         }
 
-        public void doUpdate() throws Exception {
+        public void doUpdate() {
             updateDone = true;
         }
     }

@@ -59,8 +59,14 @@ public class PageData implements Serializable {
     public static final String[] NAVIGATION_ATTRIBUTES = {
             PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH, PropertyPRUNE};
 
-    public static final String[] NON_SECURITY_ATTRIBUTES = StringUtil
-            .combineArrays(ACTION_ATTRIBUTES, NAVIGATION_ATTRIBUTES);
+    public static final String[] NON_SECURITY_ATTRIBUTES;
+
+    static {
+        List <String> nonSecurityAttributes = new ArrayList<String>(ACTION_ATTRIBUTES.length + NAVIGATION_ATTRIBUTES.length);
+        nonSecurityAttributes.addAll(Arrays.asList(ACTION_ATTRIBUTES));
+        nonSecurityAttributes.addAll(Arrays.asList(NAVIGATION_ATTRIBUTES));
+        NON_SECURITY_ATTRIBUTES = nonSecurityAttributes.toArray(new String[nonSecurityAttributes.size()]);
+    }
 
     public static final String PropertySECURE_READ = "secure-read";
     public static final String PropertySECURE_WRITE = "secure-write";

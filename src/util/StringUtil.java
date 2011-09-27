@@ -2,18 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
 public class StringUtil {
-
-    public static String[] combineArrays(String[]... arrays) {
-        List<String> combinedList = new LinkedList<String>();
-        for (String[] array : arrays)
-            combinedList.addAll(Arrays.asList(array));
-        return combinedList.toArray(new String[combinedList.size()]);
-    }
 
     public static String trimNonNullString(String original) {
         return original != null ? original.trim() : original;

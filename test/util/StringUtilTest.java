@@ -7,45 +7,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class StringUtilTest {
-    @Test
-    public void testCombineArraysBothEmpty() {
-        assertEquals(0, StringUtil.combineArrays(new String[]{}, new String[]{}).length);
-    }
-
-    @Test
-    public void testCombineArraysWithOneItemInFirst() {
-        String[] first = new String[]{"a"};
-        String[] result = StringUtil.combineArrays(first, new String[]{});
-        assertEquals(1, result.length);
-        assertEquals("a", result[0]);
-    }
-
-    @Test
-    public void testCombineArraysWithOneItemInEach() {
-        String[] first = new String[]{"a"};
-        String[] second = new String[]{"b"};
-        String[] result = StringUtil.combineArrays(first, second);
-        assertEquals(2, result.length);
-        assertEquals("a", result[0]);
-        assertEquals("b", result[1]);
-    }
-
-    @Test
-    public void testCombineArraysWithMixedNumbers() {
-        String[] first = new String[]{"a", "b", "c"};
-        String[] second = new String[]{"d", "e"};
-        String[] third = new String[]{"f", "g", "h"};
-        String[] result = StringUtil.combineArrays(first, second, third);
-        assertEquals(8, result.length);
-        assertEquals("a", result[0]);
-        assertEquals("b", result[1]);
-        assertEquals("c", result[2]);
-        assertEquals("d", result[3]);
-        assertEquals("e", result[4]);
-        assertEquals("f", result[5]);
-        assertEquals("g", result[6]);
-        assertEquals("h", result[7]);
-    }
 
     @Test
     public void testTrimNullStringReturnsNull() {

@@ -9,21 +9,6 @@ import static org.junit.Assert.assertEquals;
 public class StringUtilTest {
 
     @Test
-    public void testTrimNullStringReturnsNull() {
-        assertEquals(null, StringUtil.trimNonNullString(null));
-    }
-
-    @Test
-    public void testTrimAllSpacesStringResultsInEmptyString() {
-        assertEquals("", StringUtil.trimNonNullString("   "));
-    }
-
-    @Test
-    public void testTrimStringWithLeadingAndTrailingSpaces() {
-        assertEquals("FitNesse", StringUtil.trimNonNullString(" FitNesse "));
-    }
-
-    @Test
     public void replaceAll() throws Exception {
         assertEquals("my name is Bob, Bob is my name", StringUtil.replaceAll("my name is $name, $name is my name", "$name", "Bob"));
         assertEquals("_$namex_", StringUtil.replaceAll("_$name_", "$name", "$namex"));

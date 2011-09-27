@@ -2,13 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class WikiPageProperty implements Serializable {
@@ -29,7 +28,7 @@ public class WikiPageProperty implements Serializable {
     }
 
     public void setValue(String value) {
-        this.value = StringUtil.trimNonNullString(value);
+        this.value = StringUtils.trim(value);
     }
 
     public void set(String name, WikiPageProperty child) {
@@ -77,7 +76,7 @@ public class WikiPageProperty implements Serializable {
     }
 
     protected String toString(String key, int depth) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         for (int i = 0; i < depth; i++)
             buffer.append("\t");
@@ -86,8 +85,7 @@ public class WikiPageProperty implements Serializable {
             buffer.append(" = ").append(getValue());
         buffer.append("\n");
 
-        for (Iterator<?> iterator = keySet().iterator(); iterator.hasNext(); ) {
-            String childKey = (String) iterator.next();
+        for (String childKey : keySet()) {
             WikiPageProperty value = getProperty(childKey);
             if (value != null)
                 buffer.append(value.toString(childKey, depth + 1));

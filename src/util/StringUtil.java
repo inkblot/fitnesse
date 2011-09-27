@@ -4,10 +4,6 @@ package util;
 
 public class StringUtil {
 
-    public static String trimNonNullString(String original) {
-        return original != null ? original.trim() : original;
-    }
-
     public static String replaceAll(String original, String target, String replacement) {
         StringBuilder result = new StringBuilder();
         int fromIndex = 0;
@@ -22,10 +18,6 @@ public class StringUtil {
             fromIndex = foundIndex + target.length();
         }
         return result.toString();
-    }
-
-    public static boolean stringsNullOrEqual(String s1, String s2) {
-        return (s1 == null && s2 == null) || (s1 != null && s2 != null && s1.equals(s2));
     }
 
     public static String stripCarriageReturns(String s) {

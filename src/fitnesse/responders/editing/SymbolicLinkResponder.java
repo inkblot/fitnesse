@@ -12,8 +12,8 @@ import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.widgets.WikiWordWidget;
+import org.apache.commons.lang.StringUtils;
 import util.EnvironmentVariableTool;
-import util.StringUtil;
 
 import java.io.File;
 
@@ -80,8 +80,8 @@ public class SymbolicLinkResponder implements Responder {
     }
 
     private void addSymbolicLink(Request request, WikiPage page) throws Exception {
-        String linkName = StringUtil.trimNonNullString((String) request.getInput("linkName"));
-        String linkPath = StringUtil.trimNonNullString((String) request.getInput("linkPath"));
+        String linkName = StringUtils.trim((String) request.getInput("linkName"));
+        String linkPath = StringUtils.trim((String) request.getInput("linkPath"));
 
         if (isFilePath(linkPath) && !isValidDirectoryPath(linkPath)) {
             String message = "Cannot create link to the file system path, <b>" + linkPath + "</b>." +

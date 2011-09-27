@@ -1,6 +1,7 @@
 package fitnesse.responders.run;
 
 import fitnesse.responders.testHistory.TestHistory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -8,7 +9,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import util.DateTimeUtil;
-import util.StringUtil;
 import util.XmlUtil;
 
 import java.io.Writer;
@@ -128,7 +128,7 @@ public class SuiteExecutionReport extends ExecutionReport {
             if (!(o instanceof PageHistoryReference))
                 return false;
             PageHistoryReference r = (PageHistoryReference) o;
-            return StringUtil.stringsNullOrEqual(pageName, r.pageName) &&
+            return StringUtils.equals(pageName, r.pageName) &&
                     time == r.time &&
                     testSummary.equals(r.testSummary) &&
                     runTimeInMillis == r.runTimeInMillis;

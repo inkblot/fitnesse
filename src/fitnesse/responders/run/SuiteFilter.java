@@ -7,7 +7,7 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -94,7 +94,7 @@ public class SuiteFilter {
             criterias.add("starts with test '" + startWithTest + "'");
         }
 
-        return StringUtil.join(criterias, " & ");
+        return StringUtils.join(criterias, " & ");
     }
 
     private class SuiteTagMatcher {

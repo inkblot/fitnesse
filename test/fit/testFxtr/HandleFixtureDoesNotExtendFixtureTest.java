@@ -5,21 +5,20 @@ package fit.testFxtr;
 import fit.Fixture;
 import fit.Parse;
 import junit.framework.TestCase;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class HandleFixtureDoesNotExtendFixtureTest extends TestCase {
     public void testLearnHowBadFixtureClassIsHandled() throws Exception {
-        List<String> tableLines = Arrays.asList(new String[]
-                {"<table>",
-                        "    <tr>",
-                        "        <td>fit.testFxtr.WouldBeFixture</td>",
-                        "    </tr>",
-                        "</table>"});
+        List<String> tableLines = Arrays.asList("<table>",
+                "    <tr>",
+                "        <td>fit.testFxtr.WouldBeFixture</td>",
+                "    </tr>",
+                "</table>");
 
-        String tableText = StringUtil.join(tableLines, "\r\n");
+        String tableText = StringUtils.join(tableLines, "\r\n");
 
         Parse tableForFaultyFixture = new Parse(tableText);
 

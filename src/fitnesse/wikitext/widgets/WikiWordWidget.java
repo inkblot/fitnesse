@@ -11,7 +11,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.WidgetVisitor;
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -145,7 +145,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
         int branchPoint = findBranchPoint(parentPath.getNames(), renamedPathToReferent.getNames());
         List<String> referentPath = renamedPathToReferent.getNames();
         List<String> referentPathAfterBranchPoint = referentPath.subList(branchPoint, referentPath.size());
-        return "<" + StringUtil.join(referentPathAfterBranchPoint, ".");
+        return "<" + StringUtils.join(referentPathAfterBranchPoint, ".");
     }
 
     private static int findBranchPoint(List<String> list1, List<String> list2) {
@@ -206,7 +206,7 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
             for (WikiPage current = wikiPage.getParent(); !crawler.isRoot(current); current = current.getParent()) {
                 if (current.getName().equals(target)) {
                     pathElements[0] = PathParser.render(crawler.getFullPath(current));
-                    return "." + StringUtil.join(Arrays.asList(pathElements), ".");
+                    return "." + StringUtils.join(Arrays.asList(pathElements), ".");
                 }
             }
             return "." + undecoratedPath;

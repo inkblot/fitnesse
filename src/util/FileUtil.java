@@ -3,6 +3,7 @@
 package util;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -178,7 +179,7 @@ public class FileUtil {
     }
 
     public static String buildPath(String[] parts) {
-        return StringUtil.join(Arrays.asList(parts), System.getProperty("file.separator"));
+        return StringUtils.join(Arrays.asList(parts), System.getProperty("file.separator"));
     }
 
     public static List<String> breakFilenameIntoParts(String fileName) {

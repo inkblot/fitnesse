@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain.ant;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -10,7 +11,6 @@ import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public class ExecuteFitnesseTestsTask extends Task {
 
         Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN));
         String[] commandLine = cmd.getCommandline();
-        System.out.printf("Executing: %s\n", StringUtil.join(Arrays.asList(commandLine), " "));
+        System.out.printf("Executing: %s\n", StringUtils.join(Arrays.asList(commandLine), " "));
         execute.setCommandline(commandLine);
         execute.setNewenvironment(false);
         execute.setAntRun(getProject());

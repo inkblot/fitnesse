@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import util.StringUtil;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -97,7 +97,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
             prefix = ">";
         else if (mode == BACKWARD_SEARCH)
             prefix = "<";
-        return prefix + StringUtil.join(names, ".");
+        return prefix + StringUtils.join(names, ".");
     }
 
     public void removeNameFromEnd() {
@@ -121,7 +121,7 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
     }
 
     public int hashCode() {
-        return StringUtil.join(names, "").hashCode();
+        return StringUtils.join(names, "").hashCode();
     }
 
     public WikiPagePath relativePath() {
@@ -136,8 +136,8 @@ public class WikiPagePath implements Comparable<Object>, Cloneable, Serializable
     public int compareTo(Object o) {
         if (o instanceof WikiPagePath) {
             WikiPagePath p = (WikiPagePath) o;
-            String compressedName = StringUtil.join(names, "");
-            String compressedArgumentName = StringUtil.join(p.names, "");
+            String compressedName = StringUtils.join(names, "");
+            String compressedArgumentName = StringUtils.join(p.names, "");
             return compressedName.compareTo(compressedArgumentName);
         }
         return 1; // we are greater because we are the right type.

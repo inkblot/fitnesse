@@ -3,26 +3,10 @@
 package util;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class StringUtil {
-    public static String join(List<?> strings, String delimiter) {
-        if (strings.isEmpty())
-            return "";
-
-        Iterator<?> i = strings.iterator();
-        StringBuilder joined = new StringBuilder((String) i.next());
-
-        while (i.hasNext()) {
-            String eachLine = (String) i.next();
-            joined.append(delimiter);
-            joined.append(eachLine);
-        }
-
-        return joined.toString();
-    }
 
     public static String[] combineArrays(String[]... arrays) {
         List<String> combinedList = new LinkedList<String>();

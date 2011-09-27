@@ -5,19 +5,17 @@ package fitnesse.responders;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.wiki.WikiPage;
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
-import util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class NameWikiPageResponder extends BasicWikiPageResponder {
     protected String contentFrom(WikiPage requestedPage)
             throws Exception {
         List<String> pages = new ArrayList<String>();
-        for (Iterator<?> iterator = requestedPage.getChildren().iterator(); iterator.hasNext(); ) {
-            WikiPage child = (WikiPage) iterator.next();
+        for (WikiPage child : requestedPage.getChildren()) {
             if (request.hasInput("ShowChildCount")) {
                 String name = child.getName() + " " + Integer.toString(child.getChildren().size());
                 pages.add(name);
@@ -31,7 +29,7 @@ public class NameWikiPageResponder extends BasicWikiPageResponder {
             JSONArray jsonPages = new JSONArray(pages);
             return jsonPages.toString();
         }
-        return StringUtil.join(pages, System.getProperty("line.separator"));
+        return StringUtils.join(pages, System.getProperty("line.separator"));
     }
 
     protected String getContentType() {

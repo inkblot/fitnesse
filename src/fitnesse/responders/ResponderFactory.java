@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Injector;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.*;
@@ -30,12 +31,14 @@ import java.util.Map;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class ResponderFactory {
+    private final Injector injector;
     private final String rootPath;
-    private final Map<String, Class<?>> responderMap;
+    private final Map<String, Class<? extends Responder>> responderMap;
 
-    public ResponderFactory(String rootPath) {
+    public ResponderFactory(Injector injector, String rootPath) {
         this.rootPath = rootPath;
-        responderMap = new HashMap<String, Class<?>>();
+        this.injector = injector;
+        responderMap = new HashMap<String, Class<? extends Responder>>();
         addResponder("edit", EditResponder.class);
         addResponder("saveData", SaveResponder.class);
         addResponder("search", SearchResponder.class);
@@ -84,10 +87,10 @@ public class ResponderFactory {
     }
 
     public void addResponder(String key, String responderClassName) throws ClassNotFoundException {
-        responderMap.put(key, Class.forName(responderClassName));
+        responderMap.put(key, (Class<? extends Responder>) Class.forName(responderClassName));
     }
 
-    public void addResponder(String key, Class<?> responderClass) {
+    public void addResponder(String key, Class<? extends Responder> responderClass) {
         responderMap.put(key, responderClass);
     }
 
@@ -128,7 +131,7 @@ public class ResponderFactory {
     private Responder lookupResponder(String responderKey, Responder responder)
             throws NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
-        Class<?> responderClass = getResponderClass(responderKey);
+        Class<? extends Responder> responderClass = getResponderClass(responderKey);
         if (responderClass != null) {
             try {
                 Constructor<?> constructor = responderClass.getConstructor(String.class);
@@ -141,7 +144,7 @@ public class ResponderFactory {
         return responder;
     }
 
-    public Class<?> getResponderClass(String responderKey) {
+    public Class<? extends Responder> getResponderClass(String responderKey) {
         return responderMap.get(responderKey);
     }
 

@@ -71,7 +71,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     public void testAddPlugins() throws Exception {
         testProperties.setProperty(ComponentFactory.PLUGINS, DummyPlugin.class.getName());
 
-        ResponderFactory responderFactory = new ResponderFactory(".");
+        ResponderFactory responderFactory = new ResponderFactory(injector, ".");
 
         assertMatch("!today", false);
 
@@ -99,7 +99,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
         testProperties.setProperty(ComponentFactory.RESPONDERS, respondersValue);
 
-        ResponderFactory responderFactory = new ResponderFactory(".");
+        ResponderFactory responderFactory = new ResponderFactory(injector, ".");
         String output = factory.loadResponders(responderFactory);
 
         assertSubString("custom1:" + WikiPageResponder.class.getName(), output);

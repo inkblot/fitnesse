@@ -42,7 +42,7 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        factory = new ResponderFactory("testDir");
+        factory = new ResponderFactory(injector, "testDir");
         request = new MockRequest();
         WikiPage root = InMemoryPage.makeRoot("root", injector);
         crawler = root.getPageCrawler();

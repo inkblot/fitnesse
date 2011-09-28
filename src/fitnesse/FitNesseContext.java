@@ -55,7 +55,7 @@ public class FitNesseContext {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());
         }
         rootPagePath = rootPath + File.separator + root.getName();
-        responderFactory = new ResponderFactory(rootPagePath);
+        responderFactory = new ResponderFactory(this.injector, rootPagePath);
     }
 
 

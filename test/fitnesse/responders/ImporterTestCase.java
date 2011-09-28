@@ -3,12 +3,11 @@ package fitnesse.responders;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import org.junit.After;
 import org.junit.Before;
+
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,16 +26,23 @@ public class ImporterTestCase extends FitnesseBaseTestCase {
     public WikiPage childPageOne;
     public WikiPage pageTwo;
 
+    @Override
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        return properties;
+    }
+
     @Before
     public void beforeImportTest() throws Exception {
-        remoteContext = new FitNesseContext(InMemoryPage.makeRoot("RooT", injector), FitNesseContext.DEFAULT_PATH, injector);
+        remoteContext = new FitNesseContext(injector, FitNesseContext.DEFAULT_PATH, "RooT");
         remoteRoot = remoteContext.root;
         PageCrawler crawler = remoteRoot.getPageCrawler();
         crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
         crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
         crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
 
-        localContext = makeContext(InMemoryPage.makeRoot("local", injector));
+        localContext = new FitNesseContext(injector, getRootPath(), "local");
         localRoot = localContext.root;
         pageOne = localRoot.addChildPage("PageOne");
         childPageOne = pageOne.addChildPage("ChildOne");

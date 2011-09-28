@@ -10,6 +10,7 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,10 +45,11 @@ public class FitNesseContext {
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
-    public FitNesseContext(WikiPage root, String rootPath, Injector injector) {
-        this.root = root;
-        this.rootPath = rootPath;
+    public FitNesseContext(Injector injector, String rootPath, String rootPageName) throws Exception {
         this.injector = injector;
+        WikiPageFactory wikiPageFactory = this.injector.getInstance(WikiPageFactory.class);
+        this.root = wikiPageFactory.makeRootPage(rootPath, rootPageName);
+        this.rootPath = rootPath;
         String absolutePath = new File(this.rootPath).getAbsolutePath();
         if (!absolutePath.equals(this.rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());

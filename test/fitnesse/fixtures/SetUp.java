@@ -45,8 +45,8 @@ public class SetUp extends Fixture {
         //TODO - Inject the test listeners
         WikiImportTestEventListener.register();
 
-        root = InMemoryPage.makeRoot("RooT", injector);
-        context = new FitNesseContext(root, baseDir, injector);
+        context = new FitNesseContext(injector, baseDir, "RooT");
+        root = context.root;
         context.port = 9123;
         fitnesse = new FitNesse(context, false);
         File historyDirectory = context.getTestHistoryDirectory();

@@ -51,7 +51,7 @@ public class SerializedPageResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testWithFileSystem() throws Exception {
         wikiPageFactory.setWikiPageClass(FileSystemPage.class);
-        context = new FitNesseContext(wikiPageFactory.makeRootPage(getRootPath(), "RooT"), getRootPath(), injector);
+        context = new FitNesseContext(injector, getRootPath(), "RooT");
         root = context.root;
         assertThat(root, instanceOf(FileSystemPage.class));
         crawler = root.getPageCrawler();

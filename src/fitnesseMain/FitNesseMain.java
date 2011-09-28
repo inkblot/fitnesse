@@ -10,7 +10,6 @@ import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +51,7 @@ public class FitNesseMain {
     public static void launchFitNesse(Arguments arguments, Injector injector) throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
         WikiPageFactory wikiPageFactory = injector.getInstance(WikiPageFactory.class);
-        WikiPage root = wikiPageFactory.makeRootPage(arguments.getRootPath(), arguments.getRootDirectory());
-        FitNesseContext context = new FitNesseContext(root, arguments.getRootPath(), injector);
+        FitNesseContext context = new FitNesseContext(injector, arguments.getRootPath(), arguments.getRootDirectory());
         context.port = arguments.getPort();
         context.authenticator = injector.getInstance(Authenticator.class);
 

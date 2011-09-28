@@ -1,12 +1,10 @@
 package fitnesse.updates;
 
-import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,13 +31,6 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     protected PageCrawler crawler;
     private boolean updateDone = false;
 
-    private WikiPageFactory wikiPageFactory;
-
-    @Inject
-    public void inject(WikiPageFactory wikiPageFactory) {
-        this.wikiPageFactory = wikiPageFactory;
-    }
-
     @Before
     public void setUp() throws Exception {
         setTheContext();
@@ -50,9 +41,9 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     }
 
     private void setTheContext() throws Exception {
-        root = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
+        context = new FitNesseContext(injector, getRootPath(), "RooT");
+        root = context.root;
         assertThat(root, instanceOf(FileSystemPage.class));
-        context = new FitNesseContext(root, getRootPath(), injector);
     }
 
     private void setTheRoot() throws Exception {

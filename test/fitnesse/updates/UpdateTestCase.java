@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
@@ -22,18 +21,11 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
     protected FitNesseContext context;
     protected PageCrawler crawler;
 
-    private WikiPageFactory wikiPageFactory;
-
-    @Inject
-    public void inject(WikiPageFactory wikiPageFactory) {
-        this.wikiPageFactory = wikiPageFactory;
-    }
-
     @Before
     public final void beforeUpdateTest() throws Exception {
-        root = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
+        context = new FitNesseContext(injector, getRootPath(), "RooT");
+        root = context.root;
         assertThat(root, instanceOf(FileSystemPage.class));
-        context = new FitNesseContext(root, getRootPath(), injector);
 
         FileUtil.makeDir(getRootPath());
         crawler = root.getPageCrawler();

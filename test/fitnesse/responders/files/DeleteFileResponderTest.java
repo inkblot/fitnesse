@@ -20,7 +20,7 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         request = new MockRequest();
         context = makeContext();
         assertTrue(new File(getRootPath(), "RooT").mkdir());

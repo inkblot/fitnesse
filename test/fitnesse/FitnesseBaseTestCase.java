@@ -3,7 +3,7 @@ package fitnesse;
 import com.google.inject.*;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -31,15 +31,12 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
     private FitNesseContext context;
     protected SampleFileUtility samples;
 
-    protected final FitNesseContext makeContext() {
-        FitNesseContext context = makeContext(InMemoryPage.makeRoot("RooT", injector));
-        assertThat(context.root, instanceOf(InMemoryPage.class));
-        return context;
-    }
-
-    protected final FitNesseContext makeContext(WikiPage root) {
+    protected final FitNesseContext makeContext() throws Exception {
         if (context == null) {
-            context = new FitNesseContext(root, getRootPath(), injector);
+            WikiPageFactory wikiPageFactory = injector.getInstance(WikiPageFactory.class);
+            wikiPageFactory.setWikiPageClass(InMemoryPage.class);
+            context = new FitNesseContext(injector, getRootPath(), "RooT");
+            assertThat(context.root, instanceOf(InMemoryPage.class));
         }
         return context;
     }

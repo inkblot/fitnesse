@@ -27,7 +27,7 @@ public class FileResponder implements Responder {
     public Date lastModifiedDate;
     public String lastModifiedDateString;
 
-    public static Responder makeResponder(Request request, String rootPath) throws Exception {
+    public static Responder makeResponder(Request request, String rootPath) {
         String resource = request.getResource();
 
         if (fileNameHasSpaces(resource))

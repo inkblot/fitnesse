@@ -297,7 +297,7 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
         assertResponderTypeMatchesInput("custom", WikiPageResponder.class);
     }
 
-    private void assertResponderType(Class<?> expectedClass) throws Exception {
+    private void assertResponderType(Class<?> expectedClass) {
         Responder responder = factory.makeResponder(request);
         assertEquals(expectedClass, responder.getClass());
     }

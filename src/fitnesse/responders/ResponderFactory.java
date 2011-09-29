@@ -22,8 +22,6 @@ import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,7 +106,7 @@ public class ResponderFactory {
         return (argStart <= 0) ? fullQuery : fullQuery.substring(0, argStart);
     }
 
-    public Responder makeResponder(Request request) throws Exception {
+    public Responder makeResponder(Request request) {
         String resource = request.getResource();
         String responderKey = getResponderKey(request);
         if (isNotEmpty(responderKey)) {
@@ -124,20 +122,13 @@ public class ResponderFactory {
         }
     }
 
-    private Responder lookupResponder(String responderKey)
-            throws NoSuchMethodException, InstantiationException,
-            IllegalAccessException, InvocationTargetException {
+    private Responder lookupResponder(String responderKey) {
         Class<? extends Responder> responderClass = getResponderClass(responderKey);
         if (responderClass != null) {
-            try {
-                Constructor<?> constructor = responderClass.getConstructor(String.class);
-                return (Responder) constructor.newInstance(rootPath);
-            } catch (NoSuchMethodException e) {
-                Constructor<?> constructor = responderClass.getConstructor();
-                return (Responder) constructor.newInstance();
-            }
+            return injector.getInstance(responderClass);
+        } else {
+            return new DefaultResponder();
         }
-        return new DefaultResponder();
     }
 
     public Class<? extends Responder> getResponderClass(String responderKey) {

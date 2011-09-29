@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
+import com.google.inject.name.Names;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
@@ -46,10 +48,10 @@ public class FitNesseContext {
     public boolean doNotChunk;
 
     public FitNesseContext(Injector injector, String rootPath, String rootPageName) throws Exception {
-        this.injector = injector;
-        WikiPageFactory wikiPageFactory = this.injector.getInstance(WikiPageFactory.class);
-        this.root = wikiPageFactory.makeRootPage(rootPath, rootPageName);
         this.rootPath = rootPath;
+        this.injector = injector.createChildInjector(new ContextModule());
+        WikiPageFactory wikiPageFactory = getInjector().getInstance(WikiPageFactory.class);
+        this.root = wikiPageFactory.makeRootPage(rootPath, rootPageName);
         String absolutePath = new File(this.rootPath).getAbsolutePath();
         if (!absolutePath.equals(this.rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());
@@ -74,9 +76,19 @@ public class FitNesseContext {
         return globalContext != null ? globalContext.port : -1;
     }
 
-
     public File getTestHistoryDirectory() {
         return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
     }
 
+    public Injector getInjector() {
+        return injector;
+    }
+
+    private class ContextModule extends AbstractModule {
+        @Override
+        protected void configure() {
+            bind(FitNesseContext.class).toInstance(FitNesseContext.this);
+            bind(String.class).annotatedWith(Names.named("fitnesse.rootPath")).toInstance(rootPath);
+        }
+    }
 }

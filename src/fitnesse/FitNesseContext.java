@@ -2,9 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
@@ -48,7 +46,7 @@ public class FitNesseContext {
     public boolean doNotChunk;
 
     public FitNesseContext(Injector injector, String rootPath, String rootPageName) throws Exception {
-        this.injector = injector.createChildInjector(new ContextModule(this, rootPath, rootPageName));
+        this.injector = injector.createChildInjector(new FitNesseContextModule(this, rootPath, rootPageName));
         this.rootPath = rootPath;
         WikiPageFactory wikiPageFactory = getInjector().getInstance(WikiPageFactory.class);
         this.root = wikiPageFactory.makeRootPage(rootPath, rootPageName);
@@ -84,22 +82,4 @@ public class FitNesseContext {
         return injector;
     }
 
-    public static class ContextModule extends AbstractModule {
-        private final FitNesseContext context;
-        private final String rootPath;
-        private final String rootPageName;
-
-        public ContextModule(FitNesseContext context, String rootPath, String rootPageName) {
-            this.context = context;
-            this.rootPath = rootPath;
-            this.rootPageName = rootPageName;
-        }
-
-        @Override
-        protected void configure() {
-            bind(FitNesseContext.class).toInstance(context);
-            bind(String.class).annotatedWith(Names.named("fitnesse.rootPath")).toInstance(rootPath);
-            bind(String.class).annotatedWith(Names.named("fitnesse.rootPageName")).toInstance(rootPageName);
-        }
-    }
 }

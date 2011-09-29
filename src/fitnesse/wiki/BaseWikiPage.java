@@ -14,7 +14,7 @@ import java.util.List;
 public abstract class BaseWikiPage implements WikiPage {
     private static final long serialVersionUID = 1L;
 
-    protected String name;
+    protected final String name;
     protected WikiPage parent;
     protected WikiPage parentForVariables;
     private transient final Injector injector;

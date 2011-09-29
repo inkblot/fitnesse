@@ -48,8 +48,8 @@ public class FitNesseContext {
     public boolean doNotChunk;
 
     public FitNesseContext(Injector injector, String rootPath, String rootPageName) throws Exception {
+        this.injector = injector.createChildInjector(new ContextModule(this, rootPath, rootPageName));
         this.rootPath = rootPath;
-        this.injector = injector.createChildInjector(new ContextModule());
         WikiPageFactory wikiPageFactory = getInjector().getInstance(WikiPageFactory.class);
         this.root = wikiPageFactory.makeRootPage(rootPath, rootPageName);
         String absolutePath = new File(this.rootPath).getAbsolutePath();
@@ -84,11 +84,22 @@ public class FitNesseContext {
         return injector;
     }
 
-    private class ContextModule extends AbstractModule {
+    public static class ContextModule extends AbstractModule {
+        private final FitNesseContext context;
+        private final String rootPath;
+        private final String rootPageName;
+
+        public ContextModule(FitNesseContext context, String rootPath, String rootPageName) {
+            this.context = context;
+            this.rootPath = rootPath;
+            this.rootPageName = rootPageName;
+        }
+
         @Override
         protected void configure() {
-            bind(FitNesseContext.class).toInstance(FitNesseContext.this);
+            bind(FitNesseContext.class).toInstance(context);
             bind(String.class).annotatedWith(Names.named("fitnesse.rootPath")).toInstance(rootPath);
+            bind(String.class).annotatedWith(Names.named("fitnesse.rootPageName")).toInstance(rootPageName);
         }
     }
 }

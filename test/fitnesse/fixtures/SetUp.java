@@ -45,7 +45,7 @@ public class SetUp extends Fixture {
         //TODO - Inject the test listeners
         WikiImportTestEventListener.register();
 
-        context = new FitNesseContext(injector, baseDir, "RooT");
+        context = FitNesseContext.makeContext(injector, baseDir, "RooT");
         root = context.root;
         context.port = 9123;
         fitnesse = new FitNesse(context, false);

@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
@@ -16,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
+@Singleton
 public class FitNesseContext {
     private static final Logger logger = LoggerFactory.getLogger(FitNesseContext.class);
 
@@ -45,8 +49,14 @@ public class FitNesseContext {
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
-    public FitNesseContext(Injector injector, String rootPath, String rootPageName) throws Exception {
-        this.injector = injector.createChildInjector(new FitNesseContextModule(this, rootPath, rootPageName));
+    public static FitNesseContext makeContext(Injector injector, String rootPath, String rootPageName) throws Exception {
+        Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(rootPath, rootPageName));
+        return contextInjector.getInstance(FitNesseContext.class);
+    }
+
+    @Inject
+    public FitNesseContext(Injector injector, @Named("fitnesse.rootPath") String rootPath, @Named("fitnesse.rootPageName") String rootPageName) throws Exception {
+        this.injector = injector;
         this.rootPath = rootPath;
         WikiPageFactory wikiPageFactory = getInjector().getInstance(WikiPageFactory.class);
         this.root = wikiPageFactory.makeRootPage(rootPath, rootPageName);

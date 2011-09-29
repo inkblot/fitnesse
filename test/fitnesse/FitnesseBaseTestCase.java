@@ -40,7 +40,7 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
         if (context == null) {
             WikiPageFactory wikiPageFactory = injector.getInstance(WikiPageFactory.class);
             wikiPageFactory.setWikiPageClass(wikiPageClass);
-            context = new FitNesseContext(injector, getRootPath(), "RooT");
+            context = FitNesseContext.makeContext(injector, getRootPath(), "RooT");
             assertThat(context.root, instanceOf(wikiPageClass));
         }
         return context;

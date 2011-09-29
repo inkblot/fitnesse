@@ -39,6 +39,13 @@ public class FileSystemPageZipFileVersioningTest extends FitnesseBaseTestCase {
         firstVersion = page.commit(data);
     }
 
+    @Override
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        return properties;
+    }
+
     @Test
     public void testSave() throws Exception {
         String dirPath = page.getFileSystemPath();

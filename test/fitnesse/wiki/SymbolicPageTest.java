@@ -11,7 +11,6 @@ import util.FileUtil;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
 public class SymbolicPageTest extends FitnesseBaseTestCase {
@@ -134,10 +133,7 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     }
 
     private void CreateExternalRoot() throws Exception {
-        FileUtil.createDir("testDir");
-        FileUtil.createDir("testDir/ExternalRoot");
         externalRoot = wikiPageFactory.makeRootPage("testDir/ExternalRoot", "ExternalRoot");
-        assertThat(externalRoot, instanceOf(FileSystemPage.class));
         PageCrawler externalCrawler = externalRoot.getPageCrawler();
         WikiPage externalPageOne = externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");
         externalCrawler.addPage(externalPageOne, PathParser.parse("ExternalChild"), "external child");

@@ -67,7 +67,9 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
     }
 
     protected Properties getFitNesseProperties() {
-        return new Properties();
+        Properties properties = new Properties();
+        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        return properties;
     }
 
     @Before

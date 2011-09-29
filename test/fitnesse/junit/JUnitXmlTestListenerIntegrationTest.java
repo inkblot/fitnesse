@@ -2,6 +2,7 @@ package fitnesse.junit;
 
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.wiki.WikiPageFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 public class JUnitXmlTestListenerIntegrationTest extends FitnesseBaseTestCase {
@@ -24,6 +26,13 @@ public class JUnitXmlTestListenerIntegrationTest extends FitnesseBaseTestCase {
                     "<testcase classname=\"FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim\"" +
                     " time=\"[0-9\\.]*\" name=\"FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim\">" +
                     "</testcase></testsuite>";
+
+    @Override
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        return properties;
+    }
 
     @Test
     public void checkJunitXmlTestListenerPrintsXmlFiles() throws Exception {

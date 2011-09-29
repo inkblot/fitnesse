@@ -7,8 +7,6 @@ import fitnesse.wiki.*;
 import org.junit.After;
 import org.junit.Before;
 
-import java.util.Properties;
-
 /**
  * Created by IntelliJ IDEA.
  * User: inkblot
@@ -25,13 +23,6 @@ public class ImporterTestCase extends FitnesseBaseTestCase {
     public WikiPage localRoot;
     public WikiPage childPageOne;
     public WikiPage pageTwo;
-
-    @Override
-    protected Properties getFitNesseProperties() {
-        Properties properties = super.getFitNesseProperties();
-        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
-        return properties;
-    }
 
     @Before
     public void beforeImportTest() throws Exception {

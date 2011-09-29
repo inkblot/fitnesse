@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
@@ -40,6 +41,13 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
         root = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
         assertThat(root, instanceOf(FileSystemPage.class));
         crawler = root.getPageCrawler();
+    }
+
+    @Override
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        return properties;
     }
 
     @Test

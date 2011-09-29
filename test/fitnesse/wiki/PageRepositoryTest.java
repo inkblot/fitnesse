@@ -9,6 +9,8 @@ import org.junit.Test;
 import util.FileSystem;
 import util.MemoryFileSystem;
 
+import java.util.Properties;
+
 import static org.junit.Assert.assertEquals;
 
 public class PageRepositoryTest extends FitnesseBaseTestCase {
@@ -32,6 +34,13 @@ public class PageRepositoryTest extends FitnesseBaseTestCase {
                 bind(FileSystem.class).to(MemoryFileSystem.class);
             }
         };
+    }
+
+    @Override
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        return properties;
     }
 
     @Before

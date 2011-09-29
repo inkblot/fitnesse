@@ -2,6 +2,7 @@ package fitnesse.junit;
 
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.JavaFormatter;
+import fitnesse.wiki.WikiPageFactory;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Properties;
 
 public class JUnitHelperExampleTest extends FitnesseBaseTestCase {
     JUnitHelper helper;
@@ -22,6 +24,13 @@ public class JUnitHelperExampleTest extends FitnesseBaseTestCase {
         helper = new JUnitHelper("..",
                 new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath(), injector);
         JavaFormatter.dropInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
+    }
+
+    @Override
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        return properties;
     }
 
     @Test

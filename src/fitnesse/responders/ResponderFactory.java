@@ -21,13 +21,13 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-import org.apache.commons.lang.StringUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class ResponderFactory {
@@ -109,46 +109,39 @@ public class ResponderFactory {
     }
 
     public Responder makeResponder(Request request) throws Exception {
-        Responder responder = new DefaultResponder();
         String resource = request.getResource();
         String responderKey = getResponderKey(request);
-        if (usingResponderKey(responderKey))
-            responder = lookupResponder(responderKey, responder);
-        else {
-            if (StringUtils.isEmpty(resource))
-                responder = new WikiPageResponder();
-            else if (resource.startsWith("files/") || resource.equals("files"))
-                responder = FileResponder.makeResponder(request, rootPath);
-            else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource))
-                responder = new WikiPageResponder();
-            else
-                responder = new NotFoundResponder();
+        if (isNotEmpty(responderKey)) {
+            return lookupResponder(responderKey);
+        } else if (isEmpty(resource)) {
+            return new WikiPageResponder();
+        } else if (resource.startsWith("files/") || resource.equals("files")) {
+            return FileResponder.makeResponder(request, rootPath);
+        } else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource)) {
+            return new WikiPageResponder();
+        } else {
+            return new NotFoundResponder();
         }
-
-        return responder;
     }
 
-    private Responder lookupResponder(String responderKey, Responder responder)
+    private Responder lookupResponder(String responderKey)
             throws NoSuchMethodException, InstantiationException,
             IllegalAccessException, InvocationTargetException {
         Class<? extends Responder> responderClass = getResponderClass(responderKey);
         if (responderClass != null) {
             try {
                 Constructor<?> constructor = responderClass.getConstructor(String.class);
-                responder = (Responder) constructor.newInstance(rootPath);
+                return (Responder) constructor.newInstance(rootPath);
             } catch (NoSuchMethodException e) {
                 Constructor<?> constructor = responderClass.getConstructor();
-                responder = (Responder) constructor.newInstance();
+                return (Responder) constructor.newInstance();
             }
         }
-        return responder;
+        return new DefaultResponder();
     }
 
     public Class<? extends Responder> getResponderClass(String responderKey) {
         return responderMap.get(responderKey);
     }
 
-    private boolean usingResponderKey(String responderKey) {
-        return isNotEmpty(responderKey);
-    }
 }

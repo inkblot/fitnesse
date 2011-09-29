@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
@@ -16,7 +15,6 @@ import util.FileUtil;
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
@@ -26,13 +24,6 @@ public class SerializedPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private MockRequest request;
     private FitNesseContext context;
-
-    private WikiPageFactory wikiPageFactory;
-
-    @Inject
-    public void inject(WikiPageFactory wikiPageFactory) {
-        this.wikiPageFactory = wikiPageFactory;
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -50,10 +41,8 @@ public class SerializedPageResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testWithFileSystem() throws Exception {
-        wikiPageFactory.setWikiPageClass(FileSystemPage.class);
-        context = new FitNesseContext(injector, getRootPath(), "RooT");
+        context = makeContext(FileSystemPage.class);
         root = context.root;
-        assertThat(root, instanceOf(FileSystemPage.class));
         crawler = root.getPageCrawler();
         Object obj = doSetUpWith("bones");
         FileUtil.deleteFileSystemDirectory("RooT");

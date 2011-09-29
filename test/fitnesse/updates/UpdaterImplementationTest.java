@@ -14,7 +14,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
@@ -33,17 +32,12 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        setTheContext();
+        context = makeContext(FileSystemPage.class);
+        root = context.root;
         setTheRoot();
         createFakeJarFileResources();
         createFakeUpdateListFiles();
         updater = new UpdaterImplementation(context);
-    }
-
-    private void setTheContext() throws Exception {
-        context = new FitNesseContext(injector, getRootPath(), "RooT");
-        root = context.root;
-        assertThat(root, instanceOf(FileSystemPage.class));
     }
 
     private void setTheRoot() throws Exception {

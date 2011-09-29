@@ -8,9 +8,6 @@ import fitnesse.wiki.*;
 import org.junit.Before;
 import util.FileUtil;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
-
 public abstract class UpdateTestCase extends FitnesseBaseTestCase {
 
     protected WikiPage root;
@@ -23,9 +20,8 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
 
     @Before
     public final void beforeUpdateTest() throws Exception {
-        context = new FitNesseContext(injector, getRootPath(), "RooT");
+        context = makeContext(FileSystemPage.class);
         root = context.root;
-        assertThat(root, instanceOf(FileSystemPage.class));
 
         FileUtil.makeDir(getRootPath());
         crawler = root.getPageCrawler();

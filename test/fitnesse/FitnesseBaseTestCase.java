@@ -16,9 +16,7 @@ import java.io.FilenameFilter;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static util.FileUtil.deleteFileSystemDirectory;
 
 /**
@@ -37,12 +35,12 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
     }
 
     protected final FitNesseContext makeContext(Class<? extends WikiPage> wikiPageClass) throws Exception {
-        if (context == null) {
-            WikiPageFactory wikiPageFactory = injector.getInstance(WikiPageFactory.class);
-            wikiPageFactory.setWikiPageClass(wikiPageClass);
-            context = FitNesseContext.makeContext(injector, getRootPath(), "RooT");
-            assertThat(context.root, instanceOf(wikiPageClass));
-        }
+        assertNull(context);
+
+        WikiPageFactory wikiPageFactory = injector.getInstance(WikiPageFactory.class);
+        wikiPageFactory.setWikiPageClass(wikiPageClass);
+        context = FitNesseContext.makeContext(injector, getRootPath(), "RooT");
+        assertThat(context.root, instanceOf(wikiPageClass));
         return context;
     }
 

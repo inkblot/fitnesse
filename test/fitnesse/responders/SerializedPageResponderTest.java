@@ -2,28 +2,18 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
-import util.FileUtil;
-
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
 
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class SerializedPageResponderTest extends FitnesseBaseTestCase {
-    private PageCrawler crawler;
-    private WikiPage root;
-    private MockRequest request;
-    private FitNesseContext context;
+public class SerializedPageResponderTest extends SerializedPageResponderTestCase {
 
     @Before
     public void setUp() throws Exception {
@@ -37,44 +27,6 @@ public class SerializedPageResponderTest extends FitnesseBaseTestCase {
     public void testWithInMemory() throws Exception {
         Object obj = doSetUpWith("bones");
         doTestWith(obj);
-    }
-
-    @Test
-    public void testWithFileSystem() throws Exception {
-        context = makeContext(FileSystemPage.class);
-        root = context.root;
-        crawler = root.getPageCrawler();
-        Object obj = doSetUpWith("bones");
-        FileUtil.deleteFileSystemDirectory("RooT");
-        doTestWith(obj);
-    }
-
-    private void doTestWith(Object obj) throws Exception {
-        assertNotNull(obj);
-        assertEquals(true, obj instanceof ProxyPage);
-        WikiPage page = (WikiPage) obj;
-        assertEquals("PageOne", page.getName());
-    }
-
-    private Object doSetUpWith(String proxyType) throws Exception {
-        WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"), "this is page one");
-        PageData data = page1.getData();
-        data.setAttribute("Attr1", "true");
-        page1.commit(data);
-        crawler.addPage(page1, PathParser.parse("ChildOne"), "this is child one");
-
-        request.addInput("type", proxyType);
-        request.setResource("PageOne");
-
-        return getObject();
-    }
-
-    private Object getObject() throws Exception {
-        Responder responder = new SerializedPageResponder();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));
-        return ois.readObject();
     }
 
     @Test

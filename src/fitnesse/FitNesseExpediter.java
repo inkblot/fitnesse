@@ -10,7 +10,6 @@ import fitnesse.responders.ErrorResponder;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ClockUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -116,7 +115,7 @@ public class FitNesseExpediter implements ResponseSender {
     }
 
     private void waitForRequest(Request request) throws InterruptedException {
-        long now = ClockUtil.currentTimeInMillis();
+        long now = context.getClock().currentClockTimeInMillis();
         requestParsingDeadline = now + requestParsingTimeLimit;
         requestProgress = 0;
         while (!hasError && !request.hasBeenParsed()) {
@@ -136,7 +135,7 @@ public class FitNesseExpediter implements ResponseSender {
     }
 
     private boolean timeIsUp(long now) {
-        now = ClockUtil.currentTimeInMillis();
+        now = context.getClock().currentClockTimeInMillis();
         if (now > requestParsingDeadline) {
             requestParsingDeadline = now + requestParsingTimeLimit;
             return true;

@@ -16,6 +16,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.Clock;
 
 import java.io.File;
 
@@ -37,6 +38,7 @@ public class FitNesseContext {
     public final WikiPage root;
     public final String rootPagePath;
     private final ResponderFactory responderFactory;
+    private final Clock clock;
     private final WikiPageFactory wikiPageFactory;
 
     public FitNesse fitnesse;
@@ -55,10 +57,11 @@ public class FitNesseContext {
     }
 
     @Inject
-    public FitNesseContext(@Named("fitnesse.rootPath") String rootPath, @Named("fitnesse.rootPageName") String rootPageName, WikiPageFactory wikiPageFactory, ResponderFactory responderFactory) throws Exception {
+    public FitNesseContext(@Named("fitnesse.rootPath") String rootPath, @Named("fitnesse.rootPageName") String rootPageName, WikiPageFactory wikiPageFactory, ResponderFactory responderFactory, Clock clock) throws Exception {
         this.rootPath = rootPath;
         this.wikiPageFactory = wikiPageFactory;
         this.responderFactory = responderFactory;
+        this.clock = clock;
 
         this.root = wikiPageFactory.makeRootPage(rootPath, rootPageName);
         String absolutePath = new File(this.rootPath).getAbsolutePath();
@@ -94,5 +97,9 @@ public class FitNesseContext {
 
     public WikiPageFactory getWikiPageFactory() {
         return wikiPageFactory;
+    }
+
+    public Clock getClock() {
+        return clock;
     }
 }

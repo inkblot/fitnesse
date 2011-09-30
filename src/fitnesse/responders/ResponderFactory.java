@@ -124,7 +124,7 @@ public class ResponderFactory {
         } else if (isEmpty(resource)) {
             return new WikiPageResponder();
         } else if (resource.startsWith("files/") || resource.equals("files")) {
-            return FileResponder.makeResponder(request, rootPath);
+            return FileResponder.makeResponder(request.getResource(), rootPath);
         } else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource)) {
             return new WikiPageResponder();
         } else {

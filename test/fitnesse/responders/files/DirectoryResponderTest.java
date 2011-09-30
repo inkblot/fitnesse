@@ -25,13 +25,13 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         context = makeContext();
         makeSampleFiles();
+        request.setResource("files/testDir/");
+        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        response = (SimpleResponse) responder.makeResponse(context, request);
     }
 
     @Test
-    public void testDirectotyListing() throws Exception {
-        request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
-        response = (SimpleResponse) responder.makeResponse(context, request);
+    public void testDirectoryListing() throws Exception {
         assertHasRegexp("testDir", response.getContent());
         assertHasRegexp("testFile2</a>", response.getContent());
         assertHasRegexp("testFile3</a>", response.getContent());
@@ -40,37 +40,27 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testButtons() throws Exception {
-        request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
-        response = (SimpleResponse) responder.makeResponse(context, request);
-
         assertHasRegexp("upload form", response.getContent());
         assertHasRegexp("create directory form", response.getContent());
     }
 
     @Test
     public void testHtml() throws Exception {
-        request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
-        response = (SimpleResponse) responder.makeResponse(context, request);
         assertHasRegexp("/files/", response.getContent());
     }
 
     @Test
     public void testRedirectForDirectory() throws Exception {
         request.setResource("files/testDir");
-        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
+        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath);
         Response response = responder.makeResponse(context, request);
+
         assertEquals(303, response.getStatus());
         assertEquals("/files/testDir/", response.getHeader("Location"));
     }
 
     @Test
     public void testFrontPageSidebarButtonPresent() throws Exception {
-        request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request, context.rootPagePath);
-        response = (SimpleResponse) responder.makeResponse(context, request);
-
         assertHasRegexp("<div class=\"sidebar\">", response.getContent());
         assertHasRegexp("<div class=\"actions\">", response.getContent());
         assertHasRegexp("<a href=\"/FrontPage\" accesskey=\"f\">FrontPage</a>", response.getContent());

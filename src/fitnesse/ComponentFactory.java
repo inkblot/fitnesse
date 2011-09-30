@@ -9,9 +9,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.SaveResponder;
-import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPageFactory;
-import fitnesse.wiki.zip.ZipFileVersionsController;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
 import util.TodoException;
@@ -182,7 +180,4 @@ public class ComponentFactory {
         return "";
     }
 
-    public VersionsController loadVersionsController() {
-        return createComponent(VersionsController.class, ZipFileVersionsController.class);
-    }
 }

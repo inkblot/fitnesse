@@ -5,6 +5,7 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,22 +24,22 @@ import static org.junit.Assert.*;
 public class FileSystemPageTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
+    private FitNesseContext context;
 
     private static List<String> cmMethodCalls = new ArrayList<String>();
 
-    private WikiPageFactory wikiPageFactory;
     private Provider<Clock> clockProvider;
 
     @Inject
-    public void inject(WikiPageFactory wikiPageFactory, Provider<Clock> clockProvider) {
-        this.wikiPageFactory = wikiPageFactory;
+    public void inject(Provider<Clock> clockProvider) {
         this.clockProvider = clockProvider;
     }
 
     @Before
     public void setUp() throws Exception {
         cmMethodCalls.clear();
-        root = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
+        context = makeContext(FileSystemPage.class);
+        root = context.root;
         assertThat(root, instanceOf(FileSystemPage.class));
         crawler = root.getPageCrawler();
     }
@@ -164,7 +165,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     @Test
     public void testCanFindExistingPages() throws Exception {
         crawler.addPage(root, PathParser.parse("FrontPage"), "front page");
-        WikiPage newRoot = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
+        WikiPage newRoot = context.getWikiPageFactory().makeRootPage(getRootPath(), "RooT");
         assertThat(newRoot, instanceOf(FileSystemPage.class));
         assertNotNull(newRoot.getChildPage("FrontPage"));
     }

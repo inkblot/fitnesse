@@ -10,7 +10,6 @@ import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
-import fitnesse.wiki.WikiPageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.CommandLine;
@@ -61,8 +60,7 @@ public class FitNesseMain {
             context.defaultNewPageContent = defaultNewPageContent;
         }
 
-        WikiPageFactory wikiPageFactory = context.getWikiPageFactory();
-        String extraOutput = componentFactory.loadPlugins(context.getResponderFactory(), wikiPageFactory);
+        String extraOutput = componentFactory.loadPlugins(context.getResponderFactory(), context.getWikiPageFactory());
         extraOutput += componentFactory.loadResponders(context.getResponderFactory());
         extraOutput += componentFactory.loadSymbolTypes();
         extraOutput += componentFactory.loadContentFilter();

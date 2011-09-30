@@ -1,10 +1,10 @@
 package fitnesse.wiki;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import fitnesse.FitnesseBaseTestCase;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -37,11 +37,6 @@ public class WikiPageFactoryWikiPageClassesTest extends FitnesseBaseTestCase {
         this.wikiPageClass = wikiPageClass;
     }
 
-    @Inject
-    public void inject(WikiPageFactory wikiPageFactory) {
-        this.wikiPageFactory = wikiPageFactory;
-    }
-
     @Override
     protected Module getOverrideModule() {
         return new AbstractModule() {
@@ -50,6 +45,11 @@ public class WikiPageFactoryWikiPageClassesTest extends FitnesseBaseTestCase {
                 bind(new TypeLiteral<Class<? extends WikiPage>>(){}).toInstance(wikiPageClass);
             }
         };
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        wikiPageFactory = makeContext(wikiPageClass).getWikiPageFactory();
     }
 
     @Test

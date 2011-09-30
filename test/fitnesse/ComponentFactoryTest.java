@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import com.google.inject.Inject;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
@@ -31,15 +30,17 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     private Properties testProperties;
     private ComponentFactory factory;
     private SymbolProvider testProvider;
-
-    @Inject
-    public WikiPageFactory wikiPageFactory;
+    private WikiPageFactory wikiPageFactory;
+    private ResponderFactory responderFactory;
 
     @Before
     public void setUp() throws Exception {
+        FitNesseContext context = makeContext();
+        wikiPageFactory = context.getWikiPageFactory();
         testProperties = new Properties();
         testProvider = new SymbolProvider(new SymbolType[]{});
         factory = new ComponentFactory(testProperties, testProvider);
+        responderFactory = context.getResponderFactory();
     }
 
     @After
@@ -70,8 +71,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     @Test
     public void testAddPlugins() throws Exception {
         testProperties.setProperty(ComponentFactory.PLUGINS, DummyPlugin.class.getName());
-
-        ResponderFactory responderFactory = new ResponderFactory(injector, ".");
 
         assertMatch("!today", false);
 

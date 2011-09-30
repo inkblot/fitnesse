@@ -3,6 +3,7 @@ package fitnesse.wiki;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
+import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,12 +19,10 @@ public class PageRepositoryTest extends FitnesseBaseTestCase {
     private FileSystemPage rootPage;
 
     private FileSystem fileSystem;
-    private WikiPageFactory wikiPageFactory;
 
     @Inject
-    public void inject(FileSystem fileSystem, WikiPageFactory wikiPageFactory) {
+    public void inject(FileSystem fileSystem) {
         this.fileSystem = fileSystem;
-        this.wikiPageFactory = wikiPageFactory;
     }
 
     @Override
@@ -45,43 +44,44 @@ public class PageRepositoryTest extends FitnesseBaseTestCase {
 
     @Before
     public void SetUp() throws Exception {
+        FitNesseContext context = makeContext(FileSystemPage.class);
         pageRepository = new PageRepository(fileSystem);
-        rootPage = (FileSystemPage) wikiPageFactory.makeRootPage(".", "somepath");
+        rootPage = (FileSystemPage) context.root;
     }
 
     @Test
     public void DirectoryOfHtmlFilesIsExternalSuitePage() throws Exception {
-        fileSystem.makeFile("./somepath/ExternalSuite/myfile.html", "stuff");
+        fileSystem.makeFile(getRootPath() + "/RooT/ExternalSuite/myfile.html", "stuff");
         WikiPage page = pageRepository.makeChildPage("ExternalSuite", rootPage);
         assertEquals(ExternalSuitePage.class, page.getClass());
     }
 
     @Test
     public void DirectoryOfDirectoryOfHtmlFilesIsExternalSuitePage() throws Exception {
-        fileSystem.makeFile("./somepath/ExternalSuite/subsuite/myfile.html", "stuff");
+        fileSystem.makeFile(getRootPath() + "/RooT/ExternalSuite/subsuite/myfile.html", "stuff");
         WikiPage page = pageRepository.makeChildPage("ExternalSuite", rootPage);
         assertEquals(ExternalSuitePage.class, page.getClass());
     }
 
     @Test
     public void DirectoryWithoutHtmlFilesIsFileSystemPage() throws Exception {
-        fileSystem.makeFile("./somepath/WikiPage/myfile.txt", "stuff");
-        fileSystem.makeFile("./somepath/OtherPage/myfile.html", "stuff");
+        fileSystem.makeFile(getRootPath() + "/RooT/WikiPage/myfile.txt", "stuff");
+        fileSystem.makeFile(getRootPath() + "/RooT/OtherPage/myfile.html", "stuff");
         WikiPage page = pageRepository.makeChildPage("WikiPage", rootPage);
         assertEquals(FileSystemPage.class, page.getClass());
     }
 
     @Test
     public void DirectoryWithContentIsFileSystemPage() throws Exception {
-        fileSystem.makeFile("./somepath/WikiPage/content.txt", "stuff");
-        fileSystem.makeFile("./somepath/WikiPage/subsuite/myfile.html", "stuff");
+        fileSystem.makeFile(getRootPath() + "/RooT/WikiPage/content.txt", "stuff");
+        fileSystem.makeFile(getRootPath() + "/RooT/WikiPage/subsuite/myfile.html", "stuff");
         WikiPage page = pageRepository.makeChildPage("WikiPage", rootPage);
         assertEquals(FileSystemPage.class, page.getClass());
     }
 
     @Test
     public void HtmlFileIsExternalSuitePageChild() throws Exception {
-        fileSystem.makeFile("./somepath/ExternalSuite/myfile.html", "stuff");
+        fileSystem.makeFile(getRootPath() + "/RooT/ExternalSuite/myfile.html", "stuff");
         ExternalSuitePage page = (ExternalSuitePage) pageRepository.makeChildPage("ExternalSuite", rootPage);
         WikiPage child = pageRepository.findChildren(page).get(0);
         assertEquals(ExternalTestPage.class, child.getClass());
@@ -90,7 +90,7 @@ public class PageRepositoryTest extends FitnesseBaseTestCase {
 
     @Test
     public void DirectoryOfHtmlFilesIsExternalSuitePageChild() throws Exception {
-        fileSystem.makeFile("./somepath/ExternalSuite/subsuite/myfile.html", "stuff");
+        fileSystem.makeFile(getRootPath() + "/RooT/ExternalSuite/subsuite/myfile.html", "stuff");
         ExternalSuitePage page = (ExternalSuitePage) pageRepository.makeChildPage("ExternalSuite", rootPage);
         WikiPage child = pageRepository.findChildren(page).get(0);
         assertEquals(ExternalSuitePage.class, child.getClass());

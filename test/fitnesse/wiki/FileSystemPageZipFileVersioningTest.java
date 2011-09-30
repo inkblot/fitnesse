@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import com.google.inject.Inject;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,17 +19,10 @@ public class FileSystemPageZipFileVersioningTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private WikiPage root;
 
-    private WikiPageFactory wikiPageFactory;
-
-    @Inject
-    public void inject(WikiPageFactory wikiPageFactory) {
-        this.wikiPageFactory = wikiPageFactory;
-    }
-
     @Before
     public void setUp() throws Exception {
         PageVersionPruner.daysTillVersionsExpire = 1;
-        root = wikiPageFactory.makeRootPage(getRootPath(), "RooT");
+        root = makeContext(FileSystemPage.class).root;
         assertThat(root, instanceOf(FileSystemPage.class));
         crawler = root.getPageCrawler();
         page = (FileSystemPage) crawler.addPage(root, PathParser.parse("PageOne"), "original content");

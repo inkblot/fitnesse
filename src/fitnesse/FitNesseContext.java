@@ -33,11 +33,11 @@ public class FitNesseContext {
 
     public static FitNesseContext globalContext;
 
-    private final Injector injector;
     public final String rootPath;
     public final WikiPage root;
     public final String rootPagePath;
-    public final ResponderFactory responderFactory;
+    private final ResponderFactory responderFactory;
+    private final WikiPageFactory wikiPageFactory;
 
     public FitNesse fitnesse;
     public int port = DEFAULT_PORT;
@@ -55,17 +55,17 @@ public class FitNesseContext {
     }
 
     @Inject
-    public FitNesseContext(Injector injector, @Named("fitnesse.rootPath") String rootPath, @Named("fitnesse.rootPageName") String rootPageName) throws Exception {
-        this.injector = injector;
+    public FitNesseContext(@Named("fitnesse.rootPath") String rootPath, @Named("fitnesse.rootPageName") String rootPageName, WikiPageFactory wikiPageFactory, ResponderFactory responderFactory) throws Exception {
         this.rootPath = rootPath;
-        WikiPageFactory wikiPageFactory = getInjector().getInstance(WikiPageFactory.class);
+        this.wikiPageFactory = wikiPageFactory;
+        this.responderFactory = responderFactory;
+
         this.root = wikiPageFactory.makeRootPage(rootPath, rootPageName);
         String absolutePath = new File(this.rootPath).getAbsolutePath();
         if (!absolutePath.equals(this.rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());
         }
-        rootPagePath = rootPath + File.separator + root.getName();
-        responderFactory = new ResponderFactory(this.injector, rootPagePath);
+        rootPagePath = rootPath + File.separator + rootPageName;
     }
 
 
@@ -88,8 +88,11 @@ public class FitNesseContext {
         return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
     }
 
-    public Injector getInjector() {
-        return injector;
+    public ResponderFactory getResponderFactory() {
+        return responderFactory;
     }
 
+    public WikiPageFactory getWikiPageFactory() {
+        return wikiPageFactory;
+    }
 }

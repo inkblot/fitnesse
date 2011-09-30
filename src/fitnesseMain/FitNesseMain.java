@@ -61,9 +61,9 @@ public class FitNesseMain {
             context.defaultNewPageContent = defaultNewPageContent;
         }
 
-        WikiPageFactory wikiPageFactory = context.getInjector().getInstance(WikiPageFactory.class);
-        String extraOutput = componentFactory.loadPlugins(context.responderFactory, wikiPageFactory);
-        extraOutput += componentFactory.loadResponders(context.responderFactory);
+        WikiPageFactory wikiPageFactory = context.getWikiPageFactory();
+        String extraOutput = componentFactory.loadPlugins(context.getResponderFactory(), wikiPageFactory);
+        extraOutput += componentFactory.loadResponders(context.getResponderFactory());
         extraOutput += componentFactory.loadSymbolTypes();
         extraOutput += componentFactory.loadContentFilter();
 

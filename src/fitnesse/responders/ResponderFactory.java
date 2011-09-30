@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.*;
@@ -22,16 +25,23 @@ import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
+@Singleton
 public class ResponderFactory {
     private final Injector injector;
     private final String rootPath;
     private final Map<String, Class<? extends Responder>> responderMap;
+
+    @Inject
+    public ResponderFactory(Injector injector, @Named("fitnesse.rootPath") String rootPath, @Named("fitnesse.rootPageName") String rootPageName) {
+        this(injector, rootPath + File.separator + rootPageName);
+    }
 
     public ResponderFactory(Injector injector, String rootPath) {
         this.rootPath = rootPath;

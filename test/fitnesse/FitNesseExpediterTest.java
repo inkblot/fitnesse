@@ -66,7 +66,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         senderThread.start();
         Thread parseResponseThread = makeParsingThread();
         parseResponseThread.start();
-        Thread.sleep(sender.requestParsingTimeLimit + 100);
+        Thread.sleep(300);
 
         parseResponseThread.join();
 
@@ -79,9 +79,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         clientInput = new PipedInputStream();
         PipedOutputStream socketOutput = new PipedOutputStream(clientInput);
         MockSocket socket = new MockSocket(socketInput, socketOutput);
-        final FitNesseExpediter sender = new FitNesseExpediter(socket, context);
-        sender.requestParsingTimeLimit = 200;
-        return sender;
+        return new FitNesseExpediter(socket, context, 200);
     }
 
     @Test

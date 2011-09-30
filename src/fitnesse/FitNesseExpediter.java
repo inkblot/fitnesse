@@ -21,28 +21,32 @@ import java.net.SocketException;
 public class FitNesseExpediter implements ResponseSender {
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Socket socket;
-    private InputStream input;
-    private OutputStream output;
-    private Request request;
+    private final FitNesseContext context;
+    private final Socket socket;
+    private final InputStream input;
+    private final OutputStream output;
+    private final long requestParsingTimeLimit;
+
     private Response response;
-    private FitNesseContext context;
-    protected long requestParsingTimeLimit;
     private long requestProgress;
     private long requestParsingDeadline;
     private volatile boolean hasError;
 
     public FitNesseExpediter(Socket s, FitNesseContext context) throws IOException {
+        this(s, context, 10000L);
+    }
+
+    public FitNesseExpediter(Socket s, FitNesseContext context, long requestParsingTimeLimit) throws IOException {
         this.context = context;
         socket = s;
         input = s.getInputStream();
         output = s.getOutputStream();
-        requestParsingTimeLimit = 10000;
+        this.requestParsingTimeLimit = requestParsingTimeLimit;
     }
 
     public void start() throws Exception {
         try {
-            Request request = makeRequest();
+            Request request = new Request(input);
             makeResponse(request);
             sendResponse();
         } catch (SocketException se) {
@@ -50,10 +54,6 @@ public class FitNesseExpediter implements ResponseSender {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-    }
-
-    public void setRequestParsingTimeLimit(long t) {
-        requestParsingTimeLimit = t;
     }
 
     public void send(byte[] bytes) {
@@ -81,11 +81,6 @@ public class FitNesseExpediter implements ResponseSender {
     @Override
     public OutputStream getOutputStream() throws IOException {
         return socket.getOutputStream();
-    }
-
-    public Request makeRequest() throws Exception {
-        request = new Request(input);
-        return request;
     }
 
     public void sendResponse() throws Exception {
@@ -127,7 +122,7 @@ public class FitNesseExpediter implements ResponseSender {
         while (!hasError && !request.hasBeenParsed()) {
             Thread.sleep(10);
             if (timeIsUp(now) && parsingIsUnproductive(request))
-                reportError(408, "The client request has been unproductive for too long.  It has timed out and will no longer be processed");
+                reportError(408, "The client request has been unproductive for too long.  It has timed out and will no longer be processed", request);
         }
     }
 
@@ -156,15 +151,15 @@ public class FitNesseExpediter implements ResponseSender {
                         try {
                             request.parse();
                         } catch (HttpException e) {
-                            reportError(400, e.getMessage());
+                            reportError(400, e.getMessage(), request);
                         } catch (Exception e) {
-                            reportError(e);
+                            reportError(e, request);
                         }
                     }
                 };
     }
 
-    private void reportError(int status, String message) {
+    private void reportError(int status, String message, Request request) {
         try {
             response = new ErrorResponder(message).makeResponse(context, request);
             response.setStatus(status);
@@ -174,7 +169,7 @@ public class FitNesseExpediter implements ResponseSender {
         }
     }
 
-    private void reportError(Exception e) {
+    private void reportError(Exception e, Request request) {
         try {
             response = new ErrorResponder(e).makeResponse(context, request);
             hasError = true;

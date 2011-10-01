@@ -8,6 +8,8 @@ import fitnesse.wiki.*;
 import org.junit.Before;
 import util.FileUtil;
 
+import java.util.Properties;
+
 public abstract class UpdateTestCase extends FitnesseBaseTestCase {
 
     protected WikiPage root;
@@ -17,6 +19,13 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
     protected WikiPage pageTwo;
     protected FitNesseContext context;
     protected PageCrawler crawler;
+
+    @Override
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        return properties;
+    }
 
     @Before
     public final void beforeUpdateTest() throws Exception {

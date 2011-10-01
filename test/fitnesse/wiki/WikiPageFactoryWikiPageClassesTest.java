@@ -1,8 +1,5 @@
 package fitnesse.wiki;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Module;
-import com.google.inject.TypeLiteral;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.util.List;
+import java.util.Properties;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
@@ -38,13 +36,10 @@ public class WikiPageFactoryWikiPageClassesTest extends FitnesseBaseTestCase {
     }
 
     @Override
-    protected Module getOverrideModule() {
-        return new AbstractModule() {
-            @Override
-            protected void configure() {
-                bind(new TypeLiteral<Class<? extends WikiPage>>(){}).toInstance(wikiPageClass);
-            }
-        };
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, wikiPageClass.getName());
+        return properties;
     }
 
     @Before

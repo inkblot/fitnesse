@@ -5,6 +5,7 @@ import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,13 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     protected FitNesseContext context;
     protected PageCrawler crawler;
     private boolean updateDone = false;
+
+    @Override
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        return properties;
+    }
 
     @Before
     public void setUp() throws Exception {

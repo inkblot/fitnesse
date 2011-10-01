@@ -25,11 +25,9 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     private String pageTwoContent = "page two";
     private WikiPage externalRoot;
 
-    private FitNesseContext context;
-
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
+        FitNesseContext context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         String pageOneContent = "page one";
@@ -130,7 +128,8 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     }
 
     private void CreateExternalRoot() throws Exception {
-        externalRoot = context.getWikiPageFactory().makeRootPage("testDir/ExternalRoot", "ExternalRoot");
+        FitNesseContext externalContext = FitNesseContext.makeContext(injector, "testDir/ExternalRoot", "ExternalRoot");
+        externalRoot = externalContext.root;
         assertThat(externalRoot, instanceOf(InMemoryPage.class));
         PageCrawler externalCrawler = externalRoot.getPageCrawler();
         WikiPage externalPageOne = externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");

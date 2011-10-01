@@ -49,6 +49,6 @@ public class WikiPageFactoryWikiPageClassesTest extends FitnesseBaseTestCase {
 
     @Test
     public void createRoot() throws Exception {
-        assertNotNull(wikiPageFactory.makeRootPage(getRootPath(), "RooT"));
+        assertNotNull(wikiPageFactory.makeRootPage());
     }
 }

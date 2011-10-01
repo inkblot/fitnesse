@@ -70,7 +70,7 @@ public class FitNesseContext {
         this.responderFactory = responderFactory;
         this.clock = clock;
 
-        this.root = wikiPageFactory.makeRootPage(rootPath, rootPageName);
+        this.root = wikiPageFactory.makeRootPage();
         String absolutePath = new File(this.rootPath).getAbsolutePath();
         if (!absolutePath.equals(this.rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());

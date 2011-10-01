@@ -165,7 +165,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     @Test
     public void testCanFindExistingPages() throws Exception {
         crawler.addPage(root, PathParser.parse("FrontPage"), "front page");
-        WikiPage newRoot = context.getWikiPageFactory().makeRootPage(getRootPath(), "RooT");
+        WikiPage newRoot = context.getWikiPageFactory().makeRootPage();
         assertThat(newRoot, instanceOf(FileSystemPage.class));
         assertNotNull(newRoot.getChildPage("FrontPage"));
     }

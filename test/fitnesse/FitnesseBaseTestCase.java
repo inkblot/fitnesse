@@ -36,9 +36,6 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     protected final FitNesseContext makeContext(Class<? extends WikiPage> wikiPageClass) throws Exception {
         assertNull(context);
-
-        WikiPageFactory wikiPageFactory = injector.getInstance(WikiPageFactory.class);
-        wikiPageFactory.setWikiPageClass(wikiPageClass);
         context = FitNesseContext.makeContext(injector, getRootPath(), "RooT");
         assertThat(context.root, instanceOf(wikiPageClass));
         return context;

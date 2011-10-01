@@ -20,7 +20,7 @@ public class FitNesseContextModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(String.class).annotatedWith(Names.named("fitnesse.rootPath")).toInstance(rootPath);
-        bind(String.class).annotatedWith(Names.named("fitnesse.rootPageName")).toInstance(rootPageName);
+        bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PATH)).toInstance(rootPath);
+        bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PAGE_NAME)).toInstance(rootPageName);
     }
 }

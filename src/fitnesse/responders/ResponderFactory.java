@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.*;
@@ -39,7 +40,7 @@ public class ResponderFactory {
     private final Map<String, Class<? extends Responder>> responderMap;
 
     @Inject
-    public ResponderFactory(Injector injector, @Named("fitnesse.rootPath") String rootPath, @Named("fitnesse.rootPageName") String rootPageName) {
+    public ResponderFactory(Injector injector, @Named(FitNesseContext.ROOT_PATH) String rootPath, @Named(FitNesseContext.ROOT_PAGE_NAME) String rootPageName) {
         this(injector, rootPath + File.separator + rootPageName);
     }
 

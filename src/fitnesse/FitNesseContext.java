@@ -33,6 +33,8 @@ public class FitNesseContext {
     public static final String RFC_COMPLIANT_DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
 
     public static FitNesseContext globalContext;
+    public static final String ROOT_PATH = "fitnesse.rootPath";
+    public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
 
     public final String rootPath;
     public final WikiPage root;
@@ -57,7 +59,12 @@ public class FitNesseContext {
     }
 
     @Inject
-    public FitNesseContext(@Named("fitnesse.rootPath") String rootPath, @Named("fitnesse.rootPageName") String rootPageName, WikiPageFactory wikiPageFactory, ResponderFactory responderFactory, Clock clock) throws Exception {
+    public FitNesseContext(
+            @Named(ROOT_PATH) String rootPath,
+            @Named(ROOT_PAGE_NAME) String rootPageName,
+            WikiPageFactory wikiPageFactory,
+            ResponderFactory responderFactory,
+            Clock clock) throws Exception {
         this.rootPath = rootPath;
         this.wikiPageFactory = wikiPageFactory;
         this.responderFactory = responderFactory;

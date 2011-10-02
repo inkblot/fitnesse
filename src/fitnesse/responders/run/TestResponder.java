@@ -112,7 +112,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
 
     void addHtmlFormatter() throws Exception {
-        BaseFormatter formatter = new TestHtmlFormatter(context, page, context.htmlPageFactory) {
+        BaseFormatter formatter = new TestHtmlFormatter(context, page, context.getHtmlPageFactory()) {
             @Override
             protected void writeData(String output) throws Exception {
                 addToResponse(output);

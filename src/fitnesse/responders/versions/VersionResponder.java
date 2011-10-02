@@ -43,7 +43,7 @@ public class VersionResponder implements SecureResponder {
     }
 
     private HtmlPage makeHtml(String name, PageData pageData, FitNesseContext context) throws Exception {
-        HtmlPage html = context.htmlPageFactory.newPage();
+        HtmlPage html = context.getHtmlPageFactory().newPage();
         html.title.use("Version " + version + ": " + name);
         html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Version " + version));
         html.actions.use(makeRollbackLink(name));

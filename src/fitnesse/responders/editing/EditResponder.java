@@ -78,7 +78,7 @@ public class EditResponder implements SecureResponder {
 
     private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage)
             throws Exception {
-        HtmlPage html = context.htmlPageFactory.newPage();
+        HtmlPage html = context.getHtmlPageFactory().newPage();
         String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
         html.title.use(title + resource + ":");
 

@@ -57,7 +57,7 @@ public class DeletePageResponder implements SecureResponder {
     }
 
     private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) throws Exception {
-        HtmlPage html = context.htmlPageFactory.newPage();
+        HtmlPage html = context.getHtmlPageFactory().newPage();
         html.title.use("Delete Confirmation");
         html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(qualifiedPageName, "/", "Confirm Deletion"));
         html.main.use(makeMainContent(root, qualifiedPageName));

@@ -18,7 +18,7 @@ public class ShutdownResponder implements SecureResponder {
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
 
-        HtmlPage html = context.htmlPageFactory.newPage();
+        HtmlPage html = context.getHtmlPageFactory().newPage();
         html.title.use("Shutdown");
         html.header.use(HtmlUtil.makeSpanTag("page_title", "Shutdown"));
 

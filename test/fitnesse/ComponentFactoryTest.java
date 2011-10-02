@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.EditResponder;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static util.RegexAssertions.assertSubString;
 
 public class ComponentFactoryTest extends FitnesseBaseTestCase {
@@ -48,22 +46,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         out.write("".getBytes());
         out.close();
         TestWidgetInterceptor.widgetsIntercepted.clear();
-    }
-
-    @Test
-    public void testDefaultHtmlPageFactory() throws Exception {
-        HtmlPageFactory pageFactory = factory.getHtmlPageFactory(new HtmlPageFactory());
-        assertNotNull(pageFactory);
-        assertEquals(HtmlPageFactory.class, pageFactory.getClass());
-    }
-
-    @Test
-    public void testHtmlPageFactoryCreation() throws Exception {
-        testProperties.setProperty(HtmlPageFactory.class.getSimpleName(), TestPageFactory.class.getName());
-
-        HtmlPageFactory pageFactory = factory.getHtmlPageFactory(null);
-        assertNotNull(pageFactory);
-        assertEquals(TestPageFactory.class, pageFactory.getClass());
     }
 
     @Test
@@ -123,12 +105,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
 
         public void intercept(WikiWidget widget) {
             widgetsIntercepted.add(widget.getClass());
-        }
-    }
-
-    public static class TestPageFactory extends HtmlPageFactory {
-        public TestPageFactory(Properties p) {
-            p.propertyNames();
         }
     }
 

@@ -1,9 +1,7 @@
 package fitnesseMain;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
+import com.google.inject.*;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import fitnesse.ComponentFactory;
 import fitnesse.FitNesseContext;
@@ -13,6 +11,7 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.DefaultContentFilter;
@@ -141,6 +140,28 @@ public class FitNesseModuleTest {
     public static class TestContentFilter implements ContentFilter {
         public boolean isContentAcceptable(String content, String page) {
             return false;
+        }
+    }
+
+    @Test
+    public void testDefaultHtmlPageFactory() throws Exception {
+        Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
+        HtmlPageFactory htmlPageFactory = injector.getInstance(HtmlPageFactory.class);
+        assertEquals(HtmlPageFactory.class, htmlPageFactory.getClass());
+    }
+
+    @Test
+    public void testHtmlPageFactoryCreation() throws Exception {
+        testProperties.setProperty(HtmlPageFactory.class.getSimpleName(), TestPageFactory.class.getName());
+        Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
+        HtmlPageFactory htmlPageFactory = injector.getInstance(HtmlPageFactory.class);
+        assertEquals(TestPageFactory.class, htmlPageFactory.getClass());
+    }
+
+    public static class TestPageFactory extends HtmlPageFactory {
+        @Inject
+        public TestPageFactory(@Named(ComponentFactory.PROPERTIES_FILE) Properties p) {
+            p.propertyNames();
         }
     }
 

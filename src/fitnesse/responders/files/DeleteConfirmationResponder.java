@@ -29,7 +29,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
     }
 
     private String makeDirectoryListingPage(String filename, FitNesseContext context) throws Exception {
-        HtmlPage page = context.htmlPageFactory.newPage();
+        HtmlPage page = context.getHtmlPageFactory().newPage();
         page.title.use("Delete File(s): ");
         page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource + filename, "/", "Delete File"));
         page.main.use(makeConfirmationHTML(filename, context));

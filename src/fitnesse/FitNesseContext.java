@@ -42,6 +42,7 @@ public class FitNesseContext {
     private final ResponderFactory responderFactory;
     private final Clock clock;
     private final WikiPageFactory wikiPageFactory;
+    private final HtmlPageFactory htmlPageFactory;
 
     public FitNesse fitnesse;
     public int port = DEFAULT_PORT;
@@ -49,7 +50,6 @@ public class FitNesseContext {
     public SocketDealer socketDealer = new SocketDealer();
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
     public Authenticator authenticator = new PromiscuousAuthenticator();
-    public HtmlPageFactory htmlPageFactory = new HtmlPageFactory();
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
@@ -64,11 +64,12 @@ public class FitNesseContext {
             @Named(ROOT_PAGE_NAME) String rootPageName,
             WikiPageFactory wikiPageFactory,
             ResponderFactory responderFactory,
-            Clock clock) throws Exception {
+            Clock clock, HtmlPageFactory htmlPageFactory) throws Exception {
         this.rootPath = rootPath;
         this.wikiPageFactory = wikiPageFactory;
         this.responderFactory = responderFactory;
         this.clock = clock;
+        this.htmlPageFactory = htmlPageFactory;
 
         this.root = wikiPageFactory.makeRootPage();
         String absolutePath = new File(this.rootPath).getAbsolutePath();
@@ -108,5 +109,9 @@ public class FitNesseContext {
 
     public Clock getClock() {
         return clock;
+    }
+
+    public HtmlPageFactory getHtmlPageFactory() {
+        return htmlPageFactory;
     }
 }

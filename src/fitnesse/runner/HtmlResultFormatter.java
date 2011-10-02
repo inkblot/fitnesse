@@ -29,7 +29,7 @@ public class HtmlResultFormatter implements ResultFormatter {
 
         buffer = new ContentBuffer(".html");
 
-        createPage(context.htmlPageFactory, rootPath);
+        createPage(context.getHtmlPageFactory(), rootPath);
         suiteFormatter = createCustomFormatter();
         suiteFormatter.writeHead(null);
     }

@@ -6,8 +6,8 @@ import com.google.inject.name.Names;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.editing.ContentFilter;
-import fitnesse.responders.editing.SaveResponder;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPage;
@@ -48,6 +48,7 @@ public class FitNesseModule extends AbstractModule {
         bindWikiPageClass();
         bindFromProperty(VersionsController.class);
         bindFromProperty(ContentFilter.class);
+        bindFromProperty(HtmlPageFactory.class);
         install(new SymbolProviderModule());
         install(new UtilModule());
     }

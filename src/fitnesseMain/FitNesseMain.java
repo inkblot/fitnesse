@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.PluginsClassLoader;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.updates.UpdaterImplementation;
@@ -54,7 +53,6 @@ public class FitNesseMain {
         context.authenticator = injector.getInstance(Authenticator.class);
 
         ComponentFactory componentFactory = injector.getInstance(ComponentFactory.class);
-        context.htmlPageFactory = componentFactory.getHtmlPageFactory(new HtmlPageFactory());
         String defaultNewPageContent = componentFactory.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
         if (defaultNewPageContent != null) {
             context.defaultNewPageContent = defaultNewPageContent;

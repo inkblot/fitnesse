@@ -42,7 +42,7 @@ public class MergeResponder implements Responder {
     }
 
     private String makePageHtml(FitNesseContext context) throws Exception {
-        HtmlPage page = context.htmlPageFactory.newPage();
+        HtmlPage page = context.getHtmlPageFactory().newPage();
         page.title.use("Merge " + resource);
         page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Merge Changes"));
         page.main.use(makeRightColumn());

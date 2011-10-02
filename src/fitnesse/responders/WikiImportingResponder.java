@@ -199,7 +199,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     }
 
     private HtmlPage makeHtml() throws Exception {
-        HtmlPage html = context.htmlPageFactory.newPage();
+        HtmlPage html = context.getHtmlPageFactory().newPage();
         String title = "Wiki Import";
         if (isUpdate)
             title += " Update";

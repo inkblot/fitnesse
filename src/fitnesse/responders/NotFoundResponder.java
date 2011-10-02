@@ -28,7 +28,7 @@ public class NotFoundResponder implements Responder {
     }
 
     private String makeHtml(FitNesseContext context) throws Exception {
-        HtmlPage page = context.htmlPageFactory.newPage();
+        HtmlPage page = context.getHtmlPageFactory().newPage();
         HtmlUtil.addTitles(page, "Not Found:" + resource);
         page.main.use(makeRightColumn(resource));
         return page.html();

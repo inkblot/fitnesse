@@ -5,14 +5,11 @@ package fitnesse;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
-import util.TodoException;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
@@ -41,46 +38,6 @@ public class ComponentFactory {
 
     public String getProperty(String propertyName) {
         return getProperties().getProperty(propertyName);
-    }
-
-    public <T> T createComponent(Class<T> componentType, Class<? extends T> defaultComponent) {
-        String componentClassName = properties.getProperty(componentType.getSimpleName());
-        Class<? extends T> componentClass = defaultComponent;
-        try {
-            if (componentClassName != null) {
-                Class<?> someClass = Class.forName(componentClassName);
-                if (componentType.isAssignableFrom(someClass)) {
-                    //noinspection unchecked
-                    componentClass = (Class<? extends T>) someClass;
-                }
-            }
-
-            if (componentClass != null) {
-                Constructor<? extends T> constructor = componentClass.getConstructor(Properties.class);
-                return constructor.newInstance(properties);
-            } else {
-                return null;
-            }
-        } catch (ClassNotFoundException e) {
-            throw new TodoException(e);
-        } catch (NoSuchMethodException e) {
-            throw new TodoException(e);
-        } catch (InvocationTargetException e) {
-            throw new TodoException(e);
-        } catch (InstantiationException e) {
-            throw new TodoException(e);
-        } catch (IllegalAccessException e) {
-            throw new TodoException(e);
-        }
-    }
-
-    public <T> T createComponent(Class<T> componentType) {
-        return createComponent(componentType, null);
-    }
-
-    public HtmlPageFactory getHtmlPageFactory(HtmlPageFactory defaultPageFactory) {
-        HtmlPageFactory htmlPageFactory = createComponent(HtmlPageFactory.class);
-        return htmlPageFactory == null ? defaultPageFactory : htmlPageFactory;
     }
 
     public String loadPlugins(ResponderFactory responderFactory, WikiPageFactory wikiPageFactory) throws Exception {

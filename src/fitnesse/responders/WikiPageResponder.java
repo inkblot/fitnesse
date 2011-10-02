@@ -67,7 +67,7 @@ public class WikiPageResponder implements SecureResponder {
 
     public String makeHtml(FitNesseContext context) throws Exception {
         WikiPage page = pageData.getWikiPage();
-        HtmlPage html = context.htmlPageFactory.newPage();
+        HtmlPage html = context.getHtmlPageFactory().newPage();
         WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
         String fullPathName = PathParser.render(fullPath);
         html.title.use(fullPathName);

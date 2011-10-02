@@ -14,6 +14,8 @@ import fitnesse.authentication.MultiUserAuthenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.responders.ResponderFactory;
+import fitnesse.responders.editing.ContentFilter;
+import fitnesse.responders.editing.DefaultContentFilter;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.*;
 import fitnesse.wiki.zip.ZipFileVersionsController;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
@@ -118,6 +121,27 @@ public class FitNesseModuleTest {
         Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
         VersionsController defaultRevisionController = injector.getInstance(VersionsController.class);
         assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
+    }
+
+    @Test
+    public void testDefaultContentFilterCreation() throws Exception {
+        Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
+        ContentFilter contentFilter = injector.getInstance(ContentFilter.class);
+        assertThat(contentFilter, instanceOf(DefaultContentFilter.class));
+    }
+
+    @Test
+    public void testOtherContentFilterCreation() throws Exception {
+        testProperties.setProperty(ContentFilter.class.getSimpleName(), TestContentFilter.class.getName());
+        Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
+        ContentFilter contentFilter = injector.getInstance(ContentFilter.class);
+        assertThat(contentFilter, instanceOf(TestContentFilter.class));
+    }
+
+    public static class TestContentFilter implements ContentFilter {
+        public boolean isContentAcceptable(String content, String page) {
+            return false;
+        }
     }
 
     @Test

@@ -7,8 +7,6 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.editing.ContentFilter;
-import fitnesse.responders.editing.SaveResponder;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
 import fitnesse.wikitext.parser.SymbolType;
@@ -169,15 +167,6 @@ public class ComponentFactory {
             }
         }
         return buffer.toString();
-    }
-
-    public String loadContentFilter() {
-        ContentFilter filter = createComponent(ContentFilter.class);
-        if (filter != null) {
-            SaveResponder.contentFilter = filter;
-            return "\tContent filter installed: " + filter.getClass().getName() + "\n";
-        }
-        return "";
     }
 
 }

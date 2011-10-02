@@ -63,7 +63,6 @@ public class FitNesseMain {
         String extraOutput = componentFactory.loadPlugins(context.getResponderFactory(), context.getWikiPageFactory());
         extraOutput += componentFactory.loadResponders(context.getResponderFactory());
         extraOutput += componentFactory.loadSymbolTypes();
-        extraOutput += componentFactory.loadContentFilter();
 
         WikiImportTestEventListener.register();
 

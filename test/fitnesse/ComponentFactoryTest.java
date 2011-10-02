@@ -5,9 +5,7 @@ package fitnesse;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
-import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.EditResponder;
-import fitnesse.responders.editing.SaveResponder;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WidgetInterceptor;
 import fitnesse.wikitext.WikiWidget;
@@ -128,32 +126,9 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         }
     }
 
-    @Test
-    public void testContentFilterCreation() throws Exception {
-        assertEquals("", factory.loadContentFilter());
-        assertEquals(null, SaveResponder.contentFilter);
-
-        testProperties.setProperty(ContentFilter.class.getSimpleName(), TestContentFilter.class.getName());
-
-        String content = factory.loadContentFilter();
-        assertEquals("\tContent filter installed: " + SaveResponder.contentFilter.getClass().getName() + "\n", content);
-        assertNotNull(SaveResponder.contentFilter);
-        assertEquals(TestContentFilter.class, SaveResponder.contentFilter.getClass());
-    }
-
     public static class TestPageFactory extends HtmlPageFactory {
         public TestPageFactory(Properties p) {
             p.propertyNames();
-        }
-    }
-
-    public static class TestContentFilter implements ContentFilter {
-        public TestContentFilter(Properties p) {
-            p.propertyNames();
-        }
-
-        public boolean isContentAcceptable(String content, String page) {
-            return false;
         }
     }
 

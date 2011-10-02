@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Module;
 import com.google.inject.Provider;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
@@ -13,7 +15,6 @@ import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
@@ -32,26 +33,37 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
 
     private Provider<Clock> clockProvider;
+    private ContentFilter contentFilter;
 
     @Inject
     public void inject(Provider<Clock> clockProvider) {
         this.clockProvider = clockProvider;
     }
 
+    @Override
+    protected Module getOverrideModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(ContentFilter.class).toProvider(new Provider<ContentFilter>() {
+                    @Override
+                    public ContentFilter get() {
+                        return contentFilter;
+                    }
+                });
+            }
+        };
+    }
+
     @Before
     public void setUp() throws Exception {
+        contentFilter = new DefaultContentFilter();
         context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new SaveResponder();
-        SaveResponder.contentFilter = null;
+        responder = injector.getInstance(SaveResponder.class);
         SaveRecorder.clear();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        SaveResponder.contentFilter = null;
     }
 
     @Test
@@ -166,7 +178,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testContentFilter() throws Exception {
-        SaveResponder.contentFilter = new ContentFilter() {
+        contentFilter = new ContentFilter() {
             public boolean isContentAcceptable(String content, String page) {
                 return false;
             }

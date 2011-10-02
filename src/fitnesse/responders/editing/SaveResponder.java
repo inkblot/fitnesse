@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -17,13 +19,18 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 
 public class SaveResponder implements SecureResponder {
-    public static ContentFilter contentFilter;
+    private final Provider<ContentFilter> contentFilterProvider;
 
     private String user;
     private long ticketId;
     private String savedContent;
     private PageData data;
     private long editTimeStamp;
+
+    @Inject
+    public SaveResponder(Provider<ContentFilter> contentFilterProvider) {
+        this.contentFilterProvider = contentFilterProvider;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         editTimeStamp = getEditTime(request);
@@ -37,7 +44,7 @@ public class SaveResponder implements SecureResponder {
             return new MergeResponder(request).makeResponse(context, request);
         else {
             savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
-            if (contentFilter != null && !contentFilter.isContentAcceptable(savedContent, resource))
+            if (!contentFilterProvider.get().isContentAcceptable(savedContent, resource))
                 return makeBannedContentResponse(context, resource);
             else
                 return saveEdits(request, page);

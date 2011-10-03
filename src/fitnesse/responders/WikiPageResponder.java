@@ -18,6 +18,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.wiki.*;
 import org.apache.velocity.VelocityContext;
+import util.Clock;
 
 public class WikiPageResponder implements SecureResponder {
     protected WikiPage page;
@@ -27,10 +28,12 @@ public class WikiPageResponder implements SecureResponder {
     protected PageCrawler crawler;
 
     private final HtmlPageFactory htmlPageFactory;
+    private final Clock clock;
 
     @Inject
-    public WikiPageResponder(HtmlPageFactory htmlPageFactory) {
+    public WikiPageResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
         this.htmlPageFactory = htmlPageFactory;
+        this.clock = clock;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -53,7 +56,7 @@ public class WikiPageResponder implements SecureResponder {
     private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
         if (doNotCreateNonExistentPage(request))
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
-        return EditResponder.makeResponseForNonExistentPage(request, htmlPageFactory, context.root, context.defaultNewPageContent);
+        return EditResponder.makeResponseForNonExistentPage(request, htmlPageFactory, context.root, context.defaultNewPageContent, clock);
     }
 
     private boolean doNotCreateNonExistentPage(Request request) {

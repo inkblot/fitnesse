@@ -197,7 +197,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         WikiPage simplePage = crawler.addPage(root, PathParser.parse(pageName));
 
         PageData data = simplePage.getData();
-        SaveRecorder.pageSaved(data, 0);
+        SaveRecorder.pageSaved(data, 0, clockProvider.get());
         simplePage.commit(data);
     }
 

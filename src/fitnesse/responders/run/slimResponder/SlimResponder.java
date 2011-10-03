@@ -12,6 +12,7 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.wiki.PageData;
+import util.Clock;
 
 /*
 This responder is a test rig for SlimTestSystemTest, which makes sure that the SlimTestSystem works nicely with
@@ -22,8 +23,8 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
     private boolean fastTest = false;
     SlimTestSystem testSystem;
 
-    public SlimResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public SlimResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
+        super(htmlPageFactory, clock);
     }
 
 

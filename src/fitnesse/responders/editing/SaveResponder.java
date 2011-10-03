@@ -18,10 +18,12 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
+import util.Clock;
 
 public class SaveResponder implements SecureResponder {
     private final Provider<ContentFilter> contentFilterProvider;
     private final HtmlPageFactory htmlPageFactory;
+    private final Clock clock;
 
     private String user;
     private long ticketId;
@@ -30,9 +32,10 @@ public class SaveResponder implements SecureResponder {
     private long editTimeStamp;
 
     @Inject
-    public SaveResponder(Provider<ContentFilter> contentFilterProvider, HtmlPageFactory htmlPageFactory) {
+    public SaveResponder(Provider<ContentFilter> contentFilterProvider, HtmlPageFactory htmlPageFactory, Clock clock) {
         this.contentFilterProvider = contentFilterProvider;
         this.htmlPageFactory = htmlPageFactory;
+        this.clock = clock;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -43,8 +46,9 @@ public class SaveResponder implements SecureResponder {
         data = page.getData();
         user = request.getAuthorizationUsername();
 
-        if (editsNeedMerge())
-            return new MergeResponder(request, htmlPageFactory).makeResponse(context, request);
+        if (editsNeedMerge()) {
+            return new MergeResponder(request, htmlPageFactory, clock).makeResponse(context, request);
+        }
         else {
             savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
             if (!contentFilterProvider.get().isContentAcceptable(savedContent, resource))
@@ -109,7 +113,7 @@ public class SaveResponder implements SecureResponder {
 
     private void setData() throws Exception {
         data.setContent(savedContent);
-        SaveRecorder.pageSaved(data, ticketId);
+        SaveRecorder.pageSaved(data, ticketId, clock);
         if (user != null)
             data.setAttribute(PageData.LAST_MODIFYING_USER, user);
         else

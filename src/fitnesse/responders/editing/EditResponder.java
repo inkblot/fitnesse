@@ -14,6 +14,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+import util.Clock;
 
 import java.io.IOException;
 
@@ -24,24 +25,26 @@ public class EditResponder implements SecureResponder {
     public static final String TICKET_ID = "ticketId";
 
     private final HtmlPageFactory htmlPageFactory;
+    private final Clock clock;
 
     @Inject
-    public EditResponder(HtmlPageFactory htmlPageFactory) {
+    public EditResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
         this.htmlPageFactory = htmlPageFactory;
+        this.clock = clock;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws IOException {
         boolean nonExistent = request.hasInput("nonExistent");
-        return doMakeResponse(request, nonExistent, context.root, htmlPageFactory, context.defaultNewPageContent);
+        return doMakeResponse(request, nonExistent, context.root, htmlPageFactory, context.defaultNewPageContent, clock);
     }
 
     public static Response makeResponseForNonExistentPage(Request request,
-                                                          HtmlPageFactory htmlPageFactory, WikiPage root, String defaultContent) throws IOException {
-        return doMakeResponse(request, true, root, htmlPageFactory, defaultContent);
+                                                          HtmlPageFactory htmlPageFactory, WikiPage root, String defaultContent, Clock clock) throws IOException {
+        return doMakeResponse(request, true, root, htmlPageFactory, defaultContent, clock);
     }
 
     private static Response doMakeResponse(Request request, boolean firstTimeForNewPage, WikiPage root,
-                                           HtmlPageFactory htmlPageFactory, String defaultContent) throws IOException {
+                                           HtmlPageFactory htmlPageFactory, String defaultContent, Clock clock) throws IOException {
         SimpleResponse response = new SimpleResponse();
         String resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
@@ -57,9 +60,9 @@ public class EditResponder implements SecureResponder {
         String content = pageData.getContent();
 
         if (firstTimeForNewPage) {
-            response.setContent(doMakeHtml(resource, request, defaultContent, "Page doesn't exist. Edit ", htmlPageFactory));
+            response.setContent(doMakeHtml(resource, request, defaultContent, "Page doesn't exist. Edit ", htmlPageFactory, clock));
         } else {
-            response.setContent(doMakeHtml(resource, request, content, "Edit ", htmlPageFactory));
+            response.setContent(doMakeHtml(resource, request, content, "Edit ", htmlPageFactory, clock));
         }
 
         response.setMaxAge(0);
@@ -68,7 +71,7 @@ public class EditResponder implements SecureResponder {
     }
 
 
-    private static String doMakeHtml(String resource, Request request, String content, String title, HtmlPageFactory htmlPageFactory)
+    private static String doMakeHtml(String resource, Request request, String content, String title, HtmlPageFactory htmlPageFactory, Clock clock)
             throws IOException {
         HtmlPage html = htmlPageFactory.newPage();
         html.title.use(title + resource + ":");
@@ -76,7 +79,7 @@ public class EditResponder implements SecureResponder {
         html.body.addAttribute("onLoad", "document.f." + CONTENT_INPUT_NAME + ".focus()");
         HtmlTag header = makeHeader(resource, title);
         html.header.use(header);
-        html.main.use(makeEditForm(resource, request, content));
+        html.main.use(makeEditForm(resource, request, content, clock));
 
         return html.html();
     }
@@ -85,13 +88,13 @@ public class EditResponder implements SecureResponder {
         return HtmlUtil.makeBreadCrumbsWithPageType(resource, title + "Page:");
     }
 
-    private static HtmlTag makeEditForm(String resource, Request request, String content) throws IOException {
+    private static HtmlTag makeEditForm(String resource, Request request, String content, Clock clock) throws IOException {
         HtmlTag form = new HtmlTag("form");
         form.addAttribute("name", "f");
         form.addAttribute("action", resource);
         form.addAttribute("method", "post");
         form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
-        form.add(HtmlUtil.makeInputTag("hidden", TIME_STAMP, String.valueOf(SaveRecorder.timeStamp())));
+        form.add(HtmlUtil.makeInputTag("hidden", TIME_STAMP, String.valueOf(clock.currentClockTimeInMillis())));
         form.add(HtmlUtil.makeInputTag("hidden", TICKET_ID, String.valueOf((SaveRecorder.newTicket()))));
         if (request.hasInput("redirectToReferer") && request.hasHeader("Referer")) {
             String redirectUrl = request.getHeader("Referer").toString();

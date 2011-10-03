@@ -22,6 +22,7 @@ import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
 import org.junit.Test;
+import util.Clock;
 
 import java.net.ServerSocket;
 import java.net.SocketException;
@@ -39,9 +40,11 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     protected SimpleResponse response;
     private TestSystemListener dummyListener = new DummyListener();
     private HtmlPageFactory htmlPageFactory;
+    private Clock clock;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory) {
+        this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
     }
 
@@ -77,7 +80,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     }
 
     protected SlimResponder getSlimResponder() {
-        return new HtmlSlimResponder(htmlPageFactory);
+        return new HtmlSlimResponder(clock, htmlPageFactory);
     }
 
     @Test

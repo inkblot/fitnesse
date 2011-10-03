@@ -2,23 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.testutil;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
-import fitnesse.ComponentFactory;
 import fitnesse.authentication.Authenticator;
-
-import java.util.Properties;
 
 public class SimpleAuthenticator extends Authenticator {
     public boolean authenticated = false;
-
-    public SimpleAuthenticator() {
-    }
-
-    @Inject
-    public SimpleAuthenticator(@Named(ComponentFactory.PROPERTIES_FILE) Properties p) {
-        p.propertyNames();
-    }
 
     public boolean isAuthenticated(String username, String password) {
         return authenticated;

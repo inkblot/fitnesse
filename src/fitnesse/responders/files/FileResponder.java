@@ -10,7 +10,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import util.ClockUtil;
 import util.ImpossibleException;
 
 import java.io.File;
@@ -52,7 +51,7 @@ public class FileResponder implements Responder {
         determineLastModifiedInfo();
 
         if (isNotModified(request))
-            return createNotModifiedResponse();
+            return createNotModifiedResponse(context);
         else {
             response.setBody(requestedFile);
             setContentType(requestedFile, response);
@@ -88,10 +87,10 @@ public class FileResponder implements Responder {
         return false;
     }
 
-    private Response createNotModifiedResponse() {
+    private Response createNotModifiedResponse(FitNesseContext context) {
         Response response = new SimpleResponse();
         response.setStatus(304);
-        response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(ClockUtil.currentDate()));
+        response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(context.getClock().currentClockDate()));
         response.addHeader("Cache-Control", "private");
         response.setLastModifiedHeader(lastModifiedDateString);
         return response;

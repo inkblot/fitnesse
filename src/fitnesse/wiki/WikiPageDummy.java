@@ -4,7 +4,7 @@
 package fitnesse.wiki;
 
 import com.google.inject.Injector;
-import util.ClockUtil;
+import util.Clock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class WikiPageDummy implements WikiPage {
 
     public VersionInfo commit(PageData data) {
         pageData = data;
-        return new VersionInfo("mockVersionName", "mockAuthor", ClockUtil.currentDate());
+        return new VersionInfo("mockVersionName", "mockAuthor", injector.getInstance(Clock.class).currentClockDate());
     }
 
     public List<WikiPage> getChildren() {

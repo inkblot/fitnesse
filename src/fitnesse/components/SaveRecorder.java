@@ -4,7 +4,7 @@ package fitnesse.components;
 
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import util.ClockUtil;
+import util.Clock;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +15,8 @@ public class SaveRecorder {
     private static Map<String, Long> ticketRegistry = new HashMap<String, Long>();
     private static Map<String, Long> saveTime = new HashMap<String, Long>();
 
-    public static long pageSaved(PageData data, long ticketNumber) throws Exception {
-        long timeStamp = timeStamp();
+    public static long pageSaved(PageData data, long ticketNumber, Clock clock) throws Exception {
+        long timeStamp = clock.currentClockTimeInMillis();
         WikiPage page = data.getWikiPage();
         String name = page.getPageCrawler().getFullPath(page).toString();
         ticketRegistry.put(name, ticketNumber);
@@ -26,10 +26,6 @@ public class SaveRecorder {
 
     public static boolean changesShouldBeMerged(long thisEditTime, long ticket, PageData data) throws Exception {
         return new MergeDeterminer(thisEditTime, ticket, data).shouldMerge();
-    }
-
-    public static long timeStamp() {
-        return ClockUtil.currentTimeInMillis();
     }
 
     public static long newTicket() {

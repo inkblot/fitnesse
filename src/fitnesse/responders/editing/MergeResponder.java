@@ -17,6 +17,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
+import util.Clock;
 
 public class MergeResponder implements Responder {
     private final Request request;
@@ -25,10 +26,12 @@ public class MergeResponder implements Responder {
     private String resource;
     private static final String OLD_CONTENT_INPUT_NAME = "oldContent";
     private final HtmlPageFactory htmlPageFactory;
+    private final Clock clock;
 
-    public MergeResponder(Request request, HtmlPageFactory htmlPageFactory) {
+    public MergeResponder(Request request, HtmlPageFactory htmlPageFactory, Clock clock) {
         this.request = request;
         this.htmlPageFactory = htmlPageFactory;
+        this.clock = clock;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -55,7 +58,7 @@ public class MergeResponder implements Responder {
     private String makeRightColumn() throws Exception {
         HtmlTag form = HtmlUtil.makeFormTag("post", resource);
         form.add(HtmlUtil.makeInputTag("hidden", "responder", "saveData"));
-        form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TIME_STAMP, String.valueOf(SaveRecorder.timeStamp())));
+        form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TIME_STAMP, String.valueOf(clock.currentClockTimeInMillis())));
         form.add(HtmlUtil.makeInputTag("hidden", EditResponder.TICKET_ID, String.valueOf(SaveRecorder.newTicket())));
         HtmlTag title = HtmlUtil.makeDivTag("centered");
         title.use("This page has been recently modified.  You may want to merge existing page content into your changes.");

@@ -75,19 +75,18 @@ public class PageData implements Serializable {
             PropertySECURE_WRITE, PropertySECURE_TEST};
 
     public static final String LAST_MODIFYING_USER = "LastModifyingUser";
-
     public static final String SUITE_SETUP_NAME = "SuiteSetUp";
-
     public static final String SUITE_TEARDOWN_NAME = "SuiteTearDown";
+
+    public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
+    public static final String TEST_RUNNER = "TEST_RUNNER";
+    public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
     private transient WikiPage wikiPage;
     private String content;
     private WikiPageProperties properties = new WikiPageProperties();
     private Set<VersionInfo> versions;
 
-    public static final String COMMAND_PATTERN = "COMMAND_PATTERN";
-    public static final String TEST_RUNNER = "TEST_RUNNER";
-    public static final String PATH_SEPARATOR = "PATH_SEPARATOR";
 
     private Symbol contentSyntaxTree = null;
     private ParsingPage parsingPage;

@@ -4,10 +4,11 @@ package fitnesse.responders.run.slimResponder;
 
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.wiki.PageData;
+import util.Clock;
 
 public class HtmlSlimResponder extends SlimResponder {
-    public HtmlSlimResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public HtmlSlimResponder(Clock clock, HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory, clock);
     }
 
     protected SlimTestSystem getTestSystem(PageData pageData) {

@@ -15,6 +15,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
+import util.Clock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -28,9 +29,11 @@ public class EditResponderTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
+    private Clock clock;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory) {
+        this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
     }
 
@@ -40,7 +43,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new EditResponder(htmlPageFactory);
+        responder = new EditResponder(htmlPageFactory, clock);
     }
 
     @Test

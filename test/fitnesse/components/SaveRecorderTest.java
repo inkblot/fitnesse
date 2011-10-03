@@ -2,10 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import com.google.inject.Inject;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
+import util.Clock;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -14,6 +16,12 @@ public class SaveRecorderTest extends FitnesseBaseTestCase {
     public WikiPage somePage;
     public WikiPage root;
     private PageCrawler crawler;
+    private Clock clock;
+
+    @Inject
+    public void inject(Clock clock) {
+        this.clock = clock;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -27,7 +35,7 @@ public class SaveRecorderTest extends FitnesseBaseTestCase {
         PageData data = somePage.getData();
         long savedTicket = 0;
         long editTicket = 1;
-        long time = SaveRecorder.pageSaved(data, savedTicket);
+        long time = SaveRecorder.pageSaved(data, savedTicket, clock);
         somePage.commit(data);
         assertTrue(SaveRecorder.changesShouldBeMerged(time - 1, editTicket, somePage.getData()));
         assertFalse(SaveRecorder.changesShouldBeMerged(time + 1, editTicket, somePage.getData()));
@@ -43,7 +51,7 @@ public class SaveRecorderTest extends FitnesseBaseTestCase {
     public void testCanSaveOutOfOrderIfFromSameEditSession() throws Exception {
         PageData data = somePage.getData();
         long ticket = 99;
-        long time = SaveRecorder.pageSaved(data, ticket);
+        long time = SaveRecorder.pageSaved(data, ticket, clock);
         somePage.commit(data);
         assertFalse(SaveRecorder.changesShouldBeMerged(time - 1, ticket, data));
     }

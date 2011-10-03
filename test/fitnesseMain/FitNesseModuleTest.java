@@ -168,7 +168,6 @@ public class FitNesseModuleTest {
     @Test
     public void allThingsInjectable() {
         Injector injector = Guice.createInjector(new FitNesseModule(testProperties, null));
-        assertNotNull(injector.getInstance(ComponentFactory.class));
         assertNotNull(injector.getInstance(Authenticator.class));
         assertNotNull(injector.getInstance(VersionsController.class));
         assertNotNull(injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS))));

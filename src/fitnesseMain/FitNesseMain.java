@@ -2,22 +2,25 @@ package fitnesseMain;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import fitnesse.ComponentFactory;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
-import fitnesse.authentication.Authenticator;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
+import fitnesse.wikitext.parser.SymbolProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.CommandLine;
 import util.CommandLineParseException;
 
 import java.util.Arrays;
+import java.util.Properties;
 
 public class FitNesseMain {
     private static final Logger logger = LoggerFactory.getLogger(FitNesseMain.class);
@@ -54,15 +57,20 @@ public class FitNesseMain {
         FitNesseContext context = FitNesseContext.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory());
         context.port = arguments.getPort();
 
-        ComponentFactory componentFactory = injector.getInstance(ComponentFactory.class);
-        String defaultNewPageContent = componentFactory.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
+        Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(ComponentFactory.PROPERTIES_FILE)));
+        String defaultNewPageContent = pluginProperties.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
         if (defaultNewPageContent != null) {
             context.defaultNewPageContent = defaultNewPageContent;
         }
 
-        String extraOutput = componentFactory.loadPlugins(context.getResponderFactory(), context.getWikiPageFactory());
-        extraOutput += componentFactory.loadResponders(context.getResponderFactory());
-        extraOutput += componentFactory.loadSymbolTypes();
+        SymbolProvider wikiSymbols = injector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
+        String extraOutput = ComponentFactory.loadPlugins(
+                context.getResponderFactory(),
+                context.getWikiPageFactory(),
+                wikiSymbols,
+                pluginProperties);
+        extraOutput += ComponentFactory.loadResponders(context.getResponderFactory(), pluginProperties);
+        extraOutput += ComponentFactory.loadSymbolTypes(pluginProperties, wikiSymbols);
 
         WikiImportTestEventListener.register();
 

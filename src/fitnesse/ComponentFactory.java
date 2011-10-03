@@ -2,9 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
@@ -14,35 +11,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
 
-@Singleton
 public class ComponentFactory {
-    private final String endl = System.getProperty("line.separator");
+    private static final String endl = System.getProperty("line.separator");
     public static final String PROPERTIES_FILE = "plugins.properties";
     public static final String PLUGINS = "Plugins";
     public static final String RESPONDERS = "Responders";
     public static final String SYMBOL_TYPES = "SymbolTypes";
     public static final String DEFAULT_NEWPAGE_CONTENT = "newpage.default.content";
 
-    private final Properties properties;
-    private final SymbolProvider symbolProvider;
+    private ComponentFactory() {}
 
-    @Inject
-    public ComponentFactory(@Named(PROPERTIES_FILE) Properties properties, @Named(SymbolProvider.WIKI_PARSING) SymbolProvider symbolProvider) {
-        this.properties = properties;
-        this.symbolProvider = symbolProvider;
-    }
-
-    Properties getProperties() {
-        return properties;
-    }
-
-    public String getProperty(String propertyName) {
-        return getProperties().getProperty(propertyName);
-    }
-
-    public String loadPlugins(ResponderFactory responderFactory, WikiPageFactory wikiPageFactory) throws Exception {
+    public static String loadPlugins(ResponderFactory responderFactory, WikiPageFactory wikiPageFactory, SymbolProvider symbolProvider, Properties properties) throws Exception {
         StringBuffer buffer = new StringBuffer();
-        String[] responderPlugins = getListFromProperties(PLUGINS);
+        String[] responderPlugins = getListFromProperties(PLUGINS, properties);
         if (responderPlugins != null) {
             buffer.append("\tCustom plugins loaded:").append(endl);
             for (String responderPlugin : responderPlugins) {
@@ -55,7 +36,7 @@ public class ComponentFactory {
         return buffer.toString();
     }
 
-    private void loadWikiPageFromPlugin(Class<?> pluginClass, WikiPageFactory wikiPageFactory, StringBuffer buffer)
+    private static void loadWikiPageFromPlugin(Class<?> pluginClass, WikiPageFactory wikiPageFactory, StringBuffer buffer)
             throws IllegalAccessException, InvocationTargetException {
         try {
             Method method = pluginClass.getMethod("registerWikiPage", WikiPageFactory.class);
@@ -66,7 +47,7 @@ public class ComponentFactory {
         }
     }
 
-    private void loadRespondersFromPlugin(Class<?> pluginClass, ResponderFactory responderFactory, StringBuffer buffer)
+    private static void loadRespondersFromPlugin(Class<?> pluginClass, ResponderFactory responderFactory, StringBuffer buffer)
             throws IllegalAccessException, InvocationTargetException {
         try {
             Method method = pluginClass.getMethod("registerResponders", ResponderFactory.class);
@@ -77,7 +58,7 @@ public class ComponentFactory {
         }
     }
 
-    private void loadSymbolTypesFromPlugin(Class<?> pluginClass, SymbolProvider symbolProvider, StringBuffer buffer)
+    private static void loadSymbolTypesFromPlugin(Class<?> pluginClass, SymbolProvider symbolProvider, StringBuffer buffer)
             throws IllegalAccessException, InvocationTargetException {
         try {
             Method method = pluginClass.getMethod("registerSymbolTypes", SymbolProvider.class);
@@ -88,9 +69,9 @@ public class ComponentFactory {
         }
     }
 
-    public String loadResponders(ResponderFactory responderFactory) throws Exception {
+    public static String loadResponders(ResponderFactory responderFactory, Properties properties) throws Exception {
         StringBuilder buffer = new StringBuilder();
-        String[] responderList = getListFromProperties(RESPONDERS);
+        String[] responderList = getListFromProperties(RESPONDERS, properties);
         if (responderList != null) {
             buffer.append("\tCustom responders loaded:").append(endl);
             for (String responder : responderList) {
@@ -104,7 +85,7 @@ public class ComponentFactory {
         return buffer.toString();
     }
 
-    private String[] getListFromProperties(String propertyName) {
+    private static String[] getListFromProperties(String propertyName, Properties properties) {
         String value = properties.getProperty(propertyName);
         if (value == null)
             return null;
@@ -112,9 +93,9 @@ public class ComponentFactory {
             return value.split(",");
     }
 
-    public String loadSymbolTypes() throws Exception {
+    public static String loadSymbolTypes(Properties properties, SymbolProvider symbolProvider) throws Exception {
         StringBuilder buffer = new StringBuilder();
-        String[] symbolTypeNames = getListFromProperties(SYMBOL_TYPES);
+        String[] symbolTypeNames = getListFromProperties(SYMBOL_TYPES, properties);
         if (symbolTypeNames != null) {
             buffer.append("\tCustom symbol types loaded:").append(endl);
             for (String symbolTypeName : symbolTypeNames) {

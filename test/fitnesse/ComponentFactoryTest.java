@@ -24,7 +24,6 @@ import static util.RegexAssertions.assertSubString;
 
 public class ComponentFactoryTest extends FitnesseBaseTestCase {
     private Properties testProperties;
-    private ComponentFactory factory;
     private SymbolProvider testProvider;
     private WikiPageFactory wikiPageFactory;
     private ResponderFactory responderFactory;
@@ -35,7 +34,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         wikiPageFactory = context.getWikiPageFactory();
         testProperties = new Properties();
         testProvider = new SymbolProvider(new SymbolType[]{});
-        factory = new ComponentFactory(testProperties, testProvider);
         responderFactory = context.getResponderFactory();
     }
 
@@ -54,7 +52,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
 
         assertMatch("!today", false);
 
-        String output = factory.loadPlugins(responderFactory, wikiPageFactory);
+        String output = ComponentFactory.loadPlugins(responderFactory, wikiPageFactory, testProvider, testProperties);
 
         assertSubString(DummyPlugin.class.getName(), output);
 
@@ -78,7 +76,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
         testProperties.setProperty(ComponentFactory.RESPONDERS, respondersValue);
 
-        String output = factory.loadResponders(responderFactory);
+        String output = ComponentFactory.loadResponders(responderFactory, testProperties);
 
         assertSubString("custom1:" + WikiPageResponder.class.getName(), output);
         assertSubString("custom2:" + EditResponder.class.getName(), output);
@@ -92,7 +90,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         String symbolValues = Today.class.getName();
         testProperties.setProperty(ComponentFactory.SYMBOL_TYPES, symbolValues);
 
-        String output = factory.loadSymbolTypes();
+        String output = ComponentFactory.loadSymbolTypes(testProperties, testProvider);
 
         assertSubString(Today.class.getName(), output);
 

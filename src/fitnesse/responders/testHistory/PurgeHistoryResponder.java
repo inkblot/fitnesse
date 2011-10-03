@@ -11,7 +11,6 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
 import util.Clock;
-import util.ClockUtil;
 import util.FileUtil;
 
 import java.io.File;

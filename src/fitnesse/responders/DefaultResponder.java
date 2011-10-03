@@ -2,20 +2,30 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 
 public class DefaultResponder extends BasicResponder {
+
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public DefaultResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        String content = prepareResponseDocument(context).html();
+        String content = prepareResponseDocument().html();
         return responseWith(content);
     }
 
-    private HtmlPage prepareResponseDocument(FitNesseContext context) {
-        HtmlPage responseDocument = context.getHtmlPageFactory().newPage();
+    private HtmlPage prepareResponseDocument() {
+        HtmlPage responseDocument = htmlPageFactory.newPage();
         HtmlUtil.addTitles(responseDocument, "Default Responder");
         responseDocument.main.use(content());
         return responseDocument;

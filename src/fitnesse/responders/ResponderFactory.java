@@ -138,7 +138,7 @@ public class ResponderFactory {
         if (responderClass != null) {
             return injector.getInstance(responderClass);
         } else {
-            return new DefaultResponder();
+            return injector.getInstance(DefaultResponder.class);
         }
     }
 

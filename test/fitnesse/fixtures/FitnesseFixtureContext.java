@@ -4,6 +4,7 @@ package fitnesse.fixtures;
 
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.authentication.Authenticator;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.WikiPage;
@@ -18,4 +19,5 @@ public class FitnesseFixtureContext {
     public static FitNesseContext context;
     public static FitNesse fitnesse;
     public static Clock clock;
+    public static Authenticator authenticator;
 }

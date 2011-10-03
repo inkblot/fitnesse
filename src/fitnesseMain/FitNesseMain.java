@@ -2,7 +2,10 @@ package fitnesseMain;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import fitnesse.*;
+import fitnesse.ComponentFactory;
+import fitnesse.FitNesse;
+import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.Authenticator;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.responders.WikiImportTestEventListener;
@@ -50,7 +53,6 @@ public class FitNesseMain {
         new PluginsClassLoader().addPluginsToClassLoader();
         FitNesseContext context = FitNesseContext.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory());
         context.port = arguments.getPort();
-        context.authenticator = injector.getInstance(Authenticator.class);
 
         ComponentFactory componentFactory = injector.getInstance(ComponentFactory.class);
         String defaultNewPageContent = componentFactory.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);

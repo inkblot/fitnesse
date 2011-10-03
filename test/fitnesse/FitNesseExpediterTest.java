@@ -2,13 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Module;
+import com.google.inject.Provider;
 import fitnesse.authentication.Authenticator;
+import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.*;
 import fitnesse.http.MockSocket;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,27 +30,40 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     private PipedOutputStream clientOutput;
     private ResponseParser response;
     private HtmlPageFactory htmlPageFactory;
+    private Authenticator authenticator;
 
     @Inject
     public void inject(HtmlPageFactory htmlPageFactory) {
         this.htmlPageFactory = htmlPageFactory;
     }
 
+    @Override
+    protected Module getOverrideModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Authenticator.class).toProvider(new Provider<Authenticator>() {
+                    @Override
+                    public Authenticator get() {
+                        return authenticator;
+                    }
+                });
+            }
+        };
+    }
+
     @Before
     public void setUp() throws Exception {
+        authenticator = new PromiscuousAuthenticator();
         context = makeContext();
         context.root.addChildPage("FrontPage");
         socket = new MockSocket();
         expediter = new FitNesseExpediter(socket, context, htmlPageFactory);
     }
 
-    @After
-    public void tearDown() throws Exception {
-    }
-
     @Test
     public void testAuthenticationGetsCalled() throws Exception {
-        context.authenticator = new StoneWallAuthenticator();
+        authenticator = new StoneWallAuthenticator();
         MockRequest request = new MockRequest();
         Response response = expediter.createGoodResponse(request);
         assertEquals(401, response.getStatus());

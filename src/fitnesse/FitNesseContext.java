@@ -4,10 +4,10 @@ package fitnesse;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import fitnesse.authentication.Authenticator;
-import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
@@ -43,13 +43,13 @@ public class FitNesseContext {
     private final Clock clock;
     private final WikiPageFactory wikiPageFactory;
     private final HtmlPageFactory htmlPageFactory;
+    public final Provider<Authenticator> authenticatorProvider;
 
     public FitNesse fitnesse;
     public int port = DEFAULT_PORT;
     public String defaultNewPageContent = "!contents -R2 -g -p -f -h";
     public SocketDealer socketDealer = new SocketDealer();
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
-    public Authenticator authenticator = new PromiscuousAuthenticator();
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
@@ -64,12 +64,15 @@ public class FitNesseContext {
             @Named(ROOT_PAGE_NAME) String rootPageName,
             WikiPageFactory wikiPageFactory,
             ResponderFactory responderFactory,
-            Clock clock, HtmlPageFactory htmlPageFactory) throws Exception {
+            Clock clock,
+            HtmlPageFactory htmlPageFactory,
+            Provider<Authenticator> authenticatorProvider) throws Exception {
         this.rootPath = rootPath;
         this.wikiPageFactory = wikiPageFactory;
         this.responderFactory = responderFactory;
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
+        this.authenticatorProvider = authenticatorProvider;
 
         this.root = wikiPageFactory.makeRootPage();
         String absolutePath = new File(this.rootPath).getAbsolutePath();
@@ -85,7 +88,7 @@ public class FitNesseContext {
         StringBuilder buffer = new StringBuilder();
         buffer.append("\t").append("port:              ").append(port).append(endl);
         buffer.append("\t").append("root page:         ").append(root).append(endl);
-        buffer.append("\t").append("authenticator:     ").append(authenticator).append(endl);
+        buffer.append("\t").append("authenticator:     ").append(authenticatorProvider.get()).append(endl);
         buffer.append("\t").append("html page factory: ").append(htmlPageFactory).append(endl);
 
         return buffer.toString();

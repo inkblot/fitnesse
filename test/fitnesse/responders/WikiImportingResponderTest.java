@@ -2,8 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
+import com.google.inject.Module;
+import com.google.inject.Provider;
+import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.OneUserAuthenticator;
+import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
@@ -22,6 +27,22 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     private WikiImportingResponder responder;
     private String baseUrl;
     private HtmlPageFactory htmlPageFactory;
+    private Authenticator authenticator;
+
+    @Override
+    protected Module getOverrideModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+                bind(Authenticator.class).toProvider(new Provider<Authenticator>() {
+                    @Override
+                    public Authenticator get() {
+                        return authenticator;
+                    }
+                });
+            }
+        };
+    }
 
     @Inject
     public void inject(HtmlPageFactory htmlPageFactory) {
@@ -30,6 +51,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Before
     public void setUp() throws Exception {
+        authenticator = new PromiscuousAuthenticator();
         fitNesseUtil.startFitnesse(remoteContext);
         baseUrl = FitNesseUtil.URL;
 
@@ -238,7 +260,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         PageData data = page.getData();
         data.setAttribute(PageData.PropertySECURE_READ);
         page.commit(data);
-        remoteContext.authenticator = new OneUserAuthenticator("joe", "blow");
+        authenticator = new OneUserAuthenticator("joe", "blow");
     }
 
     private void checkRemoteLoginForm(String content) {

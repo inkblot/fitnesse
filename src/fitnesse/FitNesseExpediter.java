@@ -2,15 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Provider;
+import fitnesse.authentication.Authenticator;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.HttpException;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
+import fitnesse.responders.ResponderFactory;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.Clock;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,12 +30,15 @@ public class FitNesseExpediter implements ResponseSender {
     private final InputStream input;
     private final OutputStream output;
     private final long requestParsingTimeLimit;
+    private final HtmlPageFactory htmlPageFactory;
+    private final ResponderFactory responderFactory;
+    private final Provider<Authenticator> authenticatorProvider;
+    private final Clock clock;
 
     private Response response;
     private long requestProgress;
     private long requestParsingDeadline;
     private volatile boolean hasError;
-    private final HtmlPageFactory htmlPageFactory;
 
     public FitNesseExpediter(Socket s, FitNesseContext context, HtmlPageFactory htmlPageFactory) throws IOException {
         this(s, context, 10000L, htmlPageFactory);
@@ -44,6 +51,9 @@ public class FitNesseExpediter implements ResponseSender {
         input = s.getInputStream();
         output = s.getOutputStream();
         this.requestParsingTimeLimit = requestParsingTimeLimit;
+        responderFactory = context.getResponderFactory();
+        authenticatorProvider = context.authenticatorProvider;
+        clock = context.getClock();
     }
 
     public void start() throws Exception {
@@ -109,8 +119,8 @@ public class FitNesseExpediter implements ResponseSender {
         Response response;
         if (StringUtils.isEmpty(request.getResource()) && StringUtils.isEmpty(request.getQueryString()))
             request.setResource("FrontPage");
-        Responder responder = context.getResponderFactory().makeResponder(request);
-        responder = context.authenticator.authenticate(context, request, responder);
+        Responder responder = responderFactory.makeResponder(request);
+        responder = authenticatorProvider.get().authenticate(context, request, responder);
         response = responder.makeResponse(context, request);
         response.addHeader("Server", "FitNesse-" + FitNesse.VERSION);
         response.addHeader("Connection", "close");
@@ -118,7 +128,7 @@ public class FitNesseExpediter implements ResponseSender {
     }
 
     private void waitForRequest(Request request) throws InterruptedException {
-        long now = context.getClock().currentClockTimeInMillis();
+        long now = clock.currentClockTimeInMillis();
         requestParsingDeadline = now + requestParsingTimeLimit;
         requestProgress = 0;
         while (!hasError && !request.hasBeenParsed()) {
@@ -138,7 +148,7 @@ public class FitNesseExpediter implements ResponseSender {
     }
 
     private boolean timeIsUp(long now) {
-        now = context.getClock().currentClockTimeInMillis();
+        now = clock.currentClockTimeInMillis();
         if (now > requestParsingDeadline) {
             requestParsingDeadline = now + requestParsingTimeLimit;
             return true;

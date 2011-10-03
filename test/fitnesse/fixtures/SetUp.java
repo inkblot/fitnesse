@@ -10,6 +10,8 @@ import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
+import fitnesse.authentication.Authenticator;
+import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
@@ -28,6 +30,7 @@ public class SetUp extends Fixture {
         Properties properties = new Properties();
         properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         FitnesseFixtureContext.clock = new SystemClock();
+        FitnesseFixtureContext.authenticator = new PromiscuousAuthenticator();
         Injector injector = Guice.createInjector(
                 new FitNesseModule(properties, null),
                 new AbstractModule() {
@@ -37,6 +40,12 @@ public class SetUp extends Fixture {
                             @Override
                             public Clock get() {
                                 return FitnesseFixtureContext.clock;
+                            }
+                        });
+                        bind(Authenticator.class).toProvider(new Provider<Authenticator>() {
+                            @Override
+                            public Authenticator get() {
+                                return FitnesseFixtureContext.authenticator;
                             }
                         });
                     }

@@ -10,6 +10,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ErrorResponder;
+import util.Clock;
 import util.ClockUtil;
 import util.FileUtil;
 
@@ -22,10 +23,12 @@ public class PurgeHistoryResponder implements SecureResponder {
     private File resultsDirectory;
     private Date todaysDate;
     private final HtmlPageFactory htmlPageFactory;
+    private final Clock clock;
 
     @Inject
-    public PurgeHistoryResponder(HtmlPageFactory htmlPageFactory) {
+    public PurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
         this.htmlPageFactory = htmlPageFactory;
+        this.clock = clock;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -41,7 +44,7 @@ public class PurgeHistoryResponder implements SecureResponder {
     private void initializeResponder(FitNesseContext context) {
         if (resultsDirectory == null)
             resultsDirectory = context.getTestHistoryDirectory();
-        todaysDate = ClockUtil.currentDate();
+        todaysDate = clock.currentClockDate();
     }
 
     private SimpleResponse makeValidResponse() throws Exception {

@@ -10,6 +10,7 @@ import fitnesse.http.SimpleResponse;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import util.Clock;
 import util.FileUtil;
 
 import java.io.File;
@@ -27,9 +28,11 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     private PurgeHistoryResponder responder;
     private MockRequest request;
     private HtmlPageFactory htmlPageFactory;
+    private Clock clock;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory) {
+        this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
     }
 
@@ -39,7 +42,7 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
         removeResultsDirectory();
         resultsDirectory.mkdir();
         history = new TestHistory();
-        responder = new PurgeHistoryResponder(htmlPageFactory);
+        responder = new PurgeHistoryResponder(htmlPageFactory, clock);
         responder.setResultsDirectory(resultsDirectory);
         context = makeContext();
         request = new MockRequest();
@@ -112,7 +115,7 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void shouldDeleteHistoryFromRequestAndRedirect() throws Exception {
-        StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder(htmlPageFactory);
+        StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder(htmlPageFactory, clock);
         request.addInput("days", "30");
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals(30, responder.daysDeleted);
@@ -138,8 +141,8 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     private static class StubbedPurgeHistoryResponder extends PurgeHistoryResponder {
         public int daysDeleted = -1;
 
-        private StubbedPurgeHistoryResponder(HtmlPageFactory htmlPageFactory) {
-            super(htmlPageFactory);
+        private StubbedPurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
+            super(htmlPageFactory, clock);
         }
 
         @Override

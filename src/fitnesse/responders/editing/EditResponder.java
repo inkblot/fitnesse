@@ -2,20 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.SaveRecorder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.TagGroup;
+import fitnesse.html.*;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
+
+import java.io.IOException;
 
 public class EditResponder implements SecureResponder {
     public static final String CONTENT_INPUT_NAME = "pageContent";
@@ -23,78 +23,69 @@ public class EditResponder implements SecureResponder {
     public static final String TIME_STAMP = "editTime";
     public static final String TICKET_ID = "ticketId";
 
-    protected String content;
-    protected WikiPage page;
-    protected WikiPage root;
-    protected PageData pageData;
-    protected Request request;
+    private final HtmlPageFactory htmlPageFactory;
 
-    public EditResponder() {
+    @Inject
+    public EditResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(FitNesseContext context, Request request) throws IOException {
         boolean nonExistent = request.hasInput("nonExistent");
-        return doMakeResponse(context, request, nonExistent);
+        return doMakeResponse(request, nonExistent, context.root, htmlPageFactory, context.defaultNewPageContent);
     }
 
-    public Response makeResponseForNonExistentPage(FitNesseContext context, Request request) throws Exception {
-        return doMakeResponse(context, request, true);
+    public static Response makeResponseForNonExistentPage(Request request,
+                                                          HtmlPageFactory htmlPageFactory, WikiPage root, String defaultContent) throws IOException {
+        return doMakeResponse(request, true, root, htmlPageFactory, defaultContent);
     }
 
-    protected Response doMakeResponse(FitNesseContext context, Request request, boolean firstTimeForNewPage)
-            throws Exception {
-        initializeResponder(context.root, request);
-
+    private static Response doMakeResponse(Request request, boolean firstTimeForNewPage, WikiPage root,
+                                           HtmlPageFactory htmlPageFactory, String defaultContent) throws IOException {
         SimpleResponse response = new SimpleResponse();
         String resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
-        PageCrawler crawler = context.root.getPageCrawler();
+        PageCrawler crawler = root.getPageCrawler();
+        WikiPage page;
         if (!crawler.pageExists(root, path)) {
             crawler.setDeadEndStrategy(new MockingPageCrawler());
             page = crawler.getPage(root, path);
         } else
             page = crawler.getPage(root, path);
 
-        pageData = page.getData();
-        content = createPageContent();
+        PageData pageData = page.getData();
+        String content = pageData.getContent();
 
-        String html = doMakeHtml(resource, context, firstTimeForNewPage);
+        if (firstTimeForNewPage) {
+            response.setContent(doMakeHtml(resource, request, defaultContent, "Page doesn't exist. Edit ", htmlPageFactory));
+        } else {
+            response.setContent(doMakeHtml(resource, request, content, "Edit ", htmlPageFactory));
+        }
 
-        response.setContent(html);
         response.setMaxAge(0);
 
         return response;
     }
 
 
-    protected void initializeResponder(WikiPage root, Request request) {
-        this.root = root;
-        this.request = request;
-    }
-
-    protected String createPageContent() throws Exception {
-        return pageData.getContent();
-    }
-
-    private String doMakeHtml(String resource, FitNesseContext context, boolean firstTimeForNewPage)
-            throws Exception {
-        HtmlPage html = context.getHtmlPageFactory().newPage();
-        String title = firstTimeForNewPage ? "Page doesn't exist. Edit " : "Edit ";
+    private static String doMakeHtml(String resource, Request request, String content, String title, HtmlPageFactory htmlPageFactory)
+            throws IOException {
+        HtmlPage html = htmlPageFactory.newPage();
         html.title.use(title + resource + ":");
 
         html.body.addAttribute("onLoad", "document.f." + CONTENT_INPUT_NAME + ".focus()");
         HtmlTag header = makeHeader(resource, title);
         html.header.use(header);
-        html.main.use(makeEditForm(resource, firstTimeForNewPage, context.defaultNewPageContent));
+        html.main.use(makeEditForm(resource, request, content));
 
         return html.html();
     }
 
-    private HtmlTag makeHeader(String resource, String title) throws Exception {
+    private static HtmlTag makeHeader(String resource, String title) throws IOException {
         return HtmlUtil.makeBreadCrumbsWithPageType(resource, title + "Page:");
     }
 
-    private HtmlTag makeEditForm(String resource, boolean firstTimeForNewPage, String defaultNewPageContent) throws Exception {
+    private static HtmlTag makeEditForm(String resource, Request request, String content) throws IOException {
         HtmlTag form = new HtmlTag("form");
         form.addAttribute("name", "f");
         form.addAttribute("action", resource);
@@ -111,7 +102,7 @@ public class EditResponder implements SecureResponder {
             form.add(HtmlUtil.makeInputTag("hidden", "redirect", redirectUrl));
         }
 
-        form.add(createTextarea(firstTimeForNewPage, defaultNewPageContent));
+        form.add(createTextarea(content));
         form.add(createButtons());
         form.add(createOptions());
         form.add("<div class=\"hints\"><br />Hints:\n<ul>" +
@@ -125,13 +116,13 @@ public class EditResponder implements SecureResponder {
         return group;
     }
 
-    private HtmlTag createOptions() throws Exception {
+    private static HtmlTag createOptions() {
         HtmlTag options = HtmlUtil.makeDivTag("edit_options");
         options.add(makeScriptOptions());
         return options;
     }
 
-    private HtmlTag makeScriptOptions() {
+    private static HtmlTag makeScriptOptions() {
         TagGroup scripts = new TagGroup();
 
         includeJavaScriptFile("/files/javascript/textareaWrapSupport.js", scripts);
@@ -139,14 +130,14 @@ public class EditResponder implements SecureResponder {
         return scripts;
     }
 
-    private HtmlTag createButtons() throws Exception {
+    private static HtmlTag createButtons() {
         HtmlTag buttons = HtmlUtil.makeDivTag("edit_buttons");
         buttons.add(makeSaveButton());
         buttons.add(makeScriptButtons());
         return buttons;
     }
 
-    private HtmlTag makeScriptButtons() {
+    private static HtmlTag makeScriptButtons() {
         TagGroup scripts = new TagGroup();
 
         includeJavaScriptFile("/files/javascript/SpreadsheetTranslator.js", scripts);
@@ -158,19 +149,19 @@ public class EditResponder implements SecureResponder {
         return scripts;
     }
 
-    protected void includeJavaScriptFile(String jsFile, TagGroup scripts) {
+    private static void includeJavaScriptFile(String jsFile, TagGroup scripts) {
         HtmlTag scriptTag = HtmlUtil.makeJavascriptLink(jsFile);
         scripts.add(scriptTag);
     }
 
-    protected HtmlTag makeSaveButton() {
+    private static HtmlTag makeSaveButton() {
         HtmlTag saveButton = HtmlUtil.makeInputTag("submit", "save", "Save");
         saveButton.addAttribute("tabindex", "2");
         saveButton.addAttribute("accesskey", "s");
         return saveButton;
     }
 
-    private HtmlTag createTextarea(boolean firstTimeForNewPage, String defaultNewPageContent) {
+    private static HtmlTag createTextarea(String content) {
         HtmlTag textarea = new HtmlTag("textarea");
         textarea.addAttribute("class", CONTENT_INPUT_NAME + " no_wrap");
         textarea.addAttribute("wrap", "off");
@@ -179,7 +170,7 @@ public class EditResponder implements SecureResponder {
         textarea.addAttribute("rows", "30");
         textarea.addAttribute("cols", "70");
         textarea.addAttribute("tabindex", "1");
-        textarea.add(Utils.escapeHTML(firstTimeForNewPage ? defaultNewPageContent : content));
+        textarea.add(Utils.escapeHTML(content));
         return textarea;
     }
 

@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PathParser;
@@ -16,6 +18,12 @@ import static util.RegexAssertions.assertHasRegexp;
 public class MergeResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -29,7 +37,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testHtml() throws Exception {
-        Responder responder = new MergeResponder(request);
+        Responder responder = new MergeResponder(request, htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
         assertHasRegexp("name=\\\"" + EditResponder.CONTENT_INPUT_NAME + "\\\"", response.getContent());
         assertHasRegexp("this is SimplePage", response.getContent());
@@ -42,7 +50,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
         request.addInput("Edit", "On");
         request.addInput("PageType", "Test");
         request.addInput("Search", "On");
-        Responder responder = new MergeResponder(request);
+        Responder responder = new MergeResponder(request, htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
 
         assertHasRegexp("type=\"hidden\"", response.getContent());

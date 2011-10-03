@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -20,13 +22,19 @@ public class SearchResponderTest extends FitnesseBaseTestCase {
     private SearchResponder responder;
     private MockRequest request;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
         context = makeContext();
         PageCrawler crawler = context.root.getPageCrawler();
         crawler.addPage(context.root, PathParser.parse("SomePage"), "has something in it");
-        responder = new SearchResponder();
+        responder = new SearchResponder(htmlPageFactory);
         request = new MockRequest();
         request.addInput("searchString", "blah");
         request.addInput("searchType", "blah");

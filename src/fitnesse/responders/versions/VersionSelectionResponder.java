@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -20,6 +21,12 @@ public class VersionSelectionResponder implements SecureResponder {
     private List<VersionInfo> versions;
     private List<String> ageStrings;
     private String resource;
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public VersionSelectionResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
@@ -27,7 +34,7 @@ public class VersionSelectionResponder implements SecureResponder {
         WikiPagePath path = PathParser.parse(resource);
         page = context.root.getPageCrawler().getPage(context.root, path);
         if (page == null)
-            return new NotFoundResponder().makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
 
         PageData pageData = page.getData();
         versions = getVersionsList(pageData);
@@ -37,13 +44,13 @@ public class VersionSelectionResponder implements SecureResponder {
             ageStrings.add(howLongAgoString(now, version.getCreationTime()));
         }
 
-        response.setContent(makeHtml(context));
+        response.setContent(makeHtml());
 
         return response;
     }
 
-    public String makeHtml(FitNesseContext context) throws Exception {
-        HtmlPage html = context.getHtmlPageFactory().newPage();
+    public String makeHtml() throws Exception {
+        HtmlPage html = htmlPageFactory.newPage();
         html.title.use("Version Selection: " + resource);
         html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Version Selection"));
         html.main.use(makeRightColumn());

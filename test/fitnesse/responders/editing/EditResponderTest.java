@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.MockRequest;
@@ -25,6 +27,12 @@ public class EditResponderTest extends FitnesseBaseTestCase {
     private EditResponder responder;
     private PageCrawler crawler;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -32,7 +40,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new EditResponder();
+        responder = new EditResponder(htmlPageFactory);
     }
 
     @Test

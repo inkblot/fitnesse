@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -22,6 +23,11 @@ public abstract class ChunkingResponder implements Responder {
     protected ChunkedResponse response;
     protected FitNesseContext context;
     private boolean dontChunk = false;
+    private final HtmlPageFactory htmlPageFactory;
+
+    public ChunkingResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         this.context = context;
@@ -55,7 +61,7 @@ public abstract class ChunkingResponder implements Responder {
     }
 
     private Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
-        return new NotFoundResponder().makeResponse(context, request);
+        return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
     }
 
     protected boolean shouldRespondWith404() {

@@ -5,6 +5,7 @@ package fitnesse.responders;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -14,18 +15,21 @@ import fitnesse.http.SimpleResponse;
 public class ErrorResponder implements Responder {
     Exception exception;
     private String message;
+    private final HtmlPageFactory htmlPageFactory;
 
-    public ErrorResponder(Exception e) {
+    public ErrorResponder(Exception e, HtmlPageFactory htmlPageFactory) {
         exception = e;
+        this.htmlPageFactory = htmlPageFactory;
     }
 
-    public ErrorResponder(String message) {
+    public ErrorResponder(String message, HtmlPageFactory htmlPageFactory) {
         this.message = message;
+        this.htmlPageFactory = htmlPageFactory;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse(400);
-        HtmlPage html = context.getHtmlPageFactory().newPage();
+        HtmlPage html = htmlPageFactory.newPage();
         HtmlUtil.addTitles(html, "Error Occurred");
         if (exception != null)
             html.main.add("<pre>" + makeExceptionString(exception) + "</pre>");

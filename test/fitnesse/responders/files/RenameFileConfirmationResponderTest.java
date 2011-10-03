@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import org.junit.Before;
@@ -16,6 +18,12 @@ public class RenameFileConfirmationResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
     private FitNesseContext context;
     private String content;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -43,14 +51,14 @@ public class RenameFileConfirmationResponderTest extends FitnesseBaseTestCase {
     private void getContentForSimpleRename() throws Exception {
         request.setResource("files");
         request.addInput("filename", "MyFile.txt");
-        Responder responder = new RenameFileConfirmationResponder();
+        Responder responder = new RenameFileConfirmationResponder(htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         content = response.getContent();
     }
 
     @Test
     public void testFitnesseLook() throws Exception {
-        Responder responder = new RenameFileConfirmationResponder();
+        Responder responder = new RenameFileConfirmationResponder(htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String content = response.getContent();
         assertSubString("<link rel=\"stylesheet\" type=\"text/css\" href=\"/files/css/fitnesse.css\" media=\"screen\"/>", content);

@@ -2,14 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.RawHtml;
+import fitnesse.html.*;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -20,6 +18,13 @@ import fitnesse.wiki.WikiPagePath;
 import java.util.List;
 
 public class DeletePageResponder implements SecureResponder {
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public DeletePageResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     public Response makeResponse(final FitNesseContext context, final Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         String qualifiedPageName = request.getResource();
@@ -32,7 +37,7 @@ public class DeletePageResponder implements SecureResponder {
 
         String confirmedString = (String) request.getInput("confirmed");
         if (!"yes".equals(confirmedString)) {
-            response.setContent(buildConfirmationHtml(context.root, qualifiedPageName, context));
+            response.setContent(buildConfirmationHtml(context.root, qualifiedPageName));
             return response;
         }
 
@@ -56,8 +61,8 @@ public class DeletePageResponder implements SecureResponder {
         }
     }
 
-    private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName, final FitNesseContext context) throws Exception {
-        HtmlPage html = context.getHtmlPageFactory().newPage();
+    private String buildConfirmationHtml(final WikiPage root, final String qualifiedPageName) throws Exception {
+        HtmlPage html = htmlPageFactory.newPage();
         html.title.use("Delete Confirmation");
         html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(qualifiedPageName, "/", "Confirm Deletion"));
         html.main.use(makeMainContent(root, qualifiedPageName));

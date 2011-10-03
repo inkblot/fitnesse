@@ -5,6 +5,7 @@ package fitnesse.html;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageAction;
 
+import java.io.IOException;
 import java.util.List;
 
 public class HtmlUtil {
@@ -13,9 +14,6 @@ public class HtmlUtil {
     public static HtmlElement BR = new RawHtml(BRtag);
     public static HtmlElement HR = new RawHtml(HRtag);
     public static HtmlElement NBSP = new RawHtml("&nbsp;");
-    public static HtmlElement P = new RawHtml("<p>");
-    public static final boolean NO_NEW_WINDOW = false;
-    public static final String ENDL = System.getProperty("line.separator");
 
     public static HtmlTag makeDivTag(String divClass) {
         HtmlTag div = new HtmlTag("div");
@@ -36,12 +34,6 @@ public class HtmlUtil {
         HtmlTag bold = new HtmlTag("b");
         bold.add(content);
         return bold;
-    }
-
-    public static HtmlTag makeItalic(String content) {
-        HtmlTag italic = new HtmlTag("i");
-        italic.add(content);
-        return italic;
     }
 
     public static HtmlTag makeSpanTag(String spanClass, String content) {
@@ -83,14 +75,6 @@ public class HtmlUtil {
         return input;
     }
 
-    public static HtmlTag makeOptionTag(String value, String text) {
-        HtmlTag option = new HtmlTag("option");
-        option.addAttribute("value", value);
-        option.add(text);
-
-        return option;
-    }
-
     public static HtmlTag makeLink(String href, String text) {
         return makeLink(href, new RawHtml(text));
     }
@@ -115,7 +99,7 @@ public class HtmlUtil {
     public static TagGroup makeBreadCrumbsWithCurrentPageLinked(
             String path,
             String separator
-    ) throws Exception {
+    ) {
         TagGroup tagGroup = new TagGroup();
         String[] crumbs = path.split("[" + separator + "]");
         String trail = makeAllButLastCrumb(crumbs, separator, tagGroup);
@@ -134,8 +118,7 @@ public class HtmlUtil {
         return tagGroup;
     }
 
-    private static HtmlTag getLastCrumbAsLink(String[] crumbs, String trail)
-            throws Exception {
+    private static HtmlTag getLastCrumbAsLink(String[] crumbs, String trail) {
         String crumb = getLastCrumb(crumbs);
         HtmlTag link = makeLink("/" + trail + crumb, crumb);
         link.head = HtmlUtil.BR.html();
@@ -150,7 +133,7 @@ public class HtmlUtil {
         return crumb;
     }
 
-    private static HtmlTag getLastCrumbAsText(String[] crumbs) throws Exception {
+    private static HtmlTag getLastCrumbAsText(String[] crumbs) {
         String crumb = getLastCrumb(crumbs);
         HtmlTag thisPage = new HtmlTag("span", crumb);
         thisPage.addAttribute("class", "page_title");
@@ -158,11 +141,11 @@ public class HtmlUtil {
         return thisPage;
     }
 
-    public static HtmlTag makeBreadCrumbsWithPageType(String trail, String type) throws Exception {
+    public static HtmlTag makeBreadCrumbsWithPageType(String trail, String type) {
         return makeBreadCrumbsWithPageType(trail, ".", type);
     }
 
-    public static HtmlTag makeBreadCrumbsWithPageType(String trail, String separator, String type) throws Exception {
+    public static HtmlTag makeBreadCrumbsWithPageType(String trail, String separator, String type) {
         TagGroup group = makeBreadCrumbsWithCurrentPageLinked(trail, separator);
         group.add(HtmlUtil.BR);
         group.add(HtmlUtil.makeSpanTag("page_type", type));
@@ -235,8 +218,8 @@ public class HtmlUtil {
         return makePageHtmlWithHeaderAndFooter(pageData);
     }
 
-    public static String makePageHtmlWithHeaderAndFooter(PageData pageData) throws Exception {
-        StringBuffer buffer = new StringBuffer();
+    public static String makePageHtmlWithHeaderAndFooter(PageData pageData) throws IOException {
+        StringBuilder buffer = new StringBuilder();
         buffer.append(pageData.getHeaderPageHtml());
         buffer.append(pageData.getHtml());
         buffer.append("<br/><div class=\"footer\">\n");
@@ -271,7 +254,7 @@ public class HtmlUtil {
         String getElement = "document.getElementById(\"" + idElementToAppend + "\")";
         String escapedHtml = escapeHtmlForJavaScript(htmlToAppend);
 
-        StringBuffer script = new StringBuffer();
+        StringBuilder script = new StringBuilder();
         script.append("var existingContent = ").append(getElement).append(".innerHTML;");
         script.append(HtmlTag.endl);
         script.append(getElement).append(".innerHTML = existingContent + \"").append(escapedHtml).append("\";");

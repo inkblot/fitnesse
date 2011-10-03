@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -26,6 +28,12 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     private FitNesseContext context;
     private PageCrawler crawler;
     private FitSocketReceiver receiver;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +42,7 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new TestResponder();
+        responder = new TestResponder(htmlPageFactory);
 
         receiver = new FitSocketReceiver(context.port, context.socketDealer);
         receiver.receiveSocket();

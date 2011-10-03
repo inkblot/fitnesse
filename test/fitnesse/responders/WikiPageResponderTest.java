@@ -2,12 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
@@ -22,6 +24,12 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -36,7 +44,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
         final MockRequest request = new MockRequest();
         request.setResource("ChildPage");
 
-        final Responder responder = new WikiPageResponder();
+        final Responder responder = new WikiPageResponder(htmlPageFactory);
         final SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertEquals(200, response.getStatus());
@@ -106,7 +114,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private SimpleResponse requestPage(String name) throws Exception {
         final MockRequest request = new MockRequest();
         request.setResource(name);
-        final Responder responder = new WikiPageResponder();
+        final Responder responder = new WikiPageResponder(htmlPageFactory);
         return (SimpleResponse) responder.makeResponse(context, request);
     }
 
@@ -169,7 +177,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testResponderIsSecureReadOperation() throws Exception {
-        final Responder responder = new WikiPageResponder();
+        final Responder responder = new WikiPageResponder(htmlPageFactory);
         final SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
         assertEquals(SecureReadOperation.class, operation.getClass());
     }

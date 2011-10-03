@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.wiki.PathParser;
@@ -12,6 +13,10 @@ import fitnesse.wiki.WikiPagePath;
 // TODO This class could just be "WikiPageResponder" (already exists)
 public abstract class BasicWikiPageResponder extends BasicResponder {
     protected Request request;
+
+    public BasicWikiPageResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         this.request = request;

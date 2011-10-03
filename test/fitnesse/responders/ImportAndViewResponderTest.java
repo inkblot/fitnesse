@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
@@ -15,11 +17,17 @@ import static org.junit.Assert.assertEquals;
 
 public class ImportAndViewResponderTest extends ImporterTestCase {
     private ImportAndViewResponder responder;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
         fitNesseUtil.startFitnesse(remoteContext);
-        responder = new ImportAndViewResponder();
+        responder = new ImportAndViewResponder(htmlPageFactory);
     }
 
     @After

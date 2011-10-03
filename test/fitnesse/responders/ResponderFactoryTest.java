@@ -3,8 +3,10 @@
 package fitnesse.responders;
 
 
+import com.google.inject.Inject;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.responders.editing.*;
 import fitnesse.responders.files.*;
@@ -39,10 +41,16 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     private ResponderFactory factory;
     private MockRequest request;
     private PageCrawler crawler;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
-        factory = new ResponderFactory(injector, "testDir");
+        factory = new ResponderFactory(injector, "testDir", htmlPageFactory);
         request = new MockRequest();
         WikiPage root = InMemoryPage.makeRoot("root", injector);
         crawler = root.getPageCrawler();

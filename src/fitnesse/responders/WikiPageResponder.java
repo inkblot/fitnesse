@@ -2,12 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.http.Request;
@@ -24,7 +26,11 @@ public class WikiPageResponder implements SecureResponder {
     protected Request request;
     protected PageCrawler crawler;
 
-    public WikiPageResponder() {
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public WikiPageResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -32,7 +38,7 @@ public class WikiPageResponder implements SecureResponder {
         if (page == null)
             return notFoundResponse(context, request);
         else
-            return makePageResponse(context);
+            return makePageResponse();
     }
 
     protected void loadPage(String pageName, FitNesseContext context) throws Exception {
@@ -46,8 +52,8 @@ public class WikiPageResponder implements SecureResponder {
 
     private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
         if (doNotCreateNonExistentPage(request))
-            return new NotFoundResponder().makeResponse(context, request);
-        return new EditResponder().makeResponseForNonExistentPage(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+        return EditResponder.makeResponseForNonExistentPage(request, htmlPageFactory, context.root, context.defaultNewPageContent);
     }
 
     private boolean doNotCreateNonExistentPage(Request request) {
@@ -55,9 +61,9 @@ public class WikiPageResponder implements SecureResponder {
         return doNotCreate != null && (doNotCreate.length() == 0 || Boolean.parseBoolean(doNotCreate));
     }
 
-    private SimpleResponse makePageResponse(FitNesseContext context) throws Exception {
+    private SimpleResponse makePageResponse() throws Exception {
         pageTitle = PathParser.render(crawler.getFullPath(page));
-        String html = makeHtml(context);
+        String html = makeHtml();
 
         SimpleResponse response = new SimpleResponse();
         response.setMaxAge(0);
@@ -65,9 +71,9 @@ public class WikiPageResponder implements SecureResponder {
         return response;
     }
 
-    public String makeHtml(FitNesseContext context) throws Exception {
+    public String makeHtml() throws Exception {
         WikiPage page = pageData.getWikiPage();
-        HtmlPage html = context.getHtmlPageFactory().newPage();
+        HtmlPage html = htmlPageFactory.newPage();
         WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
         String fullPathName = PathParser.render(fullPath);
         html.title.use(fullPathName);

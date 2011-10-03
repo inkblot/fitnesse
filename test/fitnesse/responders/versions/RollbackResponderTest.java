@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.wiki.*;
@@ -16,6 +18,12 @@ import static org.junit.Assert.assertEquals;
 public class RollbackResponderTest extends FitnesseBaseTestCase {
     private WikiPage page;
     private Response response;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -30,7 +38,7 @@ public class RollbackResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageOne");
         request.addInput("version", commitRecord.getName());
 
-        Responder responder = new RollbackResponder();
+        Responder responder = new RollbackResponder(htmlPageFactory);
         response = responder.makeResponse(context, request);
     }
 

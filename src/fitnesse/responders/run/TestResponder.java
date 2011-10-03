@@ -2,10 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Response;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.run.formatters.*;
@@ -32,9 +34,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     private boolean fastTest = false;
     private boolean remoteDebug = false;
     protected TestSystem testSystem;
+    private final HtmlPageFactory htmlPageFactory;
 
-    public TestResponder() {
-        super();
+    @Inject
+    public TestResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+        this.htmlPageFactory = htmlPageFactory;
         formatters = new CompositeFormatter();
     }
 
@@ -112,7 +117,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
 
     void addHtmlFormatter() throws Exception {
-        BaseFormatter formatter = new TestHtmlFormatter(context, page, context.getHtmlPageFactory()) {
+        BaseFormatter formatter = new TestHtmlFormatter(context, page, getHtmlPageFactory()) {
             @Override
             protected void writeData(String output) throws Exception {
                 addToResponse(output);
@@ -213,5 +218,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
             logger.info("Creating test result file: resultFile=" + resultFile.getAbsolutePath());
             return new FileWriter(resultFile);
         }
+    }
+
+    public HtmlPageFactory getHtmlPageFactory() {
+        return htmlPageFactory;
     }
 }

@@ -2,10 +2,17 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.formatters.*;
 
 public class SuiteResponder extends TestResponder {
     private boolean includeHtml;
+
+    @Inject
+    public SuiteResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
 
     String getTitle() {
         return "Suite Results";
@@ -24,7 +31,7 @@ public class SuiteResponder extends TestResponder {
     }
 
     void addHtmlFormatter() throws Exception {
-        BaseFormatter formatter = new SuiteHtmlFormatter(context, page, context.getHtmlPageFactory()) {
+        BaseFormatter formatter = new SuiteHtmlFormatter(context, page, getHtmlPageFactory()) {
             protected void writeData(String output) throws Exception {
                 addToResponse(output);
             }

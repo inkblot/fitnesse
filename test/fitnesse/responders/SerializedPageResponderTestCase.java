@@ -1,8 +1,10 @@
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
@@ -24,6 +26,12 @@ public class SerializedPageResponderTestCase extends FitnesseBaseTestCase {
     protected WikiPage root;
     protected MockRequest request;
     protected FitNesseContext context;
+    protected HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     protected void doTestWith(Object obj) throws Exception {
         assertNotNull(obj);
@@ -46,7 +54,7 @@ public class SerializedPageResponderTestCase extends FitnesseBaseTestCase {
     }
 
     protected Object getObject() throws Exception {
-        Responder responder = new SerializedPageResponder();
+        Responder responder = new SerializedPageResponder(htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));

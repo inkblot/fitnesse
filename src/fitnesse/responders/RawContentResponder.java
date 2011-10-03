@@ -2,10 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -15,12 +17,19 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
 public class RawContentResponder implements SecureResponder {
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public RawContentResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         String resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
         WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
         if (page == null)
-            return new NotFoundResponder().makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         PageData pageData = page.getData();
 
         SimpleResponse response = new SimpleResponse();

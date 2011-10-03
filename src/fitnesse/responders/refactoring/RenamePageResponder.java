@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.components.PageReferenceRenamer;
 import fitnesse.components.ReferenceRenamer;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -12,6 +14,11 @@ import fitnesse.wikitext.widgets.WikiWordWidget;
 
 public class RenamePageResponder extends PageMovementResponder {
     private String newName;
+
+    @Inject
+    public RenamePageResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
 
     @Override
     protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception {

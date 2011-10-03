@@ -20,7 +20,7 @@ public class FitNesseServer implements SocketServer {
 
     public void serve(Socket s, long requestTimeout) {
         try {
-            FitNesseExpediter sender = new FitNesseExpediter(s, context, requestTimeout);
+            FitNesseExpediter sender = new FitNesseExpediter(s, context, requestTimeout, context.getHtmlPageFactory());
             sender.start();
         } catch (Exception e) {
             e.printStackTrace();

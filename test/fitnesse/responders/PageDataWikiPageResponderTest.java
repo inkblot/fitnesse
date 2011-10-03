@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PathParser;
@@ -17,6 +19,12 @@ import static org.junit.Assert.assertEquals;
 public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage pageOne;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -26,7 +34,7 @@ public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testGetPageData() throws Exception {
-        Responder responder = new PageDataWikiPageResponder();
+        Responder responder = new PageDataWikiPageResponder(htmlPageFactory);
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
         request.addInput("pageData", "");

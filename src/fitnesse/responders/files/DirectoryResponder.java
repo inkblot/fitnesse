@@ -18,35 +18,33 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DirectoryResponder implements SecureResponder {
-    private String resource;
-    private File requestedDirectory;
-    private FitNesseContext context;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy, hh:mm a");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy, hh:mm a");
 
-    public DirectoryResponder(String resource, File requestedFile) {
+    private final String resource;
+    private final File requestedDirectory;
+    private final HtmlPageFactory htmlPageFactory;
+
+    public DirectoryResponder(String resource, File requestedFile, HtmlPageFactory htmlPageFactory) {
         this.resource = resource;
         requestedDirectory = requestedFile;
+        this.htmlPageFactory = htmlPageFactory;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        this.context = context;
 
-        SimpleResponse simpleResponse = new SimpleResponse();
-        if (!resource.endsWith("/"))
-            setRedirectForDirectory(simpleResponse);
-        else
+        if (resource.endsWith("/")) {
+            SimpleResponse simpleResponse = new SimpleResponse();
             simpleResponse.setContent(makeDirectoryListingPage());
-        return simpleResponse;
-    }
-
-    private void setRedirectForDirectory(Response response) {
-        if (!resource.startsWith("/"))
-            resource = "/" + resource;
-        response.redirect(resource + "/");
+            return simpleResponse;
+        } else {
+            SimpleResponse simpleResponse = new SimpleResponse();
+            simpleResponse.redirect("/" + resource + "/");
+            return simpleResponse;
+        }
     }
 
     private String makeDirectoryListingPage() throws Exception {
-        HtmlPage page = context.getHtmlPageFactory().newPage();
+        HtmlPage page = htmlPageFactory.newPage();
         page.title.use("Files: " + resource);
         page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
         page.actions.use(makeFrontPageLink());

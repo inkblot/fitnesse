@@ -8,6 +8,7 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.responders.editing.*;
 import fitnesse.responders.files.*;
@@ -38,15 +39,17 @@ public class ResponderFactory {
     private final Injector injector;
     private final String rootPath;
     private final Map<String, Class<? extends Responder>> responderMap;
+    private final HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public ResponderFactory(Injector injector, @Named(FitNesseContext.ROOT_PATH) String rootPath, @Named(FitNesseContext.ROOT_PAGE_NAME) String rootPageName) {
-        this(injector, rootPath + File.separator + rootPageName);
+    public ResponderFactory(Injector injector, @Named(FitNesseContext.ROOT_PATH) String rootPath, @Named(FitNesseContext.ROOT_PAGE_NAME) String rootPageName, HtmlPageFactory htmlPageFactory) {
+        this(injector, rootPath + File.separator + rootPageName, htmlPageFactory);
     }
 
-    public ResponderFactory(Injector injector, String rootPath) {
+    public ResponderFactory(Injector injector, String rootPath, HtmlPageFactory htmlPageFactory) {
         this.rootPath = rootPath;
         this.injector = injector;
+        this.htmlPageFactory = htmlPageFactory;
         responderMap = new HashMap<String, Class<? extends Responder>>();
         addResponder("edit", EditResponder.class);
         addResponder("saveData", SaveResponder.class);
@@ -123,13 +126,13 @@ public class ResponderFactory {
         if (isNotEmpty(responderKey)) {
             return lookupResponder(responderKey);
         } else if (isEmpty(resource)) {
-            return new WikiPageResponder();
+            return injector.getInstance(WikiPageResponder.class);
         } else if (resource.startsWith("files/") || resource.equals("files")) {
-            return FileResponder.makeResponder(request.getResource(), rootPath);
+            return FileResponder.makeResponder(request.getResource(), rootPath, htmlPageFactory);
         } else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource)) {
-            return new WikiPageResponder();
+            return injector.getInstance(WikiPageResponder.class);
         } else {
-            return new NotFoundResponder();
+            return new NotFoundResponder(htmlPageFactory);
         }
     }
 

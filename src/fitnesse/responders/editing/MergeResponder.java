@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -18,14 +19,16 @@ import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.Utils;
 
 public class MergeResponder implements Responder {
-    private Request request;
+    private final Request request;
     private String newContent;
     private String existingContent;
     private String resource;
     private static final String OLD_CONTENT_INPUT_NAME = "oldContent";
+    private final HtmlPageFactory htmlPageFactory;
 
-    public MergeResponder(Request request) {
+    public MergeResponder(Request request, HtmlPageFactory htmlPageFactory) {
         this.request = request;
+        this.htmlPageFactory = htmlPageFactory;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -36,13 +39,13 @@ public class MergeResponder implements Responder {
         existingContent = page.getData().getContent();
         newContent = (String) this.request.getInput(EditResponder.CONTENT_INPUT_NAME);
 
-        response.setContent(makePageHtml(context));
+        response.setContent(makePageHtml());
 
         return response;
     }
 
-    private String makePageHtml(FitNesseContext context) throws Exception {
-        HtmlPage page = context.getHtmlPageFactory().newPage();
+    private String makePageHtml() throws Exception {
+        HtmlPage page = htmlPageFactory.newPage();
         page.title.use("Merge " + resource);
         page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Merge Changes"));
         page.main.use(makeRightColumn());

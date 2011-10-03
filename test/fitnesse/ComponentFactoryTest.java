@@ -78,7 +78,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         String respondersValue = "custom1:" + WikiPageResponder.class.getName() + ",custom2:" + EditResponder.class.getName();
         testProperties.setProperty(ComponentFactory.RESPONDERS, respondersValue);
 
-        ResponderFactory responderFactory = new ResponderFactory(injector, ".");
         String output = factory.loadResponders(responderFactory);
 
         assertSubString("custom1:" + WikiPageResponder.class.getName(), output);

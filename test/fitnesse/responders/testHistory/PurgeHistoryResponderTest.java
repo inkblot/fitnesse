@@ -1,7 +1,9 @@
 package fitnesse.responders.testHistory;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -24,7 +26,12 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private PurgeHistoryResponder responder;
     private MockRequest request;
+    private HtmlPageFactory htmlPageFactory;
 
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setup() throws Exception {
@@ -32,7 +39,7 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
         removeResultsDirectory();
         resultsDirectory.mkdir();
         history = new TestHistory();
-        responder = new PurgeHistoryResponder();
+        responder = new PurgeHistoryResponder(htmlPageFactory);
         responder.setResultsDirectory(resultsDirectory);
         context = makeContext();
         request = new MockRequest();
@@ -105,7 +112,7 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void shouldDeleteHistoryFromRequestAndRedirect() throws Exception {
-        StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder();
+        StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder(htmlPageFactory);
         request.addInput("days", "30");
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals(30, responder.daysDeleted);
@@ -130,6 +137,10 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
 
     private static class StubbedPurgeHistoryResponder extends PurgeHistoryResponder {
         public int daysDeleted = -1;
+
+        private StubbedPurgeHistoryResponder(HtmlPageFactory htmlPageFactory) {
+            super(htmlPageFactory);
+        }
 
         @Override
         public void deleteTestHistoryOlderThanDays(int days) throws ParseException {

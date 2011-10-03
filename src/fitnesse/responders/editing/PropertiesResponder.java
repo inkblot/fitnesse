@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -28,6 +29,12 @@ public class PropertiesResponder implements SecureResponder {
     public PageData pageData;
     private String resource;
     private SimpleResponse response;
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public PropertiesResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request)
             throws Exception {
@@ -39,21 +46,21 @@ public class PropertiesResponder implements SecureResponder {
             crawler.setDeadEndStrategy(new MockingPageCrawler());
         page = crawler.getPage(context.root, path);
         if (page == null)
-            return new NotFoundResponder().makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
 
         pageData = page.getData();
-        makeContent(context, request);
+        makeContent(request);
         response.setMaxAge(0);
         return response;
     }
 
-    private void makeContent(FitNesseContext context, Request request)
+    private void makeContent(Request request)
             throws Exception {
         if ("json".equals(request.getInput("format"))) {
             JSONObject jsonObject = makeJson();
             response.setContent(jsonObject.toString(1));
         } else {
-            String html = makeHtml(context);
+            String html = makeHtml();
             response.setContent(html);
         }
     }
@@ -77,8 +84,8 @@ public class PropertiesResponder implements SecureResponder {
         jsonObject.put(attribute, pageData.hasAttribute(attribute));
     }
 
-    private String makeHtml(FitNesseContext context) throws Exception {
-        HtmlPage page = context.getHtmlPageFactory().newPage();
+    private String makeHtml() throws Exception {
+        HtmlPage page = htmlPageFactory.newPage();
         page.title.use("Properties: " + resource);
         page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource,
                 "Page Properties"));

@@ -2,10 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -23,11 +25,17 @@ public class SerializedPageResponder implements SecureResponder {
             return !(page instanceof SymbolicPage);
         }
     };
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public SerializedPageResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         WikiPage page = getRequestedPage(request, context);
         if (page == null)
-            return new NotFoundResponder().makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
 
         if ("pages".equals(request.getInput("type"))) {
             PageXmlizer pageXmlizer = new PageXmlizer();

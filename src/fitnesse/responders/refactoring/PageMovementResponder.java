@@ -6,6 +6,7 @@ import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.ReferenceRenamer;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -22,6 +23,11 @@ public abstract class PageMovementResponder implements SecureResponder {
     protected WikiPage oldRefactoredPage;
     protected WikiPage newParentPage;
     protected WikiPagePath newParentPath;
+    private final HtmlPageFactory htmlPageFactory;
+
+    public PageMovementResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     protected abstract boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception;
 
@@ -37,7 +43,7 @@ public abstract class PageMovementResponder implements SecureResponder {
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         if (!getAndValidateRefactoredPage(context, request)) {
-            return new NotFoundResponder().makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         }
 
         if (!getAndValidateNewParentPage(context, request)) {
@@ -74,7 +80,7 @@ public abstract class PageMovementResponder implements SecureResponder {
     }
 
     private Responder makeErrorMessageResponder(String message) throws Exception {
-        return new ErrorResponder(getErrorMessageHeader() + "<br/>" + message);
+        return new ErrorResponder(getErrorMessageHeader() + "<br/>" + message, htmlPageFactory);
     }
 
     private boolean targetPageExists() throws Exception {

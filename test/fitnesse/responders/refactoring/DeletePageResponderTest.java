@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import com.google.inject.Inject;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -27,6 +29,12 @@ public class DeletePageResponderTest extends ResponderTestCase {
     private final WikiPagePath level2Path = PathParser.parse(this.level2Name);
     private final WikiPagePath level2FullPath = this.level1Path.copy().addNameToEnd(this.level2Name);
     private final String qualifiedLevel2Name = PathParser.render(this.level2FullPath);
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Test
     public void testDeleteConfirmation() throws Exception {
@@ -73,6 +81,6 @@ public class DeletePageResponderTest extends ResponderTestCase {
 
     @Override
     protected Responder responderInstance() {
-        return new DeletePageResponder();
+        return new DeletePageResponder(htmlPageFactory);
     }
 }

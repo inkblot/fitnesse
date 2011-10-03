@@ -6,13 +6,20 @@ import fitnesse.FitNesseContext;
 import fitnesse.authentication.InsecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 
 public abstract class BasicResponder implements SecureResponder {
+    private final HtmlPageFactory htmlPageFactory;
+
+    public BasicResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     protected Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
-        return new NotFoundResponder().makeResponse(context, request);
+        return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
     }
 
     protected Response responseWith(String content) throws Exception {

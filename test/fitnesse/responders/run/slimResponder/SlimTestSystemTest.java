@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
@@ -36,6 +38,12 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     public String testResults;
     protected SimpleResponse response;
     private TestSystemListener dummyListener = new DummyListener();
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     private void assertTestResultsContain(String fragment) {
         String unescapedResults = unescape(testResults);
@@ -69,7 +77,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     }
 
     protected SlimResponder getSlimResponder() {
-        return new HtmlSlimResponder();
+        return new HtmlSlimResponder(htmlPageFactory);
     }
 
     @Test

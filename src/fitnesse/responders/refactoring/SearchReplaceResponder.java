@@ -1,9 +1,11 @@
 package fitnesse.responders.refactoring;
 
+import com.google.inject.Inject;
 import fitnesse.components.ContentReplacingSearchObserver;
 import fitnesse.components.PageFinder;
 import fitnesse.components.RegularExpressionWikiPageFinder;
 import fitnesse.components.SearchObserver;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.search.ResultResponder;
 import fitnesse.wiki.WikiPage;
 
@@ -12,6 +14,11 @@ import java.io.IOException;
 public class SearchReplaceResponder extends ResultResponder {
 
     private SearchObserver observer;
+
+    @Inject
+    public SearchReplaceResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
 
     protected String getTitle() {
         return String.format("Replacing matching content \"%s\" with content \"%s\"",

@@ -2,13 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.TagGroup;
+import fitnesse.html.*;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.wiki.*;
 
@@ -25,6 +23,13 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     public PageData data;
 
     private WikiImporter importer = new WikiImporter();
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public WikiImportingResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     protected void doSending() throws Exception {
         data = page.getData();
@@ -199,7 +204,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     }
 
     private HtmlPage makeHtml() throws Exception {
-        HtmlPage html = context.getHtmlPageFactory().newPage();
+        HtmlPage html = htmlPageFactory.newPage();
         String title = "Wiki Import";
         if (isUpdate)
             title += " Update";

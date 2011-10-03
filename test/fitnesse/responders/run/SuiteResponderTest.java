@@ -8,6 +8,7 @@ import com.google.inject.Module;
 import com.google.inject.Provider;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -50,10 +51,12 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
             "|wow|wow|\n";
 
     private Provider<Clock> clockProvider;
+    private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(Provider<Clock> clockProvider) {
+    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory) {
         this.clockProvider = clockProvider;
+        this.htmlPageFactory = htmlPageFactory;
     }
 
     @Override
@@ -83,7 +86,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource(suitePageName);
-        responder = new SuiteResponder();
+        responder = new SuiteResponder(htmlPageFactory);
         responder.turnOffChunking();
         responder.setFastTest(true);
         responder.page = suite;

@@ -1,9 +1,11 @@
 package fitnesse.responders.search;
 
+import com.google.inject.Inject;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.components.AttributeWikiPageFinder;
 import fitnesse.components.PageFinder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageType;
 
@@ -23,6 +25,11 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     public static final String ACTION = "Action";
     public static final String SECURITY = "Security";
     public static final String SPECIAL = "Special";
+
+    @Inject
+    public ExecuteSearchPropertiesResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
 
     public SecureOperation getSecureOperation() {
         return new SecureReadOperation();

@@ -3,12 +3,14 @@
 package fitnesse.responders.run;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Module;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -52,6 +54,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private File xmlResultsFile;
     private XmlChecker xmlChecker = new XmlChecker();
+    private HtmlPageFactory htmlPageFactory;
 
     @Override
     protected Module getOverrideModule() {
@@ -63,6 +66,11 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         };
     }
 
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     @Before
     public void setUp() throws Exception {
         context = makeContext();
@@ -70,7 +78,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
-        responder = new TestResponder();
+        responder = new TestResponder(htmlPageFactory);
         responder.setFastTest(true);
         receiver = new FitSocketReceiver(0, context.socketDealer);
         context.port = receiver.receiveSocket();

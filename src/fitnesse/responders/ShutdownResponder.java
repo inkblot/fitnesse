@@ -2,12 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -15,10 +17,18 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 
 public class ShutdownResponder implements SecureResponder {
+
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public ShutdownResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
 
-        HtmlPage html = context.getHtmlPageFactory().newPage();
+        HtmlPage html = htmlPageFactory.newPage();
         html.title.use("Shutdown");
         html.header.use(HtmlUtil.makeSpanTag("page_title", "Shutdown"));
 

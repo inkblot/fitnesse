@@ -30,10 +30,12 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
 
     private Provider<Clock> clockProvider;
+    private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(Provider<Clock> clockProvider) {
+    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory) {
         this.clockProvider = clockProvider;
+        this.htmlPageFactory = htmlPageFactory;
     }
 
     @Before
@@ -129,7 +131,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private SimpleResponse requestPage(String name) throws Exception {
         MockRequest request = new MockRequest();
         request.setResource(name);
-        Responder responder = new WikiPageResponder();
+        Responder responder = new WikiPageResponder(htmlPageFactory);
         return (SimpleResponse) responder.makeResponse(context, request);
     }
 

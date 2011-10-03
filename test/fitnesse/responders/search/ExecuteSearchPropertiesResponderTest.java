@@ -1,7 +1,9 @@
 package fitnesse.responders.search;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -29,13 +31,19 @@ public class ExecuteSearchPropertiesResponderTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private ExecuteSearchPropertiesResponder responder;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
         context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
-        responder = new ExecuteSearchPropertiesResponder();
+        responder = new ExecuteSearchPropertiesResponder(htmlPageFactory);
     }
 
     @Test

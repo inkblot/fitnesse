@@ -5,6 +5,7 @@ package fitnesse.responders.run.slimResponder;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.TestSummary;
@@ -20,6 +21,10 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
     ExecutionLog log;
     private boolean fastTest = false;
     SlimTestSystem testSystem;
+
+    public SlimResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
 
 
     protected String generateHtml(PageData pageData) throws Exception {

@@ -5,6 +5,7 @@ package fitnesse.responders;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -18,17 +19,22 @@ import java.util.regex.Pattern;
 // scenarios (we skip directly to an EditResponder...).
 public class NotFoundResponder implements Responder {
     private String resource;
+    private final HtmlPageFactory htmlPageFactory;
+
+    public NotFoundResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse(404);
         resource = request.getResource();
 
-        response.setContent(makeHtml(context));
+        response.setContent(makeHtml());
         return response;
     }
 
-    private String makeHtml(FitNesseContext context) throws Exception {
-        HtmlPage page = context.getHtmlPageFactory().newPage();
+    private String makeHtml() throws Exception {
+        HtmlPage page = htmlPageFactory.newPage();
         HtmlUtil.addTitles(page, "Not Found:" + resource);
         page.main.use(makeRightColumn(resource));
         return page.html();

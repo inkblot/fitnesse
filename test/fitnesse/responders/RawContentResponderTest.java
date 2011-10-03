@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.PathParser;
@@ -11,8 +13,15 @@ import org.junit.Test;
 import static util.RegexAssertions.assertSubString;
 
 public class RawContentResponderTest extends ResponderTestCase {
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     protected Responder responderInstance() {
-        return new RawContentResponder();
+        return new RawContentResponder(htmlPageFactory);
     }
 
     @Test

@@ -4,6 +4,7 @@ package fitnesse.responders.files;
 
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -27,16 +28,16 @@ public class FileResponder implements Responder {
     public Date lastModifiedDate;
     public String lastModifiedDateString;
 
-    public static Responder makeResponder(String resource, String rootPath) {
+    public static Responder makeResponder(String resource, String rootPath, HtmlPageFactory htmlPageFactory) {
         if (fileNameHasSpaces(resource))
             resource = restoreRealSpacesInFileName(resource);
 
         File requestedFile = new File(rootPath + "/" + resource);
         if (!requestedFile.exists())
-            return new NotFoundResponder();
+            return new NotFoundResponder(htmlPageFactory);
 
         if (requestedFile.isDirectory())
-            return new DirectoryResponder(resource, requestedFile);
+            return new DirectoryResponder(resource, requestedFile, htmlPageFactory);
         else
             return new FileResponder(resource, requestedFile);
     }

@@ -2,10 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -15,6 +17,12 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
     private WikiPage page;
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public ImportAndViewResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         String resource = request.getResource();
@@ -24,7 +32,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
 
         loadPage(resource, context);
         if (page == null)
-            return new NotFoundResponder().makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         loadPageData();
 
         SimpleResponse response = new SimpleResponse();
@@ -53,10 +61,10 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
         }
     }
 
-    public void pageImported(WikiPage localPage) throws Exception {
+    public void pageImported(WikiPage localPage) {
     }
 
-    public void pageImportError(WikiPage localPage, Exception e) throws Exception {
+    public void pageImportError(WikiPage localPage, Exception e) {
         e.printStackTrace();
     }
 

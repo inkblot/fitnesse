@@ -67,7 +67,7 @@ public class PageDriver {
         request.parseRequestUri("/" + pageName);
         WikiPagePath path = PathParser.parse(request.getResource()); // uri;
         FitnesseFixtureContext.page = FitnesseFixtureContext.root.getPageCrawler().getPage(FitnesseFixtureContext.root, path);
-        FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context);
+        FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context, FitnesseFixtureContext.context.getHtmlPageFactory());
         FitnesseFixtureContext.response = expediter.createGoodResponse(request);
         FitnesseFixtureContext.sender = new MockResponseSender();
         FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);

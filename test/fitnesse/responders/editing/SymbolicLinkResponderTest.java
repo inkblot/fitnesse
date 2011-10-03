@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -25,6 +27,12 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private Responder responder;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -37,7 +45,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource("PageOne");
-        responder = new SymbolicLinkResponder();
+        responder = new SymbolicLinkResponder(htmlPageFactory);
     }
 
     @After

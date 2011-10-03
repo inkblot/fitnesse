@@ -1,8 +1,10 @@
 package fitnesse.responders.testHistory;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.VelocityFactory;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -33,12 +35,16 @@ public class HistoryComparatorResponder implements Responder {
     public boolean testing = false;
 
     private FitNesseContext context;
+    private final HtmlPageFactory htmlPageFactory;
 
-    public HistoryComparatorResponder(HistoryComparator historyComparator) {
+    public HistoryComparatorResponder(HistoryComparator historyComparator, HtmlPageFactory htmlPageFactory) {
         comparator = historyComparator;
+        this.htmlPageFactory = htmlPageFactory;
     }
 
-    public HistoryComparatorResponder() {
+    @Inject
+    public HistoryComparatorResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
         comparator = new HistoryComparator();
     }
 
@@ -149,6 +155,6 @@ public class HistoryComparatorResponder implements Responder {
 
     private Response makeErrorResponse(FitNesseContext context, Request request,
                                        String message) throws Exception {
-        return new ErrorResponder(message).makeResponse(context, request);
+        return new ErrorResponder(message, htmlPageFactory).makeResponse(context, request);
     }
 }

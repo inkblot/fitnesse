@@ -65,7 +65,7 @@ public class SerializedPageResponderTest extends SerializedPageResponderTestCase
 
         request.setResource("root");
         request.addInput("type", "pages");
-        Responder responder = new SerializedPageResponder();
+        Responder responder = new SerializedPageResponder(htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String xml = response.getContent();
 
@@ -89,7 +89,7 @@ public class SerializedPageResponderTest extends SerializedPageResponderTestCase
 
         request.setResource("root");
         request.addInput("type", "pages");
-        Responder responder = new SerializedPageResponder();
+        Responder responder = new SerializedPageResponder(htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String xml = response.getContent();
 
@@ -106,7 +106,7 @@ public class SerializedPageResponderTest extends SerializedPageResponderTestCase
 
         request.setResource("TestPageOne");
         request.addInput("type", "data");
-        Responder responder = new SerializedPageResponder();
+        Responder responder = new SerializedPageResponder(htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String xml = response.getContent();
 

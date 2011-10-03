@@ -1,7 +1,9 @@
 package fitnesse.responders.refactoring;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -21,6 +23,12 @@ public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private WikiPagePath pagePath;
     private WikiPage somePage;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -29,7 +37,7 @@ public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         pagePath = PathParser.parse("SomePage");
         somePage = crawler.addPage(root, pagePath, "has something in it");
-        responder = new SearchReplaceResponder();
+        responder = new SearchReplaceResponder(htmlPageFactory);
         request = new MockRequest();
         request.setResource("SomePage");
     }

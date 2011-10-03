@@ -2,10 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.authentication.AlwaysSecureOperation;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
@@ -21,6 +23,12 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private FitNesse fitnesse;
     private boolean doneShuttingDown;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -38,7 +46,7 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testFitNesseGetsShutdown() throws Exception {
-        ShutdownResponder responder = new ShutdownResponder();
+        ShutdownResponder responder = new ShutdownResponder(htmlPageFactory);
         responder.makeResponse(context, new MockRequest());
         Thread.sleep(200);
         assertFalse(fitnesse.isRunning());
@@ -67,6 +75,6 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testIsSecure() throws Exception {
-        assertTrue(new ShutdownResponder().getSecureOperation() instanceof AlwaysSecureOperation);
+        assertTrue(new ShutdownResponder(htmlPageFactory).getSecureOperation() instanceof AlwaysSecureOperation);
     }
 }

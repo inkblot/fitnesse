@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
@@ -26,6 +28,12 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     private WikiPage childOne;
     private WikiPage childTwo;
     private StandardOutAndErrorRecorder standardOutAndErrorRecorder;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -38,8 +46,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
         importerFactory = new MockWikiImporterFactory();
         eventListener = new WikiImportTestEventListener(importerFactory);
-        testResponder = new MockTestResponder();
-        suiteResponder = new MockSuiteResponder();
+        testResponder = new MockTestResponder(htmlPageFactory);
+        suiteResponder = new MockSuiteResponder(htmlPageFactory);
     }
 
     @After
@@ -137,7 +145,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     }
 
     private class MockTestResponder extends TestResponder {
-        private MockTestResponder() {
+        private MockTestResponder(HtmlPageFactory htmlPageFactory) {
+            super(htmlPageFactory);
             response = new ChunkedResponse("html");
         }
 
@@ -151,7 +160,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     }
 
     private class MockSuiteResponder extends SuiteResponder {
-        private MockSuiteResponder() {
+        private MockSuiteResponder(HtmlPageFactory htmlPageFactory) {
+            super(htmlPageFactory);
             response = new ChunkedResponse("html");
         }
 

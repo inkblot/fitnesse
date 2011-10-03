@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
@@ -27,6 +29,12 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
     private VirtualCouplingExtension extension;
     private WikiPage linker;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -55,7 +63,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
         createSimpleVirtualLink();
 
         // new request to get rid of the virtual wiki link
-        SavePropertiesResponder responder = new SavePropertiesResponder();
+        SavePropertiesResponder responder = new SavePropertiesResponder(htmlPageFactory);
         request = new MockRequest();
         request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "");
         request.setResource("LinkerPage");
@@ -85,7 +93,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
         assertTrue(!(extension.getVirtualCoupling() instanceof NullVirtualCouplingPage));
 
         // new request to get rid of the virtual wiki link
-        SavePropertiesResponder responder = new SavePropertiesResponder();
+        SavePropertiesResponder responder = new SavePropertiesResponder(htmlPageFactory);
         request = new MockRequest();
         request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "LinkeePageTwo");
         request.setResource("LinkerPage");
@@ -98,7 +106,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
     public void testResponse() throws Exception {
         createRequest();
 
-        Responder responder = new SavePropertiesResponder();
+        Responder responder = new SavePropertiesResponder(htmlPageFactory);
         Response response = responder.makeResponse(context, request);
 
         PageData data = page.getData();

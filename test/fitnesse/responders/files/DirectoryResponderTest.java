@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -19,6 +21,12 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
     private SimpleResponse response;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -26,7 +34,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
         context = makeContext();
         makeSampleFiles();
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         response = (SimpleResponse) responder.makeResponse(context, request);
     }
 
@@ -52,7 +60,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testRedirectForDirectory() throws Exception {
         request.setResource("files/testDir");
-        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         Response response = responder.makeResponse(context, request);
 
         assertEquals(303, response.getStatus());

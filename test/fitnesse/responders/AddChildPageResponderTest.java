@@ -1,8 +1,10 @@
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
@@ -21,6 +23,12 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private Responder responder;
     private WikiPagePath path;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -36,7 +44,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
         request.addInput("name", childName);
         request.addInput("content", childContent);
         request.addInput("pageType", pagetype);
-        responder = new AddChildPageResponder();
+        responder = new AddChildPageResponder(htmlPageFactory);
         path = PathParser.parse("TestPage.ChildPage");
     }
 

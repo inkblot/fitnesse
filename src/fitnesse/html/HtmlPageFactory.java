@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
+import com.google.inject.Singleton;
+
+@Singleton
 public class HtmlPageFactory {
     public HtmlPage newPage() {
         return new HtmlPage();

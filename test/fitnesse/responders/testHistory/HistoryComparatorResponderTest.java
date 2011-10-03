@@ -1,7 +1,9 @@
 package fitnesse.responders.testHistory;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.WikiPage;
@@ -25,6 +27,12 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
     public HistoryComparator mockedComparator;
     private String FIRST_FILE_PATH;
     private String SECOND_FILE_PATH;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setup() throws Exception {
@@ -37,7 +45,7 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         mockedComparator = mock(HistoryComparator.class);
 
-        responder = new HistoryComparatorResponder(mockedComparator);
+        responder = new HistoryComparatorResponder(mockedComparator, htmlPageFactory);
         responder.testing = true;
         List<String> resultContent = new ArrayList<String>();
         resultContent.add("pass");

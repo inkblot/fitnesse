@@ -1,7 +1,9 @@
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Request;
@@ -21,6 +23,12 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context = null;
     private StoppedRecorder stoppableA = new StoppedRecorder();
     private StoppedRecorder stoppableB = new StoppedRecorder();
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +42,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
         context.runningTestingTracker.addStartedProcess(stoppableA);
         context.runningTestingTracker.addStartedProcess(stoppableB);
 
-        StopTestResponder stopResponder = new StopTestResponder();
+        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory);
         String response = runResponder(stopResponder);
 
         assertTrue(stoppableA.wasStopped());
@@ -62,7 +70,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
             }
         };
 
-        StopTestResponder stopResponder = new StopTestResponder();
+        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory);
         String response = runResponder(stopResponder);
 
         assertFalse(stoppableA.wasStopped());

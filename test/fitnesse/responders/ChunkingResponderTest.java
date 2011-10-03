@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -19,11 +21,17 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     private ChunkedResponse response;
     private FitNesseContext context;
     private ChunkingResponder responder;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
         context = makeContext();
-        responder = new ChunkingResponder() {
+        responder = new ChunkingResponder(htmlPageFactory) {
             protected void doSending() throws Exception {
                 throw exception;
             }

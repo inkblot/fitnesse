@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.HttpException;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -30,14 +31,16 @@ public class FitNesseExpediter implements ResponseSender {
     private long requestProgress;
     private long requestParsingDeadline;
     private volatile boolean hasError;
+    private final HtmlPageFactory htmlPageFactory;
 
-    public FitNesseExpediter(Socket s, FitNesseContext context) throws IOException {
-        this(s, context, 10000L);
+    public FitNesseExpediter(Socket s, FitNesseContext context, HtmlPageFactory htmlPageFactory) throws IOException {
+        this(s, context, 10000L, htmlPageFactory);
     }
 
-    public FitNesseExpediter(Socket s, FitNesseContext context, long requestParsingTimeLimit) throws IOException {
+    public FitNesseExpediter(Socket s, FitNesseContext context, long requestParsingTimeLimit, HtmlPageFactory htmlPageFactory) throws IOException {
         this.context = context;
         socket = s;
+        this.htmlPageFactory = htmlPageFactory;
         input = s.getInputStream();
         output = s.getOutputStream();
         this.requestParsingTimeLimit = requestParsingTimeLimit;
@@ -97,7 +100,7 @@ public class FitNesseExpediter implements ResponseSender {
         } catch (SocketException se) {
             throw (se);
         } catch (Exception e) {
-            response = new ErrorResponder(e).makeResponse(context, request);
+            response = new ErrorResponder(e, htmlPageFactory).makeResponse(context, request);
         }
         return response;
     }
@@ -160,7 +163,7 @@ public class FitNesseExpediter implements ResponseSender {
 
     private void reportError(int status, String message, Request request) {
         try {
-            response = new ErrorResponder(message).makeResponse(context, request);
+            response = new ErrorResponder(message, htmlPageFactory).makeResponse(context, request);
             response.setStatus(status);
             hasError = true;
         } catch (Exception e) {
@@ -170,7 +173,7 @@ public class FitNesseExpediter implements ResponseSender {
 
     private void reportError(Exception e, Request request) {
         try {
-            response = new ErrorResponder(e).makeResponse(context, request);
+            response = new ErrorResponder(e, htmlPageFactory).makeResponse(context, request);
             hasError = true;
         } catch (Exception e1) {
             e1.printStackTrace();

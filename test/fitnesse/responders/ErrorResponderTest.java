@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import org.junit.Test;
@@ -14,9 +16,16 @@ import static util.RegexAssertions.assertSubString;
 
 public class ErrorResponderTest extends FitnesseBaseTestCase {
 
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     @Test
     public void testResponse() throws Exception {
-        Responder responder = new ErrorResponder(new Exception("some error message"));
+        Responder responder = new ErrorResponder(new Exception("some error message"), htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(makeContext(), new MockRequest());
 
         assertEquals(400, response.getStatus());
@@ -30,7 +39,7 @@ public class ErrorResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testWithMessage() throws Exception {
-        Responder responder = new ErrorResponder("error Message");
+        Responder responder = new ErrorResponder("error Message", htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(makeContext(), new MockRequest());
         String body = response.getContent();
 

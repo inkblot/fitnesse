@@ -4,6 +4,7 @@ package fitnesse.html;
 
 import fitnesse.wiki.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -128,7 +129,7 @@ public class SetupTeardownAndLibraryIncluder {
             includeScenarioLibrariesIfAny(libraryFilter);
     }
 
-    private void includeScenarioLibrariesIfAny(LibraryFilter libraryFilter) throws Exception {
+    private void includeScenarioLibrariesIfAny(LibraryFilter libraryFilter) throws IOException {
         List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", testPage);
 
         List<WikiPage> filteredUncles = filter(uncles, libraryFilter);
@@ -136,7 +137,7 @@ public class SetupTeardownAndLibraryIncluder {
             includeScenarioLibraries(filteredUncles);
     }
 
-    private List<WikiPage> filter(List<WikiPage> widgets, LibraryFilter filter) throws Exception {
+    private List<WikiPage> filter(List<WikiPage> widgets, LibraryFilter filter) {
         List<WikiPage> filteredList = new LinkedList<WikiPage>();
         for (WikiPage widget : widgets) {
             if (filter.canUse(widget))
@@ -147,11 +148,10 @@ public class SetupTeardownAndLibraryIncluder {
 
     private boolean isSlim(WikiPage page) throws Exception {
         String testSystem = page.getData().getVariable("TEST_SYSTEM");
-        boolean isSlim = "slim".equalsIgnoreCase(testSystem);
-        return isSlim;
+        return "slim".equalsIgnoreCase(testSystem);
     }
 
-    private void includeScenarioLibraries(List<WikiPage> uncles) throws Exception {
+    private void includeScenarioLibraries(List<WikiPage> uncles) {
         Collections.reverse(uncles);
         newPageContent.append("!*> Scenario Libraries\n");
         for (WikiPage uncle : uncles)
@@ -159,7 +159,7 @@ public class SetupTeardownAndLibraryIncluder {
         newPageContent.append("*!\n");
     }
 
-    private void includeScenarioLibrary(WikiPage uncle) throws Exception {
+    private void includeScenarioLibrary(WikiPage uncle) {
         newPageContent.append("!include -c .");
         newPageContent.append(PathParser.render(pageCrawler.getFullPath(uncle)));
         newPageContent.append("\n");
@@ -184,7 +184,7 @@ public class SetupTeardownAndLibraryIncluder {
     }
 
     private static interface LibraryFilter {
-        boolean canUse(WikiPage libraryPage) throws Exception;
+        boolean canUse(WikiPage libraryPage);
     }
 
     private static class AllLibrariesFilter implements LibraryFilter {
@@ -204,7 +204,7 @@ public class SetupTeardownAndLibraryIncluder {
         }
 
         @Override
-        public boolean canUse(WikiPage libraryPage) throws Exception {
+        public boolean canUse(WikiPage libraryPage) {
             return libraryPage.getPageCrawler().getFullPath(libraryPage).toString().length() > minimumPathLength;
         }
     }

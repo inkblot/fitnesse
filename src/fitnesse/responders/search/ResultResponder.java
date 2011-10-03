@@ -7,6 +7,7 @@ import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.SearchObserver;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PageCrawler;
@@ -23,6 +24,10 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 public abstract class ResultResponder extends ChunkingResponder implements
         SearchObserver, SecureResponder {
     private int hits;
+
+    public ResultResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
 
     protected PageCrawler getPageCrawler() {
         return root.getPageCrawler();

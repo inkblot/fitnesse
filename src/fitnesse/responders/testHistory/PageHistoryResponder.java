@@ -1,10 +1,12 @@
 package fitnesse.responders.testHistory;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -31,6 +33,12 @@ public class PageHistoryResponder implements SecureResponder {
     private VelocityContext velocityContext;
     private FitNesseContext context;
     private PageTitle pageTitle;
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public PageHistoryResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         this.context = context;
@@ -75,7 +83,7 @@ public class PageHistoryResponder implements SecureResponder {
     }
 
     private Response makeCorruptFileResponse(Request request) throws Exception {
-        return new ErrorResponder("Corrupt Test Result File").makeResponse(context, request);
+        return new ErrorResponder("Corrupt Test Result File", htmlPageFactory).makeResponse(context, request);
     }
 
     private Response makeTestExecutionReportResponse(Request request, Date resultDate, PageHistory.TestResultRecord testResultRecord) throws Exception {

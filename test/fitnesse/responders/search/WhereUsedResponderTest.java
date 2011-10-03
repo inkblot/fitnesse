@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -18,6 +20,12 @@ import static util.RegexAssertions.assertHasRegexp;
 
 public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -32,7 +40,7 @@ public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     public void testResponse() throws Exception {
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
-        WhereUsedResponder responder = new WhereUsedResponder();
+        WhereUsedResponder responder = new WhereUsedResponder(htmlPageFactory);
 
         Response response = responder.makeResponse(context, request);
         MockResponseSender sender = new MockResponseSender();

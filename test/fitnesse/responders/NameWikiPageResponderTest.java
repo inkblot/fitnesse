@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -31,13 +33,19 @@ public class NameWikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPagePath pageTwoPath;
     private WikiPagePath frontPagePath;
     private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
         context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
-        responder = new NameWikiPageResponder();
+        responder = new NameWikiPageResponder(htmlPageFactory);
         request = new MockRequest();
 
         pageOneName = "PageOne";

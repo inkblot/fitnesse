@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
@@ -15,6 +17,12 @@ import static util.RegexAssertions.*;
 public class VersionResponderTest extends FitnesseBaseTestCase {
     private String oldVersion;
     private SimpleResponse response;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     private void makeTestResponse(String pageName) throws Exception {
         FitNesseContext context = makeContext();
@@ -28,7 +36,7 @@ public class VersionResponderTest extends FitnesseBaseTestCase {
         request.setResource(pageName);
         request.addInput("version", oldVersion);
 
-        Responder responder = new VersionResponder();
+        Responder responder = new VersionResponder(htmlPageFactory);
         response = (SimpleResponse) responder.makeResponse(context, request);
     }
 

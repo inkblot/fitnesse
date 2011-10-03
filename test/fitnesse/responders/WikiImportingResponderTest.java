@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.authentication.OneUserAuthenticator;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -19,6 +21,12 @@ import static util.RegexAssertions.*;
 public class WikiImportingResponderTest extends ImporterTestCase {
     private WikiImportingResponder responder;
     private String baseUrl;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -29,7 +37,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     }
 
     private void createResponder() throws Exception {
-        responder = new WikiImportingResponder();
+        responder = new WikiImportingResponder(htmlPageFactory);
         responder.path = new WikiPagePath();
         ChunkedResponse response = new ChunkedResponse("html");
         response.readyToSend(new MockResponseSender());

@@ -2,11 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.versions;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -19,22 +21,28 @@ import fitnesse.wiki.*;
 public class VersionResponder implements SecureResponder {
     private String version;
     private String resource;
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public VersionResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         resource = request.getResource();
         version = (String) request.getInput("version");
         if (version == null)
-            return new ErrorResponder("No version specified.").makeResponse(context, request);
+            return new ErrorResponder("No version specified.", htmlPageFactory).makeResponse(context, request);
 
         PageCrawler pageCrawler = context.root.getPageCrawler();
         WikiPagePath path = PathParser.parse(resource);
         WikiPage page = pageCrawler.getPage(context.root, path);
         if (page == null)
-            return new NotFoundResponder().makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         PageData pageData = page.getDataVersion(version);
 
         String fullPathName = PathParser.render(pageCrawler.getFullPath(page));
-        HtmlPage html = makeHtml(fullPathName, pageData, context);
+        HtmlPage html = makeHtml(fullPathName, pageData);
 
         SimpleResponse response = new SimpleResponse();
         response.setContent(html.html());
@@ -42,8 +50,8 @@ public class VersionResponder implements SecureResponder {
         return response;
     }
 
-    private HtmlPage makeHtml(String name, PageData pageData, FitNesseContext context) throws Exception {
-        HtmlPage html = context.getHtmlPageFactory().newPage();
+    private HtmlPage makeHtml(String name, PageData pageData) throws Exception {
+        HtmlPage html = htmlPageFactory.newPage();
         html.title.use("Version " + version + ": " + name);
         html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Version " + version));
         html.actions.use(makeRollbackLink(name));

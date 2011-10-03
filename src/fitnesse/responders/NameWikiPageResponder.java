@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.wiki.WikiPage;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
@@ -12,6 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NameWikiPageResponder extends BasicWikiPageResponder {
+    @Inject
+    public NameWikiPageResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
+
     protected String contentFrom(WikiPage requestedPage)
             throws Exception {
         List<String> pages = new ArrayList<String>();

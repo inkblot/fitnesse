@@ -3,11 +3,13 @@
 
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.RecentChanges;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -21,13 +23,20 @@ import java.util.List;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class SavePropertiesResponder implements SecureResponder {
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public SavePropertiesResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         String resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
         WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
         if (page == null)
-            return new NotFoundResponder().makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         PageData data = page.getData();
         saveAttributes(request, data);
         VersionInfo commitRecord = page.commit(data);

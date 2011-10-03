@@ -1,9 +1,11 @@
 package fitnesse.responders.testHistory;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -19,7 +21,12 @@ import java.util.Date;
 public class PurgeHistoryResponder implements SecureResponder {
     private File resultsDirectory;
     private Date todaysDate;
+    private final HtmlPageFactory htmlPageFactory;
 
+    @Inject
+    public PurgeHistoryResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         initializeResponder(context);
@@ -67,7 +74,7 @@ public class PurgeHistoryResponder implements SecureResponder {
     }
 
     private Response makeErrorResponse(FitNesseContext context, Request request) throws Exception {
-        return new ErrorResponder("Invalid Amount Of Days").makeResponse(context, request);
+        return new ErrorResponder("Invalid Amount Of Days", htmlPageFactory).makeResponse(context, request);
     }
 
     public void setResultsDirectory(File directory) {

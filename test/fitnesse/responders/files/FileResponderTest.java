@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.*;
 import org.junit.After;
 import org.junit.Before;
@@ -20,12 +22,19 @@ import static util.RegexAssertions.*;
 
 public class FileResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
+    // Example: "Tue, 02 Apr 2003 22:18:49 GMT"
     private final String HTTP_DATE_REGEXP = "[SMTWF][a-z]{2}\\,\\s[0-9]{2}\\s[JFMASOND][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}\\:[0-9]{2}\\:[0-9]{2}\\sGMT";
+
     private Response response;
     private FitNesseContext context;
     private FileResponder responder;
     private Locale saveLocale;
-    // Example: "Tue, 02 Apr 2003 22:18:49 GMT"
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -45,7 +54,7 @@ public class FileResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testFileContent() throws Exception {
         request.setResource("files/testFile1");
-        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         response = responder.makeResponse(context, request);
         assertEquals(InputStreamResponse.class, response.getClass());
         MockResponseSender sender = new MockResponseSender();
@@ -59,7 +68,7 @@ public class FileResponderTest extends FitnesseBaseTestCase {
         assertEquals("files/test File With Spaces In Name", restoredPath);
 
         request.setResource("files/file4%20with%20spaces.txt");
-        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         assertEquals("files/file4 with spaces.txt", responder.resource);
     }
 
@@ -67,7 +76,7 @@ public class FileResponderTest extends FitnesseBaseTestCase {
     public void testLastModifiedHeader() throws Exception {
         Locale.setDefault(Locale.US);
         request.setResource("files/testFile1");
-        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         response = responder.makeResponse(context, request);
         String lastModifiedHeader = response.getHeader("Last-Modified");
         assertMatches(HTTP_DATE_REGEXP, lastModifiedHeader);
@@ -84,13 +93,13 @@ public class FileResponderTest extends FitnesseBaseTestCase {
 
         request.setResource("files/testFile1");
         request.addHeader("If-Modified-Since", yesterday);
-        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         response = responder.makeResponse(context, request);
         assertEquals(200, response.getStatus());
 
         request.setResource("files/testFile1");
         request.addHeader("If-Modified-Since", tomorrow);
-        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         SimpleResponse notModifiedResponse = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals(304, notModifiedResponse.getStatus());
         assertEquals("", notModifiedResponse.getContent());
@@ -102,7 +111,7 @@ public class FileResponderTest extends FitnesseBaseTestCase {
     public void testRecoverFromUnparseableDateInIfNotModifiedHeader() throws Exception {
         request.setResource("files/testFile1");
         request.addHeader("If-Modified-Since", "Unparseable Date");
-        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         response = responder.makeResponse(context, request);
         assertEquals(200, response.getStatus());
     }
@@ -110,7 +119,7 @@ public class FileResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testNotFoundFile() throws Exception {
         request.setResource("files/something/that/aint/there");
-        Responder notFoundResponder = FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        Responder notFoundResponder = FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         SimpleResponse response = (SimpleResponse) notFoundResponder.makeResponse(context, request);
         assertEquals(404, response.getStatus());
         assertHasRegexp("files/something/that/aint/there", response.getContent());
@@ -120,7 +129,7 @@ public class FileResponderTest extends FitnesseBaseTestCase {
     public void testCssMimeType() throws Exception {
         samples.addFile("/files/fitnesse.css", "body{color: red;}");
         request.setResource("files/fitnesse.css");
-        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath);
+        responder = (FileResponder) FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
         response = responder.makeResponse(context, request);
         assertEquals("text/css", response.getContentType());
     }

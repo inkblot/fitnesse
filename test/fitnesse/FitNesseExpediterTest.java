@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Inject;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.UnauthorizedResponder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.*;
 import fitnesse.http.MockSocket;
 import org.junit.After;
@@ -24,13 +26,19 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     private PipedInputStream clientInput;
     private PipedOutputStream clientOutput;
     private ResponseParser response;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() throws Exception {
         context = makeContext();
         context.root.addChildPage("FrontPage");
         socket = new MockSocket();
-        expediter = new FitNesseExpediter(socket, context);
+        expediter = new FitNesseExpediter(socket, context, htmlPageFactory);
     }
 
     @After
@@ -79,7 +87,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         clientInput = new PipedInputStream();
         PipedOutputStream socketOutput = new PipedOutputStream(clientInput);
         MockSocket socket = new MockSocket(socketInput, socketOutput);
-        return new FitNesseExpediter(socket, context, 200);
+        return new FitNesseExpediter(socket, context, 200, htmlPageFactory);
     }
 
     @Test

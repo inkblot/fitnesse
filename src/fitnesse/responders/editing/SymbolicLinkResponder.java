@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -23,6 +25,12 @@ public class SymbolicLinkResponder implements Responder {
     private PageCrawler crawler;
     private FitNesseContext context;
     private WikiPage page;
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public SymbolicLinkResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         resource = request.getResource();
@@ -30,7 +38,7 @@ public class SymbolicLinkResponder implements Responder {
         crawler = context.root.getPageCrawler();
         page = crawler.getPage(context.root, PathParser.parse(resource));
         if (page == null)
-            return new NotFoundResponder().makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
 
         response = new SimpleResponse();
         if (request.hasInput("removal"))
@@ -65,7 +73,7 @@ public class SymbolicLinkResponder implements Responder {
                 newName = (String) request.getInput("newname");
 
         if (page.hasChildPage(newName)) {
-            response = new ErrorResponder(resource + " already has a child named " + newName + ".").makeResponse(context, null);
+            response = new ErrorResponder(resource + " already has a child named " + newName + ".", htmlPageFactory).makeResponse(context, null);
             response.setStatus(412);
         } else {
             PageData data = page.getData();
@@ -87,13 +95,13 @@ public class SymbolicLinkResponder implements Responder {
             String message = "Cannot create link to the file system path, <b>" + linkPath + "</b>." +
                     "<br/> The canonical file system path used was <b>" + createFileFromPath(linkPath).getCanonicalPath() + ".</b>" +
                     "<br/>Either it doesn't exist or it's not a directory.";
-            response = new ErrorResponder(message).makeResponse(context, null);
+            response = new ErrorResponder(message, htmlPageFactory).makeResponse(context, null);
             response.setStatus(404);
         } else if (!isFilePath(linkPath) && isInternalPageThatDoesntExist(linkPath)) {
-            response = new ErrorResponder("The page to which you are attempting to link, " + Utils.escapeHTML(linkPath) + ", doesn't exist.").makeResponse(context, null);
+            response = new ErrorResponder("The page to which you are attempting to link, " + Utils.escapeHTML(linkPath) + ", doesn't exist.", htmlPageFactory).makeResponse(context, null);
             response.setStatus(404);
         } else if (page.hasChildPage(linkName)) {
-            response = new ErrorResponder(resource + " already has a child named " + linkName + ".").makeResponse(context, null);
+            response = new ErrorResponder(resource + " already has a child named " + linkName + ".", htmlPageFactory).makeResponse(context, null);
             response.setStatus(412);
         } else {
             PageData data = page.getData();

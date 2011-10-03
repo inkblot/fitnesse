@@ -2,14 +2,12 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.TagGroup;
+import fitnesse.html.*;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -18,6 +16,12 @@ import java.io.File;
 
 public class DeleteConfirmationResponder implements SecureResponder {
     private String resource;
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public DeleteConfirmationResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
@@ -29,7 +33,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
     }
 
     private String makeDirectoryListingPage(String filename, FitNesseContext context) throws Exception {
-        HtmlPage page = context.getHtmlPageFactory().newPage();
+        HtmlPage page = htmlPageFactory.newPage();
         page.title.use("Delete File(s): ");
         page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource + filename, "/", "Delete File"));
         page.main.use(makeConfirmationHTML(filename, context));

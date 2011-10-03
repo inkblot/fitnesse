@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -13,6 +15,13 @@ import fitnesse.responders.BasicResponder;
 public class StopTestResponder extends BasicResponder {
 
     String testId = null;
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public StopTestResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
@@ -27,7 +36,7 @@ public class StopTestResponder extends BasicResponder {
     }
 
     private String html(FitNesseContext context) throws Exception {
-        HtmlPage page = context.getHtmlPageFactory().newPage();
+        HtmlPage page = htmlPageFactory.newPage();
         HtmlUtil.addTitles(page, "Stopping tests");
         page.main.use(getDetails(context));
         return page.html();

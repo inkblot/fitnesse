@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import com.google.inject.Inject;
 import fitnesse.components.RegularExpressionWikiPageFinder;
 import fitnesse.components.TitleWikiPageFinder;
+import fitnesse.html.HtmlPageFactory;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -13,6 +15,11 @@ import static java.util.regex.Pattern.LITERAL;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class SearchResponder extends ResultResponder {
+
+    @Inject
+    public SearchResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
 
     private String getSearchString() {
         return (String) request.getInput("searchString");

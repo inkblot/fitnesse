@@ -3,10 +3,12 @@
 package fitnesse.responders.refactoring;
 
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.MovedPageReferenceRenamer;
 import fitnesse.components.ReferenceRenamer;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -16,6 +18,11 @@ import fitnesse.wiki.WikiPagePath;
 public class MovePageResponder extends PageMovementResponder implements SecureResponder {
 
     private String newParentName;
+
+    @Inject
+    public MovePageResponder(HtmlPageFactory htmlPageFactory) {
+        super(htmlPageFactory);
+    }
 
     @Override
     protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception {

@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
+import com.google.inject.Inject;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.responders.ResponderTestCase;
@@ -21,9 +23,15 @@ public class RenamePageResponderTest extends ResponderTestCase {
     private WikiPagePath pageTwoPath;
     private String pageOneName;
     private String pageTwoName;
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     protected Responder responderInstance() {
-        return new RenamePageResponder();
+        return new RenamePageResponder(htmlPageFactory);
     }
 
     @Before

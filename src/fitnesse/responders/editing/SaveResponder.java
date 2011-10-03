@@ -11,6 +11,7 @@ import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.components.RecentChanges;
 import fitnesse.components.SaveRecorder;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
@@ -20,6 +21,7 @@ import fitnesse.wiki.*;
 
 public class SaveResponder implements SecureResponder {
     private final Provider<ContentFilter> contentFilterProvider;
+    private final HtmlPageFactory htmlPageFactory;
 
     private String user;
     private long ticketId;
@@ -28,32 +30,33 @@ public class SaveResponder implements SecureResponder {
     private long editTimeStamp;
 
     @Inject
-    public SaveResponder(Provider<ContentFilter> contentFilterProvider) {
+    public SaveResponder(Provider<ContentFilter> contentFilterProvider, HtmlPageFactory htmlPageFactory) {
         this.contentFilterProvider = contentFilterProvider;
+        this.htmlPageFactory = htmlPageFactory;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         editTimeStamp = getEditTime(request);
         ticketId = getTicketId(request);
         String resource = request.getResource();
-        WikiPage page = getPage(resource, context);
+        WikiPage page = getPage(resource, context.root);
         data = page.getData();
         user = request.getAuthorizationUsername();
 
         if (editsNeedMerge())
-            return new MergeResponder(request).makeResponse(context, request);
+            return new MergeResponder(request, htmlPageFactory).makeResponse(context, request);
         else {
             savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);
             if (!contentFilterProvider.get().isContentAcceptable(savedContent, resource))
-                return makeBannedContentResponse(context, resource);
+                return makeBannedContentResponse(resource);
             else
                 return saveEdits(request, page);
         }
     }
 
-    private Response makeBannedContentResponse(FitNesseContext context, String resource) throws Exception {
+    private Response makeBannedContentResponse(String resource) throws Exception {
         SimpleResponse response = new SimpleResponse();
-        HtmlPage html = context.getHtmlPageFactory().newPage();
+        HtmlPage html = htmlPageFactory.newPage();
         html.title.use("Edit " + resource);
         html.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "Banned Content"));
         html.main.use(new HtmlTag("h3", "The content you're trying to save has been " +
@@ -95,12 +98,12 @@ public class SaveResponder implements SecureResponder {
         return Long.parseLong(editTimeStampString);
     }
 
-    private WikiPage getPage(String resource, FitNesseContext context) throws Exception {
+    private WikiPage getPage(String resource, WikiPage root) throws Exception {
         WikiPagePath path = PathParser.parse(resource);
-        PageCrawler pageCrawler = context.root.getPageCrawler();
-        WikiPage page = pageCrawler.getPage(context.root, path);
+        PageCrawler pageCrawler = root.getPageCrawler();
+        WikiPage page = pageCrawler.getPage(root, path);
         if (page == null)
-            page = pageCrawler.addPage(context.root, PathParser.parse(resource));
+            page = pageCrawler.addPage(root, PathParser.parse(resource));
         return page;
     }
 

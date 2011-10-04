@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
@@ -19,6 +20,7 @@ import util.Clock;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertNotSubString;
@@ -31,9 +33,11 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
 
     private Provider<Clock> clockProvider;
     private HtmlPageFactory htmlPageFactory;
+    private Properties properties;
 
     @Inject
-    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory) {
+    public void inject(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory) {
+        this.properties = properties;
         this.clockProvider = clockProvider;
         this.htmlPageFactory = htmlPageFactory;
     }
@@ -131,7 +135,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private SimpleResponse requestPage(String name) throws Exception {
         MockRequest request = new MockRequest();
         request.setResource(name);
-        Responder responder = new WikiPageResponder(htmlPageFactory, clockProvider.get());
+        Responder responder = new WikiPageResponder(properties, htmlPageFactory, clockProvider.get());
         return (SimpleResponse) responder.makeResponse(context, request);
     }
 

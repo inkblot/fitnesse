@@ -57,11 +57,7 @@ public class FitNesseMain {
         FitNesseContext context = FitNesseContext.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory());
         context.port = arguments.getPort();
 
-        Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(ComponentFactory.PROPERTIES_FILE)));
-        String defaultNewPageContent = pluginProperties.getProperty(ComponentFactory.DEFAULT_NEWPAGE_CONTENT);
-        if (defaultNewPageContent != null) {
-            context.defaultNewPageContent = defaultNewPageContent;
-        }
+        Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContext.PROPERTIES_FILE)));
 
         SymbolProvider wikiSymbols = injector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
         String extraOutput = ComponentFactory.loadPlugins(

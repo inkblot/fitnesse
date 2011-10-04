@@ -32,7 +32,7 @@ public class FitNesseModule extends AbstractModule {
 
     public FitNesseModule(FitNesseMain.Arguments args) {
         this(
-                FileUtil.loadProperties(new File(args.getRootPath(), ComponentFactory.PROPERTIES_FILE)),
+                FileUtil.loadProperties(new File(args.getRootPath(), FitNesseContext.PROPERTIES_FILE)),
                 args.getUserpass());
     }
 
@@ -43,7 +43,7 @@ public class FitNesseModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Properties.class).annotatedWith(Names.named(ComponentFactory.PROPERTIES_FILE)).toInstance(properties);
+        bind(Properties.class).annotatedWith(Names.named(FitNesseContext.PROPERTIES_FILE)).toInstance(properties);
         bindAuthenticator();
         bindWikiPageClass();
         bindFromProperty(VersionsController.class);

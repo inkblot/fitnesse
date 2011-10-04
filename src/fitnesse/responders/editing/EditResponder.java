@@ -3,6 +3,7 @@
 package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -17,6 +18,7 @@ import fitnesse.wikitext.Utils;
 import util.Clock;
 
 import java.io.IOException;
+import java.util.Properties;
 
 public class EditResponder implements SecureResponder {
     public static final String CONTENT_INPUT_NAME = "pageContent";
@@ -24,18 +26,27 @@ public class EditResponder implements SecureResponder {
     public static final String TIME_STAMP = "editTime";
     public static final String TICKET_ID = "ticketId";
 
+    public static final String DEFAULT_PAGE_CONTENT_PROPERTY = "newpage.default.content";
+    public static final String DEFAULT_PAGE_CONTENT = "!contents -R2 -g -p -f -h";
+
+    private final Properties properties;
     private final HtmlPageFactory htmlPageFactory;
     private final Clock clock;
 
     @Inject
-    public EditResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
+    public EditResponder(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
+        this.properties = properties;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws IOException {
         boolean nonExistent = request.hasInput("nonExistent");
-        return doMakeResponse(request, nonExistent, context.root, htmlPageFactory, context.defaultNewPageContent, clock);
+        return doMakeResponse(request, nonExistent, context.root, htmlPageFactory, getDefaultPageContent(), clock);
+    }
+
+    private String getDefaultPageContent() {
+        return properties.getProperty(DEFAULT_PAGE_CONTENT_PROPERTY, DEFAULT_PAGE_CONTENT);
     }
 
     public static Response makeResponseForNonExistentPage(Request request,

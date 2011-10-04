@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
@@ -20,6 +21,8 @@ import fitnesse.wiki.*;
 import org.apache.velocity.VelocityContext;
 import util.Clock;
 
+import java.util.Properties;
+
 public class WikiPageResponder implements SecureResponder {
     protected WikiPage page;
     protected PageData pageData;
@@ -27,11 +30,13 @@ public class WikiPageResponder implements SecureResponder {
     protected Request request;
     protected PageCrawler crawler;
 
+    private final Properties properties;
     private final HtmlPageFactory htmlPageFactory;
     private final Clock clock;
 
     @Inject
-    public WikiPageResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
+    public WikiPageResponder(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
+        this.properties = properties;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;
     }
@@ -56,7 +61,11 @@ public class WikiPageResponder implements SecureResponder {
     private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
         if (doNotCreateNonExistentPage(request))
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
-        return EditResponder.makeResponseForNonExistentPage(request, htmlPageFactory, context.root, context.defaultNewPageContent, clock);
+        return EditResponder.makeResponseForNonExistentPage(request, htmlPageFactory, context.root, getDefaultPageContent(), clock);
+    }
+
+    private String getDefaultPageContent() {
+        return properties.getProperty(EditResponder.DEFAULT_PAGE_CONTENT_PROPERTY, EditResponder.DEFAULT_PAGE_CONTENT);
     }
 
     private boolean doNotCreateNonExistentPage(Request request) {

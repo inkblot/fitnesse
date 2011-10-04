@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
@@ -18,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
 
+import java.util.Properties;
+
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.*;
 
@@ -27,9 +30,11 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private Clock clock;
+    private Properties properties;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory) {
+    public void inject(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory) {
+        this.properties = properties;
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
     }
@@ -47,7 +52,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
         final MockRequest request = new MockRequest();
         request.setResource("ChildPage");
 
-        final Responder responder = new WikiPageResponder(htmlPageFactory, clock);
+        final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock);
         final SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertEquals(200, response.getStatus());
@@ -117,7 +122,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private SimpleResponse requestPage(String name) throws Exception {
         final MockRequest request = new MockRequest();
         request.setResource(name);
-        final Responder responder = new WikiPageResponder(htmlPageFactory, clock);
+        final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock);
         return (SimpleResponse) responder.makeResponse(context, request);
     }
 
@@ -180,7 +185,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testResponderIsSecureReadOperation() throws Exception {
-        final Responder responder = new WikiPageResponder(htmlPageFactory, clock);
+        final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock);
         final SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
         assertEquals(SecureReadOperation.class, operation.getClass());
     }

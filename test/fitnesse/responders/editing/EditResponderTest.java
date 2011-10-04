@@ -17,12 +17,15 @@ import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
 
+import java.util.Properties;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static util.RegexAssertions.assertMatches;
 import static util.RegexAssertions.assertSubString;
 
 public class EditResponderTest extends FitnesseBaseTestCase {
+    public static final String TEST_DEFAULT_PAGE_CONTENT = "Will the real slim shady please stand up";
     private WikiPage root;
     private MockRequest request;
     private EditResponder responder;
@@ -37,13 +40,20 @@ public class EditResponderTest extends FitnesseBaseTestCase {
         this.htmlPageFactory = htmlPageFactory;
     }
 
+    @Override
+    protected Properties getFitNesseProperties() {
+        Properties properties = super.getFitNesseProperties();
+        properties.setProperty(EditResponder.DEFAULT_PAGE_CONTENT_PROPERTY, TEST_DEFAULT_PAGE_CONTENT);
+        return properties;
+    }
+
     @Before
     public void setUp() throws Exception {
         context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new EditResponder(htmlPageFactory, clock);
+        responder = new EditResponder(getFitNesseProperties(), htmlPageFactory, clock);
     }
 
     @Test
@@ -67,7 +77,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
     }
 
     @Test
-    public void testResponseWhenNonexistentPageRequestsed() throws Exception {
+    public void testResponseWhenNonexistentPageRequested() throws Exception {
         request.setResource("NonExistentPage");
         request.addInput("nonExistent", true);
 
@@ -79,7 +89,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
         assertSubString("<html>", body);
         assertSubString("<form", body);
         assertSubString("method=\"post\"", body);
-        assertSubString(context.defaultNewPageContent, body);
+        assertSubString(TEST_DEFAULT_PAGE_CONTENT, body);
         assertSubString("name=\"responder\"", body);
         assertSubString("name=\"" + EditResponder.TIME_STAMP + "\"", body);
         assertSubString("name=\"" + EditResponder.TICKET_ID + "\"", body);

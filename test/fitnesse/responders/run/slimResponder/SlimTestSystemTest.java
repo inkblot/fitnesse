@@ -3,6 +3,7 @@
 package fitnesse.responders.run.slimResponder;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -26,6 +27,7 @@ import util.Clock;
 
 import java.net.ServerSocket;
 import java.net.SocketException;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 
@@ -41,9 +43,11 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     private TestSystemListener dummyListener = new DummyListener();
     private HtmlPageFactory htmlPageFactory;
     private Clock clock;
+    private Properties properties;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory) {
+    public void inject(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory) {
+        this.properties = properties;
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
     }
@@ -80,7 +84,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     }
 
     protected SlimResponder getSlimResponder() {
-        return new HtmlSlimResponder(clock, htmlPageFactory);
+        return new HtmlSlimResponder(properties, htmlPageFactory, clock);
     }
 
     @Test

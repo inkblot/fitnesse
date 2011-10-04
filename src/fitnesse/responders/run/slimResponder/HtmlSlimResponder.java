@@ -6,9 +6,11 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.wiki.PageData;
 import util.Clock;
 
+import java.util.Properties;
+
 public class HtmlSlimResponder extends SlimResponder {
-    public HtmlSlimResponder(Clock clock, HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory, clock);
+    public HtmlSlimResponder(Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
+        super(properties, htmlPageFactory, clock);
     }
 
     protected SlimTestSystem getTestSystem(PageData pageData) {

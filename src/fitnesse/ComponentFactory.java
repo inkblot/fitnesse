@@ -13,11 +13,9 @@ import java.util.Properties;
 
 public class ComponentFactory {
     private static final String endl = System.getProperty("line.separator");
-    public static final String PROPERTIES_FILE = "plugins.properties";
     public static final String PLUGINS = "Plugins";
     public static final String RESPONDERS = "Responders";
     public static final String SYMBOL_TYPES = "SymbolTypes";
-    public static final String DEFAULT_NEWPAGE_CONTENT = "newpage.default.content";
 
     private ComponentFactory() {}
 

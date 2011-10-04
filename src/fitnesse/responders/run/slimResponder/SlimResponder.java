@@ -14,6 +14,8 @@ import fitnesse.responders.run.TestSystemListener;
 import fitnesse.wiki.PageData;
 import util.Clock;
 
+import java.util.Properties;
+
 /*
 This responder is a test rig for SlimTestSystemTest, which makes sure that the SlimTestSystem works nicely with
 responders in general.
@@ -23,8 +25,8 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
     private boolean fastTest = false;
     SlimTestSystem testSystem;
 
-    public SlimResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
-        super(htmlPageFactory, clock);
+    public SlimResponder(Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
+        super(properties, htmlPageFactory, clock);
     }
 
 

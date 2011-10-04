@@ -3,7 +3,6 @@ package fitnesseMain;
 import com.google.inject.*;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import fitnesse.ComponentFactory;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
 import fitnesse.FitNesseModule;
@@ -160,7 +159,7 @@ public class FitNesseModuleTest {
 
     public static class TestPageFactory extends HtmlPageFactory {
         @Inject
-        public TestPageFactory(@Named(ComponentFactory.PROPERTIES_FILE) Properties p) {
+        public TestPageFactory(@Named(FitNesseContext.PROPERTIES_FILE) Properties p) {
             p.propertyNames();
         }
     }
@@ -172,7 +171,7 @@ public class FitNesseModuleTest {
         assertNotNull(injector.getInstance(VersionsController.class));
         assertNotNull(injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS))));
         assertNotNull(injector.getInstance(FileSystem.class));
-        assertNotNull(injector.getInstance(Key.get(Properties.class, Names.named(ComponentFactory.PROPERTIES_FILE))));
+        assertNotNull(injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContext.PROPERTIES_FILE))));
 
         Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(getClass().getSimpleName(), "RooT"));
         assertNotNull(contextInjector.getInstance(FitNesseContext.class));

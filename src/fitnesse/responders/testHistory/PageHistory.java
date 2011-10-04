@@ -42,11 +42,7 @@ public class PageHistory {
     }
 
     private boolean fileIsNotADirectoryAndIsValid(File file) {
-        if (file.isDirectory())
-            return false;
-        if (!matchesPageHistoryFileFormat(file.getName()))
-            return false;
-        return true;
+        return !file.isDirectory() && matchesPageHistoryFileFormat(file.getName());
 
     }
 
@@ -109,14 +105,13 @@ public class PageHistory {
     private TestResultRecord buildTestResultRecord(File file) throws ParseException {
         String parts[] = file.getName().split("_|\\.");
         Date date = dateFormat.parse(parts[0]);
-        TestResultRecord testResultRecord = new TestResultRecord(
+        return new TestResultRecord(
                 file,
                 date,
                 Integer.parseInt(parts[1]),
                 Integer.parseInt(parts[2]),
                 Integer.parseInt(parts[3]),
                 Integer.parseInt(parts[4]));
-        return testResultRecord;
     }
 
     private void setMinMaxDate(Date date) {
@@ -196,7 +191,7 @@ public class PageHistory {
         return pageHistoryFileName.matches(TEST_FILE_FORMAT);
     }
 
-    public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
+    public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
         return String.format("%s/%s/%s",
                 context.getTestHistoryDirectory(),
                 page.getPageCrawler().getFullPath(page).toString(),

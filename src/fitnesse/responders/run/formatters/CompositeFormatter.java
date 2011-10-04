@@ -22,9 +22,9 @@ public class CompositeFormatter extends BaseFormatter {
     }
 
     @Override
-    public void errorOccured() {
+    public void errorOccurred() {
         for (BaseFormatter formatter : formatters)
-            formatter.errorOccured();
+            formatter.errorOccurred();
     }
 
     @Override

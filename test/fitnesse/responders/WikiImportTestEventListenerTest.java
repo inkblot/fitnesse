@@ -17,6 +17,8 @@ import org.junit.Before;
 import org.junit.Test;
 import util.StandardOutAndErrorRecorder;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
 
 public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
@@ -128,7 +130,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
         assertEquals("Updating imported content...done", sentMessages);
     }
 
-    private void addImportPropertyToPage(WikiPage page, boolean isRoot, boolean autoUpdate) throws Exception {
+    private void addImportPropertyToPage(WikiPage page, boolean isRoot, boolean autoUpdate) throws IOException {
         PageData data = page.getData();
         String sourceUrl = FitNesseUtil.URL + "PageOne";
         WikiImportProperty importProps = new WikiImportProperty(sourceUrl);
@@ -150,7 +152,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
             response = new ChunkedResponse("html");
         }
 
-        public void addToResponse(String output) throws Exception {
+        public void addToResponse(String output) {
             AddMessage(output);
         }
 
@@ -165,7 +167,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
             response = new ChunkedResponse("html");
         }
 
-        public void addToResponse(String output) throws Exception {
+        public void addToResponse(String output) {
             AddMessage(output);
         }
     }

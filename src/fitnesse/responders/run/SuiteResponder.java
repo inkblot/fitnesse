@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Inject;
+import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.formatters.*;
 
@@ -14,38 +15,45 @@ public class SuiteResponder extends TestResponder {
         super(htmlPageFactory);
     }
 
+    @Override
     String getTitle() {
         return "Suite Results";
     }
 
+    @Override
     protected void checkArguments() {
         super.checkArguments();
         includeHtml |= request.hasInput("includehtml");
     }
 
-    void addXmlFormatter() throws Exception {
+    @Override
+    void addXmlFormatter(FitNesseContext context) {
         CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, makeResponseWriter());
         if (includeHtml)
             xmlFormatter.includeHtml();
         formatters.add(xmlFormatter);
     }
 
-    void addHtmlFormatter() throws Exception {
+    @Override
+    void addHtmlFormatter(FitNesseContext context) {
         BaseFormatter formatter = new SuiteHtmlFormatter(context, page, getHtmlPageFactory()) {
-            protected void writeData(String output) throws Exception {
+            @Override
+            protected void writeData(String output) {
                 addToResponse(output);
             }
         };
         formatters.add(formatter);
     }
 
-    protected void addTestHistoryFormatter() throws Exception {
+    @Override
+    protected void addTestHistoryFormatter(FitNesseContext context) {
         HistoryWriterFactory source = new HistoryWriterFactory();
         formatters.add(new PageHistoryFormatter(context, page, source));
         formatters.add(new SuiteHistoryFormatter(context, page, source));
     }
 
-    protected void performExecution() throws Exception {
+    @Override
+    protected void performExecution(FitNesseContext context) throws Exception {
         SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
         SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
         MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);

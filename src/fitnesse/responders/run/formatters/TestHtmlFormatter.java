@@ -11,6 +11,8 @@ import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.*;
 import util.TimeMeasurement;
 
+import java.io.IOException;
+
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public abstract class TestHtmlFormatter extends BaseFormatter {
@@ -24,7 +26,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     private static final String TESTING_INTERRUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
     public TestHtmlFormatter(FitNesseContext context, final WikiPage page,
-                             final HtmlPageFactory pageFactory) throws Exception {
+                             final HtmlPageFactory pageFactory) {
         super(context, page);
         this.pageFactory = pageFactory;
     }
@@ -35,7 +37,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
         super(context, null);
     }
 
-    protected abstract void writeData(String output) throws Exception;
+    protected abstract void writeData(String output) throws IOException;
 
     @Override
     public void writeHead(String pageType) throws Exception {
@@ -76,15 +78,14 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     }
 
     @Override
-    public void testComplete(WikiPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
-            throws Exception {
+    public void testComplete(WikiPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
         super.testComplete(testPage, testSummary, timeMeasurement);
         latestTestTime = timeMeasurement;
 
         processTestResults(getRelativeName(testPage), testSummary);
     }
 
-    protected String getRelativeName(WikiPage testPage) throws Exception {
+    protected String getRelativeName(WikiPage testPage) {
         PageCrawler pageCrawler = getPage().getPageCrawler();
         String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
         if (isEmpty(relativeName)) {
@@ -93,7 +94,7 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
         return relativeName;
     }
 
-    public void processTestResults(String relativeName, TestSummary testSummary) throws Exception {
+    public void processTestResults(String relativeName, TestSummary testSummary) throws IOException {
         getAssertionCounts().add(testSummary);
     }
 
@@ -229,9 +230,9 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
     }
 
     @Override
-    public void errorOccured() {
+    public void errorOccurred() {
         wasInterrupted = true;
         latestTestTime = null;
-        super.errorOccured();
+        super.errorOccurred();
     }
 }

@@ -10,7 +10,7 @@ import util.TimeMeasurement;
 
 public class PrintTestListener implements ResultsListener {
     @Override
-    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
         System.out.println("--complete: " + totalTimeMeasurement.elapsedSeconds() + " seconds--");
     }
 
@@ -19,27 +19,26 @@ public class PrintTestListener implements ResultsListener {
     }
 
     @Override
-    public void errorOccured() {
+    public void errorOccurred() {
     }
 
     @Override
-    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) {
     }
 
     @Override
-    public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
-            throws Exception {
+    public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
     }
 
     @Override
-    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
         System.out.println(new WikiPagePath(test).toString() + " r " + testSummary.right + " w "
                 + testSummary.wrong + " " + testSummary.exceptions
                 + " " + timeMeasurement.elapsedSeconds() + " seconds");
     }
 
     @Override
-    public void testOutputChunk(String output) throws Exception {
+    public void testOutputChunk(String output) {
     }
 
     @Override

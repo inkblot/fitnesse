@@ -48,7 +48,7 @@ public class JUnitXMLTestListener implements ResultsListener {
     }
 
     @Override
-    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
     }
 
     @Override
@@ -56,29 +56,27 @@ public class JUnitXMLTestListener implements ResultsListener {
     }
 
     @Override
-    public void errorOccured() {
+    public void errorOccurred() {
     }
 
     @Override
-    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) {
     }
 
     @Override
-    public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log)
-            throws Exception {
+    public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
     }
 
     @Override
-    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
         recordTestResult(new WikiPagePath(test).toString(), testSummary, timeMeasurement.elapsed());
     }
 
     @Override
-    public void testOutputChunk(String output) throws Exception {
+    public void testOutputChunk(String output) {
     }
 
     @Override
-    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
-            throws Exception {
+    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
     }
 }

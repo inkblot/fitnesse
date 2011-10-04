@@ -13,6 +13,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
+import java.io.IOException;
 import java.net.SocketException;
 
 public abstract class ChunkingResponder implements Responder {
@@ -21,7 +22,6 @@ public abstract class ChunkingResponder implements Responder {
     protected WikiPagePath path;
     protected Request request;
     protected ChunkedResponse response;
-    protected FitNesseContext context;
     private boolean dontChunk = false;
     private final HtmlPageFactory htmlPageFactory;
 
@@ -30,7 +30,6 @@ public abstract class ChunkingResponder implements Responder {
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        this.context = context;
         this.request = request;
         this.root = context.root;
         String format = (String) request.getInput("format");
@@ -41,7 +40,7 @@ public abstract class ChunkingResponder implements Responder {
         if (page == null && shouldRespondWith404())
             return pageNotFoundResponse(context, request);
 
-        Thread respondingThread = new Thread(new RespondingRunnable(), getClass() + ": Responding Thread");
+        Thread respondingThread = new Thread(new RespondingRunnable(context), getClass() + ": Responding Thread");
         respondingThread.start();
 
         return response;
@@ -51,7 +50,7 @@ public abstract class ChunkingResponder implements Responder {
         dontChunk = true;
     }
 
-    private void getRequestedPage(Request request) throws Exception {
+    private void getRequestedPage(Request request) throws IOException {
         path = PathParser.parse(request.getResource());
         page = getPageCrawler().getPage(root, path);
     }
@@ -68,9 +67,9 @@ public abstract class ChunkingResponder implements Responder {
         return true;
     }
 
-    private void startSending() {
+    private void startSending(FitNesseContext context) {
         try {
-            doSending();
+            doSending(context);
         } catch (SocketException e) {
             // normal. someone stopped the request.
         } catch (Exception e) {
@@ -87,6 +86,12 @@ public abstract class ChunkingResponder implements Responder {
     }
 
     protected class RespondingRunnable implements Runnable {
+        private final FitNesseContext context;
+
+        public RespondingRunnable(FitNesseContext context) {
+            this.context = context;
+        }
+
         public void run() {
             while (!response.isReadyToSend()) {
                 try {
@@ -98,7 +103,7 @@ public abstract class ChunkingResponder implements Responder {
                     //ok
                 }
             }
-            startSending();
+            startSending(this.context);
         }
     }
 
@@ -106,5 +111,5 @@ public abstract class ChunkingResponder implements Responder {
         this.request = request;
     }
 
-    protected abstract void doSending() throws Exception;
+    protected abstract void doSending(FitNesseContext context) throws Exception;
 }

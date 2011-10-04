@@ -55,7 +55,7 @@ public class TestFormatterTest extends FitnesseBaseTestCase {
     public void testXmlFormatter() throws Exception {
         assertShouldCountTestResults(new XmlFormatter(context, page, writerFactory) {
             @Override
-            protected void writeResults() throws Exception {
+            protected void writeResults() {
             }
         });
     }
@@ -64,7 +64,7 @@ public class TestFormatterTest extends FitnesseBaseTestCase {
     public void testTestHtmlFormatter() throws Exception {
         assertShouldCountTestResults(new TestHtmlFormatter(context, testPage, mock(HtmlPageFactory.class)) {
             @Override
-            protected void writeData(String output) throws Exception {
+            protected void writeData(String output) {
             }
         });
     }
@@ -73,7 +73,7 @@ public class TestFormatterTest extends FitnesseBaseTestCase {
     public void testPageHistoryFormatter() throws Exception {
         assertShouldCountTestResults(new PageHistoryFormatter(context, testPage, writerFactory) {
             @Override
-            protected void writeResults() throws Exception {
+            protected void writeResults() {
             }
         });
     }

@@ -52,7 +52,7 @@ public class XmlUtil {
         return newDocument(is);
     }
 
-    public static Element getElementByTagName(Element element, String name) throws Exception {
+    public static Element getElementByTagName(Element element, String name) {
         NodeList nodes = element.getElementsByTagName(name);
         if (nodes.getLength() == 0)
             return null;

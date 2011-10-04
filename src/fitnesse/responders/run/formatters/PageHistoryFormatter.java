@@ -9,7 +9,7 @@ import util.TimeMeasurement;
 public class PageHistoryFormatter extends XmlFormatter {
     private WikiPage historyPage;
 
-    public PageHistoryFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) throws Exception {
+    public PageHistoryFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
         super(context, page, writerFactory);
     }
 
@@ -28,7 +28,7 @@ public class PageHistoryFormatter extends XmlFormatter {
     }
 
     @Override
-    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) {
         setTotalRunTimeOnReport(totalTimeMeasurement);
     }
 

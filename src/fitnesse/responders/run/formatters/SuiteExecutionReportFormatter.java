@@ -16,7 +16,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
     private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
     protected SuiteExecutionReport suiteExecutionReport;
 
-    public SuiteExecutionReportFormatter(FitNesseContext context, final WikiPage page) throws Exception {
+    public SuiteExecutionReportFormatter(FitNesseContext context, final WikiPage page) {
         super(context, page);
         suiteExecutionReport = new SuiteExecutionReport();
         suiteExecutionReport.version = new FitNesseVersion().toString();
@@ -54,7 +54,7 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
     }
 
     @Override
-    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) {
         referenceToCurrentTest.setTestSummary(testSummary);
         referenceToCurrentTest.setRunTimeInMillis(timeMeasurement.elapsed());
         suiteExecutionReport.addPageHistoryReference(referenceToCurrentTest);

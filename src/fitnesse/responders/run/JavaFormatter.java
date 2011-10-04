@@ -99,7 +99,7 @@ public class JavaFormatter extends BaseFormatter {
 
     }
 
-    public String getFullPath(final WikiPage wikiPage) throws Exception {
+    public String getFullPath(final WikiPage wikiPage) {
         return new WikiPagePath(wikiPage).toString();
     }
 
@@ -196,7 +196,7 @@ public class JavaFormatter extends BaseFormatter {
     }
 
     public String summaryRow(String testName, TestSummary testSummary) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("<tr class=\"").append(getCssClass(testSummary)).append("\"><td>").append(
                 "<a href=\"").append(testName).append(".html\">").append(testName).append("</a>").append(
                 "</td><td>").append(testSummary.right).append("</td><td>").append(testSummary.wrong)

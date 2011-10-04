@@ -25,7 +25,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     private WikiPage currentTest = null;
 
     private TestSystemGroup testSystemGroup = null;
-    private TestSystem currentTestSystem = null;
     private boolean isStopped = false;
     private String stopId = null;
     private PageListSetUpTearDownSurrounder surrounder;
@@ -94,8 +93,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         TestSystem testSystem = null;
         synchronized (this) {
             if (!isStopped) {
-                currentTestSystem = testSystemGroup.startTestSystem(descriptor, buildClassPath());
-                testSystem = currentTestSystem;
+                testSystem = testSystemGroup.startTestSystem(descriptor, buildClassPath());
                 resultsListener.testSystemStarted(testSystem, descriptor.testSystemName, descriptor.testRunner);
             }
         }
@@ -111,7 +109,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
                 if (!isStopped) {
                     testSystem.bye();
                 }
-                currentTestSystem = null;
             }
         }
     }
@@ -224,7 +221,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
     public void exceptionOccurred(Throwable e) {
         try {
-            resultsListener.errorOccured();
+            resultsListener.errorOccurred();
             stop();
         } catch (Exception e1) {
             if (isNotStopped()) {

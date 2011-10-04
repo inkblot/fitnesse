@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -29,11 +30,13 @@ public abstract class ResultResponder extends ChunkingResponder implements
         super(htmlPageFactory);
     }
 
+    @Override
     protected PageCrawler getPageCrawler() {
         return root.getPageCrawler();
     }
 
-    protected void doSending() throws Exception {
+    @Override
+    protected void doSending(FitNesseContext context) throws Exception {
         response.add(createSearchResultsHeader());
 
         startSearching();
@@ -50,7 +53,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
         Template template = VelocityFactory.getVelocityEngine().getTemplate(
                 "fitnesse/templates/searchResultsFooter.vm");
         if (page == null)
-            page = context.root.getPageCrawler().getPage(context.root, PathParser.parse("FrontPage"));
+            page = root.getPageCrawler().getPage(root, PathParser.parse("FrontPage"));
         velocityContext.put("hits", hits);
         if (isEmpty(request.getQueryString()))
             velocityContext.put("request", request.getBody());
@@ -73,10 +76,12 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
         velocityContext.put("page_title", getTitle());
         velocityContext.put("pageTitle", new PageTitle(getTitle()) {
+            @Override
             public String getTitle() {
                 return "search";
             }
 
+            @Override
             public String getLink() {
                 return "search";
             }
@@ -91,6 +96,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
         return "/^(\\w+) (jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) (\\d+) (\\d+).(\\d+).(\\d+) (\\w+) (\\d+)$/";
     }
 
+    @Override
     public void hit(WikiPage page) throws IOException {
         hits++;
         response.add(createSearchResultsEntry(page));
@@ -129,6 +135,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
         hits = 0;
     }
 
+    @Override
     public SecureOperation getSecureOperation() {
         return new SecureReadOperation();
     }

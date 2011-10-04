@@ -32,7 +32,7 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         context = makeContext();
         responder = new ChunkingResponder(htmlPageFactory) {
-            protected void doSending() throws Exception {
+            protected void doSending(FitNesseContext context) throws Exception {
                 throw exception;
             }
         };

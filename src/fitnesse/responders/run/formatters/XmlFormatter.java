@@ -19,13 +19,14 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import util.TimeMeasurement;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
 public class XmlFormatter extends BaseFormatter {
     public interface WriterFactory {
-        Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception;
+        Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException;
     }
 
     private WriterFactory writerFactory;
@@ -35,7 +36,7 @@ public class XmlFormatter extends BaseFormatter {
     protected TestExecutionReport testResponse = new TestExecutionReport();
     protected TestSummary finalSummary = new TestSummary();
 
-    public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) throws Exception {
+    public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
         super(context, page);
         this.writerFactory = writerFactory;
     }
@@ -57,14 +58,12 @@ public class XmlFormatter extends BaseFormatter {
     }
 
     @Override
-    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement)
-            throws Exception {
+    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
         super.testComplete(test, testSummary, timeMeasurement);
         processTestResults(test.getName(), testSummary, timeMeasurement);
     }
 
-    public void processTestResults(final String relativeTestName, TestSummary testSummary, TimeMeasurement timeMeasurement)
-            throws Exception {
+    public void processTestResults(final String relativeTestName, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
         finalSummary = new TestSummary(testSummary);
         TestExecutionReport.TestResult currentResult = newTestResult();
         testResponse.results.add(currentResult);

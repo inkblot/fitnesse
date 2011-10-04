@@ -5,6 +5,8 @@ package fitnesse.responders.run;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 
+import java.io.IOException;
+
 public interface ResultsListener {
 
     public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception;
@@ -21,5 +23,5 @@ public interface ResultsListener {
 
     public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception;
 
-    public void errorOccured();
+    public void errorOccurred();
 }

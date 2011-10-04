@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
@@ -31,7 +32,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    protected void doSending() throws Exception {
+    protected void doSending(FitNesseContext context) throws Exception {
         data = page.getData();
         HtmlPage html = makeHtml();
         response.add(html.preDivision);

@@ -31,7 +31,7 @@ public class SuiteHtmlFormatterTest extends FitnesseBaseTestCase {
             }
 
             @Override
-            protected void writeData(String output) throws Exception {
+            protected void writeData(String output) {
                 pageBuffer.append(output);
             }
         };

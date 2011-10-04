@@ -6,6 +6,8 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 
+import java.io.IOException;
+
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class SuiteXmlFormatter extends XmlFormatter {
@@ -25,8 +27,7 @@ public class SuiteXmlFormatter extends XmlFormatter {
     }
 
     @Override
-    public void testComplete(WikiPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement)
-            throws Exception {
+    public void testComplete(WikiPage testPage, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
         PageCrawler pageCrawler = getPage().getPageCrawler();
         String relativeName = pageCrawler.getRelativeName(getPage(), testPage);
         if (isEmpty(relativeName))

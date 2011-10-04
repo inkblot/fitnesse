@@ -18,7 +18,7 @@ public abstract class ExecutionReport {
     protected Document xmlDoc;
     private long totalRunTimeInMillis = 0;
 
-    protected ExecutionReport(Document xmlDocument) throws Exception {
+    protected ExecutionReport(Document xmlDocument) {
         xmlDoc = xmlDocument;
     }
 

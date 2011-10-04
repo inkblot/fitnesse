@@ -96,7 +96,7 @@ public class XmlFormatterTest extends FitnesseBaseTestCase {
         WriterFactory writerFactory = mock(WriterFactory.class);
         XmlFormatter formatter = new XmlFormatter(context, page, writerFactory) {
             @Override
-            protected void writeResults() throws Exception {
+            protected void writeResults() {
             }
         };
 

@@ -31,7 +31,7 @@ public abstract class BaseFormatter implements ResultsListener {
     }
 
     @Override
-    public void errorOccured() {
+    public void errorOccurred() {
         try {
             allTestingComplete(new TimeMeasurement().start().stop());
         } catch (Exception e) {
@@ -82,15 +82,15 @@ class NullFormatter extends BaseFormatter {
     }
 
     @Override
-    public void errorOccured() {
+    public void errorOccurred() {
     }
 
     @Override
-    public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
+    public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) {
     }
 
     @Override
-    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
     }
 
     @Override
@@ -98,7 +98,7 @@ class NullFormatter extends BaseFormatter {
     }
 
     @Override
-    public void testOutputChunk(String output) throws Exception {
+    public void testOutputChunk(String output) {
     }
 
     @Override
@@ -106,6 +106,6 @@ class NullFormatter extends BaseFormatter {
     }
 
     @Override
-    public void writeHead(String pageType) throws Exception {
+    public void writeHead(String pageType) {
     }
 }

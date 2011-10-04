@@ -30,7 +30,7 @@ public class TestHtmlFormatterTest extends FitnesseBaseTestCase {
 
         formatter = new TestHtmlFormatter(context, page, new HtmlPageFactory()) {
             @Override
-            protected void writeData(String output) throws Exception {
+            protected void writeData(String output) {
                 pageBuffer.append(output);
             }
         };
@@ -120,7 +120,7 @@ public class TestHtmlFormatterTest extends FitnesseBaseTestCase {
         formatter.announceNumberTestsToRun(1);
         formatter.newTestStarted(page, timeMeasurement.start());
         pageBuffer.setLength(0);
-        formatter.errorOccured();
+        formatter.errorOccurred();
         //assert stop button added
         assertSubString("Testing was interupted", pageBuffer.toString());
         //assert stop button removed

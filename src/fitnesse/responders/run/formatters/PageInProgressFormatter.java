@@ -23,16 +23,13 @@ public class PageInProgressFormatter extends NullFormatter {
         FileUtil.createFile(getLockFileName(test), "");
     }
 
-    ;
-
     @Override
     public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
         FileUtil.deleteFile(getLockFileName(test));
     }
 
-    ;
     /*@Override
-    public void errorOccured() {
+    public void errorOccurred() {
       FileUtil.deleteFile(getLockFileName());
     };*/
 }

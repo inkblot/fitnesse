@@ -22,7 +22,7 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
     private Writer writer;
     private boolean includeHtml = false;
 
-    public CachingSuiteXmlFormatter(FitNesseContext context, WikiPage page, Writer writer) throws Exception {
+    public CachingSuiteXmlFormatter(FitNesseContext context, WikiPage page, Writer writer) {
         super(context, page);
         velocityContext = new VelocityContext();
         velocityEngine = VelocityFactory.getVelocityEngine();

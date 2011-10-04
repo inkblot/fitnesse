@@ -11,6 +11,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.formatters.SuiteHtmlFormatter;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 public class HtmlResultFormatter implements ResultFormatter {
@@ -34,22 +35,21 @@ public class HtmlResultFormatter implements ResultFormatter {
         suiteFormatter.writeHead(null);
     }
 
-    private SuiteHtmlFormatter createCustomFormatter() throws Exception {
-        SuiteHtmlFormatter formatter = new SuiteHtmlFormatter(context) {
+    private SuiteHtmlFormatter createCustomFormatter() {
+        return new SuiteHtmlFormatter(context) {
             @Override
-            protected void writeData(String output) throws Exception {
+            protected void writeData(String output) throws IOException {
                 buffer.append(output);
             }
 
             @Override
-            protected HtmlPage buildHtml(String pageType) throws Exception {
+            protected HtmlPage buildHtml(String pageType) {
                 return htmlPage;
             }
         };
-        return formatter;
     }
 
-    private void createPage(HtmlPageFactory pageFactory, String rootPath) throws Exception {
+    private void createPage(HtmlPageFactory pageFactory, String rootPath) {
         htmlPage = pageFactory.newPage();
         htmlPage.head.use(makeBaseTag());
         htmlPage.head.add(makeContentTypeMetaTag());
@@ -74,7 +74,7 @@ public class HtmlResultFormatter implements ResultFormatter {
 
     private HtmlTag makeBaseTag() {
         HtmlTag base = new HtmlTag("base");
-        StringBuffer href = new StringBuffer("http://");
+        StringBuilder href = new StringBuilder("http://");
         href.append(host);
         href.append("/");
         base.addAttribute("href", href.toString());

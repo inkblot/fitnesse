@@ -14,6 +14,8 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import util.TimeMeasurement;
 
+import java.io.IOException;
+
 public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     private static final String cssSuffix1 = "1";
     private static final String cssSuffix2 = "2";
@@ -28,7 +30,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     private int totalTests = 1;
 
 
-    public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, HtmlPageFactory pageFactory) throws Exception {
+    public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, HtmlPageFactory pageFactory) {
         super(context, page, pageFactory);
     }
 
@@ -121,7 +123,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     }
 
     @Override
-    public void processTestResults(String relativeName, TestSummary testSummary) throws Exception {
+    public void processTestResults(String relativeName, TestSummary testSummary) throws IOException {
         finishOutputForTest();
 
         getAssertionCounts().add(testSummary);
@@ -148,7 +150,7 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
         return pageCounts;
     }
 
-    private void finishOutputForTest() throws Exception {
+    private void finishOutputForTest() throws IOException {
         writeData("</div>" + HtmlTag.endl);
     }
 

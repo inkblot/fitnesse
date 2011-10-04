@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -43,13 +44,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         formatters = new CompositeFormatter();
     }
 
-    protected void doSending() throws Exception {
+    @Override
+    protected void doSending(FitNesseContext context) throws Exception {
         checkArguments();
         data = page.getData();
 
-        createFormatterAndWriteHead();
+        createFormatterAndWriteHead(context);
         sendPreTestNotification();
-        performExecution();
+        performExecution(context);
 
         int exitCode = formatters.getErrorCount();
         closeHtmlResponse(exitCode);
@@ -60,17 +62,17 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         remoteDebug |= request.hasInput("remote_debug");
     }
 
-    protected void createFormatterAndWriteHead() throws Exception {
+    protected void createFormatterAndWriteHead(FitNesseContext context) throws Exception {
         if (response.isXmlFormat())
-            addXmlFormatter();
+            addXmlFormatter(context);
         else if (response.isTextFormat())
             addTextFormatter();
         else if (response.isJavaFormat())
             addJavaFormatter();
         else
-            addHtmlFormatter();
+            addHtmlFormatter(context);
         if (!request.hasInput("nohistory"))
-            addTestHistoryFormatter();
+            addTestHistoryFormatter(context);
         addTestInProgressFormatter();
         formatters.writeHead(getTitle());
     }
@@ -79,8 +81,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         return "Test Results";
     }
 
-    void addXmlFormatter() throws Exception {
+    void addXmlFormatter(FitNesseContext context) {
         XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
+            @Override
             public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
                 return makeResponseWriter();
             }
@@ -98,6 +101,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     protected Writer makeResponseWriter() {
         return new Writer() {
+            @Override
             public void write(char[] buf, int off, int len) {
                 String fragment = new String(buf, off, len);
                 try {
@@ -107,26 +111,28 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
                 }
             }
 
+            @Override
             public void flush() {
             }
 
+            @Override
             public void close() {
             }
         };
     }
 
 
-    void addHtmlFormatter() throws Exception {
+    void addHtmlFormatter(FitNesseContext context) {
         BaseFormatter formatter = new TestHtmlFormatter(context, page, getHtmlPageFactory()) {
             @Override
-            protected void writeData(String output) throws Exception {
+            protected void writeData(String output) {
                 addToResponse(output);
             }
         };
         formatters.add(formatter);
     }
 
-    protected void addTestHistoryFormatter() throws Exception {
+    protected void addTestHistoryFormatter(FitNesseContext context) {
         HistoryWriterFactory writerFactory = new HistoryWriterFactory();
         formatters.add(new PageHistoryFormatter(context, page, writerFactory));
     }
@@ -141,7 +147,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         }
     }
 
-    protected void performExecution() throws Exception {
+    protected void performExecution(FitNesseContext context) throws Exception {
         List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
         MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);
@@ -158,6 +164,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         return page.getData().getContent().length() == 0;
     }
 
+    @Override
     public SecureOperation getSecureOperation() {
         return new SecureTestOperation();
     }
@@ -175,7 +182,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         return fastTest;
     }
 
-    public void addToResponse(String output) throws Exception {
+    public void addToResponse(String output) {
         if (!isClosed()) {
             response.add(output);
         }
@@ -210,7 +217,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
         private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
-        public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws Exception {
+        @Override
+        public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
             File resultPath = new File(PageHistory.makePageHistoryFileName(context, page, counts, time));
             File resultDirectory = new File(resultPath.getParent());
             resultDirectory.mkdirs();

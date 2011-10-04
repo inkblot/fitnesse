@@ -11,7 +11,6 @@ import fitnesse.components.SearchObserver;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.templateUtilities.PageTitle;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.Template;
@@ -31,21 +30,16 @@ public abstract class ResultResponder extends ChunkingResponder implements
     }
 
     @Override
-    protected PageCrawler getPageCrawler() {
-        return root.getPageCrawler();
-    }
-
-    @Override
-    protected void doSending(FitNesseContext context) throws Exception {
+    protected void doSending(FitNesseContext context, WikiPage root) throws Exception {
         response.add(createSearchResultsHeader());
 
-        startSearching();
+        startSearching(root);
 
-        response.add(createSearchResultsFooter());
+        response.add(createSearchResultsFooter(root));
         response.closeAll();
     }
 
-    private String createSearchResultsFooter() throws Exception {
+    private String createSearchResultsFooter(WikiPage root) throws Exception {
         VelocityContext velocityContext = new VelocityContext();
 
         StringWriter writer = new StringWriter();
@@ -131,7 +125,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
     protected abstract String getTitle();
 
-    protected void startSearching() throws IOException {
+    protected void startSearching(WikiPage root) throws IOException {
         hits = 0;
     }
 

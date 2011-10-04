@@ -32,7 +32,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    protected void doSending(FitNesseContext context) throws Exception {
+    protected void doSending(FitNesseContext context, WikiPage root) throws Exception {
         data = page.getData();
         HtmlPage html = makeHtml();
         response.add(html.preDivision);
@@ -215,10 +215,6 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         html.main.add(HtmlPage.BreakPoint);
         html.divide();
         return html;
-    }
-
-    protected PageCrawler getPageCrawler() {
-        return root.getPageCrawler();
     }
 
     private void addRowToResponse(String status) throws Exception {

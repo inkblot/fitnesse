@@ -5,6 +5,7 @@ package fitnesse.responders.search;
 import com.google.inject.Inject;
 import fitnesse.components.WhereUsedPageFinder;
 import fitnesse.html.HtmlPageFactory;
+import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
 
@@ -15,8 +16,8 @@ public class WhereUsedResponder extends ResultResponder {
         super(htmlPageFactory);
     }
 
-    protected void startSearching() throws IOException {
-        super.startSearching();
+    protected void startSearching(WikiPage root) throws IOException {
+        super.startSearching(root);
         new WhereUsedPageFinder(page, this).search(root);
     }
 

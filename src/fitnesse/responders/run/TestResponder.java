@@ -45,13 +45,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
 
     @Override
-    protected void doSending(FitNesseContext context) throws Exception {
+    protected void doSending(FitNesseContext context, WikiPage root) throws Exception {
         checkArguments();
         data = page.getData();
 
         createFormatterAndWriteHead(context);
         sendPreTestNotification();
-        performExecution(context);
+        performExecution(context, root);
 
         int exitCode = formatters.getErrorCount();
         closeHtmlResponse(exitCode);
@@ -147,7 +147,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         }
     }
 
-    protected void performExecution(FitNesseContext context) throws Exception {
+    protected void performExecution(FitNesseContext context, WikiPage root) throws Exception {
         List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
         MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);

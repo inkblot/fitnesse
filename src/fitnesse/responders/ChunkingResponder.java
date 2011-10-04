@@ -8,16 +8,13 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 
-import java.io.IOException;
 import java.net.SocketException;
 
 public abstract class ChunkingResponder implements Responder {
-    protected WikiPage root;
     public WikiPage page;
     protected WikiPagePath path;
     protected Request request;
@@ -31,16 +28,16 @@ public abstract class ChunkingResponder implements Responder {
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         this.request = request;
-        this.root = context.root;
         String format = (String) request.getInput("format");
         response = new ChunkedResponse(format);
         if (dontChunk || context.doNotChunk || request.hasInput("nochunk"))
             response.turnOffChunking();
-        getRequestedPage(request);
+        path = PathParser.parse(request.getResource());
+        page = context.root.getPageCrawler().getPage(context.root, path);
         if (page == null && shouldRespondWith404())
             return pageNotFoundResponse(context, request);
 
-        Thread respondingThread = new Thread(new RespondingRunnable(context), getClass() + ": Responding Thread");
+        Thread respondingThread = new Thread(new RespondingRunnable(context, context.root), getClass() + ": Responding Thread");
         respondingThread.start();
 
         return response;
@@ -48,15 +45,6 @@ public abstract class ChunkingResponder implements Responder {
 
     public void turnOffChunking() {
         dontChunk = true;
-    }
-
-    private void getRequestedPage(Request request) throws IOException {
-        path = PathParser.parse(request.getResource());
-        page = getPageCrawler().getPage(root, path);
-    }
-
-    protected PageCrawler getPageCrawler() {
-        return root.getPageCrawler();
     }
 
     private Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
@@ -67,9 +55,9 @@ public abstract class ChunkingResponder implements Responder {
         return true;
     }
 
-    private void startSending(FitNesseContext context) {
+    private void startSending(FitNesseContext context, WikiPage root) {
         try {
-            doSending(context);
+            doSending(context, root);
         } catch (SocketException e) {
             // normal. someone stopped the request.
         } catch (Exception e) {
@@ -87,9 +75,11 @@ public abstract class ChunkingResponder implements Responder {
 
     protected class RespondingRunnable implements Runnable {
         private final FitNesseContext context;
+        private final WikiPage root;
 
-        public RespondingRunnable(FitNesseContext context) {
+        public RespondingRunnable(FitNesseContext context, WikiPage root) {
             this.context = context;
+            this.root = root;
         }
 
         public void run() {
@@ -103,7 +93,7 @@ public abstract class ChunkingResponder implements Responder {
                     //ok
                 }
             }
-            startSending(this.context);
+            startSending(this.context, this.root);
         }
     }
 
@@ -111,5 +101,5 @@ public abstract class ChunkingResponder implements Responder {
         this.request = request;
     }
 
-    protected abstract void doSending(FitNesseContext context) throws Exception;
+    protected abstract void doSending(FitNesseContext context, WikiPage root) throws Exception;
 }

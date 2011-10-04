@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import fitnesse.components.RegularExpressionWikiPageFinder;
 import fitnesse.components.TitleWikiPageFinder;
 import fitnesse.html.HtmlPageFactory;
+import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -39,8 +40,8 @@ public class SearchResponder extends ResultResponder {
         return getSearchType() + " Search Results for '" + getSearchString() + "'";
     }
 
-    protected void startSearching() throws IOException {
-        super.startSearching();
+    protected void startSearching(WikiPage root) throws IOException {
+        super.startSearching(root);
         String searchString = getSearchString();
         if (isNotEmpty(searchString)) {
             String searchType = getSearchType();

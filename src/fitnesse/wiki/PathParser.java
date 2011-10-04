@@ -12,7 +12,6 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 public class PathParser {
     public static final String PATH_SEPARATOR = ".";
 
-    public static final String PATH_PREFIX_CHARS = ".<>^"; //..."^" is deprecated
     private static final Pattern wikiWordPattern = Pattern.compile(WikiWordWidget.REGEXP);
     private WikiPagePath path;
 

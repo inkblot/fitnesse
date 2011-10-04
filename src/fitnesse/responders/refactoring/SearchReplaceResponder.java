@@ -38,8 +38,8 @@ public class SearchReplaceResponder extends ResultResponder {
         super.hit(page);
     }
 
-    protected void startSearching() throws IOException {
-        super.startSearching();
+    protected void startSearching(WikiPage root) throws IOException {
+        super.startSearching(root);
         String searchString = getSearchString();
         String replacementString = getReplacementString();
 

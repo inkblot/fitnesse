@@ -8,6 +8,7 @@ import fitnesse.components.PageFinder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,8 +100,8 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     }
 
     @Override
-    protected void startSearching() throws IOException {
-        super.startSearching();
+    protected void startSearching(WikiPage root) throws IOException {
+        super.startSearching(root);
         List<PageType> pageTypes = getPageTypesFromInput(request);
         Map<String, Boolean> attributes = getAttributesFromInput(request);
         String suites = getSuitesFromInput(request);

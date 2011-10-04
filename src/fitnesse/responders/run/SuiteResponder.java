@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.formatters.*;
+import fitnesse.wiki.WikiPage;
 
 public class SuiteResponder extends TestResponder {
     private boolean includeHtml;
@@ -53,7 +54,7 @@ public class SuiteResponder extends TestResponder {
     }
 
     @Override
-    protected void performExecution(FitNesseContext context) throws Exception {
+    protected void performExecution(FitNesseContext context, WikiPage root) throws Exception {
         SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
         SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
         MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);

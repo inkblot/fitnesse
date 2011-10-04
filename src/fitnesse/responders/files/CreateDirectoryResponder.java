@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -13,12 +15,19 @@ import fitnesse.http.SimpleResponse;
 import java.io.File;
 
 public class CreateDirectoryResponder implements SecureResponder {
+    private final String rootPagePath;
+
+    @Inject
+    public CreateDirectoryResponder(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath) {
+        this.rootPagePath = rootPagePath;
+    }
+
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
 
         String resource = request.getResource();
         String dirname = (String) request.getInput("dirname");
-        String path = context.rootPagePath + "/" + resource + dirname;
+        String path = rootPagePath + "/" + resource + dirname;
         File file = new File(path);
         if (!file.exists())
             file.mkdir();

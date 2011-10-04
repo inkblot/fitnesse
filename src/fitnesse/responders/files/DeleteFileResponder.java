@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -15,12 +17,18 @@ import java.io.File;
 
 public class DeleteFileResponder implements SecureResponder {
     public String resource;
+    private final String rootPagePath;
+
+    @Inject
+    public DeleteFileResponder(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath) {
+        this.rootPagePath = rootPagePath;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         Response response = new SimpleResponse();
         resource = request.getResource();
         String filename = (String) request.getInput("filename");
-        String path = context.rootPagePath + "/" + resource + filename;
+        String path = rootPagePath + "/" + resource + filename;
         File file = new File(path);
 
         if (file.isDirectory())

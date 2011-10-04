@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -14,6 +16,12 @@ import java.io.File;
 
 public class RenameFileResponder implements SecureResponder {
     String newFilename;
+    private final String rootPagePath;
+
+    @Inject
+    public RenameFileResponder(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath) {
+        this.rootPagePath = rootPagePath;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         Response response = new SimpleResponse();
@@ -22,7 +30,7 @@ public class RenameFileResponder implements SecureResponder {
         newFilename = (String) request.getInput("newName");
         newFilename = newFilename.trim();
 
-        String path = context.rootPagePath + "/" + resource;
+        String path = rootPagePath + "/" + resource;
         File file = new File(path + filename);
         file.renameTo(new File(path + newFilename));
         response.redirect("/" + resource);

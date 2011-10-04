@@ -31,19 +31,15 @@ public class PurgeHistoryResponder implements SecureResponder {
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        initializeResponder(context);
+        if (resultsDirectory == null)
+            resultsDirectory = context.getTestHistoryDirectory();
+        todaysDate = clock.currentClockDate();
         if (hasValidInputs(request)) {
             purgeHistory(request);
             return makeValidResponse();
         } else {
             return makeErrorResponse(context, request);
         }
-    }
-
-    private void initializeResponder(FitNesseContext context) {
-        if (resultsDirectory == null)
-            resultsDirectory = context.getTestHistoryDirectory();
-        todaysDate = clock.currentClockDate();
     }
 
     private SimpleResponse makeValidResponse() throws Exception {

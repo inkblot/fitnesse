@@ -4,7 +4,6 @@ package fitnesse.responders.refactoring;
 
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.MovedPageReferenceRenamer;
 import fitnesse.components.ReferenceRenamer;
@@ -14,6 +13,8 @@ import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+
+import java.io.IOException;
 
 public class MovePageResponder extends PageMovementResponder implements SecureResponder {
 
@@ -25,15 +26,15 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
     }
 
     @Override
-    protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception {
-        PageCrawler crawler = context.root.getPageCrawler();
+    protected boolean getAndValidateNewParentPage(Request request, WikiPage root) throws IOException {
+        PageCrawler crawler = root.getPageCrawler();
 
         newParentName = getNameOfNewParent(request);
         if (newParentName == null)
             return false;
 
         newParentPath = PathParser.parse(newParentName);
-        newParentPage = crawler.getPage(context.root, newParentPath);
+        newParentPage = crawler.getPage(root, newParentPath);
 
         return (newParentPage != null);
     }
@@ -68,8 +69,8 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
     }
 
     @Override
-    protected ReferenceRenamer getReferenceRenamer(FitNesseContext context) throws Exception {
-        return new MovedPageReferenceRenamer(context.root, oldRefactoredPage, newParentName);
+    protected ReferenceRenamer getReferenceRenamer(WikiPage root) {
+        return new MovedPageReferenceRenamer(root, oldRefactoredPage, newParentName);
     }
 
     @Override
@@ -79,7 +80,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
     }
 
     @Override
-    protected String getNewPageName() throws Exception {
+    protected String getNewPageName() {
         return oldRefactoredPage.getName();
     }
 

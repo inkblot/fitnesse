@@ -16,17 +16,19 @@ import static org.junit.Assert.assertTrue;
 
 public class CreateDirectoryResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
+    private String rootPagePath;
 
     @Before
     public void setUp() throws Exception {
         context = makeContext();
+        rootPagePath = context.rootPagePath;
         assertTrue(new File(getRootPath(), "RooT").mkdir());
         assertTrue(new File(new File(getRootPath(), "RooT"), "files").mkdir());
     }
 
     @Test
     public void testMakeResponse() throws Exception {
-        CreateDirectoryResponder responder = new CreateDirectoryResponder();
+        CreateDirectoryResponder responder = new CreateDirectoryResponder(rootPagePath);
         MockRequest request = new MockRequest();
         request.addInput("dirname", "subdir");
         request.setResource("");

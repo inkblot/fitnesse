@@ -31,7 +31,6 @@ public class PageHistoryResponder implements SecureResponder {
     private SimpleResponse response;
     private PageHistory pageHistory;
     private VelocityContext velocityContext;
-    private FitNesseContext context;
     private PageTitle pageTitle;
     private final HtmlPageFactory htmlPageFactory;
 
@@ -41,11 +40,10 @@ public class PageHistoryResponder implements SecureResponder {
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        this.context = context;
-        prepareResponse(request);
+        prepareResponse(request, context.getTestHistoryDirectory());
 
         if (request.hasInput("resultDate")) {
-            return tryToMakeTestExecutionReport(request);
+            return tryToMakeTestExecutionReport(request, context);
         } else {
             return makePageHistoryResponse(request);
         }
@@ -66,7 +64,7 @@ public class PageHistoryResponder implements SecureResponder {
         return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
     }
 
-    private Response tryToMakeTestExecutionReport(Request request) throws Exception {
+    private Response tryToMakeTestExecutionReport(Request request, FitNesseContext context) throws Exception {
         Date resultDate;
         String date = (String) request.getInput("resultDate");
         if ("latest".equals(date)) {
@@ -76,17 +74,17 @@ public class PageHistoryResponder implements SecureResponder {
         }
         PageHistory.TestResultRecord testResultRecord = pageHistory.get(resultDate);
         try {
-            return makeTestExecutionReportResponse(request, resultDate, testResultRecord);
+            return makeTestExecutionReportResponse(request, resultDate, testResultRecord, context);
         } catch (Exception e) {
-            return makeCorruptFileResponse(request);
+            return makeCorruptFileResponse(request, context);
         }
     }
 
-    private Response makeCorruptFileResponse(Request request) throws Exception {
+    private Response makeCorruptFileResponse(Request request, FitNesseContext context) throws Exception {
         return new ErrorResponder("Corrupt Test Result File", htmlPageFactory).makeResponse(context, request);
     }
 
-    private Response makeTestExecutionReportResponse(Request request, Date resultDate, PageHistory.TestResultRecord testResultRecord) throws Exception {
+    private Response makeTestExecutionReportResponse(Request request, Date resultDate, PageHistory.TestResultRecord testResultRecord, FitNesseContext context) throws Exception {
         if (formatIsXML(request))
             return generateXMLResponse(testResultRecord.getFile());
         ExecutionReport report;
@@ -100,7 +98,7 @@ public class PageHistoryResponder implements SecureResponder {
             pageTitle.setPageType("Suite History");
             return generateHtmlSuiteExecutionResponse((SuiteExecutionReport) report);
         } else
-            return makeCorruptFileResponse(request);
+            return makeCorruptFileResponse(request, context);
     }
 
     private Response generateHtmlSuiteExecutionResponse(SuiteExecutionReport report) throws Exception {
@@ -128,10 +126,10 @@ public class PageHistoryResponder implements SecureResponder {
         return response;
     }
 
-    private void prepareResponse(Request request) {
+    private void prepareResponse(Request request, File testHistoryDirectory) {
         response = new SimpleResponse();
         if (resultsDirectory == null)
-            resultsDirectory = context.getTestHistoryDirectory();
+            resultsDirectory = testHistoryDirectory;
         TestHistory history = new TestHistory();
         String pageName = request.getResource();
         history.readPageHistoryDirectory(resultsDirectory, pageName);

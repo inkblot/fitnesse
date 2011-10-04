@@ -16,6 +16,7 @@ import util.XmlUtil;
 import util.XmlWriter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
@@ -29,18 +30,18 @@ public class RssResponder implements SecureResponder {
         Document rssDocument = buildRssHeader();
         XmlUtil.addTextNode(rssDocument, channelElement, "title", "FitNesse:");
 
-        contextPage = getContextPage(request, context);
+        contextPage = getContextPage(request, context.root);
         WikiPage recentChangesPage = context.root.getChildPage("RecentChanges");
         buildItemReportIfRecentChangesExists(recentChangesPage, rssDocument, request.getResource());
         return responseFrom(rssDocument);
     }
 
-    private WikiPage getContextPage(Request request, FitNesseContext context)
-            throws Exception {
+    private WikiPage getContextPage(Request request, WikiPage root)
+            throws IOException {
         String resource = request.getResource();
-        PageCrawler pageCrawler = context.root.getPageCrawler();
+        PageCrawler pageCrawler = root.getPageCrawler();
         WikiPagePath resourcePath = PathParser.parse(resource);
-        return pageCrawler.getPage(context.root, resourcePath);
+        return pageCrawler.getPage(root, resourcePath);
     }
 
     protected void buildItemReportIfRecentChangesExists(WikiPage recentChangesPage, Document rssDocument, String resource) throws Exception {

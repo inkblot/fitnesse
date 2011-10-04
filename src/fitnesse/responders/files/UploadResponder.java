@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -20,10 +22,14 @@ import java.util.regex.Pattern;
 public class UploadResponder implements SecureResponder {
     private static final Pattern filenamePattern = Pattern.compile("([^/\\\\]*[/\\\\])*([^/\\\\]*)");
 
-    private String rootPath;
+    private final String rootPagePath;
+
+    @Inject
+    public UploadResponder(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath) {
+        this.rootPagePath = rootPagePath;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        rootPath = context.rootPagePath;
         SimpleResponse response = new SimpleResponse();
         String resource = request.getResource().replace("%20", " ");
         UploadedFile uploadedFile = (UploadedFile) request.getInput("file");
@@ -66,7 +72,7 @@ public class UploadResponder implements SecureResponder {
     }
 
     private String makeFullFilename(String resource, String filename) {
-        return rootPath + "/" + resource + filename;
+        return this.rootPagePath + "/" + resource + filename;
     }
 
     public static String makeRelativeFilename(String name) {

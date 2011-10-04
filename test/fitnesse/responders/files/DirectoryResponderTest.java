@@ -12,6 +12,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import org.junit.Before;
 import org.junit.Test;
+import util.Clock;
 
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
@@ -22,10 +23,12 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     private SimpleResponse response;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
+    private Clock clock;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, Clock clock) {
         this.htmlPageFactory = htmlPageFactory;
+        this.clock = clock;
     }
 
     @Before
@@ -34,7 +37,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
         context = makeContext();
         makeSampleFiles();
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
+        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory, clock);
         response = (SimpleResponse) responder.makeResponse(context, request);
     }
 
@@ -60,7 +63,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testRedirectForDirectory() throws Exception {
         request.setResource("files/testDir");
-        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory);
+        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory, clock);
         Response response = responder.makeResponse(context, request);
 
         assertEquals(303, response.getStatus());

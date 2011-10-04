@@ -3,6 +3,7 @@
 package fitnesse.responders.files;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -17,32 +18,34 @@ import java.io.File;
 public class DeleteConfirmationResponder implements SecureResponder {
     private String resource;
     private final HtmlPageFactory htmlPageFactory;
+    private final String rootPagePath;
 
     @Inject
-    public DeleteConfirmationResponder(HtmlPageFactory htmlPageFactory) {
+    public DeleteConfirmationResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath) {
         this.htmlPageFactory = htmlPageFactory;
+        this.rootPagePath = rootPagePath;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(FitNesseContext context, Request request) {
         SimpleResponse response = new SimpleResponse();
         resource = request.getResource();
         String filename = (String) request.getInput("filename");
-        response.setContent(makeDirectoryListingPage(filename, context));
+        response.setContent(makeDirectoryListingPage(filename));
         response.setLastModifiedHeader("Delete");
         return response;
     }
 
-    private String makeDirectoryListingPage(String filename, FitNesseContext context) throws Exception {
+    private String makeDirectoryListingPage(String filename) {
         HtmlPage page = htmlPageFactory.newPage();
         page.title.use("Delete File(s): ");
         page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource + filename, "/", "Delete File"));
-        page.main.use(makeConfirmationHTML(filename, context));
+        page.main.use(makeConfirmationHTML(filename));
 
         return page.html();
     }
 
-    private HtmlTag makeConfirmationHTML(String filename, FitNesseContext context) throws Exception {
-        String path = context.rootPagePath + "/" + resource + filename;
+    private HtmlTag makeConfirmationHTML(String filename) {
+        String path = rootPagePath + "/" + resource + filename;
         File file = new File(path);
         boolean isDir = file.isDirectory();
 

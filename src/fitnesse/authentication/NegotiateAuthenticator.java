@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.Base64;
 import fitnesse.html.HtmlPage;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -112,17 +113,19 @@ public class NegotiateAuthenticator extends Authenticator {
 
     // Responder used when negotiation has not started or completed
     static protected class UnauthenticatedNegotiateResponder implements Responder {
-        private String token;
+        private final String token;
+        private final HtmlPageFactory htmlPageFactory;
 
-        public UnauthenticatedNegotiateResponder(final String token) {
+        public UnauthenticatedNegotiateResponder(final String token, HtmlPageFactory htmlPageFactory) {
             this.token = token;
+            this.htmlPageFactory = htmlPageFactory;
         }
 
         public Response makeResponse(FitNesseContext context, Request request)
                 throws Exception {
             SimpleResponse response = new SimpleResponse(401);
             response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
-            HtmlPage html = context.getHtmlPageFactory().newPage();
+            HtmlPage html = htmlPageFactory.newPage();
             HtmlUtil.addTitles(html, "Negotiated authentication required");
             if (request == null)
                 html.main.add("This request requires authentication");
@@ -135,7 +138,7 @@ public class NegotiateAuthenticator extends Authenticator {
 
     @Override
     protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
-        return new UnauthenticatedNegotiateResponder(request.getAuthorizationPassword());
+        return new UnauthenticatedNegotiateResponder(request.getAuthorizationPassword(), context.getHtmlPageFactory());
     }
 
     /*

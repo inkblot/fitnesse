@@ -29,13 +29,10 @@ public class AuthenticatorTest extends FitnesseBaseTestCase {
             return new AlwaysSecureOperation();
         }
 
-        public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+        public Response makeResponse(FitNesseContext context, Request request) {
             return null;
         }
 
-        protected void refactorReferences(FitNesseContext context, WikiPage pageToBeMoved, String newParentName)
-                throws Exception {
-        }
     }
 
     @Before

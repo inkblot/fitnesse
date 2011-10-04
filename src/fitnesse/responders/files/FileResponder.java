@@ -10,6 +10,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
+import util.Clock;
 import util.ImpossibleException;
 
 import java.io.File;
@@ -26,8 +27,9 @@ public class FileResponder implements Responder {
     public File requestedFile;
     public Date lastModifiedDate;
     public String lastModifiedDateString;
+    private final Clock clock;
 
-    public static Responder makeResponder(String resource, String rootPath, HtmlPageFactory htmlPageFactory) {
+    public static Responder makeResponder(String resource, String rootPath, HtmlPageFactory htmlPageFactory, Clock clock) {
         if (fileNameHasSpaces(resource))
             resource = restoreRealSpacesInFileName(resource);
 
@@ -38,12 +40,13 @@ public class FileResponder implements Responder {
         if (requestedFile.isDirectory())
             return new DirectoryResponder(resource, requestedFile, htmlPageFactory);
         else
-            return new FileResponder(resource, requestedFile);
+            return new FileResponder(resource, requestedFile, clock);
     }
 
-    public FileResponder(String resource, File requestedFile) {
+    public FileResponder(String resource, File requestedFile, Clock clock) {
         this.resource = resource;
         this.requestedFile = requestedFile;
+        this.clock = clock;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -51,7 +54,7 @@ public class FileResponder implements Responder {
         determineLastModifiedInfo();
 
         if (isNotModified(request))
-            return createNotModifiedResponse(context);
+            return createNotModifiedResponse();
         else {
             response.setBody(requestedFile);
             setContentType(requestedFile, response);
@@ -87,10 +90,10 @@ public class FileResponder implements Responder {
         return false;
     }
 
-    private Response createNotModifiedResponse(FitNesseContext context) {
+    private Response createNotModifiedResponse() {
         Response response = new SimpleResponse();
         response.setStatus(304);
-        response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(context.getClock().currentClockDate()));
+        response.addHeader("Date", SimpleResponse.makeStandardHttpDateFormat().format(clock.currentClockDate()));
         response.addHeader("Cache-Control", "private");
         response.setLastModifiedHeader(lastModifiedDateString);
         return response;

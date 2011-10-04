@@ -1,9 +1,11 @@
 package fitnesse.authentication;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.components.Base64;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.SimpleResponse;
@@ -25,6 +27,12 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     private GSSManager manager;
     private Properties properties;
     private final String TOKEN = "xxxxxxxx";
+    private HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
 
     @Before
     public void setUp() {
@@ -61,7 +69,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     @Test
     public void negotiationErrorScreenForFailureToComplete() throws Exception {
         FitNesseContext context = makeContext();
-        Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token");
+        Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token", htmlPageFactory);
         Request request = new MockRequest();
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals("Negotiate token", response.getHeader("WWW-Authenticate"));
@@ -73,7 +81,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     @Test
     public void negotiationErrorScreenForNeedingAuthentication() throws Exception {
         FitNesseContext context = makeContext();
-        Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token");
+        Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token", htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, null);
         String content = response.getContent();
         assertSubString("This request requires authentication", content);

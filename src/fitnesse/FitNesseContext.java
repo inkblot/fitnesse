@@ -33,6 +33,7 @@ public class FitNesseContext {
     public static final String RFC_COMPLIANT_DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
     public static final String ROOT_PATH = "fitnesse.rootPath";
     public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
+    public static final String ROOT_PAGE_PATH = "fitnesse.rootPagePath";
     public static final String PROPERTIES_FILE = "plugins.properties";
 
     public static FitNesseContext globalContext;
@@ -61,13 +62,14 @@ public class FitNesseContext {
     @Inject
     public FitNesseContext(
             @Named(ROOT_PATH) String rootPath,
-            @Named(ROOT_PAGE_NAME) String rootPageName,
+            @Named(ROOT_PAGE_PATH) String rootPagePath,
             WikiPageFactory wikiPageFactory,
             ResponderFactory responderFactory,
             Clock clock,
             HtmlPageFactory htmlPageFactory,
             Provider<Authenticator> authenticatorProvider) throws Exception {
         this.rootPath = rootPath;
+        this.rootPagePath = rootPagePath;
         this.wikiPageFactory = wikiPageFactory;
         this.responderFactory = responderFactory;
         this.clock = clock;
@@ -79,7 +81,6 @@ public class FitNesseContext {
         if (!absolutePath.equals(this.rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());
         }
-        rootPagePath = rootPath + File.separator + rootPageName;
     }
 
 

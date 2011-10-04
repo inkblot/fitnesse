@@ -3,7 +3,6 @@
 package fitnesse.responders.refactoring;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.components.PageReferenceRenamer;
 import fitnesse.components.ReferenceRenamer;
 import fitnesse.html.HtmlPageFactory;
@@ -21,7 +20,7 @@ public class RenamePageResponder extends PageMovementResponder {
     }
 
     @Override
-    protected boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception {
+    protected boolean getAndValidateNewParentPage(Request request, WikiPage root) {
         newParentPath = PathParser.parse(oldNameOfPageToBeMoved).parentPath();
         newParentPage = oldRefactoredPage.getParent();
         return (newParentPage != null);
@@ -34,9 +33,8 @@ public class RenamePageResponder extends PageMovementResponder {
     }
 
     @Override
-    protected ReferenceRenamer getReferenceRenamer(FitNesseContext context)
-            throws Exception {
-        return new PageReferenceRenamer(context.root, oldRefactoredPage, getNewPageName());
+    protected ReferenceRenamer getReferenceRenamer(WikiPage root) {
+        return new PageReferenceRenamer(root, oldRefactoredPage, getNewPageName());
     }
 
     @Override
@@ -49,7 +47,7 @@ public class RenamePageResponder extends PageMovementResponder {
     }
 
     @Override
-    protected String getNewPageName() throws Exception {
+    protected String getNewPageName() {
         return newName;
     }
 

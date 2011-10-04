@@ -29,7 +29,7 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
         FileUtil.makeDir(context.rootPagePath + "/files");
         testFile = FileUtil.createFile(context.rootPagePath + "/tempFile.txt", "test content");
 
-        responder = new UploadResponder();
+        responder = new UploadResponder(context.rootPagePath);
         request = new MockRequest();
     }
 

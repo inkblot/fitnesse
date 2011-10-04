@@ -42,26 +42,26 @@ public class WikiPageResponder implements SecureResponder {
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        loadPage(request.getResource(), context);
+        loadPage(request.getResource(), context.root);
         if (page == null)
-            return notFoundResponse(context, request);
+            return notFoundResponse(context, request, context.root);
         else
             return makePageResponse();
     }
 
-    protected void loadPage(String pageName, FitNesseContext context) throws Exception {
+    protected void loadPage(String pageName, WikiPage root) throws Exception {
         WikiPagePath path = PathParser.parse(pageName);
-        crawler = context.root.getPageCrawler();
+        crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-        page = crawler.getPage(context.root, path);
+        page = crawler.getPage(root, path);
         if (page != null)
             pageData = page.getData();
     }
 
-    private Response notFoundResponse(FitNesseContext context, Request request) throws Exception {
+    private Response notFoundResponse(FitNesseContext context, Request request, WikiPage root) throws Exception {
         if (doNotCreateNonExistentPage(request))
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
-        return EditResponder.makeResponseForNonExistentPage(request, htmlPageFactory, context.root, getDefaultPageContent(), clock);
+        return EditResponder.makeResponseForNonExistentPage(request, htmlPageFactory, root, getDefaultPageContent(), clock);
     }
 
     private String getDefaultPageContent() {

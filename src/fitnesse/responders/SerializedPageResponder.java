@@ -33,7 +33,7 @@ public class SerializedPageResponder implements SecureResponder {
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        WikiPage page = getRequestedPage(request, context);
+        WikiPage page = getRequestedPage(request, context.root);
         if (page == null)
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
 
@@ -80,10 +80,10 @@ public class SerializedPageResponder implements SecureResponder {
         return object;
     }
 
-    private WikiPage getRequestedPage(Request request, FitNesseContext context) throws Exception {
+    private WikiPage getRequestedPage(Request request, WikiPage root) throws Exception {
         String resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
-        return context.root.getPageCrawler().getPage(context.root, path);
+        return root.getPageCrawler().getPage(root, path);
     }
 
     private SimpleResponse responseWith(byte[] bytes) {

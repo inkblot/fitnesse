@@ -15,6 +15,7 @@ import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
 
+import java.io.IOException;
 import java.util.List;
 
 public abstract class PageMovementResponder implements SecureResponder {
@@ -29,24 +30,24 @@ public abstract class PageMovementResponder implements SecureResponder {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    protected abstract boolean getAndValidateNewParentPage(FitNesseContext context, Request request) throws Exception;
+    protected abstract boolean getAndValidateNewParentPage(Request request, WikiPage root) throws IOException;
 
     protected abstract boolean getAndValidateRefactoringParameters(Request request) throws Exception;
 
-    protected abstract ReferenceRenamer getReferenceRenamer(FitNesseContext context) throws Exception;
+    protected abstract ReferenceRenamer getReferenceRenamer(WikiPage root);
 
-    protected abstract String getNewPageName() throws Exception;
+    protected abstract String getNewPageName() ;
 
     protected abstract String getErrorMessageHeader() throws Exception;
 
     protected abstract void execute() throws Exception;
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        if (!getAndValidateRefactoredPage(context, request)) {
+        if (!getAndValidateRefactoredPage(request, context.root)) {
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         }
 
-        if (!getAndValidateNewParentPage(context, request)) {
+        if (!getAndValidateNewParentPage(request, context.root)) {
             return makeErrorMessageResponder(newParentPath == null ? "null" : newParentPath.toString() + " does not exist.").makeResponse(context, request);
         }
 
@@ -59,7 +60,7 @@ public abstract class PageMovementResponder implements SecureResponder {
         }
 
         if (request.hasInput("refactorReferences")) {
-            getReferenceRenamer(context).renameReferences();
+            getReferenceRenamer(context.root).renameReferences();
         }
         execute();
 
@@ -69,13 +70,13 @@ public abstract class PageMovementResponder implements SecureResponder {
         return response;
     }
 
-    protected boolean getAndValidateRefactoredPage(FitNesseContext context, Request request) throws Exception {
-        PageCrawler crawler = context.root.getPageCrawler();
+    protected boolean getAndValidateRefactoredPage(Request request, WikiPage root) throws Exception {
+        PageCrawler crawler = root.getPageCrawler();
 
         oldNameOfPageToBeMoved = request.getResource();
 
         WikiPagePath path = PathParser.parse(oldNameOfPageToBeMoved);
-        oldRefactoredPage = crawler.getPage(context.root, path);
+        oldRefactoredPage = crawler.getPage(root, path);
         return (oldRefactoredPage != null);
     }
 

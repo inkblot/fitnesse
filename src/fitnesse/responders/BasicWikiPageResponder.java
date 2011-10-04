@@ -20,7 +20,7 @@ public abstract class BasicWikiPageResponder extends BasicResponder {
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         this.request = request;
-        WikiPage requestedPage = getRequestedPage(request, context);
+        WikiPage requestedPage = getRequestedPage(request, context.root);
 
         Response response;
         if (requestedPage == null)
@@ -31,9 +31,9 @@ public abstract class BasicWikiPageResponder extends BasicResponder {
         return response;
     }
 
-    private WikiPage getRequestedPage(Request request, FitNesseContext context) throws Exception {
+    private WikiPage getRequestedPage(Request request, WikiPage root) throws Exception {
         WikiPagePath path = PathParser.parse(request.getResource());
-        return context.root.getPageCrawler().getPage(context.root, path);
+        return root.getPageCrawler().getPage(root, path);
     }
 
     protected abstract String contentFrom(WikiPage requestedPage) throws Exception;

@@ -18,11 +18,13 @@ import static org.junit.Assert.assertTrue;
 public class DeleteFileResponderTest extends FitnesseBaseTestCase {
     public MockRequest request;
     private FitNesseContext context;
+    private String rootPagePath;
 
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
         context = makeContext();
+        rootPagePath = context.rootPagePath;
         assertTrue(new File(getRootPath(), "RooT").mkdir());
     }
 
@@ -30,7 +32,7 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
     public void testDelete() throws Exception {
         File file = new File(new File(getRootPath(), "RooT"), "testfile");
         assertTrue(file.createNewFile());
-        DeleteFileResponder responder = new DeleteFileResponder();
+        DeleteFileResponder responder = new DeleteFileResponder(rootPagePath);
         request.addInput("filename", "testfile");
         request.setResource("");
         Response response = responder.makeResponse(context, request);
@@ -45,7 +47,7 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
         assertTrue(dir.mkdir());
         File file = new File(dir, "testChildFile");
         assertTrue(file.createNewFile());
-        DeleteFileResponder responder = new DeleteFileResponder();
+        DeleteFileResponder responder = new DeleteFileResponder(rootPagePath);
         request.addInput("filename", "dir");
         request.setResource("");
         responder.makeResponse(context, request);

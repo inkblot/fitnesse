@@ -23,7 +23,6 @@ public class SymbolicLinkResponder implements Responder {
     private Response response;
     private String resource;
     private PageCrawler crawler;
-    private FitNesseContext context;
     private WikiPage page;
     private final HtmlPageFactory htmlPageFactory;
 
@@ -34,7 +33,6 @@ public class SymbolicLinkResponder implements Responder {
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         resource = request.getResource();
-        this.context = context;
         crawler = context.root.getPageCrawler();
         page = crawler.getPage(context.root, PathParser.parse(resource));
         if (page == null)
@@ -44,9 +42,9 @@ public class SymbolicLinkResponder implements Responder {
         if (request.hasInput("removal"))
             removeSymbolicLink(request, page);
         else if (request.hasInput("rename"))
-            renameSymbolicLink(request, page);
+            renameSymbolicLink(request, page, context);
         else
-            addSymbolicLink(request, page);
+            addSymbolicLink(request, page, context);
 
         return response;
     }
@@ -68,7 +66,7 @@ public class SymbolicLinkResponder implements Responder {
         setRedirect(resource);
     }
 
-    private void renameSymbolicLink(Request request, WikiPage page) throws Exception {
+    private void renameSymbolicLink(Request request, WikiPage page, FitNesseContext context) throws Exception {
         String linkToRename = (String) request.getInput("rename"),
                 newName = (String) request.getInput("newname");
 
@@ -87,7 +85,7 @@ public class SymbolicLinkResponder implements Responder {
         }
     }
 
-    private void addSymbolicLink(Request request, WikiPage page) throws Exception {
+    private void addSymbolicLink(Request request, WikiPage page, FitNesseContext context) throws Exception {
         String linkName = StringUtils.trim((String) request.getInput("linkName"));
         String linkPath = StringUtils.trim((String) request.getInput("linkPath"));
 

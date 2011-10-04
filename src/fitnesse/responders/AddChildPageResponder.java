@@ -12,6 +12,8 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 
+import java.io.IOException;
+
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class AddChildPageResponder implements SecureResponder {
@@ -33,7 +35,7 @@ public class AddChildPageResponder implements SecureResponder {
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        parseRequest(context, request);
+        parseRequest(request, context.root);
         if (currentPage == null)
             return notFoundResponse(context, request);
         else if (nameIsInvalid(childName))
@@ -43,13 +45,13 @@ public class AddChildPageResponder implements SecureResponder {
         }
     }
 
-    private void parseRequest(FitNesseContext context, Request request) throws Exception {
+    private void parseRequest(Request request, WikiPage root) throws IOException {
         childName = (String) request.getInput("name");
         childName = childName == null ? "null" : childName;
         childPath = PathParser.parse(childName);
         WikiPagePath currentPagePath = PathParser.parse(request.getResource());
-        crawler = context.root.getPageCrawler();
-        currentPage = crawler.getPage(context.root, currentPagePath);
+        crawler = root.getPageCrawler();
+        currentPage = crawler.getPage(root, currentPagePath);
         childContent = (String) request.getInput("content");
         pageType = (String) request.getInput("pageType");
         if (childContent == null)
@@ -58,7 +60,7 @@ public class AddChildPageResponder implements SecureResponder {
             pageType = "Default";
     }
 
-    private Response createChildPageAndMakeResponse() throws Exception {
+    private Response createChildPageAndMakeResponse() throws IOException {
         createChildPage();
         SimpleResponse response = new SimpleResponse();
         WikiPagePath fullPathOfCurrentPage = crawler.getFullPath(currentPage);
@@ -70,12 +72,12 @@ public class AddChildPageResponder implements SecureResponder {
         return isEmpty(name) || !WikiWordWidget.isSingleWikiWord(name);
     }
 
-    private void createChildPage() throws Exception {
+    private void createChildPage() throws IOException {
         WikiPage childPage = crawler.addPage(currentPage, childPath, childContent);
         setTestAndSuiteAttributes(childPage);
     }
 
-    private void setTestAndSuiteAttributes(WikiPage childPage) throws Exception {
+    private void setTestAndSuiteAttributes(WikiPage childPage) throws IOException {
         PageData childPageData = childPage.getData();
         if (pageType.equals("Normal")) {
             childPageData.getProperties().remove("Test");

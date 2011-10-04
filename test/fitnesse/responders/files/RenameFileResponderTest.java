@@ -17,19 +17,21 @@ import static org.junit.Assert.*;
 public class RenameFileResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private FitNesseContext context;
+    private String rootPagePath;
 
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
         context = makeContext();
-        FileUtil.makeDir(context.rootPagePath);
+        rootPagePath = context.rootPagePath;
+        FileUtil.makeDir(rootPagePath);
     }
 
     @Test
     public void testMakeResponse() throws Exception {
         File file = new File(context.rootPagePath, "testfile");
         assertTrue(file.createNewFile());
-        RenameFileResponder responder = new RenameFileResponder();
+        RenameFileResponder responder = new RenameFileResponder(rootPagePath);
         request.addInput("filename", "testfile");
         request.addInput("newName", "newName");
         request.setResource("");
@@ -44,7 +46,7 @@ public class RenameFileResponderTest extends FitnesseBaseTestCase {
     public void testRenameWithTrailingSpace() throws Exception {
         File file = new File(context.rootPagePath, "testfile");
         assertTrue(file.createNewFile());
-        RenameFileResponder responder = new RenameFileResponder();
+        RenameFileResponder responder = new RenameFileResponder(rootPagePath);
         request.addInput("filename", "testfile");
         request.addInput("newName", "new Name With Space ");
         request.setResource("");

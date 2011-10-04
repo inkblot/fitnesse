@@ -30,7 +30,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
         if (isEmpty(resource))
             resource = "FrontPage";
 
-        loadPage(resource, context);
+        loadPage(resource, context.root);
         if (page == null)
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         loadPageData();
@@ -41,11 +41,11 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
         return response;
     }
 
-    protected void loadPage(String resource, FitNesseContext context) throws Exception {
+    protected void loadPage(String resource, WikiPage root) throws Exception {
         WikiPagePath path = PathParser.parse(resource);
-        PageCrawler crawler = context.root.getPageCrawler();
+        PageCrawler crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-        page = crawler.getPage(context.root, path);
+        page = crawler.getPage(root, path);
     }
 
     protected void loadPageData() throws Exception {

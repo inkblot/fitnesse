@@ -30,23 +30,23 @@ public class StopTestResponder extends BasicResponder {
             testId = request.getInput("id").toString();
         }
 
-        response.setContent(html(context));
+        response.setContent(html(context.runningTestingTracker));
 
         return response;
     }
 
-    private String html(FitNesseContext context) throws Exception {
+    private String html(RunningTestingTracker runningTestingTracker) throws Exception {
         HtmlPage page = htmlPageFactory.newPage();
         HtmlUtil.addTitles(page, "Stopping tests");
-        page.main.use(getDetails(context));
+        page.main.use(getDetails(runningTestingTracker));
         return page.html();
     }
 
-    public String getDetails(FitNesseContext context) {
+    public String getDetails(RunningTestingTracker runningTestingTracker) {
         if (testId != null) {
-            return "Attempting to stop single test or suite..." + HtmlUtil.BRtag + context.runningTestingTracker.stopProcess(testId);
+            return "Attempting to stop single test or suite..." + HtmlUtil.BRtag + runningTestingTracker.stopProcess(testId);
         } else {
-            return "Attempting to stop all running test processes..." + HtmlUtil.BRtag + context.runningTestingTracker.stopAllProcesses();
+            return "Attempting to stop all running test processes..." + HtmlUtil.BRtag + runningTestingTracker.stopAllProcesses();
         }
     }
 }

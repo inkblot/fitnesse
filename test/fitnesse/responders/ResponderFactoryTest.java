@@ -3,10 +3,9 @@
 package fitnesse.responders;
 
 
-import com.google.inject.Inject;
+import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.responders.editing.*;
 import fitnesse.responders.files.*;
@@ -41,16 +40,12 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     private ResponderFactory factory;
     private MockRequest request;
     private PageCrawler crawler;
-    private HtmlPageFactory htmlPageFactory;
-
-    @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
-        this.htmlPageFactory = htmlPageFactory;
-    }
+    private FitNesseContext context;
 
     @Before
     public void setUp() throws Exception {
-        factory = new ResponderFactory(injector, "testDir", htmlPageFactory);
+        context = makeContext();
+        factory = context.getResponderFactory();
         request = new MockRequest();
         WikiPage root = InMemoryPage.makeRoot("root", injector);
         crawler = root.getPageCrawler();
@@ -126,15 +121,11 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
 
     @Test
     public void testFileResponder() throws Exception {
-        try {
-            assertTrue(new File("testDir").mkdir());
-            assertTrue(new File("testDir/files").mkdir());
-            FileUtil.createFile("testDir/files/someFile", "this is a test");
-            request.setResource("files/someFile");
-            assertResponderType(FileResponder.class);
-        } finally {
-            FileUtil.deleteFileSystemDirectory("testDir");
-        }
+        assertTrue(new File(context.rootPagePath).mkdir());
+        assertTrue(new File(context.rootPagePath + "/files").mkdir());
+        FileUtil.createFile(context.rootPagePath + "/files/someFile", "this is a test");
+        request.setResource("files/someFile");
+        assertResponderType(FileResponder.class);
     }
 
     @Test

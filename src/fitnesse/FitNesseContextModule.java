@@ -3,6 +3,8 @@ package fitnesse;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
+import java.io.File;
+
 /**
 * Created by IntelliJ IDEA.
 * User: inkblot
@@ -22,5 +24,7 @@ public class FitNesseContextModule extends AbstractModule {
     protected void configure() {
         bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PATH)).toInstance(rootPath);
         bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PAGE_NAME)).toInstance(rootPageName);
+        String rootPagePath = rootPath + File.separator + rootPageName;
+        bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PAGE_PATH)).toInstance(rootPagePath);
     }
 }

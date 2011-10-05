@@ -34,7 +34,7 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         context = makeContext();
         responder = new ChunkingResponder(htmlPageFactory) {
-            protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path) throws Exception {
+            protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
                 throw exception;
             }
         };

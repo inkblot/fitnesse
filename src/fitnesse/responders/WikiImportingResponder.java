@@ -32,7 +32,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path) throws Exception {
+    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
         data = page.getData();
         HtmlPage html = makeHtml(path);
         response.add(html.preDivision);

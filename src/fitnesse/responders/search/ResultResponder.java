@@ -31,16 +31,16 @@ public abstract class ResultResponder extends ChunkingResponder implements
     }
 
     @Override
-    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path) throws Exception {
+    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
         response.add(createSearchResultsHeader());
 
-        startSearching(root);
+        startSearching(root, page);
 
-        response.add(createSearchResultsFooter(root));
+        response.add(createSearchResultsFooter(root, page));
         response.closeAll();
     }
 
-    private String createSearchResultsFooter(WikiPage root) throws Exception {
+    private String createSearchResultsFooter(WikiPage root, WikiPage page) throws Exception {
         VelocityContext velocityContext = new VelocityContext();
 
         StringWriter writer = new StringWriter();
@@ -126,7 +126,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
 
     protected abstract String getTitle();
 
-    protected void startSearching(WikiPage root) throws IOException {
+    protected void startSearching(WikiPage root, WikiPage page) throws IOException {
         hits = 0;
     }
 

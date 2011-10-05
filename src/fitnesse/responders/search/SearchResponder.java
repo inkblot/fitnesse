@@ -40,8 +40,8 @@ public class SearchResponder extends ResultResponder {
         return getSearchType() + " Search Results for '" + getSearchString() + "'";
     }
 
-    protected void startSearching(WikiPage root) throws IOException {
-        super.startSearching(root);
+    protected void startSearching(WikiPage root, WikiPage page) throws IOException {
+        super.startSearching(root, page);
         String searchString = getSearchString();
         if (isNotEmpty(searchString)) {
             String searchType = getSearchType();

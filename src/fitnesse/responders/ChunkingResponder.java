@@ -15,7 +15,6 @@ import fitnesse.wiki.WikiPagePath;
 import java.net.SocketException;
 
 public abstract class ChunkingResponder implements Responder {
-    public WikiPage page;
     protected Request request;
     protected ChunkedResponse response;
     private boolean dontChunk = false;
@@ -32,11 +31,11 @@ public abstract class ChunkingResponder implements Responder {
         if (dontChunk || context.doNotChunk || request.hasInput("nochunk"))
             response.turnOffChunking();
         WikiPagePath path = getWikiPagePath(request);
-        page = context.root.getPageCrawler().getPage(context.root, path);
+        WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
         if (page == null && shouldRespondWith404())
             return pageNotFoundResponse(context, request);
 
-        Thread respondingThread = new Thread(new RespondingRunnable(context, context.root, path), getClass() + ": Responding Thread");
+        Thread respondingThread = new Thread(new RespondingRunnable(context, context.root, path, page), getClass() + ": Responding Thread");
         respondingThread.start();
 
         return response;
@@ -58,9 +57,9 @@ public abstract class ChunkingResponder implements Responder {
         return true;
     }
 
-    private void startSending(FitNesseContext context, WikiPage root, WikiPagePath path) {
+    private void startSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) {
         try {
-            doSending(context, root, path);
+            doSending(context, root, path, page);
         } catch (SocketException e) {
             // normal. someone stopped the request.
         } catch (Exception e) {
@@ -80,11 +79,13 @@ public abstract class ChunkingResponder implements Responder {
         private final FitNesseContext context;
         private final WikiPage root;
         private final WikiPagePath path;
+        private final WikiPage page;
 
-        public RespondingRunnable(FitNesseContext context, WikiPage root, WikiPagePath path) {
+        public RespondingRunnable(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) {
             this.context = context;
             this.root = root;
             this.path = path;
+            this.page = page;
         }
 
         public void run() {
@@ -98,7 +99,7 @@ public abstract class ChunkingResponder implements Responder {
                     //ok
                 }
             }
-            startSending(this.context, this.root, this.path);
+            startSending(this.context, this.root, this.path, this.page);
         }
     }
 
@@ -106,5 +107,5 @@ public abstract class ChunkingResponder implements Responder {
         this.request = request;
     }
 
-    protected abstract void doSending(FitNesseContext context, WikiPage root, WikiPagePath path) throws Exception;
+    protected abstract void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception;
 }

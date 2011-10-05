@@ -16,8 +16,8 @@ public class WhereUsedResponder extends ResultResponder {
         super(htmlPageFactory);
     }
 
-    protected void startSearching(WikiPage root) throws IOException {
-        super.startSearching(root);
+    protected void startSearching(WikiPage root, WikiPage page) throws IOException {
+        super.startSearching(root, page);
         new WhereUsedPageFinder(page, this).search(root);
     }
 

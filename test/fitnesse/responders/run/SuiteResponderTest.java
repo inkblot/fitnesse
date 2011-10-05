@@ -25,6 +25,7 @@ import util.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Date;
 
 import static fitnesse.responders.run.TestResponderTest.XmlTestUtilities.assertCounts;
@@ -89,16 +90,15 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         responder = new SuiteResponder(htmlPageFactory);
         responder.turnOffChunking();
         responder.setFastTest(true);
-        responder.page = suite;
 
         receiver = new FitSocketReceiver(0, context.socketDealer);
     }
 
-    private WikiPage addTestToSuite(String name, String content) throws Exception {
+    private WikiPage addTestToSuite(String name, String content) throws IOException {
         return addTestPage(suite, name, content);
     }
 
-    private WikiPage addTestPage(WikiPage page, String name, String content) throws Exception {
+    private WikiPage addTestPage(WikiPage page, String name, String content) throws IOException {
         WikiPage testPage = crawler.addPage(page, PathParser.parse(name), content);
         PageData data = testPage.getData();
         data.setAttribute("Test");

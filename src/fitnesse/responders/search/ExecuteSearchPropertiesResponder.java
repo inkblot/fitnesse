@@ -100,8 +100,8 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     }
 
     @Override
-    protected void startSearching(WikiPage root) throws IOException {
-        super.startSearching(root);
+    protected void startSearching(WikiPage root, WikiPage page) throws IOException {
+        super.startSearching(root, page);
         List<PageType> pageTypes = getPageTypesFromInput(request);
         Map<String, Boolean> attributes = getAttributesFromInput(request);
         String suites = getSuitesFromInput(request);

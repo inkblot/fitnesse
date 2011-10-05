@@ -28,7 +28,7 @@ public class SuiteResponder extends TestResponder {
     }
 
     @Override
-    void addXmlFormatter(FitNesseContext context) {
+    void addXmlFormatter(FitNesseContext context, WikiPage page) {
         CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, makeResponseWriter());
         if (includeHtml)
             xmlFormatter.includeHtml();
@@ -36,7 +36,7 @@ public class SuiteResponder extends TestResponder {
     }
 
     @Override
-    void addHtmlFormatter(FitNesseContext context) {
+    void addHtmlFormatter(FitNesseContext context, WikiPage page) {
         BaseFormatter formatter = new SuiteHtmlFormatter(context, page, getHtmlPageFactory()) {
             @Override
             protected void writeData(String output) {
@@ -47,15 +47,15 @@ public class SuiteResponder extends TestResponder {
     }
 
     @Override
-    protected void addTestHistoryFormatter(FitNesseContext context) {
+    protected void addTestHistoryFormatter(FitNesseContext context, WikiPage page) {
         HistoryWriterFactory source = new HistoryWriterFactory();
         formatters.add(new PageHistoryFormatter(context, page, source));
         formatters.add(new SuiteHistoryFormatter(context, page, source));
     }
 
     @Override
-    protected void performExecution(FitNesseContext context, WikiPage root) throws Exception {
-        SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest());
+    protected void performExecution(FitNesseContext context, WikiPage root, WikiPage page) throws Exception {
+        SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest(page));
         SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
         MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters);
         runner.setDebug(isRemoteDebug());
@@ -72,7 +72,7 @@ public class SuiteResponder extends TestResponder {
     }
 
 
-    private String getSuiteFirstTest() throws Exception {
+    private String getSuiteFirstTest(WikiPage page) throws Exception {
         String startTest = null;
         if (request != null) {
             startTest = (String) request.getInput("firstTest");

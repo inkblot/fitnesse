@@ -45,13 +45,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
 
     @Override
-    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path) throws Exception {
+    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
         checkArguments();
         data = page.getData();
 
-        createFormatterAndWriteHead(context);
+        createFormatterAndWriteHead(context, page);
         sendPreTestNotification();
-        performExecution(context, root);
+        performExecution(context, root, page);
 
         int exitCode = formatters.getErrorCount();
         closeHtmlResponse(exitCode);
@@ -62,18 +62,18 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         remoteDebug |= request.hasInput("remote_debug");
     }
 
-    protected void createFormatterAndWriteHead(FitNesseContext context) throws Exception {
+    protected void createFormatterAndWriteHead(FitNesseContext context, WikiPage page) throws Exception {
         if (response.isXmlFormat())
-            addXmlFormatter(context);
+            addXmlFormatter(context, page);
         else if (response.isTextFormat())
             addTextFormatter();
         else if (response.isJavaFormat())
-            addJavaFormatter();
+            addJavaFormatter(page);
         else
-            addHtmlFormatter(context);
+            addHtmlFormatter(context, page);
         if (!request.hasInput("nohistory"))
-            addTestHistoryFormatter(context);
-        addTestInProgressFormatter();
+            addTestHistoryFormatter(context, page);
+        addTestInProgressFormatter(page);
         formatters.writeHead(getTitle());
     }
 
@@ -81,7 +81,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         return "Test Results";
     }
 
-    void addXmlFormatter(FitNesseContext context) {
+    void addXmlFormatter(FitNesseContext context, WikiPage page) {
         XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
             @Override
             public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
@@ -95,7 +95,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         formatters.add(new TestTextFormatter(response));
     }
 
-    void addJavaFormatter() {
+    void addJavaFormatter(WikiPage page) {
         formatters.add(JavaFormatter.getInstance(new WikiPagePath(page).toString()));
     }
 
@@ -122,7 +122,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
 
 
-    void addHtmlFormatter(FitNesseContext context) {
+    void addHtmlFormatter(FitNesseContext context, WikiPage page) {
         BaseFormatter formatter = new TestHtmlFormatter(context, page, getHtmlPageFactory()) {
             @Override
             protected void writeData(String output) {
@@ -132,12 +132,12 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         formatters.add(formatter);
     }
 
-    protected void addTestHistoryFormatter(FitNesseContext context) {
+    protected void addTestHistoryFormatter(FitNesseContext context, WikiPage page) {
         HistoryWriterFactory writerFactory = new HistoryWriterFactory();
         formatters.add(new PageHistoryFormatter(context, page, writerFactory));
     }
 
-    protected void addTestInProgressFormatter() {
+    protected void addTestInProgressFormatter(WikiPage page) {
         formatters.add(new PageInProgressFormatter(page));
     }
 
@@ -147,7 +147,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         }
     }
 
-    protected void performExecution(FitNesseContext context, WikiPage root) throws Exception {
+    protected void performExecution(FitNesseContext context, WikiPage root, WikiPage page) throws Exception {
         List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
         MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);

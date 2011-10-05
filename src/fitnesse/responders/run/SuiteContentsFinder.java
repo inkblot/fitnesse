@@ -23,7 +23,7 @@ public class SuiteContentsFinder {
         testPageList = new LinkedList<WikiPage>();
     }
 
-    public List<WikiPage> makePageListForSingleTest() throws Exception {
+    public List<WikiPage> makePageListForSingleTest() {
         testPageList = new LinkedList<WikiPage>();
 
         testPageList.add(pageToRun);

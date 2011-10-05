@@ -45,7 +45,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
 
     @Override
-    protected void doSending(FitNesseContext context, WikiPage root) throws Exception {
+    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path) throws Exception {
         checkArguments();
         data = page.getData();
 
@@ -95,7 +95,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         formatters.add(new TestTextFormatter(response));
     }
 
-    void addJavaFormatter() throws Exception {
+    void addJavaFormatter() {
         formatters.add(JavaFormatter.getInstance(new WikiPagePath(page).toString()));
     }
 
@@ -137,7 +137,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         formatters.add(new PageHistoryFormatter(context, page, writerFactory));
     }
 
-    protected void addTestInProgressFormatter() throws Exception {
+    protected void addTestInProgressFormatter() {
         formatters.add(new PageInProgressFormatter(page));
     }
 

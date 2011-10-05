@@ -75,7 +75,7 @@ public class HtmlPage extends HtmlTag {
         return css;
     }
 
-    public void divide() throws Exception {
+    public void divide() {
         String html = html();
         int breakIndex = html.indexOf(BreakPoint);
         preDivision = html.substring(0, breakIndex);

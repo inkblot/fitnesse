@@ -60,7 +60,6 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     private void createResponder() throws Exception {
         responder = new WikiImportingResponder(htmlPageFactory);
-        responder.path = new WikiPagePath();
         ChunkedResponse response = new ChunkedResponse("html");
         response.readyToSend(new MockResponseSender());
         responder.setResponse(response);
@@ -328,11 +327,11 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         responder.setRequest(request);
         responder.data = new PageData(new WikiPageDummy(injector));
 
-        responder.initializeImporter();
+        responder.initializeImporter(ChunkingResponder.getWikiPagePath(request));
         assertFalse(responder.getImporter().getAutoUpdateSetting());
 
         request.addInput("autoUpdate", "1");
-        responder.initializeImporter();
+        responder.initializeImporter(ChunkingResponder.getWikiPagePath(request));
         assertTrue(responder.getImporter().getAutoUpdateSetting());
     }
 

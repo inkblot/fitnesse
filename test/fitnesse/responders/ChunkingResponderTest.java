@@ -10,6 +10,7 @@ import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +34,7 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         context = makeContext();
         responder = new ChunkingResponder(htmlPageFactory) {
-            protected void doSending(FitNesseContext context, WikiPage root) throws Exception {
+            protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path) throws Exception {
                 throw exception;
             }
         };

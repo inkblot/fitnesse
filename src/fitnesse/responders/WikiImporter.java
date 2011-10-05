@@ -119,7 +119,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
         }
     }
 
-    public void configureAutoUpdateSetting(WikiPage page) throws Exception {
+    public void configureAutoUpdateSetting(WikiPage page) throws IOException {
         PageData data = page.getData();
         WikiPageProperties props = data.getProperties();
         WikiImportProperty importProps = WikiImportProperty.createFrom(props);
@@ -131,7 +131,7 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
         return crawler.getFullPath(childPage).subtractFromFront(contextPath);
     }
 
-    protected void importRemotePageContent(WikiPage localPage) throws Exception {
+    protected void importRemotePageContent(WikiPage localPage) throws AuthenticationRequiredException, IOException {
         try {
             Document doc = getXmlDocument("data");
             PageData remoteData = new PageXmlizer().deXmlizeData(doc, localPage.getInjector());
@@ -227,13 +227,8 @@ public class WikiImporter implements XmlizerPageHandler, TraversalListener {
         return importCount;
     }
 
-    public void parseUrl(String urlString) throws Exception {
-        URL url;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            throw new MalformedURLException(urlString + " is not a valid URL.");
-        }
+    public void parseUrl(String urlString) throws MalformedURLException {
+        URL url = new URL(urlString);
 
         remoteHostname = url.getHost();
         remotePort = url.getPort();

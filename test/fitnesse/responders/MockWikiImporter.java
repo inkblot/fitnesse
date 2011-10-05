@@ -12,7 +12,7 @@ public class MockWikiImporter extends WikiImporter {
     public static String mockContent = "mock importer content";
     public boolean fail;
 
-    protected void importRemotePageContent(WikiPage localPage) throws Exception {
+    protected void importRemotePageContent(WikiPage localPage) throws IOException {
         if (fail)
             importerClient.pageImportError(localPage, new Exception("blah"));
         else

@@ -32,14 +32,14 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    protected void doSending(FitNesseContext context, WikiPage root) throws Exception {
+    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path) throws Exception {
         data = page.getData();
-        HtmlPage html = makeHtml();
+        HtmlPage html = makeHtml(path);
         response.add(html.preDivision);
 
         try {
-            initializeImporter();
-            addHeadContent();
+            initializeImporter(path);
+            addHeadContent(path);
             if (isNonRoot)
                 importer.importRemotePageContent(page);
 
@@ -68,7 +68,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         response.closeAll();
     }
 
-    public void initializeImporter() throws Exception {
+    public void initializeImporter(WikiPagePath path) throws MalformedURLException {
         String remoteWikiUrl = establishRemoteUrlAndUpdateStyle();
         importer.setWikiImporterClient(this);
         importer.setLocalPath(path);
@@ -84,7 +84,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
             importer.setRemotePassword((String) request.getInput("remotePassword"));
     }
 
-    private String establishRemoteUrlAndUpdateStyle() throws Exception {
+    private String establishRemoteUrlAndUpdateStyle() {
         String remoteWikiUrl = (String) request.getInput("remoteUrl");
 
         WikiImportProperty importProperty = WikiImportProperty.createFrom(data.getProperties());
@@ -96,14 +96,14 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         return remoteWikiUrl;
     }
 
-    private void writeErrorMessage(String message) throws Exception {
+    private void writeErrorMessage(String message) {
         HtmlTag alert = HtmlUtil.makeDivTag("centered");
         alert.add(new HtmlTag("h2", "Import Failure"));
         alert.add(message);
         response.add(alert.html());
     }
 
-    private void writeErrorMessage(Exception e) throws Exception {
+    private void writeErrorMessage(Exception e) {
         writeErrorMessage(e.getMessage());
         HtmlTag pre = new HtmlTag("pre");
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -114,7 +114,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         response.add(pre.html());
     }
 
-    private void addHeadContent() throws Exception {
+    private void addHeadContent(WikiPagePath path) {
         TagGroup head = new TagGroup();
         if (isUpdate)
             head.add("Updating imported wiki.");
@@ -139,12 +139,12 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         response.add(head.html());
     }
 
-    private void addTailContent() throws Exception {
+    private void addTailContent() {
         TagGroup tail = makeTailHtml(importer);
         response.add(tail.html());
     }
 
-    public TagGroup makeTailHtml(WikiImporter importer) throws Exception {
+    public TagGroup makeTailHtml(WikiImporter importer) {
         TagGroup tail = new TagGroup();
         tail.add("<a name=\"end\"><hr></a>");
         tail.add(HtmlUtil.makeBold("Import complete. "));
@@ -204,7 +204,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         }
     }
 
-    private HtmlPage makeHtml() throws Exception {
+    private HtmlPage makeHtml(WikiPagePath path) {
         HtmlPage html = htmlPageFactory.newPage();
         String title = "Wiki Import";
         if (isUpdate)
@@ -217,7 +217,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         return html;
     }
 
-    private void addRowToResponse(String status) throws Exception {
+    private void addRowToResponse(String status) {
         HtmlTag tag = alternatingRow();
         String relativePathName = PathParser.render(importer.getRelativePath());
         String localPathName = PathParser.render(importer.getLocalPath());
@@ -243,7 +243,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         return new SecureWriteOperation();
     }
 
-    private void writeAuthenticationForm(String resource) throws Exception {
+    private void writeAuthenticationForm(String resource) {
         HtmlTag html = HtmlUtil.makeDivTag("centered");
         html.add(new HtmlTag("h3", "The wiki at " + resource + " requires authentication."));
         html.add(HtmlUtil.BR);
@@ -267,11 +267,11 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
         response.add(html.html());
     }
 
-    public void pageImported(WikiPage localPage) throws Exception {
+    public void pageImported(WikiPage localPage) {
         addRowToResponse("");
     }
 
-    public void pageImportError(WikiPage localPage, Exception e) throws Exception {
+    public void pageImportError(WikiPage localPage, Exception e) {
         addRowToResponse(e.toString());
     }
 

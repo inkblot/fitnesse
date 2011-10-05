@@ -13,6 +13,7 @@ import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPagePath;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
@@ -30,7 +31,7 @@ public abstract class ResultResponder extends ChunkingResponder implements
     }
 
     @Override
-    protected void doSending(FitNesseContext context, WikiPage root) throws Exception {
+    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path) throws Exception {
         response.add(createSearchResultsHeader());
 
         startSearching(root);

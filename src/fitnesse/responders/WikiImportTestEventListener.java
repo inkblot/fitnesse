@@ -19,7 +19,7 @@ public class WikiImportTestEventListener implements TestEventListener {
         this.importerFactory = importerFactory;
     }
 
-    public void notifyPreTest(TestResponder testResponder, PageData data) throws Exception {
+    public void notifyPreTest(TestResponder testResponder, PageData data) {
         TestEventProcessor eventProcessor;
         if (testResponder instanceof SuiteResponder)
             eventProcessor = new SuiteEventProcessor();
@@ -37,7 +37,7 @@ public class WikiImportTestEventListener implements TestEventListener {
         protected PageData data;
         protected WikiImportProperty importProperty;
 
-        public void run(TestResponder testResponder, PageData data) throws Exception {
+        public void run(TestResponder testResponder, PageData data) {
             this.testResponder = testResponder;
             this.data = data;
             importProperty = WikiImportProperty.createFrom(data.getProperties());
@@ -48,19 +48,19 @@ public class WikiImportTestEventListener implements TestEventListener {
             }
         }
 
-        private void closeAnnouncement(TestResponder testResponder) throws Exception {
+        private void closeAnnouncement(TestResponder testResponder) {
             if (testResponder.getResponse().isHtmlFormat())
                 testResponder.addToResponse("</span>");
         }
 
-        private void announceImportAttempt(TestResponder testResponder) throws Exception {
+        private void announceImportAttempt(TestResponder testResponder) {
             if (testResponder.getResponse().isHtmlFormat()) {
                 testResponder.addToResponse("<span class=\"meta\">Updating imported content...</span>");
                 testResponder.addToResponse("<span class=\"meta\">");
             }
         }
 
-        private void doImport(TestResponder testResponder, PageData data) throws Exception {
+        private void doImport(TestResponder testResponder, PageData data) {
             try {
                 wikiImporter = importerFactory.newImporter(this);
                 wikiImporter.parseUrl(importProperty.getSourceUrl());
@@ -75,7 +75,7 @@ public class WikiImportTestEventListener implements TestEventListener {
             }
         }
 
-        private void announceDone(TestResponder testResponder) throws Exception {
+        private void announceDone(TestResponder testResponder) {
             if (testResponder.getResponse().isHtmlFormat())
                 testResponder.addToResponse("done");
         }
@@ -89,10 +89,10 @@ public class WikiImportTestEventListener implements TestEventListener {
             data.setContent(wikiPage.getData().getContent());
         }
 
-        public void pageImported(WikiPage localPage) throws Exception {
+        public void pageImported(WikiPage localPage) {
         }
 
-        public void pageImportError(WikiPage localPage, Exception e) throws Exception {
+        public void pageImportError(WikiPage localPage, Exception e) {
             errorOccured = true;
             System.out.println("Exception while importing \"local page\": " + localPage.getName() + ", exception: " + e.getMessage());
             if (e.getCause() != null)

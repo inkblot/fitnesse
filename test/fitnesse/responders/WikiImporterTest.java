@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 import util.Clock;
 import util.XmlUtil;
 
+import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -125,8 +126,8 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
         try {
             importer.parseUrl("blah");
             fail("should have exception");
-        } catch (Exception e) {
-            assertEquals("blah is not a valid URL.", e.getMessage());
+        } catch (MalformedURLException e) {
+            // very good
         }
     }
 

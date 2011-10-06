@@ -6,6 +6,8 @@ import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 import util.TimeMeasurement;
 
+import java.io.IOException;
+
 public class PageInProgressFormatter extends NullFormatter {
 
     public PageInProgressFormatter(final WikiPage page) {
@@ -13,7 +15,7 @@ public class PageInProgressFormatter extends NullFormatter {
         this.page = page;
     }
 
-    public String getLockFileName(WikiPage test) throws Exception {
+    public String getLockFileName(WikiPage test) throws IOException {
         //PageData data = page.getData();
         PageData data = test.getData();
         return "FitNesseRoot/files/testProgress/" + data.getVariable("PAGE_PATH") + "." + data.getVariable("PAGE_NAME");

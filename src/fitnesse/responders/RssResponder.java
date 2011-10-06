@@ -97,7 +97,7 @@ public class RssResponder implements SecureResponder {
         XmlUtil.addTextNode(rssDocument, itemElement1, "pubDate", pubDate);
     }
 
-    protected void buildLink(Document rssDocument, Element itemElement1, String pageName) throws Exception {
+    protected void buildLink(Document rssDocument, Element itemElement1, String pageName) throws IOException {
         String hostName = java.net.InetAddress.getLocalHost().getHostName();
         String prefix = "http://" + hostName + "/";
         if (contextPage != null) {

@@ -6,6 +6,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public abstract class TestSystem implements TestSystemListener {
         return command;
     }
 
-    private static String getRemoteDebugCommandPattern(PageData pageData) throws Exception {
+    private static String getRemoteDebugCommandPattern(PageData pageData) {
         String testRunner = pageData.getVariable("REMOTE_DEBUG_COMMAND");
         if (testRunner == null) {
             testRunner = pageData.getVariable(PageData.COMMAND_PATTERN);
@@ -51,7 +52,7 @@ public abstract class TestSystem implements TestSystemListener {
         return testRunner;
     }
 
-    private static String getNormalCommandPattern(PageData pageData) throws Exception {
+    private static String getNormalCommandPattern(PageData pageData) {
         String testRunner = pageData.getVariable(PageData.COMMAND_PATTERN);
         if (testRunner == null)
             testRunner = DEFAULT_COMMAND_PATTERN;
@@ -84,21 +85,21 @@ public abstract class TestSystem implements TestSystemListener {
         return String.format("%s:%s", testSystemName, testRunner);
     }
 
-    private static String getTestSystem(PageData data) throws Exception {
+    private static String getTestSystem(PageData data) {
         String testSystemName = data.getVariable("TEST_SYSTEM");
         if (testSystemName == null)
             return "fit";
         return testSystemName;
     }
 
-    public static String getPathSeparator(PageData pageData) throws Exception {
+    public static String getPathSeparator(PageData pageData) {
         String separator = pageData.getVariable(PageData.PATH_SEPARATOR);
         if (separator == null)
             separator = (String) System.getProperties().get("path.separator");
         return separator;
     }
 
-    public static String getTestSystemType(String testSystemName) throws Exception {
+    public static String getTestSystemType(String testSystemName) {
         String parts[] = testSystemName.split(":");
         return parts[0];
     }
@@ -127,7 +128,7 @@ public abstract class TestSystem implements TestSystemListener {
     }
 
 
-    private static String getTestRunnerDebug(PageData data) throws Exception {
+    private static String getTestRunnerDebug(PageData data) {
         String program = data.getVariable("REMOTE_DEBUG_RUNNER");
         if (program == null) {
             program = getTestRunnerNormal(data);
@@ -138,14 +139,14 @@ public abstract class TestSystem implements TestSystemListener {
         return program;
     }
 
-    public static String getTestRunnerNormal(PageData data) throws Exception {
+    public static String getTestRunnerNormal(PageData data) {
         String program = data.getVariable(PageData.TEST_RUNNER);
         if (program == null)
             program = defaultTestRunner(data);
         return program;
     }
 
-    static String defaultTestRunner(PageData data) throws Exception {
+    static String defaultTestRunner(PageData data) {
         String testSystemType = getTestSystemType(getTestSystem(data));
         if ("slim".equalsIgnoreCase(testSystemType))
             return "fitnesse.slim.SlimService";
@@ -169,7 +170,7 @@ public abstract class TestSystem implements TestSystemListener {
         return new Descriptor(testSystemName, testRunner, commandPattern, pathSeparator);
     }
 
-    protected Map<String, String> createClasspathEnvironment(String classPath) throws Exception {
+    protected Map<String, String> createClasspathEnvironment(String classPath) throws IOException {
         String classpathProperty = page.getData().getVariable("CLASSPATH_PROPERTY");
         Map<String, String> environmentVariables = null;
         if (classpathProperty != null) {

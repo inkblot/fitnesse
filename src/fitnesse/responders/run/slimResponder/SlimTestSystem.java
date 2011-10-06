@@ -19,7 +19,10 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.Symbol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.ServerSocket;
@@ -30,6 +33,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class SlimTestSystem extends TestSystem implements SlimTestContext {
+    private static final Logger logger = LoggerFactory.getLogger(SlimTestSystem.class);
+
     public static final String MESSAGE_ERROR = "!error:";
     public static final String MESSAGE_FAIL = "!fail:";
     public static final SlimTable START_OF_TEST = null;
@@ -99,7 +104,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
             slimClient.close();
     }
 
-    String getSlimFlags() throws Exception {
+    String getSlimFlags() throws IOException {
         String slimFlags = page.getData().getVariable("SLIM_FLAGS");
         if (slimFlags == null)
             slimFlags = "";
@@ -133,7 +138,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return port;
     }
 
-    public int getNextSlimSocket() {
+    public int getNextSlimSocket() throws IOException {
         int base = getSlimPortBase();
         if (base == 0) {
             return findFreePort();
@@ -146,14 +151,19 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         }
     }
 
-    private int getSlimPortBase() {
+    private int getSlimPortBase() throws IOException {
         int base = 8085;
         try {
             String slimPort = page.getData().getVariable("SLIM_PORT");
             if (slimPort != null) {
                 base = Integer.parseInt(slimPort);
             }
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            if (logger.isDebugEnabled()) {
+                logger.warn("Could not read SLIM_PORT page variable, using default value: slimBasePort=" + base, e);
+            } else {
+                logger.warn("Could not read SLIM_PORT page variable, using default value: slimBasePort=" + base);
+            }
         }
         return base;
     }
@@ -170,7 +180,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         }
     }
 
-    String determineSlimHost() throws Exception {
+    String determineSlimHost() throws IOException {
         String slimHost = page.getData().getVariable("SLIM_HOST");
         return slimHost == null ? "localhost" : slimHost;
     }
@@ -243,13 +253,18 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
                     String.format("Expected V%s but was V%s", expectedVersionNumber, serverVersionNumber));
     }
 
-    private double getExpectedSlimVersion(PageData pageData) throws Exception {
+    private double getExpectedSlimVersion(PageData pageData) {
         double expectedVersionNumber = SlimClient.MINIMUM_REQUIRED_SLIM_VERSION;
         String pageSpecificSlimVersion = pageData.getVariable("SLIM_VERSION");
         if (pageSpecificSlimVersion != null) {
             try {
                 expectedVersionNumber = Double.parseDouble(pageSpecificSlimVersion);
             } catch (NumberFormatException e) {
+                if (logger.isDebugEnabled()) {
+                    logger.warn("Could not read SLIM_VERSION page variable, using default value: expectedVersionNumber=" + expectedVersionNumber, e);
+                } else {
+                    logger.warn("Could not read SLIM_VERSION page variable, using default value: expectedVersionNumber=" + expectedVersionNumber);
+                }
             }
         }
         return expectedVersionNumber;

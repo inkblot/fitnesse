@@ -216,7 +216,7 @@ public class PageData implements Serializable {
         return footer == null ? "" : footer.getData().getHtml();
     }
 
-    public String getVariable(String name) throws Exception {
+    public String getVariable(String name) {
         Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
         if (variable.isNothing()) return null;
         //todo: push this into parser/translator

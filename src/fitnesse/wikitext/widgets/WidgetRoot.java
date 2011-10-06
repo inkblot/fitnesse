@@ -9,6 +9,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -141,7 +142,7 @@ public class WidgetRoot extends ParentWidget {
         return value;
     }
 
-    private String getVariableFromParentPages(String key) throws Exception {
+    private String getVariableFromParentPages(String key) throws IOException {
         String value = null;
         WikiPage page = getWikiPage();
         while (value == null && !page.getPageCrawler().isRoot(page)) {

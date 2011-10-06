@@ -146,7 +146,7 @@ public class SetupTeardownAndLibraryIncluder {
         return filteredList;
     }
 
-    private boolean isSlim(WikiPage page) throws Exception {
+    private boolean isSlim(WikiPage page) throws IOException {
         String testSystem = page.getData().getVariable("TEST_SYSTEM");
         return "slim".equalsIgnoreCase(testSystem);
     }

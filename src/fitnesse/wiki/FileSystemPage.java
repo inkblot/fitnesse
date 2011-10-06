@@ -336,7 +336,7 @@ public class FileSystemPage extends CachingPage {
             return cmSystemClassName;
         }
 
-        private String getCmSystemVariable() throws Exception {
+        private String getCmSystemVariable() throws IOException {
             return getData().getVariable("CM_SYSTEM");
         }
     }

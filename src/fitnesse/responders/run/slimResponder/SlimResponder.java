@@ -23,7 +23,7 @@ responders in general.
 */
 public abstract class SlimResponder extends WikiPageResponder implements TestSystemListener {
     ExecutionLog log;
-    private boolean fastTest = false;
+    private SlimTestSystem.SlimTestMode testMode = new SlimTestSystem.DefaultTestMode();
     SlimTestSystem testSystem;
 
     public SlimResponder(Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
@@ -38,7 +38,7 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
         descriptor.testRunner = "fitnesse.slim.SlimService";
         log = testSystem.getExecutionLog(classPath, descriptor);
         testSystem.start();
-        testSystem.setFastTest(fastTest);
+        testSystem.setTestMode(testMode);
         String html = testSystem.runTestsAndGenerateHtml(pageData);
         testSystem.bye();
 
@@ -69,8 +69,8 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
         return testSystem.getTestSummary();
     }
 
-    protected void setFastTest(boolean fastTest) {
-        this.fastTest = fastTest;
+    public void setTestMode(SlimTestSystem.SlimTestMode testMode) {
+        this.testMode = testMode;
     }
 
     public void acceptOutputFirst(String output) {

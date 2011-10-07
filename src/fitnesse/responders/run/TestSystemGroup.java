@@ -56,7 +56,6 @@ public class TestSystemGroup {
         TestSystem testSystem = null;
         if (!testSystems.containsKey(descriptor)) {
             testSystem = makeTestSystem(descriptor);
-            testSystem.setFastTest(fastTest);
             testSystems.put(descriptor, testSystem);
             log.add(descriptor.testSystemName, testSystem.getExecutionLog(classPath, descriptor));
             testSystem.start();
@@ -68,7 +67,7 @@ public class TestSystemGroup {
         if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.testSystemName)))
             return new HtmlSlimTestSystem(page, testSystemListener);
         else
-            return new FitTestSystem(context, page, testSystemListener);
+            return new FitTestSystem(context, page, testSystemListener, fastTest);
     }
 
 }

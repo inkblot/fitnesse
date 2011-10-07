@@ -78,7 +78,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         request = new MockRequest();
         responder = getSlimResponder();
-        responder.setFastTest(true);
+        responder.setTestMode(new SlimTestSystem.FastTestMode());
         testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!path classes");
         SlimTestSystem.clearSlimPortOffset();
     }
@@ -123,7 +123,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void slimResponderStartsAndQuitsSlim() throws Exception {
-        responder.setFastTest(false);
+        responder.setTestMode(new SlimTestSystem.DefaultTestMode());
         request.setResource("TestPage");
         responder.makeResponse(context, request);
         assertTrue(!responder.slimOpen());

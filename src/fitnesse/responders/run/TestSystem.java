@@ -74,8 +74,6 @@ public abstract class TestSystem implements TestSystemListener {
         return value.substring(0, index) + replacement + value.substring(index + mark.length());
     }
 
-    public abstract void setFastTest(boolean fastTest);
-
     public static String getTestSystemName(PageData data) {
         String testSystemName = getTestSystem(data);
         String testRunner = getTestRunnerNormal(data);

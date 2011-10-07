@@ -15,9 +15,10 @@ public class FitTestSystem extends TestSystem {
     private FitNesseContext context;
     private boolean fastTest;
 
-    public FitTestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener) {
+    public FitTestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener, boolean fastTest) {
         super(page, listener);
         this.context = context;
+        this.fastTest = fastTest;
     }
 
     protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws IOException {
@@ -54,8 +55,4 @@ public class FitTestSystem extends TestSystem {
         client.start();
     }
 
-    @Override
-    public void setFastTest(boolean fastTest) {
-        this.fastTest = fastTest;
-    }
 }

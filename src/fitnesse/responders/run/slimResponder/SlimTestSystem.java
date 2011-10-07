@@ -502,9 +502,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return "!include -c ." + path + "\n";
     }
 
-    @Override
-    public void setFastTest(boolean fastTest) {
-        testMode = fastTest ? new FastTestMode() : new DefaultTestMode();
+    public void setTestMode(SlimTestMode testMode) {
+        this.testMode = testMode;
     }
 
     public static interface SlimTestMode {

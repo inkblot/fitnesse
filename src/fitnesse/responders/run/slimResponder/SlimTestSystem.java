@@ -40,6 +40,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     public static final SlimTable START_OF_TEST = null;
     public static final SlimTable END_OF_TEST = null;
 
+    private SlimTestMode testMode;
     private CommandRunner slimRunner;
     private String slimCommand;
     private SlimClient slimClient;
@@ -71,6 +72,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     public SlimTestSystem(WikiPage page, TestSystemListener listener) {
         super(page, listener);
         testSummary = new TestSummary(0, 0, 0, 0);
+        testMode = new DefaultTestMode();
     }
 
     public String getSymbol(String symbolName) {
@@ -113,20 +115,15 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
     protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws IOException {
         String slimFlags = getSlimFlags();
-        slimSocket = getNextSlimSocket();
+        slimSocket = getNextSlimSocket(getSlimPortBase(page));
         String slimArguments = String.format("%s %d", slimFlags, slimSocket);
         String slimCommandPrefix = buildCommand(descriptor, classPath);
         slimCommand = String.format("%s %s", slimCommandPrefix, slimArguments);
-        if (fastTest) {
-            slimRunner = new MockCommandRunner();
-            createSlimService(slimArguments);
-        } else {
-            slimRunner = new CommandRunner(slimCommand, "", createClasspathEnvironment(classPath));
-        }
+        slimRunner = testMode.createSlimRunner(classPath, this);
         return new ExecutionLog(page, slimRunner);
     }
 
-    public int findFreePort() {
+    public static int findFreePort() {
         int port;
         try {
             ServerSocket socket = new ServerSocket(0);
@@ -138,8 +135,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return port;
     }
 
-    public int getNextSlimSocket() throws IOException {
-        int base = getSlimPortBase();
+    public static int getNextSlimSocket(int base) throws IOException {
         if (base == 0) {
             return findFreePort();
         }
@@ -151,7 +147,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         }
     }
 
-    private int getSlimPortBase() throws IOException {
+    public static int getSlimPortBase(WikiPage page) throws IOException {
         int base = 8085;
         try {
             String slimPort = page.getData().getVariable("SLIM_PORT");
@@ -191,16 +187,11 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
     public void bye() throws IOException {
         slimClient.sendBye();
-        if (!fastTest)
-            try {
-                slimRunner.join();
-            } catch (InterruptedException e) {
-                // ok
-            }
+        testMode.bye(this);
     }
 
     //For testing only.  Makes responder faster.
-    void createSlimService(String args) throws SocketException {
+    static void createSlimService(String args) throws SocketException {
         try {
             while (!tryCreateSlimService(args))
                 Thread.sleep(10);
@@ -209,7 +200,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         }
     }
 
-    private boolean tryCreateSlimService(String args) throws SocketException {
+    private static boolean tryCreateSlimService(String args) throws SocketException {
         try {
             SlimService.startSlimService(args.trim().split(" "));
             return true;
@@ -509,5 +500,49 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
     private String include(WikiPagePath path) {
         return "!include -c ." + path + "\n";
+    }
+
+    @Override
+    public void setFastTest(boolean fastTest) {
+        testMode = fastTest ? new FastTestMode() : new DefaultTestMode();
+    }
+
+    public static interface SlimTestMode {
+
+        CommandRunner createSlimRunner(String classPath, SlimTestSystem testSystem) throws IOException;
+
+        void bye(SlimTestSystem testSystem);
+    }
+
+    public static class DefaultTestMode implements SlimTestMode {
+
+        @Override
+        public CommandRunner createSlimRunner(String classPath, SlimTestSystem testSystem) throws IOException {
+            return new CommandRunner(testSystem.slimCommand, "", testSystem.createClasspathEnvironment(classPath));
+        }
+
+        @Override
+        public void bye(SlimTestSystem testSystem) {
+            try {
+                testSystem.slimRunner.join();
+            } catch (InterruptedException e) {
+                // ok
+            }
+        }
+    }
+
+    public static class FastTestMode implements SlimTestMode {
+
+        @Override
+        public CommandRunner createSlimRunner(String classPath, SlimTestSystem testSystem) throws IOException {
+            String slimArguments = String.format("%s %d", testSystem.getSlimFlags(), testSystem.slimSocket);
+            createSlimService(slimArguments);
+            return new MockCommandRunner();
+        }
+
+        @Override
+        public void bye(SlimTestSystem testSystem) {
+
+        }
     }
 }

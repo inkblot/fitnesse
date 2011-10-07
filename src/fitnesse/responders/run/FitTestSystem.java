@@ -13,6 +13,7 @@ import java.util.Map;
 public class FitTestSystem extends TestSystem {
     private CommandRunningFitClient client;
     private FitNesseContext context;
+    private boolean fastTest;
 
     public FitTestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener) {
         super(page, listener);
@@ -51,5 +52,10 @@ public class FitTestSystem extends TestSystem {
 
     public void start() {
         client.start();
+    }
+
+    @Override
+    public void setFastTest(boolean fastTest) {
+        this.fastTest = fastTest;
     }
 }

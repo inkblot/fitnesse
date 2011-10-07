@@ -89,25 +89,22 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void portRotates() throws Exception {
-        SlimTestSystem sys = new HtmlSlimTestSystem(root, dummyListener);
         for (int i = 1; i < 15; i++)
-            assertEquals(8085 + (i % 10), sys.getNextSlimSocket());
+            assertEquals(8085 + (i % 10), SlimTestSystem.getNextSlimSocket(SlimTestSystem.getSlimPortBase(root)));
     }
 
     @Test
     public void portStartsAtSlimPortVariable() throws Exception {
         WikiPage pageWithSlimPortDefined = crawler.addPage(root, PathParser.parse("PageWithSlimPortDefined"), "!define SLIM_PORT {9000}\n");
-        SlimTestSystem sys = new HtmlSlimTestSystem(pageWithSlimPortDefined, dummyListener);
         for (int i = 1; i < 15; i++)
-            assertEquals(9000 + (i % 10), sys.getNextSlimSocket());
+            assertEquals(9000 + (i % 10), SlimTestSystem.getNextSlimSocket(SlimTestSystem.getSlimPortBase(pageWithSlimPortDefined)));
     }
 
     @Test
     public void badSlimPortVariableDefaults() throws Exception {
         WikiPage pageWithBadSlimPortDefined = crawler.addPage(root, PathParser.parse("PageWithBadSlimPortDefined"), "!define SLIM_PORT {BOB}\n");
-        SlimTestSystem sys = new HtmlSlimTestSystem(pageWithBadSlimPortDefined, dummyListener);
         for (int i = 1; i < 15; i++)
-            assertEquals(8085 + (i % 10), sys.getNextSlimSocket());
+            assertEquals(8085 + (i % 10), SlimTestSystem.getNextSlimSocket(SlimTestSystem.getSlimPortBase(pageWithBadSlimPortDefined)));
     }
 
     @Test
@@ -477,9 +474,8 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         final int slimServerPort = 10258;
         ServerSocket slimSocket = new ServerSocket(slimServerPort);
         try {
-            SlimTestSystem sys = new HtmlSlimTestSystem(root, dummyListener);
             String slimArguments = String.format("%s %d", "", slimServerPort);
-            sys.createSlimService(slimArguments);
+            SlimTestSystem.createSlimService(slimArguments);
         } finally {
             slimSocket.close();
         }

@@ -17,7 +17,6 @@ public abstract class TestSystem implements TestSystemListener {
     public static final String DEFAULT_CSHARP_DEBUG_RUNNER_FIND = "runner.exe";
     public static final String DEFAULT_CSHARP_DEBUG_RUNNER_REPLACE = "runnerw.exe";
     protected WikiPage page;
-    protected boolean fastTest;
     protected static final String emptyPageContent = "OH NO! This page is empty!";
     protected TestSystemListener testSystemListener;
     protected ExecutionLog log;
@@ -75,9 +74,7 @@ public abstract class TestSystem implements TestSystemListener {
         return value.substring(0, index) + replacement + value.substring(index + mark.length());
     }
 
-    public void setFastTest(boolean fastTest) {
-        this.fastTest = fastTest;
-    }
+    public abstract void setFastTest(boolean fastTest);
 
     public static String getTestSystemName(PageData data) {
         String testSystemName = getTestSystem(data);

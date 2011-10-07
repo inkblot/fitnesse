@@ -2,6 +2,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WidgetBuilder;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +14,7 @@ public class PlainTextTableWidget extends ParentWidget implements TableWidget {
     private String body;
     private int columnCount;
 
-    public PlainTextTableWidget(ParentWidget parent, String text) throws Exception {
+    public PlainTextTableWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         if (match.find()) {
@@ -30,7 +31,7 @@ public class PlainTextTableWidget extends ParentWidget implements TableWidget {
         }
     }
 
-    private TableRowWidget addRow(String row) throws Exception {
+    private TableRowWidget addRow(String row) {
         return new TableRowWidget(this, parseToCells(row));
     }
 
@@ -41,19 +42,19 @@ public class PlainTextTableWidget extends ParentWidget implements TableWidget {
             return row.split(delimiter);
     }
 
-    private void addHiddenRow(String rowString) throws Exception {
+    private void addHiddenRow(String rowString) {
         TableRowWidget row = addRow(rowString);
         row.setCommentRow(true);
     }
 
-    public String render() throws Exception {
-        StringBuffer html = new StringBuffer("<table class=\"plain_text_table\">");
+    public String render() throws IOException {
+        StringBuilder html = new StringBuilder("<table class=\"plain_text_table\">");
         html.append(childHtml()).append("</table>");
 
         return html.toString();
     }
 
-    public String asWikiText() throws Exception {
+    public String asWikiText() {
         return "![" + childWikiText() + "]!";
     }
 

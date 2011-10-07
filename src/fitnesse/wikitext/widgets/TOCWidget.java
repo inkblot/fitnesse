@@ -9,9 +9,9 @@ import fitnesse.html.RawHtml;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WikiWidget;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,7 +53,7 @@ public class TOCWidget extends WikiWidget {
     }
 
     private void setRecursive(String text) {
-        recursive = (text.indexOf("-R") > -1);
+        recursive = (text.contains("-R"));
 
         if (recursive) // -R[0-9]...
         {
@@ -64,19 +64,19 @@ public class TOCWidget extends WikiWidget {
     }
 
     private void setGraceful(String text) {
-        isGraceful = (text.indexOf("-g") > -1);
+        isGraceful = (text.contains("-g"));
     }
 
     private void setPropertied(String text) {
-        isPropertied = (text.indexOf("-p") > -1);
+        isPropertied = (text.contains("-p"));
     }
 
     private void setFiltered(String text) {
-        isFiltered = (text.indexOf("-f") > -1);
+        isFiltered = (text.contains("-f"));
     }
 
     private void setHelpShown(String text) {
-        isHelpShown = (text.indexOf("-h") > -1);
+        isHelpShown = (text.contains("-h"));
     }
 
     public boolean isRegracing() {
@@ -95,29 +95,29 @@ public class TOCWidget extends WikiWidget {
         return isVarHelpShown || isHelpShown;
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         WikiPage page = getWikiPage();
-        initVarFlags(page);
-        initMoreSuffix(page);
-        initPropertyCharacters(page);
-        initHelpTextPrefix(page);
+        initVarFlags();
+        initMoreSuffix();
+        initPropertyCharacters();
+        initHelpTextPrefix();
         return buildContentsDiv(page, 1).html();
     }
 
-    private void initVarFlags(WikiPage page) throws Exception {
+    private void initVarFlags() throws IOException {
         isVarGraceful = "true".equals(parent.getVariable(REGRACE_TOC));
         isVarPropertied = "true".equals(parent.getVariable(PROPERTY_TOC));
         isVarFiltered = "true".equals(parent.getVariable(FILTER_TOC));
         isVarHelpShown = "true".equals(parent.getVariable(HELP_TOC));
     }
 
-    private void initMoreSuffix(WikiPage page) throws Exception {
+    private void initMoreSuffix() throws IOException {
         String moreSuffixEnv = parent.getVariable(MORE_SUFFIX_TOC);
         moreSuffix = (moreSuffixEnv != null) ? moreSuffixEnv : MORE_SUFFIX_DEFAULT;
     }
 
-    private void initPropertyCharacters(WikiPage page) {
-        StringBuffer propChars = new StringBuffer();
+    private void initPropertyCharacters() {
+        StringBuilder propChars = new StringBuilder();
         try {
             String propsFromEnv = parent.getVariable(PROPERTY_CHARACTERS);
             if (propsFromEnv != null) propChars.append(propsFromEnv);
@@ -132,21 +132,19 @@ public class TOCWidget extends WikiWidget {
         propertyCharacters = propChars.toString();
     }
 
-    private void initHelpTextPrefix(WikiPage page) throws Exception {
+    private void initHelpTextPrefix() throws IOException {
         String helpPrefixEnv = parent.getVariable(HELP_PREFIX_TOC);
         helpTextPrefix = (helpPrefixEnv != null) ? helpPrefixEnv : HELP_PREFIX_DEFAULT;
     }
 
-    private HtmlTag buildContentsDiv(WikiPage wikiPage, int currentDepth)
-            throws Exception {
+    private HtmlTag buildContentsDiv(WikiPage wikiPage, int currentDepth) throws IOException {
         HtmlTag div = makeDivTag(currentDepth);
         div.add(buildList(wikiPage, currentDepth));
         return div;
     }
 
-    private HtmlTag buildList(WikiPage wikiPage, int currentDepth)
-            throws Exception {
-        HtmlTag contentsDiv = null;
+    private HtmlTag buildList(WikiPage wikiPage, int currentDepth) throws IOException {
+        HtmlTag contentsDiv;
         if (currentDepth == 1) {
             contentsDiv = HtmlUtil.makeDivTag("contents");
             contentsDiv.add(HtmlUtil.makeBold("Contents:"));
@@ -154,8 +152,8 @@ public class TOCWidget extends WikiWidget {
             contentsDiv = HtmlUtil.makeDivTag("nested-contents");
         }
         HtmlTag list = new HtmlTag("ul");
-        for (Iterator<?> iterator = buildListOfChildPages(wikiPage).iterator(); iterator.hasNext(); ) {
-            list.add(buildListItem((WikiPage) iterator.next(), currentDepth));
+        for (WikiPage wikiPage1 : buildListOfChildPages(wikiPage)) {
+            list.add(buildListItem(wikiPage1, currentDepth));
         }
         contentsDiv.add(list);
         return contentsDiv;
@@ -166,7 +164,7 @@ public class TOCWidget extends WikiWidget {
         return (depthLimit > 0) && (currentDepth > depthLimit);
     }
 
-    private HtmlTag buildListItem(WikiPage wikiPage, int currentDepth) throws Exception {
+    private HtmlTag buildListItem(WikiPage wikiPage, int currentDepth) throws IOException {
         HtmlTag listItem = new HtmlTag("li");
         HtmlTag link = HtmlUtil.makeLink(getHref(wikiPage), getLinkText(wikiPage));
 
@@ -184,14 +182,11 @@ public class TOCWidget extends WikiWidget {
         return listItem;
     }
 
-    private String getHref(WikiPage wikiPage) throws Exception {
-        String href = null;
-        WikiPagePath wikiPagePath = wikiPage.getPageCrawler().getFullPath(wikiPage);
-        href = PathParser.render(wikiPagePath);
-        return href;
+    private String getHref(WikiPage wikiPage) {
+        return PathParser.render(wikiPage.getPageCrawler().getFullPath(wikiPage));
     }
 
-    private void addHelpText(HtmlTag link, WikiPage wikiPage) throws Exception {
+    private void addHelpText(HtmlTag link, WikiPage wikiPage) throws IOException {
         String helpText = wikiPage.getHelpText();
         if (helpText != null) {
             if (isHelpAppended())
@@ -201,7 +196,7 @@ public class TOCWidget extends WikiWidget {
         }
     }
 
-    private HtmlElement getLinkText(WikiPage wikiPage) throws Exception {
+    private HtmlElement getLinkText(WikiPage wikiPage) throws IOException {
         String name = regrace(wikiPage.getName()),
                 props = getProperties(wikiPage),
                 filters = getFilters(wikiPage);
@@ -212,8 +207,8 @@ public class TOCWidget extends WikiWidget {
             return new RawHtml(name + props + filters);
     }
 
-    private String getProperties(WikiPage wikiPage) throws Exception {
-        StringBuffer propText = new StringBuffer();
+    private String getProperties(WikiPage wikiPage) throws IOException {
+        StringBuilder propText = new StringBuilder();
         if (isPropertyAppended()) {
             PageData data = wikiPage.getData();
             WikiPageProperties props = data.getProperties();
@@ -229,33 +224,33 @@ public class TOCWidget extends WikiWidget {
         return (propText.length() > 0) ? " " + propText.toString() : "";
     }
 
-    private boolean isSymbolic(WikiPage page) throws Exception {
+    private boolean isSymbolic(WikiPage page) throws IOException {
         boolean isSym = false;
         WikiPageProperties props = page.getParent().getData().getProperties();
 
         if (props.has("SymbolicLinks")) {
             WikiPageProperty syms = props.getProperty("SymbolicLinks");
-            isSym = syms == null ? false : syms.has(page.getName());
+            isSym = syms != null && syms.has(page.getName());
         }
 
         return isSym;
     }
 
-    private String getFilters(WikiPage wikiPage) throws Exception {
+    private String getFilters(WikiPage wikiPage) throws IOException {
         String filters = "";
 
         if (isFiltersAppended()) {
             PageData data = wikiPage.getData();
             WikiPageProperties props = data.getProperties();
 
-            String filterText = (props.has(PageData.PropertySUITES)) ? filterText = props.get(PageData.PropertySUITES) : "";
+            String filterText = props.has(PageData.PropertySUITES) ? props.get(PageData.PropertySUITES) : "";
             filters = (filterText != null) ? filterText.trim() : "";
         }
 
         return (filters.length() > 0) ? " (" + filters + ")" : "";
     }
 
-    private List<WikiPage> buildListOfChildPages(WikiPage wikiPage) throws Exception {
+    private List<WikiPage> buildListOfChildPages(WikiPage wikiPage) throws IOException {
         List<WikiPage> childPageList = new ArrayList<WikiPage>(wikiPage.getChildren());
         if (wikiPage.hasExtension(VirtualCouplingExtension.NAME)) {
             VirtualCouplingExtension extension = (VirtualCouplingExtension) wikiPage.getExtension(VirtualCouplingExtension.NAME);

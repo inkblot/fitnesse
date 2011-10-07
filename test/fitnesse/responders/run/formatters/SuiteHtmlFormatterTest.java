@@ -26,7 +26,7 @@ public class SuiteHtmlFormatterTest extends FitnesseBaseTestCase {
         htmlPage = new HtmlPageFactory().newPage();
         formatter = new SuiteHtmlFormatter(context) {
             @Override
-            protected HtmlPage buildHtml(String pageType) throws Exception {
+            protected HtmlPage buildHtml(String pageType) {
                 return htmlPage;
             }
 

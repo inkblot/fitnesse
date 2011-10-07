@@ -3,25 +3,26 @@ package fitnesse.responders.run.formatters;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.wiki.WikiPage;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
 import util.TimeMeasurement;
 
+import java.io.IOException;
 import java.io.Writer;
+
+import static org.apache.commons.io.IOUtils.closeQuietly;
 
 public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
     private Writer writer;
     private XmlFormatter.WriterFactory writerFactory;
     private long suiteTime = 0;
 
-    public SuiteHistoryFormatter(FitNesseContext context, final WikiPage page, Writer writer) throws Exception {
+    public SuiteHistoryFormatter(FitNesseContext context, final WikiPage page, Writer writer) {
         super(context, page);
         this.writer = writer;
     }
 
     @Override
-    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) {
         if (suiteTime == 0)
             suiteTime = timeMeasurement.startedAt();
         super.newTestStarted(test, timeMeasurement);
@@ -33,15 +34,13 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
     }
 
     @Override
-    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
         super.allTestingComplete(totalTimeMeasurement);
         if (writerFactory != null)
             writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime);
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("suiteExecutionReport", suiteExecutionReport);
-        VelocityEngine velocityEngine = VelocityFactory.getVelocityEngine();
-        Template template = velocityEngine.getTemplate("fitnesse/templates/suiteHistoryXML.vm");
-        template.merge(velocityContext, writer);
-        writer.close();
+        VelocityFactory.mergeTemplate(writer, velocityContext, "fitnesse/templates/suiteHistoryXML.vm");
+        closeQuietly(writer);
     }
 }

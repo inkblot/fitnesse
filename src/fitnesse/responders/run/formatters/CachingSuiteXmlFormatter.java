@@ -7,25 +7,24 @@ import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.wiki.WikiPage;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
 import util.TimeMeasurement;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
+
+import static org.apache.commons.io.IOUtils.closeQuietly;
 
 public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
     private TestHistory testHistory = new TestHistory();
     private VelocityContext velocityContext;
-    private VelocityEngine velocityEngine;
     private Writer writer;
     private boolean includeHtml = false;
 
     public CachingSuiteXmlFormatter(FitNesseContext context, WikiPage page, Writer writer) {
         super(context, page);
         velocityContext = new VelocityContext();
-        velocityEngine = VelocityFactory.getVelocityEngine();
         this.writer = writer;
     }
 
@@ -33,27 +32,25 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
         this.testHistory = testHistory;
     }
 
-    void setVelocityForTests(VelocityContext velocityContext, VelocityEngine engine, Writer writer) {
+    void setVelocityForTests(VelocityContext velocityContext, Writer writer) {
         this.velocityContext = velocityContext;
-        this.velocityEngine = engine;
         this.writer = writer;
     }
 
     @Override
-    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
         super.allTestingComplete(totalTimeMeasurement);
         writeOutSuiteXML();
     }
 
-    protected void writeOutSuiteXML() throws Exception {
+    protected void writeOutSuiteXML() throws IOException {
         testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
         velocityContext.put("formatter", this);
-        Template template = velocityEngine.getTemplate("fitnesse/templates/suiteXML.vm");
-        template.merge(velocityContext, writer);
-        writer.close();
+        VelocityFactory.mergeTemplate(writer, velocityContext, "fitnesse/templates/suiteXML.vm");
+        closeQuietly(writer);
     }
 
-    public TestExecutionReport getTestExecutionReport(SuiteExecutionReport.PageHistoryReference reference) throws Exception {
+    public TestExecutionReport getTestExecutionReport(SuiteExecutionReport.PageHistoryReference reference) throws IOException {
         PageHistory pageHistory = testHistory.getPageHistory(reference.getPageName());
         Date date;
         date = new Date(reference.getTime());

@@ -5,6 +5,7 @@ import fitnesse.slimTables.HtmlTableScanner;
 import org.htmlparser.util.ParserException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,14 +36,14 @@ public class HistoryComparator {
         }
     }
 
-    private String attemptGetFileContent(String filePath) throws Exception {
+    private String attemptGetFileContent(String filePath) throws IOException {
         TestExecutionReport report = readTestExecutionReport(filePath);
         if (!exactlyOneReport(report))
             return null;
         return report.getContentsOfReport(0);
     }
 
-    private TestExecutionReport readTestExecutionReport(String filePath) throws Exception {
+    private TestExecutionReport readTestExecutionReport(String filePath) throws IOException {
         return new TestExecutionReport().read(new File(filePath));
     }
 
@@ -86,14 +87,14 @@ public class HistoryComparator {
         return true;
     }
 
-    public boolean compare(String firstFilePath, String secondFilePath) throws Exception {
+    public boolean compare(String firstFilePath, String secondFilePath) throws IOException {
         if (firstFilePath.equals(secondFilePath))
             return false;
         initializeFileContents(firstFilePath, secondFilePath);
         return grabAndCompareTablesFromHtml();
     }
 
-    public boolean grabAndCompareTablesFromHtml() throws ParserException {
+    public boolean grabAndCompareTablesFromHtml() throws IOException {
         initializeComparatorHelpers();
         if (firstScanner.getTableCount() == 0 || secondScanner.getTableCount() == 0)
             return false;
@@ -107,7 +108,7 @@ public class HistoryComparator {
         return true;
     }
 
-    private void initializeComparatorHelpers() throws ParserException {
+    private void initializeComparatorHelpers() throws IOException {
         matchedTables = new ArrayList<MatchedPair>();
         firstScanner = new HtmlTableScanner(firstFileContent);
         secondScanner = new HtmlTableScanner(secondFileContent);
@@ -242,7 +243,7 @@ public class HistoryComparator {
         }
     }
 
-    private void initializeFileContents(String firstFilePath, String secondFilePath) throws ParserException {
+    private void initializeFileContents(String firstFilePath, String secondFilePath) {
         String content = getFileContent(firstFilePath);
         firstFileContent = content == null ? "" : content;
         content = getFileContent(secondFilePath);

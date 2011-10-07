@@ -10,6 +10,7 @@ import org.htmlparser.tags.TableTag;
 import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,12 +22,16 @@ public class HtmlTableScanner implements TableScanner {
     private List<Table> tables = new ArrayList<Table>();
     private NodeList htmlTree;
 
-    public HtmlTableScanner(String page) throws ParserException {
+    public HtmlTableScanner(String page) throws IOException {
         if (isEmpty(page))
             page = "<i>This page intentionally left blank.</i>";
 
         Parser parser = new Parser(new Lexer(new Page(page)));
-        htmlTree = parser.parse(null);
+        try {
+            htmlTree = parser.parse(null);
+        } catch (ParserException e) {
+            throw new IOException("Could not read HTML content", e);
+        }
         scanForTables(htmlTree);
     }
 

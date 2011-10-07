@@ -2,12 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public abstract class InheritedItemBuilder {
-    protected List<String> getInheritedItems(WikiPage page, Set<WikiPage> visitedPages) throws Exception {
+    protected List<String> getInheritedItems(WikiPage page, Set<WikiPage> visitedPages) throws IOException {
         List<String> items = new ArrayList<String>();
         addItemsFromPage(page, items);
 
@@ -22,10 +23,10 @@ public abstract class InheritedItemBuilder {
         return items;
     }
 
-    private void addItemsFromPage(WikiPage itemPage, List<String> items) throws Exception {
+    private void addItemsFromPage(WikiPage itemPage, List<String> items) throws IOException {
         List<String> itemsOnThisPage = getItemsFromPage(itemPage);
         items.addAll(itemsOnThisPage);
     }
 
-    protected abstract List<String> getItemsFromPage(WikiPage page) throws Exception;
+    protected abstract List<String> getItemsFromPage(WikiPage page) throws IOException;
 }

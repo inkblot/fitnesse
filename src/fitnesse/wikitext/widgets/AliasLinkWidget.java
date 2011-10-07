@@ -10,28 +10,28 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.WidgetVisitor;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AliasLinkWidget extends ParentWidget {
     public static final String REGEXP = "\\[\\[[^\n\r\\]]+\\]\\[[^\n\r\\]]+\\]\\]";
     public static final Pattern pattern = Pattern.compile("\\[\\[([^\n\r\\]]+)\\]\\[([^\n\r\\]]+)\\]\\]");
-    private String tag;
     private String href;
     WikiPage parentPage;
     private static final Pattern URL_SUFFIX_PARSER = Pattern.compile("([^\\?\\#]*)((\\?.+)?(\\#.+)?)?");
 
-    public AliasLinkWidget(ParentWidget parent, String text) throws Exception {
+    public AliasLinkWidget(ParentWidget parent, String text) {
         super(parent);
         parentPage = getWikiPage().getParent();
         Matcher match = pattern.matcher(text);
         match.find();
-        tag = match.group(1);
+        String tag = match.group(1);
         href = match.group(2).trim();
         addChildWidgets(tag);
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         String expandedHref = expandVariables(href);
         Matcher suffixMatcher = URL_SUFFIX_PARSER.matcher(expandedHref);
         suffixMatcher.find();
@@ -42,7 +42,7 @@ public class AliasLinkWidget extends ParentWidget {
 
     }
 
-    private String makeLinkTag(String url, String urlSuffix) throws Exception {
+    private String makeLinkTag(String url, String urlSuffix) throws IOException {
         if (WikiWordWidget.isWikiWord(url))
             return makeLinkTagForWikiWord(url, urlSuffix);
         else {
@@ -51,7 +51,7 @@ public class AliasLinkWidget extends ParentWidget {
         }
     }
 
-    private String makeLinkTagForWikiWord(String url, String urlSuffix) throws Exception {
+    private String makeLinkTagForWikiWord(String url, String urlSuffix) throws IOException {
         WikiWordWidget www = new WikiWordWidget(new BlankParentWidget(this, ""), url);
         String theWord = www.getWikiWord();
         WikiPagePath wikiWordPath = PathParser.parse(theWord);
@@ -68,12 +68,12 @@ public class AliasLinkWidget extends ParentWidget {
             return (childHtml() + "<a title=\"create page\" href=\"" + qualifiedName + "?edit&amp;nonExistent=true\">[?]</a>");
     }
 
-    private void addHelpText(HtmlTag link, WikiPage wikiPage) throws Exception {
+    private void addHelpText(HtmlTag link, WikiPage wikiPage) throws IOException {
         String helpText = wikiPage.getHelpText();
         if (helpText != null) link.addAttribute("title", helpText);
     }
 
-    private String makeAliasLinkToNonExistentRemotePage(String theWord) throws Exception {
+    private String makeAliasLinkToNonExistentRemotePage(String theWord) throws IOException {
         ProxyPage proxy = (ProxyPage) getWikiPage();
         String remoteURLOfPage = proxy.getThisPageUrl();
         String nameOfThisPage = proxy.getName();
@@ -84,15 +84,15 @@ public class AliasLinkWidget extends ParentWidget {
                 + ">[?]</a>";
     }
 
-    public String asWikiText() throws Exception {
+    public String asWikiText() {
         return "[[" + childWikiText() + "][" + href + "]]";
     }
 
-    public void acceptVisitor(WidgetVisitor visitor) throws Exception {
+    public void acceptVisitor(WidgetVisitor visitor) {
         visitor.visit(this);
     }
 
-    public void renamePageIfReferenced(WikiPage pageToRename, String newName) throws Exception {
+    public void renamePageIfReferenced(WikiPage pageToRename, String newName) {
         if (WikiWordWidget.isWikiWord(href)) {
             WikiWordWidget www = new WikiWordWidget(new BlankParentWidget(this, ""), href);
             www.renamePageIfReferenced(pageToRename, newName);

@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +10,7 @@ public class ItalicWidget extends ParentWidget {
     public static final String REGEXP = "''.+?''";
     private static final Pattern pattern = Pattern.compile("''(.+?)''", Pattern.MULTILINE + Pattern.DOTALL);
 
-    public ItalicWidget(ParentWidget parent, String text) throws Exception {
+    public ItalicWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         if (match.find())
@@ -18,8 +19,8 @@ public class ItalicWidget extends ParentWidget {
             System.err.println("ItalicWidget: match was not found");
     }
 
-    public String render() throws Exception {
-        StringBuffer html = new StringBuffer("<i>");
+    public String render() throws IOException {
+        StringBuilder html = new StringBuilder("<i>");
         html.append(childHtml()).append("</i>");
 
         return html.toString();

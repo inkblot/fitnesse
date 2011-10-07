@@ -14,6 +14,7 @@ import fitnesse.responders.run.TestSystemListener;
 import fitnesse.wiki.PageData;
 import util.Clock;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /*
@@ -30,7 +31,7 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
     }
 
 
-    protected String generateHtml(PageData pageData) throws Exception {
+    protected String generateHtml(PageData pageData) throws IOException {
         testSystem = getTestSystem(pageData);
         String classPath = new ClassPathBuilder().getClasspath(page);
         TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), false);
@@ -40,7 +41,13 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
         testSystem.setFastTest(fastTest);
         String html = testSystem.runTestsAndGenerateHtml(pageData);
         testSystem.bye();
-        Thread.sleep(20);
+
+        // TODO: Why is this sleep here?
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            // ok
+        }
         return html;
     }
 
@@ -66,10 +73,10 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
         this.fastTest = fastTest;
     }
 
-    public void acceptOutputFirst(String output) throws Exception {
+    public void acceptOutputFirst(String output) {
     }
 
-    public void testComplete(TestSummary testSummary) throws Exception {
+    public void testComplete(TestSummary testSummary) {
     }
 
     public void exceptionOccurred(Throwable e) {

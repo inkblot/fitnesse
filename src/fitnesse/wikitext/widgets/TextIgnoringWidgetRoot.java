@@ -5,23 +5,24 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TextIgnoringWidgetRoot extends WidgetRoot {
     //Refactored for isGathering parameter.
-    public TextIgnoringWidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws Exception {
+    public TextIgnoringWidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
         super(value, page, builder, /*isGatheringInfo=*/ true);
     }
 
     //Parent Literals: T'I'W'Root ctor with parent's literals
-    public TextIgnoringWidgetRoot(String value, WikiPage page, List<String> literals, WidgetBuilder builder) throws Exception {
+    public TextIgnoringWidgetRoot(String value, WikiPage page, List<String> literals, WidgetBuilder builder) throws IOException {
         super(null, page, builder, /*isGatheringInfo=*/ true);
         if (literals != null) this.setLiterals(literals);
         this.buildWidgets(value);
     }
 
 
-    public void addChildWidgets(String value) throws Exception {
+    public void addChildWidgets(String value) {
         getBuilder().addChildWidgets(value, this, false);
     }
 }

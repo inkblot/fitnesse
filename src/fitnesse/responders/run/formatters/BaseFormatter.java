@@ -8,6 +8,8 @@ import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 
+import java.io.IOException;
+
 public abstract class BaseFormatter implements ResultsListener {
 
     protected WikiPage page = null;
@@ -16,7 +18,7 @@ public abstract class BaseFormatter implements ResultsListener {
     protected int testCount = 0;
     protected int failCount = 0;
 
-    public abstract void writeHead(String pageType) throws Exception;
+    public abstract void writeHead(String pageType) throws IOException;
 
     protected BaseFormatter() {
     }
@@ -40,7 +42,7 @@ public abstract class BaseFormatter implements ResultsListener {
     }
 
     @Override
-    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
         finalErrorCount = failCount;
     }
 
@@ -49,7 +51,7 @@ public abstract class BaseFormatter implements ResultsListener {
     }
 
     @Override
-    public void testComplete(WikiPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws Exception {
+    public void testComplete(WikiPage test, TestSummary summary, TimeMeasurement timeMeasurement) throws IOException {
         testCount++;
         if (summary.wrong > 0) {
             failCount++;
@@ -59,7 +61,7 @@ public abstract class BaseFormatter implements ResultsListener {
         }
     }
 
-    public void addMessageForBlankHtml() throws Exception {
+    public void addMessageForBlankHtml() throws IOException {
     }
 
     public int getErrorCount() {
@@ -94,7 +96,7 @@ class NullFormatter extends BaseFormatter {
     }
 
     @Override
-    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws IOException {
     }
 
     @Override
@@ -102,7 +104,7 @@ class NullFormatter extends BaseFormatter {
     }
 
     @Override
-    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
     }
 
     @Override

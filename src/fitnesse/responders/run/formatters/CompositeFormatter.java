@@ -6,6 +6,7 @@ import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,43 +35,43 @@ public class CompositeFormatter extends BaseFormatter {
     }
 
     @Override
-    public void addMessageForBlankHtml() throws Exception {
+    public void addMessageForBlankHtml() throws IOException {
         for (BaseFormatter formatter : formatters)
             formatter.addMessageForBlankHtml();
     }
 
-    public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws Exception {
+    public void setExecutionLogAndTrackingId(String stopResponderId, CompositeExecutionLog log) throws IOException {
         for (BaseFormatter formatter : formatters)
             formatter.setExecutionLogAndTrackingId(stopResponderId, log);
     }
 
-    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws IOException {
         for (BaseFormatter formatter : formatters)
             formatter.testSystemStarted(testSystem, testSystemName, testRunner);
     }
 
-    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws IOException {
         for (BaseFormatter formatter : formatters)
             formatter.newTestStarted(test, timeMeasurement);
     }
 
-    public void testOutputChunk(String output) throws Exception {
+    public void testOutputChunk(String output) throws IOException {
         for (BaseFormatter formatter : formatters)
             formatter.testOutputChunk(output);
     }
 
-    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
         for (BaseFormatter formatter : formatters)
             formatter.testComplete(test, testSummary, timeMeasurement);
     }
 
-    public void writeHead(String pageType) throws Exception {
+    public void writeHead(String pageType) throws IOException {
         for (BaseFormatter formatter : formatters)
             formatter.writeHead(pageType);
     }
 
     @Override
-    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
         for (BaseFormatter formatter : formatters)
             formatter.allTestingComplete(totalTimeMeasurement);
     }

@@ -57,7 +57,7 @@ public class FitProtocol {
         return reader.read(size);
     }
 
-    public static Counts readCounts(StreamReader reader) throws Exception {
+    public static Counts readCounts(StreamReader reader) throws IOException {
         Counts counts = new Counts();
         counts.right = readSize(reader);
         counts.wrong = readSize(reader);

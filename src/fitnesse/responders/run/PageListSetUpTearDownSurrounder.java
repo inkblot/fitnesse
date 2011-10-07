@@ -4,6 +4,7 @@ import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.util.*;
 
 public class PageListSetUpTearDownSurrounder {
@@ -14,7 +15,7 @@ public class PageListSetUpTearDownSurrounder {
         this.root = root;
     }
 
-    public void surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(List<WikiPage> pageList) throws Exception {
+    public void surroundGroupsOfTestPagesWithRespectiveSetUpAndTearDowns(List<WikiPage> pageList) throws IOException {
         this.pageList = pageList;
         Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups = new HashMap<String, LinkedList<WikiPage>>();
         createPageSetUpTearDownGroups(pageSetUpTearDownGroups);
@@ -22,13 +23,13 @@ public class PageListSetUpTearDownSurrounder {
         reinsertPagesViaSetUpTearDownGroups(pageSetUpTearDownGroups);
     }
 
-    private void createPageSetUpTearDownGroups(Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws Exception {
+    private void createPageSetUpTearDownGroups(Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws IOException {
         for (WikiPage page : pageList) {
             makeSetUpTearDownPageGroupForPage(page, pageSetUpTearDownGroups);
         }
     }
 
-    private void makeSetUpTearDownPageGroupForPage(WikiPage page, Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws Exception {
+    private void makeSetUpTearDownPageGroupForPage(WikiPage page, Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws IOException {
         String group = getSetUpTearDownGroup(page);
         LinkedList<WikiPage> pageGroup;
         if (pageSetUpTearDownGroups.get(group) != null) {
@@ -41,13 +42,13 @@ public class PageListSetUpTearDownSurrounder {
         }
     }
 
-    private String getSetUpTearDownGroup(WikiPage page) throws Exception {
+    private String getSetUpTearDownGroup(WikiPage page) throws IOException {
         String setUpPath = getPathForSetUpTearDown(page, SuiteContentsFinder.SUITE_SETUP_NAME);
         String tearDownPath = getPathForSetUpTearDown(page, SuiteContentsFinder.SUITE_TEARDOWN_NAME);
         return setUpPath + "," + tearDownPath;
     }
 
-    private String getPathForSetUpTearDown(WikiPage page, String setUpTearDownName) throws Exception {
+    private String getPathForSetUpTearDown(WikiPage page, String setUpTearDownName) throws IOException {
         String path = null;
         WikiPage suiteSetUpTearDown = PageCrawlerImpl.getClosestInheritedPage(setUpTearDownName, page);
         if (suiteSetUpTearDown != null)
@@ -55,22 +56,21 @@ public class PageListSetUpTearDownSurrounder {
         return path;
     }
 
-    private void reinsertPagesViaSetUpTearDownGroups(Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws Exception {
-        Set groups = pageSetUpTearDownGroups.keySet();
-        for (Object group : groups) {
-            String setUpAndTearDownGroupKey = group.toString();
+    private void reinsertPagesViaSetUpTearDownGroups(Map<String, LinkedList<WikiPage>> pageSetUpTearDownGroups) throws IOException {
+        Set<String> groups = pageSetUpTearDownGroups.keySet();
+        for (String group : groups) {
             LinkedList<WikiPage> pageGroup = pageSetUpTearDownGroups.get(group);
-            insertSetUpTearDownPageGroup(setUpAndTearDownGroupKey, pageGroup);
+            insertSetUpTearDownPageGroup(group, pageGroup);
         }
     }
 
-    private void insertSetUpTearDownPageGroup(String setUpAndTearDownGroupKey, LinkedList<WikiPage> pageGroup) throws Exception {
+    private void insertSetUpTearDownPageGroup(String setUpAndTearDownGroupKey, LinkedList<WikiPage> pageGroup) throws IOException {
         insertSetUpForThisGroup(setUpAndTearDownGroupKey);
         insertPagesOfThisGroup(pageGroup);
         insertTearDownForThisGroup(setUpAndTearDownGroupKey);
     }
 
-    private void insertSetUpForThisGroup(String setUpAndTearDown) throws Exception {
+    private void insertSetUpForThisGroup(String setUpAndTearDown) throws IOException {
         String setUpPath = setUpAndTearDown.split(",")[0];
         WikiPage setUpPage = root.getPageCrawler().getPage(root, PathParser.parse(setUpPath));
         if (setUpPage != null)
@@ -82,7 +82,7 @@ public class PageListSetUpTearDownSurrounder {
             pageList.add(page);
     }
 
-    private void insertTearDownForThisGroup(String setUpAndTearDownGroupKey) throws Exception {
+    private void insertTearDownForThisGroup(String setUpAndTearDownGroupKey) throws IOException {
         String tearDownPath = setUpAndTearDownGroupKey.split(",")[1];
         WikiPage tearDownPage = root.getPageCrawler().getPage(root, PathParser.parse(tearDownPath));
         if (tearDownPage != null)

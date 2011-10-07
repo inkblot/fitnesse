@@ -17,16 +17,15 @@ public class SetupTeardownAndLibraryIncluder {
     private PageCrawler pageCrawler;
 
 
-    public static void includeInto(PageData pageData) throws Exception {
+    public static void includeInto(PageData pageData) throws IOException {
         includeInto(pageData, false);
     }
 
-    public static void includeInto(PageData pageData, boolean isSuite)
-            throws Exception {
+    public static void includeInto(PageData pageData, boolean isSuite) throws IOException {
         new SetupTeardownAndLibraryIncluder(pageData).includeInto(isSuite);
     }
 
-    public static void includeSetupsTeardownsAndLibrariesBelowTheSuite(PageData pageData, WikiPage suitePage) throws Exception {
+    public static void includeSetupsTeardownsAndLibrariesBelowTheSuite(PageData pageData, WikiPage suitePage) throws IOException {
         new SetupTeardownAndLibraryIncluder(pageData).includeSetupsTeardownsAndLibrariesBelowTheSuite(suitePage);
     }
 
@@ -38,17 +37,17 @@ public class SetupTeardownAndLibraryIncluder {
         newPageContent = new StringBuffer();
     }
 
-    private void includeInto(boolean isSuite) throws Exception {
+    private void includeInto(boolean isSuite) throws IOException {
         this.isSuite = isSuite;
         if (isTestPage())
             includeSetupTeardownAndLibraryPages();
     }
 
-    private boolean isTestPage() throws Exception {
+    private boolean isTestPage() {
         return pageData.hasAttribute("Test");
     }
 
-    private void includeSetupTeardownAndLibraryPages() throws Exception {
+    private void includeSetupTeardownAndLibraryPages() throws IOException {
         includeScenarioLibraries();
         includeSetupPages();
         includePageContent();
@@ -56,7 +55,7 @@ public class SetupTeardownAndLibraryIncluder {
         updatePageContent();
     }
 
-    private void includeSetupsTeardownsAndLibrariesBelowTheSuite(WikiPage suitePage) throws Exception {
+    private void includeSetupsTeardownsAndLibrariesBelowTheSuite(WikiPage suitePage) throws IOException {
         String pageName = testPage.getName();
         includeScenarioLibraryBelow(suitePage);
         if (!isSuiteSetUpOrTearDownPage(pageName))
@@ -71,52 +70,52 @@ public class SetupTeardownAndLibraryIncluder {
         return PageData.SUITE_SETUP_NAME.equals(pageName) || PageData.SUITE_TEARDOWN_NAME.equals(pageName);
     }
 
-    private void includeScenarioLibraryBelow(WikiPage suitePage) throws Exception {
+    private void includeScenarioLibraryBelow(WikiPage suitePage) throws IOException {
         includeScenarioLibrariesIfAppropriate(new BelowSuiteLibraryFilter(suitePage));
     }
 
-    private void includeScenarioLibraries() throws Exception {
+    private void includeScenarioLibraries() throws IOException {
         includeScenarioLibrariesIfAppropriate(AllLibrariesFilter.instance);
 
     }
 
-    private void includeSetupPages() throws Exception {
+    private void includeSetupPages() throws IOException {
         if (isSuite)
             includeSuiteSetupPage();
         includeSetupPage();
     }
 
-    private void includeSuiteSetupPage() throws Exception {
+    private void includeSuiteSetupPage() throws IOException {
         include(PageData.SUITE_SETUP_NAME, "-setup");
     }
 
-    private void includeSetupPage() throws Exception {
+    private void includeSetupPage() throws IOException {
         include("SetUp", "-setup");
     }
 
-    private void includePageContent() throws Exception {
+    private void includePageContent() {
         newPageContent.append(pageData.getContent());
     }
 
-    private void includeTeardownPages() throws Exception {
+    private void includeTeardownPages() throws IOException {
         includeTeardownPage();
         if (isSuite)
             includeSuiteTeardownPage();
     }
 
-    private void includeTeardownPage() throws Exception {
+    private void includeTeardownPage() throws IOException {
         include("TearDown", "-teardown");
     }
 
-    private void includeSuiteTeardownPage() throws Exception {
+    private void includeSuiteTeardownPage() throws IOException {
         include(PageData.SUITE_TEARDOWN_NAME, "-teardown");
     }
 
-    private void updatePageContent() throws Exception {
+    private void updatePageContent() {
         pageData.setContent(newPageContent.toString());
     }
 
-    private void include(String pageName, String arg) throws Exception {
+    private void include(String pageName, String arg) throws IOException {
         WikiPage inheritedPage = findInheritedPage(pageName);
         if (inheritedPage != null) {
             String pagePathName = getPathNameForPage(inheritedPage);
@@ -124,7 +123,7 @@ public class SetupTeardownAndLibraryIncluder {
         }
     }
 
-    private void includeScenarioLibrariesIfAppropriate(LibraryFilter libraryFilter) throws Exception {
+    private void includeScenarioLibrariesIfAppropriate(LibraryFilter libraryFilter) throws IOException {
         if (isSlim(testPage))
             includeScenarioLibrariesIfAny(libraryFilter);
     }
@@ -165,11 +164,11 @@ public class SetupTeardownAndLibraryIncluder {
         newPageContent.append("\n");
     }
 
-    private WikiPage findInheritedPage(String pageName) throws Exception {
+    private WikiPage findInheritedPage(String pageName) throws IOException {
         return PageCrawlerImpl.getClosestInheritedPage(pageName, testPage);
     }
 
-    private String getPathNameForPage(WikiPage page) throws Exception {
+    private String getPathNameForPage(WikiPage page) {
         WikiPagePath pagePath = pageCrawler.getFullPath(page);
         return PathParser.render(pagePath);
     }
@@ -199,7 +198,7 @@ public class SetupTeardownAndLibraryIncluder {
     private class BelowSuiteLibraryFilter implements LibraryFilter {
         private int minimumPathLength;
 
-        public BelowSuiteLibraryFilter(WikiPage suitePage) throws Exception {
+        public BelowSuiteLibraryFilter(WikiPage suitePage) {
             minimumPathLength = suitePage.getPageCrawler().getFullPath(suitePage).addNameToEnd("ScenarioLibrary").toString().length();
         }
 

@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.wiki.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class CompositeExecutionLog {
     private PageCrawler crawler;
     private WikiPage root;
 
-    public CompositeExecutionLog(WikiPage testPage) throws Exception {
+    public CompositeExecutionLog(WikiPage testPage) {
         crawler = testPage.getPageCrawler();
         root = crawler.getRoot(testPage);
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
@@ -27,7 +28,7 @@ public class CompositeExecutionLog {
         logs.put(testSystemName, executionLog);
     }
 
-    public void publish() throws Exception {
+    public void publish() throws IOException {
         String content = buildLogContent();
 
         WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
@@ -36,8 +37,8 @@ public class CompositeExecutionLog {
         errorLogPage.commit(data);
     }
 
-    private String buildLogContent() throws Exception {
-        StringBuffer logContent = new StringBuffer();
+    private String buildLogContent() {
+        StringBuilder logContent = new StringBuilder();
         for (String testSystemName : logs.keySet()) {
             logContent.append(String.format("!3 !-%s-!\n", testSystemName));
             logContent.append(logs.get(testSystemName).buildLogContent());
@@ -45,7 +46,7 @@ public class CompositeExecutionLog {
         return logContent.toString();
     }
 
-    public String executionStatusHtml() throws Exception {
+    public String executionStatusHtml() {
         for (ExecutionLog log : logs.values())
             if (log.exceptionCount() != 0)
                 return ExecutionLog.makeExecutionStatusLink(errorLogPageName, ExecutionStatus.ERROR);

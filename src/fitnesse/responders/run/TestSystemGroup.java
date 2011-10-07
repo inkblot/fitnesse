@@ -6,6 +6,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.responders.run.slimResponder.HtmlSlimTestSystem;
 import fitnesse.wiki.WikiPage;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,24 +18,24 @@ public class TestSystemGroup {
     private CompositeExecutionLog log;
     private boolean fastTest = false;
 
-    public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener) throws Exception {
+    public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener) {
         this.context = context;
         this.page = page;
         this.testSystemListener = listener;
         log = new CompositeExecutionLog(page);
     }
 
-    public CompositeExecutionLog getExecutionLog() throws Exception {
+    public CompositeExecutionLog getExecutionLog() {
         return log;
     }
 
-    public void bye() throws Exception {
+    public void bye() throws IOException {
         for (TestSystem testSystem : testSystems.values()) {
             testSystem.bye();
         }
     }
 
-    public void kill() throws Exception {
+    public void kill() throws IOException {
         for (TestSystem testSystem : testSystems.values()) {
             testSystem.kill();
         }
@@ -46,12 +47,12 @@ public class TestSystemGroup {
 
     public boolean isSuccessfullyStarted() {
         for (TestSystem testSystem : testSystems.values())
-            if (testSystem.isSuccessfullyStarted() == false)
+            if (!testSystem.isSuccessfullyStarted())
                 return false;
         return true;
     }
 
-    TestSystem startTestSystem(TestSystem.Descriptor descriptor, String classPath) throws Exception {
+    TestSystem startTestSystem(TestSystem.Descriptor descriptor, String classPath) throws IOException {
         TestSystem testSystem = null;
         if (!testSystems.containsKey(descriptor)) {
             testSystem = makeTestSystem(descriptor);
@@ -63,7 +64,7 @@ public class TestSystemGroup {
         return testSystem;
     }
 
-    private TestSystem makeTestSystem(TestSystem.Descriptor descriptor) throws Exception {
+    private TestSystem makeTestSystem(TestSystem.Descriptor descriptor) {
         if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.testSystemName)))
             return new HtmlSlimTestSystem(page, testSystemListener);
         else

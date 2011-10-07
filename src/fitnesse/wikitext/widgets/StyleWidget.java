@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,7 @@ public class StyleWidget extends ParentWidget {
         super(parent);
     }
 
-    protected void buildWidget(Pattern matchingPattern, String text) throws Exception {
+    protected void buildWidget(Pattern matchingPattern, String text) {
         Matcher match = matchingPattern.matcher(text);
         if (match.find()) {
             style = match.group(1);
@@ -20,7 +21,7 @@ public class StyleWidget extends ParentWidget {
         }
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         return String.format("<span class=\"%s\">%s</span>", style, childHtml());
     }
 
@@ -28,7 +29,7 @@ public class StyleWidget extends ParentWidget {
         public static final String REGEXP = "!style_\\w+\\([^\r\n\\)]*\\)";
         private static final Pattern pattern = Pattern.compile("!style_(\\w+)\\(([^\\)]*)\\)");
 
-        public ParenFormat(ParentWidget parent, String text) throws Exception {
+        public ParenFormat(ParentWidget parent, String text) {
             super(parent);
             buildWidget(pattern, text);
         }
@@ -39,7 +40,7 @@ public class StyleWidget extends ParentWidget {
         public static final String REGEXP = "!style_\\w+\\[[^\r\n\\]]*\\]";
         private static final Pattern pattern = Pattern.compile("!style_(\\w+)\\[([^\\]]*)\\]");
 
-        public BracketFormat(ParentWidget parent, String text) throws Exception {
+        public BracketFormat(ParentWidget parent, String text) {
             super(parent);
             buildWidget(pattern, text);
         }
@@ -49,7 +50,7 @@ public class StyleWidget extends ParentWidget {
         public static final String REGEXP = "!style_\\w+\\{[^\r\n\\}]*\\}";
         private static final Pattern pattern = Pattern.compile("!style_(\\w+)\\{([^\\}]*)\\}");
 
-        public BraceFormat(ParentWidget parent, String text) throws Exception {
+        public BraceFormat(ParentWidget parent, String text) {
             super(parent);
             buildWidget(pattern, text);
         }

@@ -9,6 +9,7 @@ import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.*;
 import util.ClockUtil;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ExecutionLog {
     private List<String> reasons = new LinkedList<String>();
     private List<Throwable> exceptions = new LinkedList<Throwable>();
 
-    public ExecutionLog(WikiPage testPage, CommandRunner client) throws Exception {
+    public ExecutionLog(WikiPage testPage, CommandRunner client) {
         this.testPage = testPage;
         runner = client;
 
@@ -51,7 +52,7 @@ public class ExecutionLog {
             reasons.add(reason);
     }
 
-    public void publish() throws Exception {
+    public void publish() throws IOException {
         String content = buildLogContent();
 
         WikiPage errorLogPage = crawler.addPage(root, errorLogPagePath);
@@ -60,7 +61,7 @@ public class ExecutionLog {
         errorLogPage.commit(data);
     }
 
-    String buildLogContent() throws Exception {
+    String buildLogContent() {
         StringBuffer buffer = new StringBuffer();
         addLiteralEntry(buffer, "Date", makeDateFormat().format(ClockUtil.currentDate()));
         addEntry(buffer, "Test Page", "." + PathParser.render(crawler.getFullPath(testPage)));
@@ -124,12 +125,12 @@ public class ExecutionLog {
         return runner.wroteToErrorStream() || runner.wroteToOutputStream();
     }
 
-    public String executionStatusHtml() throws Exception {
+    public String executionStatusHtml() {
         String linkHref = getErrorLogPageName();
         return executionStatusHtml(linkHref);
     }
 
-    private String executionStatusHtml(String linkHref) throws Exception {
+    private String executionStatusHtml(String linkHref) {
         ExecutionStatus executionStatus;
 
         if (exceptionCount() > 0)
@@ -142,7 +143,7 @@ public class ExecutionLog {
         return makeExecutionStatusLink(linkHref, executionStatus);
     }
 
-    public static String makeExecutionStatusLink(String linkHref, ExecutionStatus executionStatus) throws Exception {
+    public static String makeExecutionStatusLink(String linkHref, ExecutionStatus executionStatus) {
         HtmlTag status = new HtmlTag("div");
         status.addAttribute("id", "execution-status");
         HtmlTag image = new HtmlTag("img");

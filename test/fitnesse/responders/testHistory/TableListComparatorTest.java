@@ -2,7 +2,6 @@ package fitnesse.responders.testHistory;
 
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
-import org.htmlparser.util.ParserException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +11,7 @@ public class TableListComparatorTest {
     private TableListComparator comparator;
 
     @Before
-    public void setUp() throws ParserException {
+    public void setUp() throws Exception {
         HtmlTableScanner leftHandScanner = new HtmlTableScanner("<table>empty</table>");
         HtmlTableScanner rightHandScanner = new HtmlTableScanner("<table>empty</table>");
         comparator = new TableListComparator(leftHandScanner, rightHandScanner);

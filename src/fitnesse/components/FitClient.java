@@ -4,6 +4,7 @@ package fitnesse.components;
 
 import fit.Counts;
 import fit.FitProtocol;
+import fit.FitProtocolException;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystemListener;
 import util.StreamReader;
@@ -40,13 +41,13 @@ public class FitClient {
         fitListeningThread.start();
     }
 
-    public void send(String data) throws Exception {
+    public void send(String data) throws IOException {
         checkForPulse();
         FitProtocol.writeData(data, fitInput);
         sent++;
     }
 
-    public void done() throws Exception {
+    public void done() throws IOException {
         checkForPulse();
         FitProtocol.writeSize(0, fitInput);
         isDoneSending = true;
@@ -82,14 +83,14 @@ public class FitClient {
         }
     }
 
-    private void attemptToListenToFit() throws Exception {
+    private void attemptToListenToFit() throws IOException {
         while (!finishedReading()) {
             int size;
             size = FitProtocol.readSize(fitOutput);
             if (size != 0) {
                 String readValue = fitOutput.read(size);
                 if (fitOutput.byteCount() < size)
-                    throw new Exception("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
+                    throw new FitProtocolException("I was expecting " + size + " bytes but I only got " + fitOutput.byteCount());
                 listener.acceptOutputFirst(readValue);
             } else {
                 Counts counts = FitProtocol.readCounts(fitOutput);

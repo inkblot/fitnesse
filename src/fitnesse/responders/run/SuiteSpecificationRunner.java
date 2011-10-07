@@ -36,7 +36,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
     }
 
 
-    public boolean getPageListFromPageContent(String pageContent) throws Exception {
+    public boolean getPageListFromPageContent(String pageContent) throws IOException {
         HtmlTableScanner scanner = new HtmlTableScanner(pageContent);
         for (int tableIndex = 0; tableIndex < scanner.getTableCount(); tableIndex++) {
             Table table = scanner.getTable(tableIndex);
@@ -123,7 +123,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
             testPageList.add(page);
     }
 
-    public static boolean isASuiteSpecificationsPage(String page) throws ParserException {
+    public static boolean isASuiteSpecificationsPage(String page) throws IOException {
         HtmlTableScanner scanner = new HtmlTableScanner(page);
         if (scanner.getTableCount() > 0) {
             Table table = scanner.getTable(0);

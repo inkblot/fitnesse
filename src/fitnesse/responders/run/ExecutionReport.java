@@ -8,6 +8,7 @@ import util.DateTimeUtil;
 import util.TimeMeasurement;
 import util.XmlUtil;
 
+import java.io.IOException;
 import java.util.Date;
 
 public abstract class ExecutionReport {
@@ -48,7 +49,7 @@ public abstract class ExecutionReport {
         return true;
     }
 
-    public static ExecutionReport makeReport(String xmlString) throws Exception {
+    public static ExecutionReport makeReport(String xmlString) throws IOException {
         Document xmlDocument = XmlUtil.newDocument(xmlString);
         Element documentElement = xmlDocument.getDocumentElement();
         String documentNodeName = documentElement.getNodeName();
@@ -60,7 +61,7 @@ public abstract class ExecutionReport {
             throw new RuntimeException(String.format("%s is not a valid document element tag for an Execution Report.", documentNodeName));
     }
 
-    protected void unpackCommonFields(Element documentElement) throws Exception {
+    protected void unpackCommonFields(Element documentElement) {
         version = XmlUtil.getTextValue(documentElement, "FitNesseVersion");
         rootPath = XmlUtil.getTextValue(documentElement, "rootPath");
         String dateString = XmlUtil.getTextValue(documentElement, "date");
@@ -70,12 +71,12 @@ public abstract class ExecutionReport {
         totalRunTimeInMillis = getTotalRunTimeInMillisOrZeroIfNotPresent(documentElement);
     }
 
-    protected long getTotalRunTimeInMillisOrZeroIfNotPresent(Element documentElement) throws Exception {
+    protected long getTotalRunTimeInMillisOrZeroIfNotPresent(Element documentElement) {
         String textValue = XmlUtil.getTextValue(documentElement, "totalRunTimeInMillis");
         return textValue == null ? 0 : Long.parseLong(textValue);
     }
 
-    private void unpackFinalCounts(Element testResults) throws Exception {
+    private void unpackFinalCounts(Element testResults) {
         Element counts = util.XmlUtil.getElementByTagName(testResults, "finalCounts");
         if (counts != null) {
             finalCounts = new TestSummary(
@@ -87,13 +88,13 @@ public abstract class ExecutionReport {
         }
     }
 
-    protected void unpackXml() throws Exception {
+    protected void unpackXml() {
         Element historyDocument = xmlDoc.getDocumentElement();
         unpackCommonFields(historyDocument);
         unpackResults(historyDocument);
     }
 
-    protected abstract void unpackResults(Element testResults) throws Exception;
+    protected abstract void unpackResults(Element testResults);
 
     public TestSummary getFinalCounts() {
         return finalCounts;

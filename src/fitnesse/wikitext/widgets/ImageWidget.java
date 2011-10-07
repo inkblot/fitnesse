@@ -27,8 +27,8 @@ public class ImageWidget extends WikiWidget {
             System.err.println("ImagesWidget parse error: " + text);
     }
 
-    public String render() throws Exception {
-        StringBuffer html = new StringBuffer("<img src=\"");
+    public String render() {
+        StringBuilder html = new StringBuilder("<img src=\"");
         html.append(picturePath).append("\"");
         if (alignment != null) {
             html.append(" class=\"");
@@ -43,7 +43,7 @@ public class ImageWidget extends WikiWidget {
         return html.toString();
     }
 
-    public String asWikiText() throws Exception {
+    public String asWikiText() {
         String pathString = picturePath;
         if (pathString.startsWith("/files"))
             pathString = "http:/" + pathString;

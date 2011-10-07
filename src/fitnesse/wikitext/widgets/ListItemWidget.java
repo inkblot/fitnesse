@@ -2,17 +2,19 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.io.IOException;
+
 public class ListItemWidget extends ParentWidget {
     private int level;
 
-    public ListItemWidget(ParentWidget parent, String text, int level) throws Exception {
+    public ListItemWidget(ParentWidget parent, String text, int level) {
         super(parent);
         this.level = level;
         addChildWidgets(text);
     }
 
-    public String render() throws Exception {
-        StringBuffer html = new StringBuffer();
+    public String render() throws IOException {
+        StringBuilder html = new StringBuilder();
         for (int i = 0; i < level; i++)
             html.append("\t");
         html.append("<li>").append(childHtml()).append("</li>\n");

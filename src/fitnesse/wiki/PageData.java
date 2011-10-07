@@ -240,7 +240,7 @@ public class PageData implements Serializable {
         }
     }
 
-    public void addVariable(String name, String value) throws Exception {
+    public void addVariable(String name, String value) {
         getParsingPage().putVariable(name, value);
     }
 
@@ -266,11 +266,11 @@ public class PageData implements Serializable {
         //return getTextOfWidgets(classpathWidgetBuilder);
     }
 
-    public List<String> getXrefPages() throws Exception {
+    public List<String> getXrefPages() throws IOException {
         return getTextOfWidgets(xrefWidgetBuilder);
     }
 
-    private List<String> getTextOfWidgets(WidgetBuilder builder) throws Exception {
+    private List<String> getTextOfWidgets(WidgetBuilder builder) throws IOException {
         ParentWidget root = new TextIgnoringWidgetRoot(getContent(), wikiPage,
                 builder);
         List<WikiWidget> widgets = root.getChildren();

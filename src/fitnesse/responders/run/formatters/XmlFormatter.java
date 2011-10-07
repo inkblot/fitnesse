@@ -15,7 +15,6 @@ import fitnesse.slimTables.SlimTable;
 import fitnesse.slimTables.Table;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import util.TimeMeasurement;
 
@@ -23,6 +22,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.commons.io.IOUtils.closeQuietly;
 
 public class XmlFormatter extends BaseFormatter {
     public interface WriterFactory {
@@ -42,23 +43,23 @@ public class XmlFormatter extends BaseFormatter {
     }
 
     @Override
-    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws Exception {
+    public void newTestStarted(WikiPage test, TimeMeasurement timeMeasurement) throws IOException {
         currentTestStartTime = timeMeasurement.startedAt();
         appendHtmlToBuffer(getPage().getData().getHeaderPageHtml());
     }
 
     @Override
-    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) throws Exception {
+    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
         this.testSystem = testSystem;
     }
 
     @Override
-    public void testOutputChunk(String output) throws Exception {
+    public void testOutputChunk(String output) {
         appendHtmlToBuffer(output);
     }
 
     @Override
-    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
         super.testComplete(test, testSummary, timeMeasurement);
         processTestResults(test.getName(), testSummary, timeMeasurement);
     }
@@ -87,21 +88,21 @@ public class XmlFormatter extends BaseFormatter {
 
     @Override
     public void setExecutionLogAndTrackingId(String stopResponderId,
-                                             CompositeExecutionLog log) throws Exception {
+                                             CompositeExecutionLog log) {
     }
 
     @Override
-    public void writeHead(String pageType) throws Exception {
+    public void writeHead(String pageType) {
         writeHead(getPage());
     }
 
-    protected void writeHead(WikiPage testPage) throws Exception {
+    protected void writeHead(WikiPage testPage) {
         testResponse.version = new FitNesseVersion().toString();
         testResponse.rootPath = testPage.getName();
     }
 
     @Override
-    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws Exception {
+    public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
         super.allTestingComplete(totalTimeMeasurement);
         setTotalRunTimeOnReport(totalTimeMeasurement);
         writeResults();
@@ -111,7 +112,7 @@ public class XmlFormatter extends BaseFormatter {
         testResponse.setTotalRunTimeInMillis(totalTimeMeasurement);
     }
 
-    protected void writeResults() throws Exception {
+    protected void writeResults() throws IOException {
         writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, currentTestStartTime));
     }
 
@@ -124,12 +125,11 @@ public class XmlFormatter extends BaseFormatter {
         return finalSummary.wrong + finalSummary.exceptions;
     }
 
-    protected void writeResults(Writer writer) throws Exception {
+    protected void writeResults(Writer writer) throws IOException {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("response", testResponse);
-        Template template = VelocityFactory.getVelocityEngine().getTemplate("fitnesse/templates/testResults.vm");
-        template.merge(velocityContext, writer);
-        writer.close();
+        VelocityFactory.mergeTemplate(writer, velocityContext, "fitnesse/templates/testResults.vm");
+        closeQuietly(writer);
     }
 
     private void addCountsToResult(TestExecutionReport.TestResult currentResult, TestSummary testSummary) {

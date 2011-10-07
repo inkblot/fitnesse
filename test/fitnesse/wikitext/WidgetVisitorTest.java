@@ -26,7 +26,7 @@ public class WidgetVisitorTest extends FitnesseBaseTestCase implements WidgetVis
         visits.add(widget);
     }
 
-    public void visit(AliasLinkWidget widget) throws Exception {
+    public void visit(AliasLinkWidget widget) {
     }
 
     @Before

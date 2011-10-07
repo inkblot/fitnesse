@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,15 +12,15 @@ public class BoldWidget extends ParentWidget {
             Pattern.MULTILINE + Pattern.DOTALL
     );
 
-    public BoldWidget(ParentWidget parent, String text) throws Exception {
+    public BoldWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         match.find();
         addChildWidgets(match.group(1));
     }
 
-    public String render() throws Exception {
-        StringBuffer html = new StringBuffer("<b>");
+    public String render() throws IOException {
+        StringBuilder html = new StringBuilder("<b>");
         html.append(childHtml()).append("</b>");
         return html.toString();
     }

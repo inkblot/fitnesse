@@ -6,9 +6,10 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.ParentWidget;
 import util.GracefulNamer;
 
+import java.io.IOException;
+
 public abstract class WikiWidget {
     protected ParentWidget parent = null;
-    public static final String LINE_BREAK_PATTERN = "\n";
 
     protected WikiWidget(ParentWidget parent) {
         this.parent = parent;
@@ -28,9 +29,9 @@ public abstract class WikiWidget {
             this.parent.addChild(this);
     }
 
-    public abstract String render() throws Exception;
+    public abstract String render() throws IOException;
 
-    public void acceptVisitor(WidgetVisitor visitor) throws Exception {
+    public void acceptVisitor(WidgetVisitor visitor) {
         visitor.visit(this);
     }
 
@@ -38,15 +39,15 @@ public abstract class WikiWidget {
         return parent.getWikiPage();
     }
 
-    public String asWikiText() throws Exception {
+    public String asWikiText() {
         return getClass().toString() + ".asWikiText()";
     }
 
-    public boolean isRegracing() {
+    public boolean isRegracing() throws IOException {
         return false;
     }
 
-    public String regrace(String disgracefulName) {
+    public String regrace(String disgracefulName) throws IOException {
         String newName = disgracefulName;
         //todo don't use the GracefulNamer for this.  It's only for java instance and variable names.  Write a different tool.
         if (isRegracing()) newName = GracefulNamer.regrace(disgracefulName);

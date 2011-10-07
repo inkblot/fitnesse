@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,11 +12,11 @@ public class HeaderWidget extends ParentWidget {
 
     private int size = 3;
 
-    public HeaderWidget(ParentWidget parent, String text) throws Exception {
+    public HeaderWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         if (match.find()) {
-            size = Integer.valueOf(match.group(1)).intValue();
+            size = Integer.valueOf(match.group(1));
             addChildWidgets(match.group(2).trim());
         }
     }
@@ -24,8 +25,8 @@ public class HeaderWidget extends ParentWidget {
         return size;
     }
 
-    public String render() throws Exception {
-        StringBuffer html = new StringBuffer("<h");
+    public String render() throws IOException {
+        StringBuilder html = new StringBuilder("<h");
         html.append(size).append(">").append(childHtml());
         html.append("</h").append(size).append(">");
 

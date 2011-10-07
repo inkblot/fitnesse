@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,7 @@ public class ListWidget extends ParentWidget {
     private boolean ordered = false;
     private int level;
 
-    public ListWidget(ParentWidget parent, String text) throws Exception {
+    public ListWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         if (match.find()) {
@@ -28,7 +29,7 @@ public class ListWidget extends ParentWidget {
         ordered = !("*".equals(match.group(2)));
     }
 
-    private String buildList(String text) throws Exception {
+    private String buildList(String text) {
         if (text == null)
             return null;
         Matcher match = pattern.matcher(text);
@@ -83,9 +84,9 @@ public class ListWidget extends ParentWidget {
         return level;
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         String tagValue = ordered ? "ol" : "ul";
-        StringBuffer html = new StringBuffer();
+        StringBuilder html = new StringBuilder();
         //appendTabs(html);
         html.append("<").append(tagValue).append(">").append("\n");
         html.append(childHtml());

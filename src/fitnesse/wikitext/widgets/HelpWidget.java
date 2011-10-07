@@ -5,18 +5,20 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.WikiPagePath;
 import fitnesse.wikitext.WikiWidget;
 
+import java.io.IOException;
+
 //created by Clare McLennan
 
 public class HelpWidget extends WikiWidget {
     public static final String REGEXP = "!help *(-editable)?";
     private final boolean editable;
 
-    public HelpWidget(ParentWidget parent, String text) throws Exception {
+    public HelpWidget(ParentWidget parent, String text) {
         super(parent);
         editable = text.contains("-editable");
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         String helpText = getWikiPage().getHelpText();
         String editString = "edit";
         if (helpText == null) {

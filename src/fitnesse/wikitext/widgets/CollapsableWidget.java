@@ -9,6 +9,7 @@ import fitnesse.html.RawHtml;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.wiki.PageData;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,21 +45,21 @@ public class CollapsableWidget extends ParentWidget {
         super(parent);
     }
 
-    public CollapsableWidget(ParentWidget parent, String text) throws Exception {
+    public CollapsableWidget(ParentWidget parent, String text) {
         this(parent);
         showEditCommand = false;  // hack. only set false here.
         Matcher match = pattern.matcher(text);
         match.find();
         String tailChar = match.group(1);
         expanded = tailChar == null;
-        invisible = expanded ? false : "<".equals(tailChar);
+        invisible = !expanded && "<".equals(tailChar);
         String title = match.group(2);
         String body = match.group(3);
         init(title, body, this);
     }
 
     //!include: Refactored to use dual-scope constructor
-    public CollapsableWidget(ParentWidget parent, String title, String body, String cssClass, boolean collapsed) throws Exception {
+    public CollapsableWidget(ParentWidget parent, String title, String body, String cssClass, boolean collapsed) {
         this(parent);
         init(title, body, this); //!include: dual-scope
         this.cssClass = cssClass;
@@ -67,7 +68,7 @@ public class CollapsableWidget extends ParentWidget {
 
     //!include: New constructor with dual scope: title & body.
     public CollapsableWidget(ParentWidget parent, ParentWidget includeParent,
-                             String title, String body, String cssClass, boolean collapsed) throws Exception {
+                             String title, String body, String cssClass, boolean collapsed) {
         this(parent);
         init(title, body, includeParent);
         this.cssClass = cssClass;
@@ -75,7 +76,7 @@ public class CollapsableWidget extends ParentWidget {
     }
 
     //!include: Refactored for 3rd arg
-    private void init(String title, String body, ParentWidget parent) throws Exception {
+    private void init(String title, String body, ParentWidget parent) {
         titleWidget = new BlankParentWidget(parent, "!meta " + title + " " + makeEditLinks(title));
         addChildWidgets(body);
     }
@@ -116,7 +117,7 @@ public class CollapsableWidget extends ParentWidget {
         return "";
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         HtmlElement titleElement = new RawHtml("&nbsp;" + titleWidget.childHtml());
         HtmlElement bodyElement = new RawHtml(childHtml());
         HtmlElement html = makeCollapsableSection(titleElement, bodyElement);
@@ -174,7 +175,7 @@ public class CollapsableWidget extends ParentWidget {
             return collapsableClosedImg;
     }
 
-    public String asWikiText() throws Exception {
+    public String asWikiText() {
         return "";
     }
 }

@@ -7,6 +7,7 @@ import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.*;
 
+import java.text.ParseException;
 import java.util.Date;
 
 public class WikiImportProperty extends WikiPageProperty {
@@ -80,7 +81,7 @@ public class WikiImportProperty extends WikiPageProperty {
         set("LastRemoteModification", getTimeFormat().format(date));
     }
 
-    public Date getLastRemoteModificationTime() throws Exception {
+    public Date getLastRemoteModificationTime() throws ParseException {
         Date date = new Date(0);
         String strValue = get("LastRemoteModification");
         if (strValue != null)
@@ -89,7 +90,7 @@ public class WikiImportProperty extends WikiPageProperty {
         return date;
     }
 
-    public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) throws Exception {
+    public static void handleImportProperties(HtmlPage html, WikiPage page, PageData pageData) {
         html.actions.add(HtmlUtil.makeNavBreak());
         if (isImported(pageData)) {
             html.body.addAttribute("class", "imported");

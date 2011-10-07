@@ -59,7 +59,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     protected ExceptionList exceptions = new ExceptionList();
     private Map<String, String> symbols = new HashMap<String, String>();
     protected TestSummary testSummary;
-    private static AtomicInteger slimSocketOffset = new AtomicInteger(0);
+    private static final AtomicInteger slimSocketOffset = new AtomicInteger(0);
     private int slimSocket;
     protected final Pattern exceptionMessagePattern = Pattern.compile("message:<<(.*)>>");
     private Map<String, ScenarioTable> scenarios = new HashMap<String, ScenarioTable>();
@@ -97,7 +97,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return started;
     }
 
-    public void kill() throws Exception {
+    public void kill() throws IOException {
         if (slimRunner != null)
             slimRunner.kill();
         if (slimClient != null)
@@ -111,7 +111,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return slimFlags;
     }
 
-    protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws Exception {
+    protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws IOException {
         String slimFlags = getSlimFlags();
         slimSocket = getNextSlimSocket();
         String slimArguments = String.format("%s %d", slimFlags, slimSocket);
@@ -168,7 +168,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return base;
     }
 
-    public void start() throws Exception {
+    public void start() throws IOException {
         slimRunner.asynchronousStart();
 
         slimClient = new SlimClient(determineSlimHost(), slimSocket);
@@ -189,16 +189,24 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return slimCommand;
     }
 
-    public void bye() throws Exception {
+    public void bye() throws IOException {
         slimClient.sendBye();
         if (!fastTest)
-            slimRunner.join();
+            try {
+                slimRunner.join();
+            } catch (InterruptedException e) {
+                // ok
+            }
     }
 
     //For testing only.  Makes responder faster.
-    void createSlimService(String args) throws Exception {
-        while (!tryCreateSlimService(args))
-            Thread.sleep(10);
+    void createSlimService(String args) throws SocketException {
+        try {
+            while (!tryCreateSlimService(args))
+                Thread.sleep(10);
+        } catch (InterruptedException e) {
+            // ok
+        }
     }
 
     private boolean tryCreateSlimService(String args) throws SocketException {
@@ -212,12 +220,16 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         }
     }
 
-    void waitForConnection() throws Exception {
-        while (!isConnected())
-            Thread.sleep(50);
+    void waitForConnection() {
+        try {
+            while (!isConnected())
+                Thread.sleep(50);
+        } catch (InterruptedException e) {
+            // ok
+        }
     }
 
-    private boolean isConnected() throws Exception {
+    private boolean isConnected() {
         try {
             slimClient.connect();
             return true;
@@ -226,7 +238,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         }
     }
 
-    public String runTestsAndGenerateHtml(PageData pageData) throws Exception {
+    public String runTestsAndGenerateHtml(PageData pageData) throws IOException {
         initializeTest();
         checkForAndReportVersionMismatch(pageData);
         String html = processAllTablesOnPage(pageData);
@@ -245,7 +257,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         exceptions.resetForNewTest();
     }
 
-    private void checkForAndReportVersionMismatch(PageData pageData) throws Exception {
+    private void checkForAndReportVersionMismatch(PageData pageData) {
         double expectedVersionNumber = getExpectedSlimVersion(pageData);
         double serverVersionNumber = slimClient.getServerVersion();
         if (serverVersionNumber < expectedVersionNumber)
@@ -270,9 +282,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return expectedVersionNumber;
     }
 
-    protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable) throws Exception;
+    protected abstract String createHtmlResults(SlimTable startAfterTable, SlimTable lastWrittenTable);
 
-    String processAllTablesOnPage(PageData pageData) throws Exception {
+    String processAllTablesOnPage(PageData pageData) throws IOException {
         tableScanner = scanTheTables(pageData);
         allTables = createSlimTables(tableScanner);
         testResults = pageData;
@@ -295,9 +307,9 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return htmlResults;
     }
 
-    protected abstract TableScanner scanTheTables(PageData pageData) throws Exception;
+    protected abstract TableScanner scanTheTables(PageData pageData) throws IOException;
 
-    private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws Exception {
+    private String processTablesAndGetHtml(List<SlimTable> tables, SlimTable startWithTable, SlimTable nextTable) throws IOException {
         expectations.clear();
 
         testTables = tables;
@@ -472,21 +484,21 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
 
 
-    public Symbol getPreparsedScenarioLibrary() throws Exception {
+    public Symbol getPreparsedScenarioLibrary() throws IOException {
         if (preparsedScenarioLibrary == null) {
             preparsedScenarioLibrary = Parser.make(page, getScenarioLibraryContent()).parse();
         }
         return preparsedScenarioLibrary;
     }
 
-    private String getScenarioLibraryContent() throws Exception {
+    private String getScenarioLibraryContent() throws IOException {
         String content = "!*> Precompiled Libraries\n\n";
         content += includeUncleLibraries();
         content += "*!\n";
         return content;
     }
 
-    private String includeUncleLibraries() throws Exception {
+    private String includeUncleLibraries() throws IOException {
         String content = "";
         List<WikiPage> uncles = PageCrawlerImpl.getAllUncles("ScenarioLibrary", page);
         Collections.reverse(uncles);

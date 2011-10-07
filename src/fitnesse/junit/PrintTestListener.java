@@ -42,7 +42,6 @@ public class PrintTestListener implements ResultsListener {
     }
 
     @Override
-    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner)
-            throws Exception {
+    public void testSystemStarted(TestSystem testSystem, String testSystemName, String testRunner) {
     }
 }

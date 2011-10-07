@@ -9,6 +9,7 @@ import fitnesse.html.HtmlUtil;
 import util.Expression;
 import util.Maybe;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,12 +31,12 @@ public class EvaluatorWidget extends ParentWidget {
         if (match.find()) name = match.group(1);
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         if (!rendered) doRender();
         return renderedText;
     }
 
-    private void doRender() throws Exception {
+    private void doRender() throws IOException {
         parseOutFormat(expandVariables(name));
         if (renderedText.length() > 0) {
             evaluateAndFormat();
@@ -63,7 +64,7 @@ public class EvaluatorWidget extends ParentWidget {
         }
         Double result = evaluation.getValue();
 
-        Long iResult = new Long(Math.round(result));
+        Long iResult = Math.round(result);
 
         if (formatSpec == null)
             renderedText = (result.equals(iResult.doubleValue())) ? iResult.toString() : result.toString();

@@ -5,6 +5,8 @@ package fitnesse.wikitext.widgets;
 import fitnesse.html.HtmlTag;
 import fitnesse.wikitext.WidgetBuilder;
 
+import java.io.IOException;
+
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class TableCellWidget extends ParentWidget {
@@ -13,7 +15,7 @@ public class TableCellWidget extends ParentWidget {
     private TableRowWidget parentRow = null;
     private boolean isLiteral;
 
-    public TableCellWidget(TableRowWidget parentRow, String text, boolean isLiteral) throws Exception {
+    public TableCellWidget(TableRowWidget parentRow, String text, boolean isLiteral) {
         super(parentRow);
         this.parentRow = parentRow;
         this.isLiteral = isLiteral;
@@ -25,19 +27,20 @@ public class TableCellWidget extends ParentWidget {
         return text.trim();
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         return makeCellTag();
     }
 
-    private String makeCellTag() throws Exception {
+    private String makeCellTag() throws IOException {
         HtmlTag cellTag = new HtmlTag("td");
         if (computeColSpan().length() > 0) {
             cellTag.addAttribute("colspan", computeColSpan());
         }
-        if (isEmpty(childHtml()))
+        String childHtml = childHtml();
+        if (isEmpty(childHtml))
             cellTag.add("&nbsp;"); // Some browsers don't like empty table cells.
         else
-            cellTag.add(childHtml());
+            cellTag.add(childHtml);
         return cellTag.html();
     }
 

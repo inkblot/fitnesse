@@ -4,6 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.html.HtmlUtil;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,23 +14,23 @@ public class MetaWidget extends ParentWidget {
 
     private String content;
 
-    public MetaWidget(ParentWidget parent, String text) throws Exception {
+    public MetaWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         if (match.find())
             setContent(match.group(1));
     }
 
-    private void setContent(String content) throws Exception {
+    private void setContent(String content) {
         this.content = content;
         addChildWidgets(this.content);
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         return HtmlUtil.metaText(childHtml());
     }
 
-    public String asWikiText() throws Exception {
+    public String asWikiText() {
         return "!meta " + content;
     }
 }

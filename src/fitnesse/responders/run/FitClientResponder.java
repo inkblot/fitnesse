@@ -26,7 +26,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     private boolean shouldIncludePaths;
     private String suiteFilter;
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(FitNesseContext context, Request request) {
         this.context = context;
         crawler = context.root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
@@ -36,7 +36,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         return new PuppetResponse(this);
     }
 
-    public void readyToSend(ResponseSender sender) throws Exception {
+    public void readyToSend(ResponseSender sender) throws IOException {
         WikiPagePath pagePath = PathParser.parse(resource);
         OutputStream output = sender.getOutputStream();
         if (!crawler.pageExists(context.root, pagePath))
@@ -56,7 +56,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         sender.close();
     }
 
-    private void handleTestPage(InputStream input, OutputStream output, PageData data) throws Exception {
+    private void handleTestPage(InputStream input, OutputStream output, PageData data) throws IOException {
         FitClient client = startClient(input, output);
 
         if (shouldIncludePaths) {
@@ -68,7 +68,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         closeClient(client);
     }
 
-    private void handleSuitePage(InputStream input, OutputStream output, WikiPage page, WikiPage root) throws Exception {
+    private void handleSuitePage(InputStream input, OutputStream output, WikiPage page, WikiPage root) throws IOException {
         FitClient client = startClient(input, output);
         SuiteFilter filter = new SuiteFilter(suiteFilter, null, null);
         SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
@@ -87,7 +87,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         closeClient(client);
     }
 
-    private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws Exception {
+    private void sendPage(PageData data, FitClient client, boolean includeSuiteSetup) throws IOException {
         String pageName = crawler.getRelativeName(page, data.getWikiPage());
         SetupTeardownAndLibraryIncluder.includeInto(data, includeSuiteSetup);
         String testableHtml = data.getHtml();
@@ -95,9 +95,13 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         client.send(sendableHtml);
     }
 
-    private void closeClient(FitClient client) throws Exception {
+    private void closeClient(FitClient client) throws IOException {
         client.done();
-        client.join();
+        try {
+            client.join();
+        } catch (InterruptedException e) {
+            // ok, done waiting
+        }
     }
 
     private FitClient startClient(InputStream input, OutputStream output) throws IOException {
@@ -114,10 +118,10 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         return "The page " + resource + " was not found.";
     }
 
-    public void acceptOutputFirst(String output) throws Exception {
+    public void acceptOutputFirst(String output) {
     }
 
-    public void testComplete(TestSummary testSummary) throws Exception {
+    public void testComplete(TestSummary testSummary) {
     }
 
     public void exceptionOccurred(Throwable e) {

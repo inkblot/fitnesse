@@ -20,7 +20,7 @@ public class ParentWidgetTest extends FitnesseBaseTestCase {
             super(parent);
         }
 
-        public String render() throws Exception {
+        public String render() {
             return null;
         }
     }

@@ -27,14 +27,14 @@ public abstract class TestSystem implements TestSystemListener {
         this.testSystemListener = testSystemListener;
     }
 
-    public ExecutionLog getExecutionLog(String classPath, TestSystem.Descriptor descriptor) throws Exception {
+    public ExecutionLog getExecutionLog(String classPath, TestSystem.Descriptor descriptor) throws IOException {
         log = createExecutionLog(classPath, descriptor);
         return log;
     }
 
-    protected abstract ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws Exception;
+    protected abstract ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws IOException;
 
-    protected String buildCommand(TestSystem.Descriptor descriptor, String classPath) throws Exception {
+    protected String buildCommand(TestSystem.Descriptor descriptor, String classPath) {
         String commandPattern = descriptor.commandPattern;
         String command = replace(commandPattern, "%p", classPath);
         command = replace(command, "%m", descriptor.testRunner);
@@ -59,7 +59,7 @@ public abstract class TestSystem implements TestSystemListener {
         return testRunner;
     }
 
-    private static String getCommandPattern(PageData pageData, boolean isRemoteDebug) throws Exception {
+    private static String getCommandPattern(PageData pageData, boolean isRemoteDebug) {
         if (isRemoteDebug)
             return getRemoteDebugCommandPattern(pageData);
         else
@@ -79,7 +79,7 @@ public abstract class TestSystem implements TestSystemListener {
         this.fastTest = fastTest;
     }
 
-    public static String getTestSystemName(PageData data) throws Exception {
+    public static String getTestSystemName(PageData data) {
         String testSystemName = getTestSystem(data);
         String testRunner = getTestRunnerNormal(data);
         return String.format("%s:%s", testSystemName, testRunner);
@@ -104,11 +104,11 @@ public abstract class TestSystem implements TestSystemListener {
         return parts[0];
     }
 
-    public void acceptOutputFirst(String output) throws Exception {
+    public void acceptOutputFirst(String output) throws IOException {
         testSystemListener.acceptOutputFirst(output);
     }
 
-    public void testComplete(TestSummary testSummary) throws Exception {
+    public void testComplete(TestSummary testSummary) throws IOException {
         testSystemListener.testComplete(testSummary);
     }
 
@@ -118,9 +118,9 @@ public abstract class TestSystem implements TestSystemListener {
         testSystemListener.exceptionOccurred(e);
     }
 
-    public abstract void start() throws Exception;
+    public abstract void start() throws IOException;
 
-    private static String getTestRunner(PageData pageData, boolean isRemoteDebug) throws Exception {
+    private static String getTestRunner(PageData pageData, boolean isRemoteDebug) {
         if (isRemoteDebug)
             return getTestRunnerDebug(pageData);
         else
@@ -154,15 +154,15 @@ public abstract class TestSystem implements TestSystemListener {
             return "fit.FitServer";
     }
 
-    public abstract void bye() throws Exception;
+    public abstract void bye() throws IOException;
 
     public abstract boolean isSuccessfullyStarted();
 
-    public abstract void kill() throws Exception;
+    public abstract void kill() throws IOException;
 
-    public abstract String runTestsAndGenerateHtml(PageData pageData) throws Exception;
+    public abstract String runTestsAndGenerateHtml(PageData pageData) throws IOException;
 
-    public static Descriptor getDescriptor(PageData data, boolean isRemoteDebug) throws Exception {
+    public static Descriptor getDescriptor(PageData data, boolean isRemoteDebug) {
         String testSystemName = getTestSystem(data);
         String testRunner = getTestRunner(data, isRemoteDebug);
         String commandPattern = getCommandPattern(data, isRemoteDebug);

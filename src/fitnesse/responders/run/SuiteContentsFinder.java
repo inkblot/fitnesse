@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import fitnesse.wiki.*;
 
+import java.io.IOException;
 import java.util.*;
 
 public class SuiteContentsFinder {
@@ -31,7 +32,7 @@ public class SuiteContentsFinder {
         return testPageList;
     }
 
-    public List<WikiPage> makePageList() throws Exception {
+    public List<WikiPage> makePageList() throws IOException {
         getAllPagesToRunForThisSuite();
 
         if (testPageList.isEmpty()) {
@@ -46,7 +47,7 @@ public class SuiteContentsFinder {
     }
 
 
-    public LinkedList<WikiPage> getAllPagesToRunForThisSuite() throws Exception {
+    public LinkedList<WikiPage> getAllPagesToRunForThisSuite() throws IOException {
         String content = pageToRun.getData().getHtml();
         if (SuiteSpecificationRunner.isASuiteSpecificationsPage(content)) {
             SuiteSpecificationRunner runner = new SuiteSpecificationRunner(wikiRootPage);
@@ -60,7 +61,7 @@ public class SuiteContentsFinder {
         return testPageList;
     }
 
-    private LinkedList<WikiPage> getAllTestPagesUnder() throws Exception {
+    private LinkedList<WikiPage> getAllTestPagesUnder() throws IOException {
         LinkedList<WikiPage> testPages = new LinkedList<WikiPage>();
         addTestPagesToSuite(testPages, pageToRun, suiteFilter);
 
@@ -83,7 +84,7 @@ public class SuiteContentsFinder {
         return testPages;
     }
 
-    private void addTestPagesToSuite(List<WikiPage> suite, WikiPage page, SuiteFilter suiteFilter) throws Exception {
+    private void addTestPagesToSuite(List<WikiPage> suite, WikiPage page, SuiteFilter suiteFilter) throws IOException {
         if (suiteFilter.isMatchingTest(page)) {
             suite.add(page);
         }
@@ -96,14 +97,14 @@ public class SuiteContentsFinder {
         }
     }
 
-    private static List<WikiPage> getChildren(WikiPage page) throws Exception {
+    private static List<WikiPage> getChildren(WikiPage page) throws IOException {
         List<WikiPage> children = new ArrayList<WikiPage>();
         children.addAll(page.getChildren());
         addVirtualChildrenIfAny(page, children);
         return children;
     }
 
-    private static void addVirtualChildrenIfAny(WikiPage context, List<WikiPage> children) throws Exception {
+    private static void addVirtualChildrenIfAny(WikiPage context, List<WikiPage> children) throws IOException {
         if (context.hasExtension(VirtualCouplingExtension.NAME)) {
             VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
                     VirtualCouplingExtension.NAME
@@ -112,20 +113,20 @@ public class SuiteContentsFinder {
         }
     }
 
-    protected List<WikiPage> gatherCrossReferencedTestPages() throws Exception {
+    protected List<WikiPage> gatherCrossReferencedTestPages() throws IOException {
         List<WikiPage> pages = new LinkedList<WikiPage>();
         addAllXRefs(pages, pageToRun);
         return pages;
     }
 
-    private void addAllXRefs(List<WikiPage> xrefPages, WikiPage page) throws Exception {
+    private void addAllXRefs(List<WikiPage> xrefPages, WikiPage page) throws IOException {
         List<WikiPage> children = page.getChildren();
         addXrefPages(xrefPages, page);
         for (WikiPage child : children)
             addAllXRefs(xrefPages, child);
     }
 
-    private void addXrefPages(List<WikiPage> pages, WikiPage thePage) throws Exception {
+    private void addXrefPages(List<WikiPage> pages, WikiPage thePage) throws IOException {
         PageData data = thePage.getData();
         List<String> pageReferences = data.getXrefPages();
         PageCrawler crawler = thePage.getPageCrawler();
@@ -139,7 +140,7 @@ public class SuiteContentsFinder {
         }
     }
 
-    public static boolean isSuiteSetupOrTearDown(WikiPage testPage) throws Exception {
+    public static boolean isSuiteSetupOrTearDown(WikiPage testPage) {
         String name = testPage.getName();
         return (SUITE_SETUP_NAME.equals(name) || SUITE_TEARDOWN_NAME.equals(name));
     }

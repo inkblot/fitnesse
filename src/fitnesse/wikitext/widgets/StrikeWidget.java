@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,15 +16,15 @@ public class StrikeWidget extends ParentWidget {
 // in the string to match would double the time it took to parse.
 //	public static final String REGEXP = "--(?:(?:[^-]+[-]?[^-]+)+)--";
 
-    public StrikeWidget(ParentWidget parent, String text) throws Exception {
+    public StrikeWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         if (match.find())
             addChildWidgets(match.group(1));
     }
 
-    public String render() throws Exception {
-        StringBuffer strike = new StringBuffer("<span class=\"strike\">");
+    public String render() throws IOException {
+        StringBuilder strike = new StringBuilder("<span class=\"strike\">");
         strike.append(childHtml()).append("</span>");
         return strike.toString();
 

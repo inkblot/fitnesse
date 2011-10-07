@@ -8,6 +8,7 @@ import fitnesse.wiki.WikiPage;
 import util.Wildcard;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,16 +19,16 @@ public class ClassPathBuilder extends InheritedItemBuilder {
     private StringBuffer pathsString;
     private Set<String> addedPaths;
 
-    public String getClasspath(WikiPage page) throws Exception {
+    public String getClasspath(WikiPage page) throws IOException {
         List<String> paths = getInheritedPathElements(page, new HashSet<WikiPage>());
         return createClassPathString(paths, getPathSeparator(page));
     }
 
-    public String getPathSeparator(WikiPage page) throws Exception {
+    public String getPathSeparator(WikiPage page) throws IOException {
         return TestSystem.getPathSeparator(page.getData());
     }
 
-    public List<String> getInheritedPathElements(WikiPage page, Set<WikiPage> visitedPages) throws Exception {
+    public List<String> getInheritedPathElements(WikiPage page, Set<WikiPage> visitedPages) throws IOException {
         return getInheritedItems(page, visitedPages);
     }
 
@@ -56,7 +57,7 @@ public class ClassPathBuilder extends InheritedItemBuilder {
     }
 
     private String surroundPathWithQuotesIfItHasSpaces(String path) {
-        if (path.matches(".*\\s.*") && path.indexOf("\"") == -1)
+        if (path.matches(".*\\s.*") && !path.contains("\""))
             path = "\"" + path + "\"";
         return path;
     }
@@ -103,7 +104,7 @@ public class ClassPathBuilder extends InheritedItemBuilder {
     }
 
     private boolean pathHasDoubleWildCard(String path) {
-        return path.indexOf("**") != -1;
+        return path.contains("**");
     }
 
     private void addMatchingFiles(String path, File dir) {
@@ -127,7 +128,7 @@ public class ClassPathBuilder extends InheritedItemBuilder {
             pathsString.append(separator);
     }
 
-    protected List<String> getItemsFromPage(WikiPage page) throws Exception {
+    protected List<String> getItemsFromPage(WikiPage page) throws IOException {
         return page.getData().getClasspaths();
     }
 }

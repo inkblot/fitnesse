@@ -6,6 +6,8 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 
+import java.io.IOException;
+
 public class PageHistoryFormatter extends XmlFormatter {
     private WikiPage historyPage;
 
@@ -14,7 +16,7 @@ public class PageHistoryFormatter extends XmlFormatter {
     }
 
     @Override
-    public void newTestStarted(WikiPage testedPage, TimeMeasurement timeMeasurement) throws Exception {
+    public void newTestStarted(WikiPage testedPage, TimeMeasurement timeMeasurement) throws IOException {
         testResponse = new TestExecutionReport();
         writeHead(testedPage);
         historyPage = testedPage;
@@ -22,7 +24,7 @@ public class PageHistoryFormatter extends XmlFormatter {
     }
 
     @Override
-    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws Exception {
+    public void testComplete(WikiPage test, TestSummary testSummary, TimeMeasurement timeMeasurement) throws IOException {
         super.testComplete(test, testSummary, timeMeasurement);
         writeResults();
     }

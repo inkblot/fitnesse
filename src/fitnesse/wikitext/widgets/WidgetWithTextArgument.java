@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import java.io.IOException;
+
 public interface WidgetWithTextArgument {
-    String getText() throws Exception;
+    String getText() throws IOException;
 }

@@ -86,13 +86,11 @@ public class HtmlUtil {
         return link;
     }
 
-    public static TagGroup makeBreadCrumbsWithCurrentPageLinked(String path)
-            throws Exception {
+    public static TagGroup makeBreadCrumbsWithCurrentPageLinked(String path) {
         return makeBreadCrumbsWithCurrentPageLinked(path, ".");
     }
 
-    public static HtmlTag makeBreadCrumbsWithCurrentPageNotLinked(String trail)
-            throws Exception {
+    public static HtmlTag makeBreadCrumbsWithCurrentPageNotLinked(String trail) {
         return makeBreadCrumbsWithCurrentPageNotLinked(trail, ".");
     }
 
@@ -107,10 +105,7 @@ public class HtmlUtil {
         return tagGroup;
     }
 
-    public static HtmlTag makeBreadCrumbsWithCurrentPageNotLinked(
-            String path,
-            String separator
-    ) throws Exception {
+    public static HtmlTag makeBreadCrumbsWithCurrentPageNotLinked(String path, String separator) {
         TagGroup tagGroup = new TagGroup();
         String[] crumbs = path.split("[" + separator + "]");
         makeAllButLastCrumb(crumbs, separator, tagGroup);
@@ -164,7 +159,7 @@ public class HtmlUtil {
         return trail;
     }
 
-    public static HtmlTag makeActions(List<WikiPageAction> actions) throws Exception {
+    public static HtmlTag makeActions(List<WikiPageAction> actions) {
         TagGroup actionsGroup = new TagGroup();
 
         for (WikiPageAction action : actions) {
@@ -213,7 +208,7 @@ public class HtmlUtil {
         return navBreak;
     }
 
-    public static String makeNormalWikiPageContent(PageData pageData) throws Exception {
+    public static String makeNormalWikiPageContent(PageData pageData) throws IOException {
         SetupTeardownAndLibraryIncluder.includeInto(pageData);
         return makePageHtmlWithHeaderAndFooter(pageData);
     }

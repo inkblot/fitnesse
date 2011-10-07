@@ -1,8 +1,8 @@
 package fitnesse.responders.run;
 
+import fitnesse.VelocityFactory;
 import fitnesse.responders.testHistory.TestHistory;
 import org.apache.commons.lang.StringUtils;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.w3c.dom.Document;
@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import util.DateTimeUtil;
 import util.XmlUtil;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
 public class SuiteExecutionReport extends ExecutionReport {
     private List<PageHistoryReference> pageHistoryReferences = new ArrayList<PageHistoryReference>();
 
-    public SuiteExecutionReport(Document xmlDocument) throws Exception {
+    public SuiteExecutionReport(Document xmlDocument) {
         super(xmlDocument);
         unpackXml();
     }
@@ -65,14 +66,13 @@ public class SuiteExecutionReport extends ExecutionReport {
         return builder.toString();
     }
 
-    public void toXml(Writer writer, VelocityEngine velocityEngine) throws Exception {
+    public void toXml(Writer writer, VelocityEngine velocityEngine) throws IOException {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("suiteExecutionReport", this);
-        Template template = velocityEngine.getTemplate("fitnesse/templates/suiteHistoryXML.vm");
-        template.merge(velocityContext, writer);
+        VelocityFactory.mergeTemplate(writer, velocityContext, "fitnesse/templates/suiteHistoryXML.vm");
     }
 
-    protected void unpackResults(Element testResults) throws Exception {
+    protected void unpackResults(Element testResults) {
         NodeList references = testResults.getElementsByTagName("pageHistoryReference");
         for (int referenceIndex = 0; referenceIndex < references.getLength(); referenceIndex++) {
             Element refElement = (Element) references.item(referenceIndex);
@@ -89,7 +89,7 @@ public class SuiteExecutionReport extends ExecutionReport {
         }
     }
 
-    protected long getRunTimeInMillisOrZeroIfNotPresent(Element refElement) throws Exception {
+    protected long getRunTimeInMillisOrZeroIfNotPresent(Element refElement) {
         String textValue = XmlUtil.getTextValue(refElement, "runTimeInMillis");
         return textValue == null ? 0 : Long.parseLong(textValue);
     }

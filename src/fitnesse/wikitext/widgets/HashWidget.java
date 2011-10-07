@@ -2,6 +2,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WikiWidget;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -14,7 +15,7 @@ public class HashWidget extends ParentWidget {
     private static final Pattern pair = Pattern.compile("([^,:\\s]+)\\s*:\\s*([^,:\\s]+)\\s*,?\\s*");
 
 
-    public HashWidget(ParentWidget parent, String text) throws Exception {
+    public HashWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         match.find();
@@ -31,8 +32,8 @@ public class HashWidget extends ParentWidget {
         keys.add(key);
     }
 
-    public String render() throws Exception {
-        StringBuffer html = new StringBuffer("<table class=\"hash_table\">");
+    public String render() throws IOException {
+        StringBuilder html = new StringBuilder("<table class=\"hash_table\">");
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
             WikiWidget widget = children.get(i);

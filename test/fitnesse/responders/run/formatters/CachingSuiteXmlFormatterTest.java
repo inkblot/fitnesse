@@ -10,9 +10,7 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.wiki.WikiPage;
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
 import org.junit.Before;
 import org.junit.Test;
 import util.DateTimeUtil;
@@ -77,7 +75,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     private CachingSuiteXmlFormatter newNonWritingCachingSuiteXmlFormatter() throws Exception {
         return new CachingSuiteXmlFormatter(context, root, null) {
             @Override
-            protected void writeOutSuiteXML() throws Exception {
+            protected void writeOutSuiteXML() {
             }
         };
     }
@@ -102,16 +100,11 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
         TestHistory testHistory = mock(TestHistory.class);
         formatter.setTestHistoryForTests(testHistory);
         VelocityContext velocityContext = mock(VelocityContext.class);
-        VelocityEngine velocityEngine = mock(VelocityEngine.class);
         Writer writer = mock(Writer.class);
-        formatter.setVelocityForTests(velocityContext, velocityEngine, writer);
-        Template template = mock(Template.class);
-        when(velocityEngine.getTemplate("fitnesse/templates/suiteXML.vm")).thenReturn(template);
+        formatter.setVelocityForTests(velocityContext, writer);
         formatter.allTestingComplete(new TimeMeasurement().start().stop());
         verify(testHistory).readHistoryDirectory(context.getTestHistoryDirectory());
         verify(velocityContext).put("formatter", formatter);
-        verify(velocityEngine).getTemplate("fitnesse/templates/suiteXML.vm");
-        verify(template).merge(velocityContext, writer);
         verify(writer).close();
     }
 

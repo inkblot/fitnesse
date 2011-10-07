@@ -5,6 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.components.PageReferencer;
 import fitnesse.wiki.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -27,7 +28,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
     private static Map<String, String> optionCssMap = buildOptionsCssMap();
     private String includeOption;
 
-    public IncludeWidget(ParentWidget parent, String text) throws Exception {
+    public IncludeWidget(ParentWidget parent, String text) throws IOException {
         super(parent);
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
@@ -36,14 +37,14 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
         }
     }
 
-    private void addChildWidgetsThatRepresentTheInclusion() throws Exception {
+    private void addChildWidgetsThatRepresentTheInclusion() throws IOException {
         if (isParentOf(includedPage, includingPage))
             addChildWidgets(String.format("!meta Error! Cannot include parent page (%s).\n", pageName));
         else
             buildWidget();
     }
 
-    private void initializeWidget(ParentWidget parent, Matcher matcher) throws Exception {
+    private void initializeWidget(ParentWidget parent, Matcher matcher) throws IOException {
         includeOption = getOption(matcher);
         pageName = getPageName(matcher);
         includingPage = parent.getWikiPage();
@@ -51,7 +52,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
         includedPage = getIncludedPage();
     }
 
-    private boolean isParentOf(WikiPage possibleParent, WikiPage page) throws Exception {
+    private boolean isParentOf(WikiPage possibleParent, WikiPage page) {
         for (; page.getParent() != page; page = page.getParent()) {
             if (possibleParent == page)
                 return true;
@@ -63,7 +64,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
         return pageName;
     }
 
-    protected String getIncludedPageContent() throws Exception {
+    protected String getIncludedPageContent() throws IOException {
         PageCrawler crawler = parentPage.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         WikiPagePath pagePath = PathParser.parse(pageName);
@@ -87,13 +88,13 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
         }
     }
 
-    protected WikiPage getIncludedPage() throws Exception {
+    protected WikiPage getIncludedPage() throws IOException {
         PageCrawler crawler = parentPage.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         return crawler.getPage(parentPage, PathParser.parse(pageName));
     }
 
-    protected WikiPage getParentPage() throws Exception {
+    protected WikiPage getParentPage() {
         return parent.getWikiPage().getParent();
     }
 
@@ -106,7 +107,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
     }
 
     //TODO MDM I know this is bad...  But it seems better then creating two new widgets.
-    private void buildWidget() throws Exception {
+    private void buildWidget() throws IOException {
         String includedText = getIncludedPageContent(includeOption);
         String widgetText = processLiterals(includedText);
 
@@ -129,7 +130,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
 
     //TODO MG There was no better way to nest in this behaviour. As future evolution point we can
     //        expand the if clause to also accept regular includes and replace PAGE_NAME all the time.
-    private String getIncludedPageContent(String option) throws Exception {
+    private String getIncludedPageContent(String option) throws IOException {
 
         if (isSetup(option) || isTeardown(option)) {
             return replaceSpecialVariables(getIncludedPageContent());
@@ -139,7 +140,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
     }
 
     //TODO MG What about PAGE_PATH?
-    private String replaceSpecialVariables(String includedPageContent) throws Exception {
+    private String replaceSpecialVariables(String includedPageContent) {
         return includedPageContent.replaceAll("\\$\\{PAGE_NAME\\}", includingPage.getName());
     }
 
@@ -155,8 +156,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
         return optionPrefixMap.get(option);
     }
 
-    private boolean isCollapsed(String option)
-            throws Exception {
+    private boolean isCollapsed(String option) throws IOException {
         if (isSetup(option) && isSetupCollapsed())
             return true;
         else if (isTeardown(option) && isTeardownCollapsed())
@@ -184,8 +184,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
         return optionPrefixMap;
     }
 
-    private boolean isTeardownCollapsed()
-            throws Exception {
+    private boolean isTeardownCollapsed() throws IOException {
         final String teardownCollapseVariable = parent.getVariable(COLLAPSE_TEARDOWN);
         return teardownCollapseVariable == null || "true".equals(teardownCollapseVariable);
     }
@@ -194,8 +193,7 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
         return "-teardown".equals(option);
     }
 
-    private boolean isSetupCollapsed()
-            throws Exception {
+    private boolean isSetupCollapsed() throws IOException {
         final String setupCollapseVariable = parent.getVariable(COLLAPSE_SETUP);
         return setupCollapseVariable == null || "true".equals(setupCollapseVariable);
     }
@@ -204,20 +202,20 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
         return "-setup".equals(option);
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         return childHtml();
     }
 
-    public WikiPage getReferencedPage() throws Exception {
+    public WikiPage getReferencedPage() throws IOException {
         return getParentPage().getPageCrawler().getPage(getParentPage(), PathParser.parse(pageName));
     }
 
-    public String asWikiText() throws Exception {
+    public String asWikiText() {
         return "";
     }
 
     @Override
-    public String processLiterals(String value) throws Exception {
+    public String processLiterals(String value) throws IOException {
         // TODO Auto-generated method stub
         return super.processLiterals(value);
     }

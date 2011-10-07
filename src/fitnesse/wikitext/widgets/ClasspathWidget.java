@@ -5,6 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wikitext.WidgetBuilder;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +14,7 @@ public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgum
     private static final Pattern pattern = Pattern.compile("^!path (.*)");
     private String pathText;
 
-    public ClasspathWidget(ParentWidget parent, String text) throws Exception {
+    public ClasspathWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         if (match.find()) {
@@ -26,15 +27,15 @@ public class ClasspathWidget extends ParentWidget implements WidgetWithTextArgum
         return WidgetBuilder.variableEvaluatorWidgetBuilder;
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         return HtmlUtil.metaText("classpath: " + childHtml());
     }
 
-    public String asWikiText() throws Exception {
+    public String asWikiText() {
         return "!path " + pathText;
     }
 
-    public String getText() throws Exception {
+    public String getText() throws IOException {
         return childHtml();
     }
 }

@@ -10,6 +10,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import util.TimeMeasurement;
 
+import java.io.IOException;
 import java.util.*;
 
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
@@ -60,13 +61,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         }
     }
 
-    void allTestingComplete() throws Exception {
+    void allTestingComplete() throws IOException {
         TimeMeasurement completionTimeMeasurement = new TimeMeasurement().start();
         resultsListener.allTestingComplete(totalTestTime.stop());
         completionTimeMeasurement.stop(); // a non-trivial amount of time elapses here
     }
 
-    private void internalExecuteTestPages() throws Exception {
+    private void internalExecuteTestPages() throws IOException {
         synchronized (this) {
             testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
             stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
@@ -83,13 +84,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     }
 
     private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
-                                          PagesByTestSystem pagesByTestSystem) throws Exception {
+                                          PagesByTestSystem pagesByTestSystem) throws IOException {
         List<WikiPage> pagesInTestSystem = pagesByTestSystem.get(descriptor);
 
         startTestSystemAndExecutePages(descriptor, pagesInTestSystem);
     }
 
-    private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<WikiPage> testSystemPages) throws Exception {
+    private void startTestSystemAndExecutePages(TestSystem.Descriptor descriptor, List<WikiPage> testSystemPages) throws IOException {
         TestSystem testSystem = null;
         synchronized (this) {
             if (!isStopped) {
@@ -100,9 +101,14 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         if (testSystem != null) {
             if (testSystem.isSuccessfullyStarted()) {
                 executeTestSystemPages(testSystemPages, testSystem);
-                waitForTestSystemToSendResults();
+                try {
+                    waitForTestSystemToSendResults();
+                } catch (InterruptedException e) {
+                    // ok
+                }
             } else {
-                throw new Exception("Test system not started");
+                // TODO: choose a better exception type
+                throw new RuntimeException("Test system not started");
             }
 
             synchronized (this) {
@@ -113,7 +119,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         }
     }
 
-    private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws Exception {
+    private void executeTestSystemPages(List<WikiPage> pagesInTestSystem, TestSystem testSystem) throws IOException {
         for (WikiPage testPage : pagesInTestSystem) {
             addToProcessingQueue(testPage);
             PageData pageData = testPage.getData();
@@ -131,11 +137,11 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
             Thread.sleep(50);
     }
 
-    PagesByTestSystem makeMapOfPagesByTestSystem() throws Exception {
+    PagesByTestSystem makeMapOfPagesByTestSystem() throws IOException {
         return addSuiteSetUpAndTearDownToAllTestSystems(mapWithAllPagesButSuiteSetUpAndTearDown());
     }
 
-    private PagesByTestSystem mapWithAllPagesButSuiteSetUpAndTearDown() throws Exception {
+    private PagesByTestSystem mapWithAllPagesButSuiteSetUpAndTearDown() throws IOException {
         PagesByTestSystem pagesByTestSystem = new PagesByTestSystem();
 
         for (WikiPage testPage : testPagesToRun) {
@@ -146,7 +152,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         return pagesByTestSystem;
     }
 
-    private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage testPage) throws Exception {
+    private void addPageToListWithinMap(PagesByTestSystem pagesByTestSystem, WikiPage testPage) throws IOException {
         Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), isRemoteDebug);
         getOrMakeListWithinMap(pagesByTestSystem, descriptor).add(testPage);
     }
@@ -162,7 +168,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         return pagesForTestSystem;
     }
 
-    private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) throws Exception {
+    private PagesByTestSystem addSuiteSetUpAndTearDownToAllTestSystems(PagesByTestSystem pagesByTestSystem) throws IOException {
         if (testPagesToRun.size() == 0)
             return pagesByTestSystem;
         for (LinkedList<WikiPage> pagesForTestSystem : pagesByTestSystem.values())
@@ -180,7 +186,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         totalTestTime = new TimeMeasurement().start();
     }
 
-    public String buildClassPath() throws Exception {
+    public String buildClassPath() throws IOException {
         final ClassPathBuilder classPathBuilder = new ClassPathBuilder();
         final String pathSeparator = classPathBuilder.getPathSeparator(page);
         List<String> classPathElements = new ArrayList<String>();
@@ -193,13 +199,12 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
     }
 
-    private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages)
-            throws Exception {
+    private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages) throws IOException {
         List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
         classPathElements.addAll(pathElements);
     }
 
-    public void acceptOutputFirst(String output) throws Exception {
+    public void acceptOutputFirst(String output) throws IOException {
         WikiPage firstInQueue = processingQueue.isEmpty() ? null : processingQueue.getFirst();
         boolean isNewTest = firstInQueue != null && firstInQueue != currentTest;
         if (isNewTest) {
@@ -208,13 +213,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         resultsListener.testOutputChunk(output);
     }
 
-    void startingNewTest(WikiPage test) throws Exception {
+    void startingNewTest(WikiPage test) throws IOException {
         currentTest = test;
         currentTestTime = new TimeMeasurement().start();
         resultsListener.newTestStarted(currentTest, currentTestTime);
     }
 
-    public void testComplete(TestSummary testSummary) throws Exception {
+    public void testComplete(TestSummary testSummary) throws IOException {
         WikiPage testPage = processingQueue.removeFirst();
         resultsListener.testComplete(testPage, testSummary, currentTestTime.stop());
     }
@@ -234,7 +239,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         return !isStopped;
     }
 
-    public void stop() throws Exception {
+    public void stop() throws IOException {
         boolean wasNotStopped = isNotStopped();
         synchronized (this) {
             isStopped = true;

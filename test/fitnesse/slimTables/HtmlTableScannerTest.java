@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slimTables;
 
-import org.htmlparser.util.ParserException;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -13,7 +12,7 @@ import static util.RegexAssertions.assertHasRegexp;
 public class HtmlTableScannerTest {
     private HtmlTableScanner ts;
 
-    private void scan(String page) throws ParserException {
+    private void scan(String page) throws Exception {
         ts = new HtmlTableScanner(page);
     }
 

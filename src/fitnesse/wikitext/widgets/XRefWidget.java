@@ -4,6 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.html.HtmlUtil;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,7 @@ public class XRefWidget extends ParentWidget implements WidgetWithTextArgument {
     private static final Pattern pattern = Pattern.compile("^!see (.*)");
     private String pageName;
 
-    public XRefWidget(ParentWidget parent, String text) throws Exception {
+    public XRefWidget(ParentWidget parent, String text) {
         super(parent);
         Matcher match = pattern.matcher(text);
         if (match.find()) {
@@ -21,11 +22,11 @@ public class XRefWidget extends ParentWidget implements WidgetWithTextArgument {
         }
     }
 
-    public String render() throws Exception {
+    public String render() throws IOException {
         return HtmlUtil.metaText("<b>See: " + childHtml() + "</b>");
     }
 
-    public String asWikiText() throws Exception {
+    public String asWikiText() {
         return "!see " + pageName;
     }
 

@@ -13,6 +13,6 @@ public class MockWidgetRoot extends WidgetRoot {
         super(null, new PagePointer(new WikiPageDummy("RooT", injector), new WikiPagePath()), WidgetBuilder.htmlWidgetBuilder);
     }
 
-    protected void buildWidgets(String value) throws Exception {
+    protected void buildWidgets(String value) {
     }
 }

@@ -12,17 +12,16 @@ public class AnchorMarkerWidget extends WikiWidget {
     public static final String REGEXP = "\\.#\\w+";
     private static final Pattern pattern = Pattern.compile("\\.#(\\w*)");
 
-    private String text, anchorName;
+    private String anchorName;
 
     public AnchorMarkerWidget(ParentWidget parent, String text) {
         super(parent);
-        this.text = text;
-        Matcher match = pattern.matcher(this.text);
+        Matcher match = pattern.matcher(text);
         if (match.find())
             anchorName = match.group(1);
     }
 
-    public String render() throws Exception {
+    public String render() {
         return HtmlUtil.makeLink("#" + anchorName, ".#" + anchorName).html();
     }
 }

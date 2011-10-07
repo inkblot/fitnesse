@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import java.io.IOException;
+
 public class PagePointer {
     public WikiPage root;
     public WikiPagePath path;
@@ -11,7 +13,7 @@ public class PagePointer {
         this.path = path;
     }
 
-    public WikiPage getPage() throws Exception {
+    public WikiPage getPage() throws IOException {
         return root.getPageCrawler().getPage(root, path);
     }
 }

@@ -6,10 +6,12 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slim.SlimClient;
 import fitnesse.slimTables.HtmlTableScanner;
@@ -21,15 +23,21 @@ import fitnesse.wikitext.parser.Collapsible;
 import fitnesse.wikitext.parser.Include;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.test.ParserTestHelper;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketException;
 import java.util.Properties;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
 public class SlimTestSystemTest extends FitnesseBaseTestCase {
@@ -38,9 +46,6 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private MockRequest request;
     protected SlimResponder responder;
-    private WikiPage testPage;
-    public String testResults;
-    protected SimpleResponse response;
     private TestSystemListener dummyListener = new DummyListener();
     private HtmlPageFactory htmlPageFactory;
     private Clock clock;
@@ -53,32 +58,13 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    private void assertTestResultsContain(String fragment) {
-        String unescapedResults = unescape(testResults);
-        assertTrue(unescapedResults, unescapedResults.contains(fragment));
-    }
-
-    private void assertTestResultsDoNotContain(String fragment) {
-        String unescapedResults = unescape(testResults);
-        assertTrue(unescapedResults, !unescapedResults.contains(fragment));
-    }
-
-    private void getResultsForPageContents(String pageContents) throws Exception {
-        request.setResource("TestPage");
-        PageData data = testPage.getData();
-        data.setContent(data.getContent() + "\n" + pageContents);
-        testPage.commit(data);
-        response = (SimpleResponse) responder.makeResponse(context, request);
-        testResults = response.getContent();
-    }
-
     @Before
     public void setUp() throws Exception {
         context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!path classes");
+        request.setResource("TestPage");
         responder = new SlimResponder(properties, htmlPageFactory, clock);
         responder.setTestMode(new SlimTestSystem.FastTestMode());
     }
@@ -86,6 +72,35 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     @After
     public void tearDown() {
         SlimTestSystem.clearSlimPortOffset();
+    }
+
+    private Matcher<String> contains(final String needle) {
+        return new BaseMatcher<String>() {
+            @Override
+            public boolean matches(Object o) {
+                assertThat(o, instanceOf(String.class));
+                return ((String) o).contains(needle);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("contains");
+            }
+        };
+    }
+
+    private String getResultsForPageContents(String pageContents) throws Exception {
+        createTestPageWithContent(pageContents);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        return response.getContent();
+    }
+
+    private WikiPage createTestPageWithContent(String pageContents) throws IOException {
+        WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!define TEST_SYSTEM {slim}\n!path classes");
+        PageData data = testPage.getData();
+        data.setContent(data.getContent() + "\n" + pageContents);
+        testPage.commit(data);
+        return testPage;
     }
 
     @Test
@@ -122,111 +137,113 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         assertEquals("somehost", sys.determineSlimHost());
     }
 
-    @Test
+    // TODO: This test runs a lot of code, but what does it test?
+    //@Test
     public void slimResponderStartsAndQuitsSlim() throws Exception {
         responder.setTestMode(new SlimTestSystem.DefaultTestMode());
-        request.setResource("TestPage");
         responder.makeResponse(context, request);
     }
 
     @Test
     public void verboseOutputIfSlimFlagSet() throws Exception {
-        getResultsForPageContents("!define SLIM_FLAGS {-v}\n");
-        assertTrue(responder.testSystem.getCommandLine().contains("fitnesse.slim.SlimService -v"));
+        WikiPage testPage = createTestPageWithContent("!define SLIM_FLAGS {-v}\n");
+        SlimTestSystem testSystem = new HtmlSlimTestSystem(testPage.getData().getWikiPage(), new DummyListener());
+        testSystem.getExecutionLog(new ClassPathBuilder().getClasspath(testPage), TestSystem.getDescriptor(testPage.getData(), false));
+        assertTrue(testSystem.getCommandLine().contains("fitnesse.slim.SlimService -v"));
     }
 
     @Test
     public void tableWithoutPrefixWillBeConstructed() throws Exception {
-        getResultsForPageContents("|XX|\n");
-        assertTestResultsContain("<td>XX <span class=\"error\">Could not invoke constructor for XX[0]</span></td>");
+        String testResults = getResultsForPageContents("|XX|\n");
+        assertThat(unescape(testResults), contains("<td>XX <span class=\"error\">Could not invoke constructor for XX[0]</span></td>"));
     }
 
     @Test
     public void emptyQueryTable() throws Exception {
-        getResultsForPageContents("|Query:x|\n");
-        assertTestResultsContain("Query tables must have at least two rows.");
+        String testResults = getResultsForPageContents("|Query:x|\n");
+        assertThat(unescape(testResults), contains("Query tables must have at least two rows."));
     }
 
     @Test
     public void queryFixtureHasNoQueryFunction() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|Query:fitnesse.slim.test.TestSlim|\n" +
                         "|x|y|\n"
         );
-        assertTestResultsContain("Method query[0] not found in fitnesse.slim.test.TestSlim");
+        assertThat(unescape(testResults), contains("Method query[0] not found in fitnesse.slim.test.TestSlim"));
     }
 
     @Test
     public void emptyOrderedQueryTable() throws Exception {
-        getResultsForPageContents("|ordered query:x|\n");
-        assertTestResultsContain("Query tables must have at least two rows.");
+        String testResults = getResultsForPageContents("|ordered query:x|\n");
+        assertThat(unescape(testResults), contains("Query tables must have at least two rows."));
     }
 
     @Test
     public void orderedQueryFixtureHasNoQueryFunction() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|ordered query:fitnesse.slim.test.TestSlim|\n" +
                         "|x|y|\n"
         );
-        assertTestResultsContain("Method query[0] not found in fitnesse.slim.test.TestSlim");
+        assertThat(unescape(testResults), contains("Method query[0] not found in fitnesse.slim.test.TestSlim"));
     }
 
     @Test
     public void emptySubsetQueryTable() throws Exception {
-        getResultsForPageContents("|subset query:x|\n");
-        assertTestResultsContain("Query tables must have at least two rows.");
+        String testResults = getResultsForPageContents("|subset query:x|\n");
+        assertThat(unescape(testResults), contains("Query tables must have at least two rows."));
     }
 
     @Test
     public void subsetQueryFixtureHasNoQueryFunction() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|subset query:fitnesse.slim.test.TestSlim|\n" +
                         "|x|y|\n"
         );
-        assertTestResultsContain("Method query[0] not found in fitnesse.slim.test.TestSlim");
+        assertThat(unescape(testResults), contains("Method query[0] not found in fitnesse.slim.test.TestSlim"));
     }
 
     @Test
     public void scriptTableWithBadConstructor() throws Exception {
-        getResultsForPageContents("!|Script|NoSuchClass|\n");
-        assertTestResultsContain("<span class=\"error\">Could not invoke constructor for NoSuchClass");
+        String testResults = getResultsForPageContents("!|Script|NoSuchClass|\n");
+        assertThat(unescape(testResults), contains("<span class=\"error\">Could not invoke constructor for NoSuchClass"));
     }
 
     @Test
     public void emptyImportTable() throws Exception {
-        getResultsForPageContents("|Import|\n");
-        assertTestResultsContain("Import tables must have at least two rows.");
+        String testResults = getResultsForPageContents("|Import|\n");
+        assertThat(unescape(testResults), contains("Import tables must have at least two rows."));
     }
 
     @Test
     public void emptyTableTable() throws Exception {
-        getResultsForPageContents("!|Table:TableFixture|\n");
-        assertTestResultsContain("<span class=\"error\">Could not invoke constructor for TableFixture[0]</span>");
+        String testResults = getResultsForPageContents("!|Table:TableFixture|\n");
+        assertThat(unescape(testResults), contains("<span class=\"error\">Could not invoke constructor for TableFixture[0]</span>"));
     }
 
     @Test
     public void tableFixtureHasNoDoTableFunction() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|Table:fitnesse.slim.test.TestSlim|\n" +
                         "|a|b|\n"
         );
-        assertTestResultsContain("Table fixture has no valid doTable method");
+        assertThat(unescape(testResults), contains("Table fixture has no valid doTable method"));
     }
 
 
     @Test
     public void simpleDecisionTable() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:fitnesse.slim.test.TestSlim|\n" +
                         "|returnInt?|\n" +
                         "|7|\n"
         );
-        assertTestResultsContain("<span class=\"pass\">7</span>");
+        assertThat(unescape(testResults), contains("<span class=\"pass\">7</span>"));
     }
 
     @Test
     public void decisionTableIgnoresMethodMissingForResetExecuteaAndTable() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:fitnesse.slim.test.DummyDecisionTable|\n" +
                         "|x?|\n" +
                         "|1|\n"
@@ -236,7 +253,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void decisionTableWithNoResetDoesNotCountExceptionsForExecute() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:fitnesse.slim.test.DummyDecisionTableWithExecuteButNoReset|\n" +
                         "|x?|\n" +
                         "|1|\n"
@@ -246,7 +263,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void queryTableWithoutTableFunctionIgnoresMissingMethodException() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|query:fitnesse.slim.test.DummyQueryTableWithNoTableMethod|\n" +
                         "|x|\n" +
                         "|1|\n"
@@ -256,68 +273,68 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void decisionTableWithExecuteThatThrowsDoesShowsException() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:fitnesse.slim.test.DecisionTableExecuteThrows|\n" +
                         "|x?|\n" +
                         "|1|\n"
         );
         assertEquals(1, responder.testSystem.getTestSummary().getExceptions());
-        assertTestResultsContain("EXECUTE_THROWS");
+        assertThat(unescape(testResults), contains("EXECUTE_THROWS"));
     }
 
     @Test
     public void tableWithException() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:NoSuchClass|\n" +
                         "|returnInt?|\n" +
                         "|7|\n"
         );
-        assertTestResultsContain("<span class=\"error\">Could not invoke constructor for NoSuchClass");
+        assertThat(unescape(testResults), contains("<span class=\"error\">Could not invoke constructor for NoSuchClass"));
     }
 
     @Test
     public void tableWithBadConstructorHasException() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:fitnesse.slim.test.TestSlim|badArgument|\n" +
                         "|returnConstructorArgument?|\n" +
                         "|3|\n"
         );
         TableScanner ts = new HtmlTableScanner(responder.testSystem.getTestResults().getHtml());
         ts.getTable(0);
-        assertTestResultsContain("Could not invoke constructor");
+        assertThat(unescape(testResults), contains("Could not invoke constructor"));
     }
 
     @Test
     public void tableWithBadVariableHasException() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:fitnesse.slim.test.TestSlim|\n" +
                         "|noSuchVar|\n" +
                         "|3|\n"
         );
-        assertTestResultsContain("<span class=\"error\">Method setNoSuchVar[1] not found in fitnesse.slim.test.TestSlim");
+        assertThat(unescape(testResults), contains("<span class=\"error\">Method setNoSuchVar[1] not found in fitnesse.slim.test.TestSlim"));
     }
 
     @Test
     public void tableWithStopTestMessageException() throws Exception {
-        getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
+        String testResults = getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
                 "|throwStopTestExceptionWithMessage?|\n" +
                 "| once |\n" +
                 "| twice |\n");
-        assertTestResultsContain("<td>once <span class=\"fail\">Stop Test</span></td>");
-        assertTestResultsContain("<td>twice <span class=\"ignore\">Test not run</span>");
+        assertThat(unescape(testResults), contains("<td>once <span class=\"fail\">Stop Test</span></td>"));
+        assertThat(unescape(testResults), contains("<td>twice <span class=\"ignore\">Test not run</span>"));
     }
 
     @Test
     public void tableWithMessageException() throws Exception {
-        getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
+        String testResults = getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
                 "|throwExceptionWithMessage?|\n" +
                 "| once |\n");
-        assertTestResultsContain("<td>once <span class=\"error\">Test message</span></td>");
+        assertThat(unescape(testResults), contains("<td>once <span class=\"error\">Test message</span></td>"));
     }
 
     @Test
     public void tableWithStopTestExceptionThrown() throws Exception {
-        getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
+        String testResults = getResultsForPageContents("!|DT:fitnesse.slim.test.TestSlim|\n" +
                 "|throwNormal?| throwStopping? |\n" +
                 "| first | second  |\n" +
                 "| should fail1| true           |\n" +
@@ -326,37 +343,37 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                 "|throwNormal?|\n" +
                 "| should fail2|\n"
         );
-        assertTestResultsContain("<td><span class=\"error\">Exception: <a href");
-        assertTestResultsContain("<td><span class=\"error\">Exception: <a href");
-        assertTestResultsContain("<td>should fail1 <span class=\"ignore\">Test not run</span></td>");
-        assertTestResultsContain("<td>should fail2 <span class=\"ignore\">Test not run</span></td>");
+        assertThat(unescape(testResults), contains("<td><span class=\"error\">Exception: <a href"));
+        assertThat(unescape(testResults), contains("<td><span class=\"error\">Exception: <a href"));
+        assertThat(unescape(testResults), contains("<td>should fail1 <span class=\"ignore\">Test not run</span></td>"));
+        assertThat(unescape(testResults), contains("<td>should fail2 <span class=\"ignore\">Test not run</span></td>"));
     }
 
     @Test
     public void tableWithSymbolSubstitution() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:fitnesse.slim.test.TestSlim|\n" +
                         "|string|getStringArg?|\n" +
                         "|Bob|$V=|\n" +
                         "|$V|$V|\n"
         );
-        TableScanner ts = getScannedResults();
+        TableScanner ts = getScannedResults(testResults);
         Table dt = ts.getTable(0);
         assertEquals("$V<-[Bob]", unescape(dt.getCellContents(1, 2)));
         assertEquals("$V->[Bob]", unescape(dt.getCellContents(0, 3)));
     }
 
-    protected TableScanner getScannedResults() throws Exception {
+    protected TableScanner getScannedResults(String testResults) throws Exception {
         return new HtmlTableScanner(testResults);
     }
 
-    private String unescape(String x) {
+    private static String unescape(String x) {
         return Utils.unescapeWiki(Utils.unescapeHTML(x));
     }
 
     @Test
     public void substituteSymbolIntoExpression() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:fitnesse.slim.test.TestSlim|\n" +
                         "|string|getStringArg?|\n" +
                         "|3|$A=|\n" +
@@ -364,7 +381,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|5|$B=|\n" +
                         "|4|$A<_<$B|\n"
         );
-        TableScanner ts = getScannedResults();
+        TableScanner ts = getScannedResults(testResults);
         Table dt = ts.getTable(0);
         assertEquals("<span class=\"pass\">2<$A->[3]</span>", unescape(dt.getCellContents(1, 3)));
         assertEquals("<span class=\"pass\">$A->[3]<4<$B->[5]</span>", unescape(dt.getCellContents(1, 5)));
@@ -372,24 +389,24 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void tableWithExpression() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|DT:fitnesse.slim.test.TestSlim|\n" +
                         "|string|getStringArg?|\n" +
                         "|${=3+4=}|7|\n"
         );
-        TableScanner ts = getScannedResults();
+        TableScanner ts = getScannedResults(testResults);
         Table dt = ts.getTable(0);
         assertEquals("<span class=\"pass\">7</span>", dt.getCellContents(1, 2));
     }
 
     @Test
     public void noSuchConverter() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "|!-DT:fitnesse.slim.test.TestSlim-!|\n" +
                         "|noSuchConverter|noSuchConverter?|\n" +
                         "|x|x|\n"
         );
-        TableScanner ts = getScannedResults();
+        TableScanner ts = getScannedResults(testResults);
         Table dt = ts.getTable(0);
         assertEquals("x <span class=\"error\">No converter for fitnesse.slim.test.TestSlim$NoSuchConverter.</span>", dt.getCellContents(0, 2));
     }
@@ -411,61 +428,61 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void returnedListsBecomeStrings() throws Exception {
-        getResultsForPageContents("!|script|\n" +
+        String testResults = getResultsForPageContents("!|script|\n" +
                 "|start|fitnesse.slim.test.TestSlim|\n" +
                 "|one list|1,2|\n" +
                 "|check|get list arg|[1, 2]|\n");
-        assertTestResultsContain("<td><span class=\"pass\">[1, 2]</span></td>");
+        assertThat(unescape(testResults), contains("<td><span class=\"pass\">[1, 2]</span></td>"));
     }
 
     @Test
     public void nullStringReturned() throws Exception {
-        getResultsForPageContents("!|fitnesse.slim.test.TestSlim|\n" +
+        String testResults = getResultsForPageContents("!|fitnesse.slim.test.TestSlim|\n" +
                 "|nullString?|\n" +
                 "|null|\n");
-        assertTestResultsContain("<td><span class=\"pass\">null</span></td>");
+        assertThat(unescape(testResults), contains("<td><span class=\"pass\">null</span></td>"));
     }
 
     @Test
     public void reportableExceptionsAreReported() throws Exception {
-        getResultsForPageContents(
+        String testResults = getResultsForPageContents(
                 "!|fitnesse.slim.test.ExecuteThrowsReportableException|\n" +
                         "|x|\n" +
                         "|1|\n");
-        assertTestResultsContain("A Reportable Exception");
+        assertThat(unescape(testResults), contains("A Reportable Exception"));
     }
 
     @Test
     public void versionMismatchIsNotReported() throws Exception {
-        getResultsForPageContents("");
-        assertTestResultsDoNotContain("Slim Protocol Version Error");
+        String testResults = getResultsForPageContents("");
+        assertThat(unescape(testResults), not(contains("Slim Protocol Version Error")));
     }
 
     @Test
     public void versionMismatchIsReported() throws Exception {
         SlimClient.MINIMUM_REQUIRED_SLIM_VERSION = 1000.0;  // I doubt will ever get here.
-        getResultsForPageContents("");
-        assertTestResultsContain("Slim Protocol Version Error");
+        String testResults = getResultsForPageContents("");
+        assertThat(unescape(testResults), contains("Slim Protocol Version Error"));
     }
 
     @Test
     public void checkTestClassPrecededByDefine() throws Exception {
-        getResultsForPageContents("!define PI {3.141592}\n" +
+        String testResults = getResultsForPageContents("!define PI {3.141592}\n" +
                 "!path classes\n" +
                 "!path fitnesse.jar\n" +
                 "|fitnesse.testutil.PassFixture|\n");
-        assertTestResultsContain("PassFixture");
+        assertThat(unescape(testResults), contains("PassFixture"));
     }
 
     @Test
     public void emptyScenarioTable() throws Exception {
-        getResultsForPageContents("|Scenario|\n");
-        assertTestResultsContain("Scenario tables must have a name.");
+        String testResults = getResultsForPageContents("|Scenario|\n");
+        assertThat(unescape(testResults), contains("Scenario tables must have a name."));
     }
 
     @Test
     public void scenarioTableIsRegistered() throws Exception {
-        getResultsForPageContents("|Scenario|myScenario|\n");
+        String testResults = getResultsForPageContents("|Scenario|myScenario|\n");
         assertTrue("scenario should be registered", responder.testSystem.getScenarios().containsKey("myScenario"));
     }
 

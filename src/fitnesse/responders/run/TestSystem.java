@@ -175,10 +175,10 @@ public abstract class TestSystem implements TestSystemListener {
     }
 
     public static class Descriptor {
-        public String testSystemName;
-        public String testRunner;
-        public String commandPattern;
-        public String pathSeparator;
+        public final String testSystemName;
+        public final String testRunner;
+        public final String commandPattern;
+        public final String pathSeparator;
 
         public Descriptor(String testSystemName, String testRunner, String commandPattern, String pathSeparator) {
             this.testSystemName = testSystemName;

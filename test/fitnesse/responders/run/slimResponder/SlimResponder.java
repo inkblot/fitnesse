@@ -36,7 +36,6 @@ public class SlimResponder extends WikiPageResponder implements TestSystemListen
         testSystem = getTestSystem(pageData);
         String classPath = new ClassPathBuilder().getClasspath(page);
         TestSystem.Descriptor descriptor = TestSystem.getDescriptor(page.getData(), false);
-        descriptor.testRunner = "fitnesse.slim.SlimService";
         log = testSystem.getExecutionLog(classPath, descriptor);
         testSystem.start();
         testSystem.setTestMode(testMode);

@@ -22,7 +22,7 @@ import java.util.Properties;
 This responder is a test rig for SlimTestSystemTest, which makes sure that the SlimTestSystem works nicely with
 responders in general.
 */
-public abstract class SlimResponder extends WikiPageResponder implements TestSystemListener {
+public class SlimResponder extends WikiPageResponder implements TestSystemListener {
     ExecutionLog log;
     private SlimTestSystem.SlimTestMode testMode = new SlimTestSystem.DefaultTestMode();
     SlimTestSystem testSystem;
@@ -52,7 +52,9 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
         return html;
     }
 
-    abstract SlimTestSystem getTestSystem(PageData pageData);
+    SlimTestSystem getTestSystem(PageData pageData) {
+        return new HtmlSlimTestSystem(pageData.getWikiPage(), this);
+    }
 
     public SecureOperation getSecureOperation() {
         return new SecureTestOperation();

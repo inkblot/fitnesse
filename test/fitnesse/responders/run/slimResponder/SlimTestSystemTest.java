@@ -21,6 +21,7 @@ import fitnesse.wikitext.parser.Collapsible;
 import fitnesse.wikitext.parser.Include;
 import fitnesse.wikitext.parser.Symbol;
 import fitnesse.wikitext.test.ParserTestHelper;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
@@ -77,14 +78,14 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = getSlimResponder();
-        responder.setTestMode(new SlimTestSystem.FastTestMode());
         testPage = crawler.addPage(root, PathParser.parse("TestPage"), "!path classes");
-        SlimTestSystem.clearSlimPortOffset();
+        responder = new SlimResponder(properties, htmlPageFactory, clock);
+        responder.setTestMode(new SlimTestSystem.FastTestMode());
     }
 
-    protected SlimResponder getSlimResponder() {
-        return new HtmlSlimResponder(properties, htmlPageFactory, clock);
+    @After
+    public void tearDown() {
+        SlimTestSystem.clearSlimPortOffset();
     }
 
     @Test

@@ -4,10 +4,10 @@ import fitnesse.components.SearchObserver;
 import fitnesse.components.SuiteSpecificationMatchFinder;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
+import fitnesse.slimTables.TableScanner;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import org.htmlparser.util.ParserException;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -37,7 +37,7 @@ public class SuiteSpecificationRunner implements SearchObserver {
 
 
     public boolean getPageListFromPageContent(String pageContent) throws IOException {
-        HtmlTableScanner scanner = new HtmlTableScanner(pageContent);
+        TableScanner scanner = new HtmlTableScanner(pageContent);
         for (int tableIndex = 0; tableIndex < scanner.getTableCount(); tableIndex++) {
             Table table = scanner.getTable(tableIndex);
             if (!getPageListFromTable(table))

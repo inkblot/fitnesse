@@ -21,14 +21,10 @@ import fitnesse.wiki.*;
 import org.apache.velocity.VelocityContext;
 import util.Clock;
 
+import java.io.IOException;
 import java.util.Properties;
 
 public class WikiPageResponder implements SecureResponder {
-    protected WikiPage page;
-    protected PageData pageData;
-    protected String pageTitle;
-    protected Request request;
-    protected PageCrawler crawler;
 
     private final Properties properties;
     private final HtmlPageFactory htmlPageFactory;
@@ -42,20 +38,15 @@ public class WikiPageResponder implements SecureResponder {
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        loadPage(request.getResource(), context.root);
-        if (page == null)
-            return notFoundResponse(context, request, context.root);
-        else
-            return makePageResponse();
-    }
-
-    protected void loadPage(String pageName, WikiPage root) throws Exception {
-        WikiPagePath path = PathParser.parse(pageName);
-        crawler = root.getPageCrawler();
+        WikiPagePath path = PathParser.parse(request.getResource());
+        PageCrawler crawler = context.root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-        page = crawler.getPage(root, path);
-        if (page != null)
-            pageData = page.getData();
+        WikiPage page = crawler.getPage(context.root, path);
+
+        if (page == null) return notFoundResponse(context, request, context.root);
+
+        PageData pageData = page.getData();
+        return makePageResponse(pageData);
     }
 
     private Response notFoundResponse(FitNesseContext context, Request request, WikiPage root) throws Exception {
@@ -73,9 +64,8 @@ public class WikiPageResponder implements SecureResponder {
         return doNotCreate != null && (doNotCreate.length() == 0 || Boolean.parseBoolean(doNotCreate));
     }
 
-    private SimpleResponse makePageResponse() throws Exception {
-        pageTitle = PathParser.render(crawler.getFullPath(page));
-        String html = makeHtml();
+    private SimpleResponse makePageResponse(PageData pageData) throws IOException {
+        String html = makeHtml(pageData);
 
         SimpleResponse response = new SimpleResponse();
         response.setMaxAge(0);
@@ -83,7 +73,7 @@ public class WikiPageResponder implements SecureResponder {
         return response;
     }
 
-    public String makeHtml() throws Exception {
+    public String makeHtml(PageData pageData) throws IOException {
         WikiPage page = pageData.getWikiPage();
         HtmlPage html = htmlPageFactory.newPage();
         WikiPagePath fullPath = page.getPageCrawler().getFullPath(page);
@@ -93,22 +83,22 @@ public class WikiPageResponder implements SecureResponder {
         html.header.add("<a style=\"font-size:small;\" onclick=\"popup('addChildPopup')\"> [add child]</a>");
         html.actions.use(HtmlUtil.makeActions(page.getActions()));
         SetupTeardownAndLibraryIncluder.includeInto(pageData);
-        html.main.use(generateHtml(pageData));
+        html.main.use(generateHtml(pageData, page));
         VelocityContext velocityContext = new VelocityContext();
 
         velocityContext.put("page_name", page.getName());
         velocityContext.put("full_path", fullPathName);
         html.main.add(VelocityFactory.translateTemplate(velocityContext, "fitnesse/templates/addChildPagePopup.vm"));
-        handleSpecialProperties(html, page);
+        handleSpecialProperties(html, page, pageData);
         return html.html();
     }
 
     /* hook for subclasses */
-    protected String generateHtml(PageData pageData) throws Exception {
+    protected String generateHtml(PageData pageData, WikiPage page) throws IOException {
         return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
     }
 
-    private void handleSpecialProperties(HtmlPage html, WikiPage page) throws Exception {
+    private void handleSpecialProperties(HtmlPage html, WikiPage page, PageData pageData) {
         WikiImportProperty.handleImportProperties(html, page, pageData);
     }
 

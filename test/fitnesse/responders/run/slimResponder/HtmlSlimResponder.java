@@ -13,7 +13,7 @@ public class HtmlSlimResponder extends SlimResponder {
         super(properties, htmlPageFactory, clock);
     }
 
-    protected SlimTestSystem getTestSystem(PageData pageData) {
+    SlimTestSystem getTestSystem(PageData pageData) {
         return new HtmlSlimTestSystem(pageData.getWikiPage(), this);
     }
 }

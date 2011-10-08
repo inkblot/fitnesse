@@ -126,13 +126,12 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         responder.setTestMode(new SlimTestSystem.DefaultTestMode());
         request.setResource("TestPage");
         responder.makeResponse(context, request);
-        assertTrue(!responder.slimOpen());
     }
 
     @Test
     public void verboseOutputIfSlimFlagSet() throws Exception {
         getResultsForPageContents("!define SLIM_FLAGS {-v}\n");
-        assertTrue(responder.getCommandLine().contains("fitnesse.slim.SlimService -v"));
+        assertTrue(responder.testSystem.getCommandLine().contains("fitnesse.slim.SlimService -v"));
     }
 
     @Test
@@ -231,7 +230,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|x?|\n" +
                         "|1|\n"
         );
-        assertEquals(0, responder.getTestSummary().getExceptions());
+        assertEquals(0, responder.testSystem.getTestSummary().getExceptions());
     }
 
     @Test
@@ -241,7 +240,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|x?|\n" +
                         "|1|\n"
         );
-        assertEquals(0, responder.getTestSummary().getExceptions());
+        assertEquals(0, responder.testSystem.getTestSummary().getExceptions());
     }
 
     @Test
@@ -251,7 +250,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|x|\n" +
                         "|1|\n"
         );
-        assertEquals(0, responder.getTestSummary().getExceptions());
+        assertEquals(0, responder.testSystem.getTestSummary().getExceptions());
     }
 
     @Test
@@ -261,7 +260,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|x?|\n" +
                         "|1|\n"
         );
-        assertEquals(1, responder.getTestSummary().getExceptions());
+        assertEquals(1, responder.testSystem.getTestSummary().getExceptions());
         assertTestResultsContain("EXECUTE_THROWS");
     }
 
@@ -282,7 +281,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|returnConstructorArgument?|\n" +
                         "|3|\n"
         );
-        TableScanner ts = new HtmlTableScanner(responder.getTestResults().getHtml());
+        TableScanner ts = new HtmlTableScanner(responder.testSystem.getTestResults().getHtml());
         ts.getTable(0);
         assertTestResultsContain("Could not invoke constructor");
     }

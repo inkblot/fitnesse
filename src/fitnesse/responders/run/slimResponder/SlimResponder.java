@@ -57,10 +57,6 @@ public abstract class SlimResponder extends WikiPageResponder implements TestSys
         return new SecureTestOperation();
     }
 
-    boolean slimOpen() {
-        return false;
-    }
-
     public PageData getTestResults() {
         return testSystem.getTestResults();
     }

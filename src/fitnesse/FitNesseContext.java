@@ -38,6 +38,7 @@ public class FitNesseContext {
 
     public static FitNesseContext globalContext;
 
+    private final Injector injector;
     public final String rootPath;
     public final WikiPage root;
     public final String rootPagePath;
@@ -67,7 +68,8 @@ public class FitNesseContext {
             ResponderFactory responderFactory,
             Clock clock,
             HtmlPageFactory htmlPageFactory,
-            Provider<Authenticator> authenticatorProvider) throws Exception {
+            Provider<Authenticator> authenticatorProvider,
+            Injector injector) throws Exception {
         this.rootPath = rootPath;
         this.rootPagePath = rootPagePath;
         this.wikiPageFactory = wikiPageFactory;
@@ -75,6 +77,7 @@ public class FitNesseContext {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
         this.authenticatorProvider = authenticatorProvider;
+        this.injector = injector;
 
         this.root = wikiPageFactory.makeRootPage();
         String absolutePath = new File(this.rootPath).getAbsolutePath();
@@ -117,5 +120,9 @@ public class FitNesseContext {
 
     public HtmlPageFactory getHtmlPageFactory() {
         return htmlPageFactory;
+    }
+
+    public Injector getInjector() {
+        return injector;
     }
 }

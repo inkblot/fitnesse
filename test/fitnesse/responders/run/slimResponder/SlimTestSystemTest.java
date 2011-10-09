@@ -2,14 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.components.ClassPathBuilder;
-import fitnesse.html.HtmlPageFactory;
-import fitnesse.http.MockRequest;
-import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSystemListener;
@@ -29,12 +24,10 @@ import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import util.Clock;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketException;
-import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
@@ -43,30 +36,14 @@ import static org.junit.Assert.*;
 public class SlimTestSystemTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
-    private FitNesseContext context;
-    private MockRequest request;
-    protected SlimResponder responder;
     private TestSystemListener dummyListener = new DummyListener();
-    private HtmlPageFactory htmlPageFactory;
-    private Clock clock;
-    private Properties properties;
-
-    @Inject
-    public void inject(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory) {
-        this.properties = properties;
-        this.clock = clock;
-        this.htmlPageFactory = htmlPageFactory;
-    }
+    private SlimTestSystem testSystem;
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
+        FitNesseContext context = makeContext();
         root = context.root;
         crawler = root.getPageCrawler();
-        request = new MockRequest();
-        request.setResource("TestPage");
-        responder = new SlimResponder(properties, htmlPageFactory, clock);
-        responder.setTestMode(new SlimTestSystem.FastTestMode());
     }
 
     @After
@@ -90,9 +67,24 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     }
 
     private String getResultsForPageContents(String pageContents) throws Exception {
-        createTestPageWithContent(pageContents);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
-        return response.getContent();
+        WikiPage testPage = createTestPageWithContent(pageContents);
+        PageData pageData = testPage.getData();
+        testSystem = new HtmlSlimTestSystem(pageData.getWikiPage(), dummyListener);
+        String classPath = new ClassPathBuilder().getClasspath(testPage);
+        TestSystem.Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), false);
+        testSystem.getExecutionLog(classPath, descriptor);
+        testSystem.start();
+        testSystem.setTestMode(new SlimTestSystem.FastTestMode());
+        String html = testSystem.runTestsAndGenerateHtml(pageData);
+        testSystem.bye();
+
+        // TODO: Why is this sleep here?
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            // ok
+        }
+        return html;
     }
 
     private WikiPage createTestPageWithContent(String pageContents) throws IOException {
@@ -138,10 +130,23 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     }
 
     // TODO: This test runs a lot of code, but what does it test?
-    //@Test
+    @Test
     public void slimResponderStartsAndQuitsSlim() throws Exception {
-        responder.setTestMode(new SlimTestSystem.DefaultTestMode());
-        responder.makeResponse(context, request);
+        WikiPage testPage = createTestPageWithContent("");
+        PageData pageData = testPage.getData();
+        testSystem = new HtmlSlimTestSystem(pageData.getWikiPage(), dummyListener);
+        String classPath = new ClassPathBuilder().getClasspath(testPage);
+        TestSystem.Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), false);
+        testSystem.getExecutionLog(classPath, descriptor);
+        testSystem.start();
+        testSystem.bye();
+
+        // TODO: Why is this sleep here?
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            // ok
+        }
     }
 
     @Test
@@ -248,7 +253,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|x?|\n" +
                         "|1|\n"
         );
-        assertEquals(0, responder.testSystem.getTestSummary().getExceptions());
+        assertEquals(0, testSystem.getTestSummary().getExceptions());
     }
 
     @Test
@@ -258,7 +263,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|x?|\n" +
                         "|1|\n"
         );
-        assertEquals(0, responder.testSystem.getTestSummary().getExceptions());
+        assertEquals(0, testSystem.getTestSummary().getExceptions());
     }
 
     @Test
@@ -268,7 +273,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|x|\n" +
                         "|1|\n"
         );
-        assertEquals(0, responder.testSystem.getTestSummary().getExceptions());
+        assertEquals(0, testSystem.getTestSummary().getExceptions());
     }
 
     @Test
@@ -278,7 +283,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|x?|\n" +
                         "|1|\n"
         );
-        assertEquals(1, responder.testSystem.getTestSummary().getExceptions());
+        assertEquals(1, testSystem.getTestSummary().getExceptions());
         assertThat(unescape(testResults), contains("EXECUTE_THROWS"));
     }
 
@@ -299,7 +304,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                         "|returnConstructorArgument?|\n" +
                         "|3|\n"
         );
-        TableScanner ts = new HtmlTableScanner(responder.testSystem.getTestResults().getHtml());
+        TableScanner ts = new HtmlTableScanner(testSystem.getTestResults().getHtml());
         ts.getTable(0);
         assertThat(unescape(testResults), contains("Could not invoke constructor"));
     }
@@ -483,7 +488,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     @Test
     public void scenarioTableIsRegistered() throws Exception {
         String testResults = getResultsForPageContents("|Scenario|myScenario|\n");
-        assertTrue("scenario should be registered", responder.testSystem.getScenarios().containsKey("myScenario"));
+        assertTrue("scenario should be registered", testSystem.getScenarios().containsKey("myScenario"));
     }
 
     @Test(expected = SocketException.class)

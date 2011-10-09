@@ -3,7 +3,6 @@
 package fitnesse.responders.run.slimResponder;
 
 import fitnesse.components.CommandRunner;
-import fitnesse.http.MockCommandRunner;
 import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
@@ -11,7 +10,6 @@ import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slim.SlimClient;
 import fitnesse.slim.SlimError;
 import fitnesse.slim.SlimServer;
-import fitnesse.slim.SlimService;
 import fitnesse.slimTables.*;
 import fitnesse.wiki.PageCrawlerImpl;
 import fitnesse.wiki.PageData;
@@ -26,7 +24,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.ServerSocket;
-import java.net.SocketException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -188,27 +185,6 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     public void bye() throws IOException {
         slimClient.sendBye();
         testMode.bye(this);
-    }
-
-    //For testing only.  Makes responder faster.
-    static void createSlimService(String args) throws SocketException {
-        try {
-            while (!tryCreateSlimService(args))
-                Thread.sleep(10);
-        } catch (InterruptedException e) {
-            // ok
-        }
-    }
-
-    private static boolean tryCreateSlimService(String args) throws SocketException {
-        try {
-            SlimService.startSlimService(args.trim().split(" "));
-            return true;
-        } catch (SocketException e) {
-            throw e;
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     void waitForConnection() {
@@ -506,6 +482,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         this.testMode = testMode;
     }
 
+    public int getSlimSocket() {
+        return slimSocket;
+    }
+
     public static interface SlimTestMode {
 
         CommandRunner createSlimRunner(String classPath, SlimTestSystem testSystem) throws IOException;
@@ -530,18 +510,4 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         }
     }
 
-    public static class FastTestMode implements SlimTestMode {
-
-        @Override
-        public CommandRunner createSlimRunner(String classPath, SlimTestSystem testSystem) throws IOException {
-            String slimArguments = String.format("%s %d", testSystem.getSlimFlags(), testSystem.slimSocket);
-            createSlimService(slimArguments);
-            return new MockCommandRunner();
-        }
-
-        @Override
-        public void bye(SlimTestSystem testSystem) {
-
-        }
-    }
 }

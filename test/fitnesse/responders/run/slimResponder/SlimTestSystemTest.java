@@ -5,10 +5,13 @@ package fitnesse.responders.run.slimResponder;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.components.ClassPathBuilder;
+import fitnesse.components.CommandRunner;
+import fitnesse.http.MockCommandRunner;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimService;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
@@ -74,7 +77,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         TestSystem.Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), false);
         testSystem.getExecutionLog(classPath, descriptor);
         testSystem.start();
-        testSystem.setTestMode(new SlimTestSystem.FastTestMode());
+        testSystem.setTestMode(new FastTestMode());
         String html = testSystem.runTestsAndGenerateHtml(pageData);
         testSystem.bye();
 
@@ -497,7 +500,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         ServerSocket slimSocket = new ServerSocket(slimServerPort);
         try {
             String slimArguments = String.format("%s %d", "", slimServerPort);
-            SlimTestSystem.createSlimService(slimArguments);
+            createSlimService(slimArguments);
         } finally {
             slimSocket.close();
         }
@@ -557,6 +560,26 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         return null;
     }
 
+    private static void createSlimService(String args) throws SocketException {
+        try {
+            while (!tryCreateSlimService(args))
+                Thread.sleep(10);
+        } catch (InterruptedException e) {
+            // ok
+        }
+    }
+
+    private static boolean tryCreateSlimService(String args) throws SocketException {
+        try {
+            SlimService.startSlimService(args.trim().split(" "));
+            return true;
+        } catch (SocketException e) {
+            throw e;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private static class DummyListener implements TestSystemListener {
         public void acceptOutputFirst(String output) {
         }
@@ -565,6 +588,21 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         }
 
         public void exceptionOccurred(Throwable e) {
+        }
+    }
+
+    public static class FastTestMode implements SlimTestSystem.SlimTestMode {
+
+        @Override
+        public CommandRunner createSlimRunner(String classPath, SlimTestSystem testSystem) throws IOException {
+            String slimArguments = String.format("%s %d", testSystem.getSlimFlags(), testSystem.getSlimSocket());
+            createSlimService(slimArguments);
+            return new MockCommandRunner();
+        }
+
+        @Override
+        public void bye(SlimTestSystem testSystem) {
+
         }
     }
 }

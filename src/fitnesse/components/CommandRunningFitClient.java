@@ -12,76 +12,37 @@ import fitnesse.responders.run.TestSystemListener;
 import java.io.IOException;
 import java.util.Map;
 
+import static java.net.InetAddress.getLocalHost;
+
 public class CommandRunningFitClient extends FitClient implements SocketSeeker {
     public static int TIMEOUT = 60000;
-    private static final String SPACE = " ";
 
-    public CommandRunner commandRunner;
+    public final CommandRunner commandRunner;
+    private final FitTestMode testMode;
+
     private SocketDonor donor;
     private boolean connectionEstablished = false;
 
-    private Thread timeoutThread;
-    private Thread earlyTerminationThread;
-    private boolean fastTest = false;
-    private Thread fastFitServer;
+    public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer) throws IOException {
+        this(listener, command, port, null, dealer, new DefaultTestMode());
+    }
 
     public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest) throws IOException {
+        this(listener, command, port, environmentVariables, dealer, fastTest ? new FastTestMode() : new DefaultTestMode());
+    }
+
+    public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, FitTestMode fitTestMode) throws IOException {
         super(listener);
-        this.fastTest = fastTest;
+        this.testMode = fitTestMode;
         int ticketNumber = dealer.seekingSocket(this);
-        String hostName = java.net.InetAddress.getLocalHost().getHostName();
-        String fitArguments = hostName + SPACE + port + SPACE + ticketNumber;
-        String commandLine = command + SPACE + fitArguments;
-        if (fastTest) {
-            commandRunner = new MockCommandRunner();
-            createFitServer(fitArguments);
-        } else
-            commandRunner = new CommandRunner(commandLine, "", environmentVariables);
-    }
-
-    public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer) throws IOException {
-        this(listener, command, port, null, dealer);
-    }
-
-    public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer) throws IOException {
-        this(listener, command, port, environmentVariables, dealer, false);
-    }
-
-    //For testing only.  Makes responder faster.
-    void createFitServer(String args) {
-        final String fitArgs = args;
-        Runnable fastFitServerRunnable = new Runnable() {
-            public void run() {
-                try {
-                    while (!tryCreateFitServer(fitArgs))
-                        Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    // ok
-                }
-            }
-        };
-        fastFitServer = new Thread(fastFitServerRunnable);
-        fastFitServer.start();
-    }
-
-    private boolean tryCreateFitServer(String args) {
-        try {
-            FitServer.runFitServer(args.trim().split(" "));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        String fitArguments = getLocalHost().getHostName() + " " + port + " " + ticketNumber;
+        commandRunner = testMode.initialize(fitArguments, command, environmentVariables);
     }
 
     public void start() {
         try {
             commandRunner.asynchronousStart();
-            if (!fastTest) {
-                timeoutThread = new Thread(new TimeoutRunnable(), "FitClient timeout");
-                timeoutThread.start();
-                earlyTerminationThread = new Thread(new EarlyTerminationRunnable(), "FitClient early termination");
-                earlyTerminationThread.start();
-            }
+            testMode.start(this);
             waitForConnection();
         } catch (Exception e) {
             listener.exceptionOccurred(e);
@@ -107,11 +68,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
     public void join() {
         try {
-            if (fastTest) {
-                fastFitServer.join();
-            } else {
-                commandRunner.join();
-            }
+            testMode.join(this);
             super.join();
             if (donor != null)
                 donor.finishedWithSocket();
@@ -123,15 +80,11 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
     public void kill() {
         super.kill();
-        killVigilantThreads();
+        testMode.killVigilantThreads();
         commandRunner.kill();
     }
 
     private void killVigilantThreads() {
-        if (timeoutThread != null)
-            timeoutThread.interrupt();
-        if (earlyTerminationThread != null)
-            earlyTerminationThread.interrupt();
     }
 
     public void exceptionOccurred(Exception e) {
@@ -172,6 +125,100 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
             } catch (InterruptedException e) {
                 // ok
             }
+        }
+    }
+
+    public static interface FitTestMode {
+
+        public CommandRunner initialize(String fitArguments, String command, Map<String, String> environmentVariables);
+
+        void join(CommandRunningFitClient commandRunningFitClient) throws InterruptedException;
+
+        void killVigilantThreads();
+
+        void start(CommandRunningFitClient commandRunningFitClient);
+    }
+
+    public static class DefaultTestMode implements FitTestMode {
+
+        private Thread timeoutThread;
+        private Thread earlyTerminationThread;
+
+        @Override
+        public CommandRunner initialize(String fitArguments, String command, Map<String, String> environmentVariables) {
+            String commandLine = command + " " + fitArguments;
+            return new CommandRunner(commandLine, "", environmentVariables);
+        }
+
+        @Override
+        public void join(CommandRunningFitClient commandRunningFitClient) throws InterruptedException {
+            commandRunningFitClient.commandRunner.join();
+        }
+
+        @Override
+        public void start(CommandRunningFitClient commandRunningFitClient) {
+            timeoutThread = new Thread(commandRunningFitClient.new TimeoutRunnable(), "FitClient timeout");
+            timeoutThread.start();
+            earlyTerminationThread = new Thread(commandRunningFitClient.new EarlyTerminationRunnable(), "FitClient early termination");
+            earlyTerminationThread.start();
+        }
+
+        @Override
+        public void killVigilantThreads() {
+            if (timeoutThread != null)
+                timeoutThread.interrupt();
+            if (earlyTerminationThread != null)
+                earlyTerminationThread.interrupt();
+        }
+    }
+
+    public static class FastTestMode implements FitTestMode {
+
+        private Thread fastFitServer;
+
+        void createFitServer(String args) {
+            final String fitArgs = args;
+
+            Runnable fastFitServerRunnable = new Runnable() {
+                public void run() {
+                    try {
+                        while (!tryCreateFitServer(fitArgs))
+                            Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        // ok
+                    }
+                }
+            };
+            fastFitServer = new Thread(fastFitServerRunnable);
+            fastFitServer.start();
+        }
+
+        private boolean tryCreateFitServer(String args) {
+            try {
+                FitServer.runFitServer(args.trim().split(" "));
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        @Override
+        public CommandRunner initialize(String fitArguments, String command, Map<String, String> environmentVariables) {
+            createFitServer(fitArguments);
+            return new MockCommandRunner();
+        }
+
+        @Override
+        public void join(CommandRunningFitClient commandRunningFitClient) throws InterruptedException {
+            fastFitServer.join();
+        }
+
+        @Override
+        public void start(CommandRunningFitClient commandRunningFitClient) {
+        }
+
+        @Override
+        public void killVigilantThreads() {
         }
     }
 }

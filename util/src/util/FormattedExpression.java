@@ -1,7 +1,5 @@
 package util;
 
-import fitnesse.html.HtmlUtil;
-
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,7 +59,7 @@ public class FormattedExpression {
             else
                 sString = String.format(format, result.toString());
 
-            return new Maybe<String>(sString.replaceAll(" ", HtmlUtil.NBSP.html()));
+            return new Maybe<String>(sString.replaceAll(" ", "&nbsp;"));
         }
 
         if ("tT".indexOf(conversion) >= 0) { //...date

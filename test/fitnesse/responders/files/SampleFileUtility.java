@@ -11,10 +11,6 @@ public class SampleFileUtility {
     public final File testDir;
     public final File testFile1;
 
-    public SampleFileUtility() {
-        this("testdir");
-    }
-
     public SampleFileUtility(String base) {
         this.base = base;
         testDir = new File(new File(base, "files"), "testDir");
@@ -32,10 +28,6 @@ public class SampleFileUtility {
         FileUtil.createFile(base + "/files/testDir/testFile2", "file2 content");
         FileUtil.createFile(base + "/files/testDir/testFile3", "file3 content");
         FileUtil.createFile(base + "/files/file4 with spaces.txt", "file4 content");
-    }
-
-    public void deleteSampleFiles() {
-        FileUtil.deleteFileSystemDirectory(base);
     }
 
     public void addFile(String name, String content) {

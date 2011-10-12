@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -14,6 +16,7 @@ import util.Clock;
 import util.ImpossibleException;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
@@ -22,52 +25,57 @@ import java.text.ParseException;
 import java.util.Date;
 
 public class FileResponder implements Responder {
-    private static FileNameMap fileNameMap = URLConnection.getFileNameMap();
-    public String resource;
-    public File requestedFile;
-    public Date lastModifiedDate;
-    public String lastModifiedDateString;
+    private static final FileNameMap fileNameMap = URLConnection.getFileNameMap();
+
+    private final String rootPath;
     private final Clock clock;
 
-    public static Responder makeResponder(String resource, String rootPath, HtmlPageFactory htmlPageFactory, Clock clock) {
-        if (fileNameHasSpaces(resource))
-            resource = restoreRealSpacesInFileName(resource);
+    private Date lastModifiedDate;
+    private String lastModifiedDateString;
 
-        File requestedFile = new File(rootPath + "/" + resource);
-        if (!requestedFile.exists())
-            return new NotFoundResponder(htmlPageFactory);
-
-        if (requestedFile.isDirectory())
-            return new DirectoryResponder(resource, requestedFile, htmlPageFactory);
-        else
-            return new FileResponder(resource, requestedFile, clock);
+    @Inject
+    public FileResponder(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath, Clock clock) {
+        this.rootPath = rootPagePath;
+        this.clock = clock;
     }
 
-    public FileResponder(String resource, File requestedFile, Clock clock) {
-        this.resource = resource;
-        this.requestedFile = requestedFile;
-        this.clock = clock;
+    public static Responder makeResponder(Injector injector, String resource, String rootPath) {
+        File requestedFile = getRequestedFile(rootPath, resource);
+        if (requestedFile.exists()) {
+            // serve the file or directory if it exists
+            if (requestedFile.isDirectory())
+                return injector.getInstance(DirectoryResponder.class);
+            else
+                return injector.getInstance(FileResponder.class);
+        } else {
+            // it doesn't exist
+            return injector.getInstance(NotFoundResponder.class);
+        }
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         InputStreamResponse response = new InputStreamResponse();
-        determineLastModifiedInfo();
+        determineLastModifiedInfo(request.getResource());
 
         if (isNotModified(request))
             return createNotModifiedResponse();
         else {
-            response.setBody(requestedFile);
-            setContentType(requestedFile, response);
+            File requestedFile = getRequestedFile(rootPath, request.getResource());
+            FileInputStream input = new FileInputStream(requestedFile);
+            int size = (int) requestedFile.length();
+            response.setBody(input, size);
+            String contentType = getContentType(getFileName(request.getResource()));
+            response.setContentType(contentType);
             response.setLastModifiedHeader(lastModifiedDateString);
         }
         return response;
     }
 
-    public static boolean fileNameHasSpaces(String resource) {
-        return resource.indexOf("%20") != 0;
+    private static File getRequestedFile(String rootPath, String resource) {
+        return new File(rootPath + File.separator + decodeFileName(resource));
     }
 
-    public static String restoreRealSpacesInFileName(String resource) {
+    public static String decodeFileName(String resource) {
         try {
             return URLDecoder.decode(resource, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -99,8 +107,8 @@ public class FileResponder implements Responder {
         return response;
     }
 
-    private void determineLastModifiedInfo() {
-        lastModifiedDate = new Date(requestedFile.lastModified());
+    private void determineLastModifiedInfo(String resource) {
+        lastModifiedDate = new Date(getRequestedFile(rootPath, resource).lastModified());
         lastModifiedDateString = SimpleResponse.makeStandardHttpDateFormat().format(lastModifiedDate);
 
         try  // remove milliseconds
@@ -111,21 +119,18 @@ public class FileResponder implements Responder {
         }
     }
 
-    private void setContentType(File file, Response response) {
-        String contentType = getContentType(file.getName());
-        response.setContentType(contentType);
+    public static String getFileName(String resource) {
+        return resource.substring(resource.lastIndexOf(File.separator) + 1);
     }
 
     public static String getContentType(String filename) {
-        String contentType = fileNameMap.getContentTypeFor(filename);
-        if (contentType == null) {
-            if (filename.endsWith(".css"))
-                contentType = "text/css";
-            else if (filename.endsWith(".jar"))
-                contentType = "application/x-java-archive";
-            else
-                contentType = "text/plain";
-        }
-        return contentType;
+        if (fileNameMap.getContentTypeFor(filename) != null)
+            return fileNameMap.getContentTypeFor(filename);
+        else if (filename.endsWith(".css"))
+            return "text/css";
+        else if (filename.endsWith(".jar"))
+            return "application/x-java-archive";
+        else
+            return "text/plain";
     }
 }

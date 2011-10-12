@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -20,35 +22,34 @@ import java.util.Date;
 public class DirectoryResponder implements SecureResponder {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy, hh:mm a");
 
-    private final String resource;
-    private final File requestedDirectory;
+    private final String rootPath;
     private final HtmlPageFactory htmlPageFactory;
 
-    public DirectoryResponder(String resource, File requestedFile, HtmlPageFactory htmlPageFactory) {
-        this.resource = resource;
-        requestedDirectory = requestedFile;
+    @Inject
+    public DirectoryResponder(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath, HtmlPageFactory htmlPageFactory) {
+        this.rootPath = rootPagePath;
         this.htmlPageFactory = htmlPageFactory;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
 
-        if (resource.endsWith("/")) {
+        if (request.getResource().endsWith("/")) {
             SimpleResponse simpleResponse = new SimpleResponse();
-            simpleResponse.setContent(makeDirectoryListingPage());
+            simpleResponse.setContent(makeDirectoryListingPage(request.getResource()));
             return simpleResponse;
         } else {
             SimpleResponse simpleResponse = new SimpleResponse();
-            simpleResponse.redirect("/" + resource + "/");
+            simpleResponse.redirect("/" + request.getResource() + "/");
             return simpleResponse;
         }
     }
 
-    private String makeDirectoryListingPage() throws Exception {
+    private String makeDirectoryListingPage(String resource) throws Exception {
         HtmlPage page = htmlPageFactory.newPage();
         page.title.use("Files: " + resource);
         page.header.use(HtmlUtil.makeBreadCrumbsWithPageType(resource, "/", "Files Section"));
         page.actions.use(makeFrontPageLink());
-        page.main.use(makeRightColumn());
+        page.main.use(makeRightColumn(resource));
 
         return page.html();
     }
@@ -59,12 +60,13 @@ public class DirectoryResponder implements SecureResponder {
         return HtmlUtil.makeAction(action);
     }
 
-    private String makeRightColumn() throws Exception {
+    private String makeRightColumn(String resource) throws Exception {
         TagGroup html = new TagGroup();
+        File requestedDirectory = new File(rootPath + File.separator + FileResponder.decodeFileName(resource));
         html.add(addFiles(FileUtil.getDirectoryListing(requestedDirectory)));
         html.add(HtmlUtil.HR.html());
-        html.add(makeUploadForm());
-        html.add(makeDirectoryForm());
+        html.add(makeUploadForm(resource));
+        html.add(makeDirectoryForm(resource));
         return html.html();
     }
 
@@ -119,7 +121,7 @@ public class DirectoryResponder implements SecureResponder {
             return HtmlUtil.makeLink(href, file.getName());
     }
 
-    private HtmlTag makeUploadForm() throws Exception {
+    private HtmlTag makeUploadForm(String resource) throws Exception {
         HtmlTag uploadForm = HtmlUtil.makeFormTag("post", "/" + resource);
         uploadForm.addAttribute("enctype", "multipart/form-data");
         uploadForm.addAttribute("class", "left");
@@ -133,7 +135,7 @@ public class DirectoryResponder implements SecureResponder {
         return uploadForm;
     }
 
-    private HtmlTag makeDirectoryForm() throws Exception {
+    private HtmlTag makeDirectoryForm(String resource) throws Exception {
         HtmlTag dirForm = HtmlUtil.makeFormTag("get", "/" + resource);
         dirForm.addAttribute("class", "right");
         dirForm.add(HtmlUtil.makeInputTag("hidden", "responder", "createDir"));

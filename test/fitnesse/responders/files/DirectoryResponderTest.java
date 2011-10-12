@@ -2,17 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import org.junit.Before;
 import org.junit.Test;
-import util.Clock;
 
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
@@ -22,14 +19,6 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
     private SimpleResponse response;
     private FitNesseContext context;
-    private HtmlPageFactory htmlPageFactory;
-    private Clock clock;
-
-    @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, Clock clock) {
-        this.htmlPageFactory = htmlPageFactory;
-        this.clock = clock;
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -37,7 +26,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
         context = makeContext();
         makeSampleFiles();
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory, clock);
+        Responder responder = FileResponder.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
         response = (SimpleResponse) responder.makeResponse(context, request);
     }
 
@@ -63,7 +52,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testRedirectForDirectory() throws Exception {
         request.setResource("files/testDir");
-        Responder responder = FileResponder.makeResponder(request.getResource(), context.rootPagePath, htmlPageFactory, clock);
+        Responder responder = FileResponder.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
         Response response = responder.makeResponse(context, request);
 
         assertEquals(303, response.getStatus());

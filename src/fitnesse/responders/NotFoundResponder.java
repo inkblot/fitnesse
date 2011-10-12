@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
@@ -21,6 +22,7 @@ public class NotFoundResponder implements Responder {
     private String resource;
     private final HtmlPageFactory htmlPageFactory;
 
+    @Inject
     public NotFoundResponder(HtmlPageFactory htmlPageFactory) {
         this.htmlPageFactory = htmlPageFactory;
     }

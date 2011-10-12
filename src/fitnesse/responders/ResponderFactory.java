@@ -26,7 +26,6 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wikitext.widgets.WikiWordWidget;
-import util.Clock;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,14 +39,12 @@ public class ResponderFactory {
     private final String rootPagePath;
     private final Map<String, Class<? extends Responder>> responderMap;
     private final HtmlPageFactory htmlPageFactory;
-    private final Clock clock;
 
     @Inject
-    public ResponderFactory(Injector injector, @Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath, HtmlPageFactory htmlPageFactory, Clock clock) {
+    public ResponderFactory(Injector injector, @Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath, HtmlPageFactory htmlPageFactory) {
         this.rootPagePath = rootPagePath;
         this.injector = injector;
         this.htmlPageFactory = htmlPageFactory;
-        this.clock = clock;
         responderMap = new HashMap<String, Class<? extends Responder>>();
         addResponder("edit", EditResponder.class);
         addResponder("saveData", SaveResponder.class);
@@ -126,7 +123,7 @@ public class ResponderFactory {
         } else if (isEmpty(resource)) {
             return injector.getInstance(WikiPageResponder.class);
         } else if (resource.startsWith("files/") || resource.equals("files")) {
-            return FileResponder.makeResponder(request.getResource(), rootPagePath, htmlPageFactory, clock);
+            return FileResponder.makeResponder(injector, request.getResource(), rootPagePath);
         } else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource)) {
             return injector.getInstance(WikiPageResponder.class);
         } else {

@@ -58,7 +58,7 @@ public class SimpleResponse extends Response {
     }
 
     @Override
-    public int getContentSize() {
+    public Integer getContentSize() {
         return content.length;
     }
 

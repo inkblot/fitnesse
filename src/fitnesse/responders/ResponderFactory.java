@@ -78,7 +78,7 @@ public class ResponderFactory {
         addResponder("raw", RawContentResponder.class);
         addResponder("rss", RssResponder.class);
         addResponder("import", WikiImportingResponder.class);
-        addResponder("files", FileResponder.class);
+        addResponder("files", FileSystemResponder.class);
         addResponder("shutdown", ShutdownResponder.class);
         addResponder("format", TestResultFormattingResponder.class);
         addResponder("symlink", SymbolicLinkResponder.class);
@@ -123,7 +123,7 @@ public class ResponderFactory {
         } else if (isEmpty(resource)) {
             return injector.getInstance(WikiPageResponder.class);
         } else if (resource.startsWith("files/") || resource.equals("files")) {
-            return FileResponder.makeResponder(injector, request.getResource(), rootPagePath);
+            return FileSystemResponder.makeResponder(injector, request.getResource(), rootPagePath);
         } else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource)) {
             return injector.getInstance(WikiPageResponder.class);
         } else {

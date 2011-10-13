@@ -77,7 +77,7 @@ public abstract class Response {
 
     protected abstract void addSpecificHeaders();
 
-    public abstract int getContentSize();
+    public abstract Integer getContentSize();
 
     public int getStatus() {
         return status;

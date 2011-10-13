@@ -82,7 +82,7 @@ public class ChunkedResponse extends Response {
         close();
     }
 
-    public int getContentSize() {
+    public Integer getContentSize() {
         return bytesSent;
     }
 

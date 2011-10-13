@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.http;
 
-import util.StreamReader;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class InputStreamResponse extends Response {
-    private StreamReader reader;
-    private int contentSize = 0;
+    private InputStream input;
+    private Integer contentSize = null;
 
     public InputStreamResponse() {
         super("html");
@@ -21,24 +21,24 @@ public class InputStreamResponse extends Response {
         try {
             addStandardHeaders();
             sender.send(makeHttpHeaders().getBytes());
-            while (!reader.isEof())
-                sender.send(reader.readBytes(1000));
+            IOUtils.copy(input, sender.getOutputStream());
         } finally {
-            reader.close();
+            input.close();
             sender.close();
         }
     }
 
     protected void addSpecificHeaders() {
-        addHeader("Content-Length", getContentSize() + "");
+        if (getContentSize() != null)
+            addHeader("Content-Length", getContentSize() + "");
     }
 
-    public int getContentSize() {
+    public Integer getContentSize() {
         return contentSize;
     }
 
-    public void setBody(InputStream input, int size) {
-        reader = new StreamReader(input);
+    public void setBody(InputStream input, Integer size) {
+        this.input = input;
         contentSize = size;
     }
 

@@ -67,7 +67,7 @@ public class ResponseTest {
         protected void addSpecificHeaders() {
         }
 
-        public int getContentSize() {
+        public Integer getContentSize() {
             return 0;
         }
     }

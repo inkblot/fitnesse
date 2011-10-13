@@ -62,7 +62,7 @@ public class DirectoryResponder implements SecureResponder {
 
     private String makeRightColumn(String resource) throws Exception {
         TagGroup html = new TagGroup();
-        File requestedDirectory = new File(rootPath + File.separator + FileResponder.decodeFileName(resource));
+        File requestedDirectory = new File(rootPath + File.separator + FileSystemResponder.decodeFileName(resource));
         html.add(addFiles(FileUtil.getDirectoryListing(requestedDirectory)));
         html.add(HtmlUtil.HR.html());
         html.add(makeUploadForm(resource));

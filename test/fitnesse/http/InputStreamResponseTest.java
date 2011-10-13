@@ -14,7 +14,6 @@ public class InputStreamResponseTest extends TestCase implements ResponseSender 
     private boolean closed = false;
     private ByteArrayOutputStream output;
     private File testFile = new File("testFile.test");
-    private long bytesSent = 0;
 
     public void setUp() throws Exception {
         response = new InputStreamResponse();
@@ -56,7 +55,7 @@ public class InputStreamResponseTest extends TestCase implements ResponseSender 
         response.readyToSend(this);
         String responseString = output.toString();
         assertSubString("Content-Length: 100000", responseString);
-        assertTrue(bytesSent > 100000);
+        assertTrue(output.toByteArray().length > 100000);
     }
 
     public void testWithLargerFile() throws Exception {
@@ -66,7 +65,7 @@ public class InputStreamResponseTest extends TestCase implements ResponseSender 
         response.readyToSend(this);
         String responseString = output.toString();
         assertSubString("Content-Length: 10000000", responseString);
-        assertTrue(bytesSent > 10000000);
+        assertTrue(output.toByteArray().length > 10000000);
     }
 
     // Don't run unless you have some time to kill.
@@ -77,7 +76,7 @@ public class InputStreamResponseTest extends TestCase implements ResponseSender 
         response.readyToSend(this);
         String responseString = output.toString();
         assertSubString("Content-Length: 1000000000", responseString);
-        assertTrue(bytesSent > 1000000000);
+        assertTrue(output.toByteArray().length > 1000000000);
     }
 
     private void writeLinesToFile(int lines) throws IOException {
@@ -91,9 +90,7 @@ public class InputStreamResponseTest extends TestCase implements ResponseSender 
 
     public void send(byte[] bytes) {
         try {
-            if (bytesSent < 500)
-                output.write(bytes);
-            bytesSent += bytes.length;
+            output.write(bytes);
         } catch (IOException e) {
             e.printStackTrace(System.err);
             fail("No IOException should occur here");
@@ -111,6 +108,6 @@ public class InputStreamResponseTest extends TestCase implements ResponseSender 
 
     @Override
     public OutputStream getOutputStream() throws IOException {
-        return null;
+        return output;
     }
 }

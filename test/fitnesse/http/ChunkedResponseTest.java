@@ -127,7 +127,7 @@ public class ChunkedResponseTest implements ResponseSender {
     public void testContentSize() {
         response.add("12345");
         response.closeAll();
-        assertEquals(5, response.getContentSize());
+        assertEquals(5, (int) response.getContentSize());
     }
 
     @Test

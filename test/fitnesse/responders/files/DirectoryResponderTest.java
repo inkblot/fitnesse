@@ -26,7 +26,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
         context = makeContext();
         makeSampleFiles();
         request.setResource("files/testDir/");
-        Responder responder = FileResponder.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
+        Responder responder = FileSystemResponder.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
         response = (SimpleResponse) responder.makeResponse(context, request);
     }
 
@@ -52,7 +52,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testRedirectForDirectory() throws Exception {
         request.setResource("files/testDir");
-        Responder responder = FileResponder.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
+        Responder responder = FileSystemResponder.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
         Response response = responder.makeResponse(context, request);
 
         assertEquals(303, response.getStatus());

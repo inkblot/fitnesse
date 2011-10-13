@@ -23,7 +23,6 @@ public class InputStreamResponse extends Response {
             sender.send(makeHttpHeaders().getBytes());
             IOUtils.copy(input, sender.getOutputStream());
         } finally {
-            input.close();
             sender.close();
         }
     }

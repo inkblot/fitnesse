@@ -17,6 +17,7 @@ import util.ImpossibleException;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
@@ -60,15 +61,24 @@ public class FileResponder implements Responder {
         if (isNotModified(request))
             return createNotModifiedResponse();
         else {
-            File requestedFile = getRequestedFile(rootPath, request.getResource());
-            FileInputStream input = new FileInputStream(requestedFile);
-            int size = (int) requestedFile.length();
-            response.setBody(input, size);
+            response.setBody(getResponseStream(request), getContentLength(request));
             String contentType = getContentType(getFileName(request.getResource()));
             response.setContentType(contentType);
             response.setLastModifiedHeader(lastModifiedDateString);
         }
         return response;
+    }
+
+    private int getContentLength(Request request) {
+        return (int) getFile(request).length();
+    }
+
+    private FileInputStream getResponseStream(Request request) throws FileNotFoundException {
+        return new FileInputStream(getFile(request));
+    }
+
+    private File getFile(Request request) {
+        return getRequestedFile(rootPath, request.getResource());
     }
 
     private static File getRequestedFile(String rootPath, String resource) {

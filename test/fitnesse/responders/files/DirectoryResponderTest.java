@@ -8,6 +8,7 @@ import fitnesse.Responder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.responders.ResponderFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +27,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
         context = makeContext();
         makeSampleFiles();
         request.setResource("files/testDir/");
-        Responder responder = FileSystemResponder.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
+        Responder responder = ResponderFactory.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
         response = (SimpleResponse) responder.makeResponse(context, request);
     }
 
@@ -52,7 +53,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testRedirectForDirectory() throws Exception {
         request.setResource("files/testDir");
-        Responder responder = FileSystemResponder.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
+        Responder responder = ResponderFactory.makeResponder(context.getInjector(), request.getResource(), context.rootPagePath);
         Response response = responder.makeResponse(context, request);
 
         assertEquals(303, response.getStatus());

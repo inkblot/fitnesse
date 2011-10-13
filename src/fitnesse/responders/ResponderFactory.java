@@ -26,7 +26,9 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.wikitext.widgets.WikiWordWidget;
+import util.StringUtil;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,6 +95,20 @@ public class ResponderFactory {
         addResponder("replace", SearchReplaceResponder.class);
     }
 
+    public static Responder makeResponder(Injector injector, String resource, String rootPath) {
+        File requestedFile = new File(rootPath + File.separator + StringUtil.decodeURLText(resource));
+        if (requestedFile.exists()) {
+            // serve the file or directory if it exists
+            if (requestedFile.isDirectory())
+                return injector.getInstance(DirectoryResponder.class);
+            else
+                return injector.getInstance(FileSystemResponder.class);
+        } else {
+            // it doesn't exist
+            return injector.getInstance(NotFoundResponder.class);
+        }
+    }
+
     public void addResponder(String key, String responderClassName) throws ClassNotFoundException {
         responderMap.put(key, (Class<? extends Responder>) Class.forName(responderClassName));
     }
@@ -123,7 +139,7 @@ public class ResponderFactory {
         } else if (isEmpty(resource)) {
             return injector.getInstance(WikiPageResponder.class);
         } else if (resource.startsWith("files/") || resource.equals("files")) {
-            return FileSystemResponder.makeResponder(injector, request.getResource(), rootPagePath);
+            return makeResponder(injector, request.getResource(), rootPagePath);
         } else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource)) {
             return injector.getInstance(WikiPageResponder.class);
         } else {

@@ -3,26 +3,16 @@
 package fitnesse.responders.files;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.Responder;
-import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
-import fitnesse.http.Response;
-import fitnesse.http.SimpleResponse;
-import fitnesse.responders.NotFoundResponder;
 import util.Clock;
-import util.ImpossibleException;
+import util.StringUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.FileNameMap;
 import java.net.URLConnection;
-import java.net.URLDecoder;
-import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 public class FileSystemResponder extends FileResponder {
@@ -30,92 +20,34 @@ public class FileSystemResponder extends FileResponder {
 
     private final String rootPath;
 
-    private Date lastModifiedDate;
-
     @Inject
     public FileSystemResponder(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath, Clock clock) {
         super(clock);
         this.rootPath = rootPagePath;
     }
 
-    public static Responder makeResponder(Injector injector, String resource, String rootPath) {
-        File requestedFile = getRequestedFile(rootPath, resource);
-        if (requestedFile.exists()) {
-            // serve the file or directory if it exists
-            if (requestedFile.isDirectory())
-                return injector.getInstance(DirectoryResponder.class);
-            else
-                return injector.getInstance(FileSystemResponder.class);
-        } else {
-            // it doesn't exist
-            return injector.getInstance(NotFoundResponder.class);
-        }
+    public String getContentType(Request request) {
+        return getContentType(getFileName(request.getResource()));
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        InputStreamResponse response = new InputStreamResponse();
-        determineLastModifiedInfo(request.getResource());
-
-        if (isNotModified(request))
-            return createNotModifiedResponse();
-        else {
-            response.setBody(getResponseStream(request), getContentLength(request));
-            String contentType = getContentType(getFileName(request.getResource()));
-            response.setContentType(contentType);
-            response.setLastModifiedHeader(lastModifiedDateString);
-        }
-        return response;
-    }
-
-    public int getContentLength(Request request) {
+    public Integer getContentLength(Request request) {
         return (int) getFile(request).length();
     }
 
-    public FileInputStream getResponseStream(Request request) throws FileNotFoundException {
+    public FileInputStream getFileStream(Request request) throws IOException {
         return new FileInputStream(getFile(request));
     }
 
     private File getFile(Request request) {
-        return getRequestedFile(rootPath, request.getResource());
+        return new File(rootPath + File.separator + StringUtil.decodeURLText(request.getResource()));
     }
 
-    private static File getRequestedFile(String rootPath, String resource) {
-        return new File(rootPath + File.separator + decodeFileName(resource));
-    }
-
-    public static String decodeFileName(String resource) {
-        try {
-            return URLDecoder.decode(resource, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new ImpossibleException("UTF-8 is a supported encoding", e);
-        }
-    }
-
-    public boolean isNotModified(Request request) {
-        if (request.hasHeader("If-Modified-Since")) {
-            String queryDateString = (String) request.getHeader("If-Modified-Since");
-            try {
-                Date queryDate = SimpleResponse.makeStandardHttpDateFormat().parse(queryDateString);
-                if (!queryDate.before(lastModifiedDate))
-                    return true;
-            } catch (ParseException e) {
-                //Some browsers use local date formats that we can't parse.
-                //So just ignore this exception if we can't parse the date.
-            }
-        }
-        return false;
-    }
-
-    private void determineLastModifiedInfo(String resource) {
-        lastModifiedDate = new Date(getRequestedFile(rootPath, resource).lastModified());
-        lastModifiedDateString = SimpleResponse.makeStandardHttpDateFormat().format(lastModifiedDate);
-
-        try  // remove milliseconds
-        {
-            lastModifiedDate = SimpleResponse.makeStandardHttpDateFormat().parse(lastModifiedDateString);
-        } catch (java.text.ParseException e) {
-            e.printStackTrace();
-        }
+    public Date getLastModifiedDate(Request request) {
+        Calendar lastModified = Calendar.getInstance();
+        lastModified.setTime(new Date(getFile(request).lastModified()));
+        // remove milliseconds
+        lastModified.set(Calendar.MILLISECOND, 0);
+        return lastModified.getTime();
     }
 
     public static String getFileName(String resource) {

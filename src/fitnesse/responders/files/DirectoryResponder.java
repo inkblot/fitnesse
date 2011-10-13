@@ -14,6 +14,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.WikiPageAction;
 import util.FileUtil;
+import util.StringUtil;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -62,7 +63,7 @@ public class DirectoryResponder implements SecureResponder {
 
     private String makeRightColumn(String resource) throws Exception {
         TagGroup html = new TagGroup();
-        File requestedDirectory = new File(rootPath + File.separator + FileSystemResponder.decodeFileName(resource));
+        File requestedDirectory = new File(rootPath + File.separator + StringUtil.decodeURLText(resource));
         html.add(addFiles(FileUtil.getDirectoryListing(requestedDirectory)));
         html.add(HtmlUtil.HR.html());
         html.add(makeUploadForm(resource));

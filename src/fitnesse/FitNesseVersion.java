@@ -3,11 +3,15 @@
 package fitnesse;
 
 import org.apache.commons.io.IOUtils;
+import util.ImpossibleException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 public class FitNesseVersion {
@@ -30,6 +34,15 @@ public class FitNesseVersion {
             IOUtils.closeQuietly(propertyStream);
         }
         return buildProperties;
+    }
+
+    public static Date getBuildDate() {
+        String buildDate = getBuildProperties().getProperty("build.date");
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(buildDate);
+        } catch (ParseException e) {
+            throw new ImpossibleException("Date parsed using the same pattern with which it was formatted", e);
+        }
     }
 
     public FitNesseVersion() {

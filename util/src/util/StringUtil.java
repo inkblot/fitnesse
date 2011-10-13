@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 public class StringUtil {
 
     public static String replaceAll(String original, String target, String replacement) {
@@ -25,5 +28,13 @@ public class StringUtil {
             return null;
         else
             return s.replaceAll("\r", "");
+    }
+
+    public static String decodeURLText(String resource) {
+        try {
+            return URLDecoder.decode(resource, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ImpossibleException("UTF-8 is a supported encoding", e);
+        }
     }
 }

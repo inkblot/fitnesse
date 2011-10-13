@@ -10,13 +10,10 @@ import util.Clock;
 import util.StringUtil;
 
 import java.io.*;
-import java.net.FileNameMap;
-import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.Date;
 
 public class FileSystemResponder extends FileResponder {
-    private static final FileNameMap fileNameMap = URLConnection.getFileNameMap();
 
     private final String rootPath;
 
@@ -24,10 +21,6 @@ public class FileSystemResponder extends FileResponder {
     public FileSystemResponder(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath, Clock clock) {
         super(clock);
         this.rootPath = rootPagePath;
-    }
-
-    public String getContentType(Request request) {
-        return getContentType(getFileName(request.getResource()));
     }
 
     public Integer getContentLength(Request request) {
@@ -50,18 +43,4 @@ public class FileSystemResponder extends FileResponder {
         return lastModified.getTime();
     }
 
-    public static String getFileName(String resource) {
-        return resource.substring(resource.lastIndexOf(File.separator) + 1);
-    }
-
-    public static String getContentType(String filename) {
-        if (fileNameMap.getContentTypeFor(filename) != null)
-            return fileNameMap.getContentTypeFor(filename);
-        else if (filename.endsWith(".css"))
-            return "text/css";
-        else if (filename.endsWith(".jar"))
-            return "application/x-java-archive";
-        else
-            return "text/plain";
-    }
 }

@@ -8,8 +8,11 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import util.Clock;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -20,6 +23,7 @@ import java.util.Date;
  * Time: 9:06 PM
  */
 public abstract class FileResponder implements Responder {
+    private static final FileNameMap fileNameMap = URLConnection.getFileNameMap();
     protected final Clock clock;
 
     public FileResponder(Clock clock) {
@@ -28,7 +32,9 @@ public abstract class FileResponder implements Responder {
 
     public abstract InputStream getFileStream(Request request) throws IOException;
 
-    public abstract String getContentType(Request request);
+    public String getContentType(Request request) {
+        return FileResponder.getContentType(FileResponder.getFileName(request.getResource()));
+    }
 
     public abstract Integer getContentLength(Request request);
 
@@ -69,5 +75,20 @@ public abstract class FileResponder implements Responder {
             }
         }
         return false;
+    }
+
+    public static String getFileName(String resource) {
+        return resource.substring(resource.lastIndexOf(File.separator) + 1);
+    }
+
+    public static String getContentType(String filename) {
+        if (fileNameMap.getContentTypeFor(filename) != null)
+            return fileNameMap.getContentTypeFor(filename);
+        else if (filename.endsWith(".css"))
+            return "text/css";
+        else if (filename.endsWith(".jar"))
+            return "application/x-java-archive";
+        else
+            return "text/plain";
     }
 }

@@ -103,32 +103,13 @@
 
     <target name="compile" depends="compile-util,compile-all"/>
 
-    <target name="-copy-wiki-resources" depends="init">
-        <copy todir="${build.classes}/Resources/FitNesseRoot">
-            <fileset dir="FitNesseRoot">
-                <include name="files/images/**"/>
-                <include name="files/css/*.css"/>
-                <include name="files/javascript/**/*.js"/>
-                <include name="files/html/**"/>
-                <exclude name="files/juUnitTestLink.js"/>
-                <exclude name="files/**/unused/**"/>
-                <include name="FrontPage/**/content.txt"/>
-                <include name="FrontPage/**/properties.xml"/>
-                <include name="PageHeader/**/content.txt"/>
-                <include name="PageHeader/**/properties.xml"/>
-                <include name="PageFooter/**/content.txt"/>
-                <include name="PageFooter/**/properties.xml"/>
-            </fileset>
-        </copy>
-    </target>
-
-    <target name="create-update-lists" depends="compile, -copy-wiki-resources">
+    <target name="create-update-lists" depends="compile">
         <java classname="fitnesse.updates.UpdateFileList" failonerror="true">
             <classpath>
                 <pathelement path="${build.classes}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
             </classpath>
-            <arg value="-baseDirectory:${build.classes}/Resources"/>
+            <arg value="-baseDirectory:${resources}/Resources"/>
             <arg value="-updateList:${build.classes}/Resources/updateList"/>
             <arg value="-doNotCopyList:${build.classes}/Resources/updateDoNotCopyOverList"/>
             <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css"/>

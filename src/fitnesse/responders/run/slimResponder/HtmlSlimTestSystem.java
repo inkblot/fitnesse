@@ -16,7 +16,11 @@ import java.io.IOException;
 
 public class HtmlSlimTestSystem extends SlimTestSystem {
     public HtmlSlimTestSystem(WikiPage page, TestSystemListener listener) {
-        super(page, listener);
+        this(page, listener, new DefaultTestMode());
+    }
+
+    public HtmlSlimTestSystem(WikiPage page, TestSystemListener listener, SlimTestMode testMode) {
+        super(page, listener, testMode);
     }
 
     protected TableScanner scanTheTables(PageData pageData) throws IOException {

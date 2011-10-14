@@ -22,18 +22,21 @@ public class SlimService {
         startSlimService(argv);
     }
 
-    public static void startSlimService(String[] argv) throws IOException {
+    public static SlimServer startSlimService(String[] argv) throws IOException {
         Arguments args = parseCommandLine(argv);
         if (args != null) {
-            startSlimService(args.getPort(), args.isVerbose());
+            return startSlimService(args.getPort(), args.isVerbose());
+        } else {
+            return null;
         }
     }
 
-    public static void startSlimService(int port, boolean verbose) throws IOException {
+    public static SlimServer startSlimService(int port, boolean verbose) throws IOException {
         SlimServer slimServer = new JavaSlimFactory().getSlimServer(verbose);
         SocketService service = new SocketService(port, slimServer);
         slimServer.setSocketService(service);
         service.start();
+        return slimServer;
     }
 
     private static Arguments parseCommandLine(String[] argv) {

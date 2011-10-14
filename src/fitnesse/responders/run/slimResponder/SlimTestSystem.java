@@ -37,7 +37,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     public static final SlimTable START_OF_TEST = null;
     public static final SlimTable END_OF_TEST = null;
 
-    private SlimTestMode testMode;
+    private final SlimTestMode testMode;
     private CommandRunner slimRunner;
     private String slimCommand;
     private SlimClient slimClient;
@@ -66,10 +66,10 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     private Symbol preparsedScenarioLibrary;
 
 
-    public SlimTestSystem(WikiPage page, TestSystemListener listener) {
+    protected SlimTestSystem(WikiPage page, TestSystemListener listener, SlimTestMode testMode) {
         super(page, listener);
         testSummary = new TestSummary(0, 0, 0, 0);
-        testMode = new DefaultTestMode();
+        this.testMode = testMode;
     }
 
     public String getSymbol(String symbolName) {
@@ -183,7 +183,8 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
     }
 
     public void bye() throws IOException {
-        slimClient.sendBye();
+        if (slimClient != null)
+            slimClient.sendBye();
         testMode.bye(this);
     }
 
@@ -478,10 +479,6 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return "!include -c ." + path + "\n";
     }
 
-    public void setTestMode(SlimTestMode testMode) {
-        this.testMode = testMode;
-    }
-
     public int getSlimSocket() {
         return slimSocket;
     }
@@ -490,7 +487,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
 
         CommandRunner createSlimRunner(String classPath, SlimTestSystem testSystem) throws IOException;
 
-        void bye(SlimTestSystem testSystem);
+        void bye(SlimTestSystem testSystem) throws IOException;
     }
 
     public static class DefaultTestMode implements SlimTestMode {

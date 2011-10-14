@@ -11,6 +11,7 @@ import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.responders.run.TestSystemListener;
 import fitnesse.slim.SlimClient;
+import fitnesse.slim.SlimServer;
 import fitnesse.slim.SlimService;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
@@ -50,7 +51,11 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
+        if (testSystem != null) {
+            testSystem.bye();
+            testSystem = null;
+        }
         SlimTestSystem.clearSlimPortOffset();
     }
 
@@ -72,12 +77,11 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     private String getResultsForPageContents(String pageContents) throws Exception {
         WikiPage testPage = createTestPageWithContent(pageContents);
         PageData pageData = testPage.getData();
-        testSystem = new HtmlSlimTestSystem(pageData.getWikiPage(), dummyListener);
+        testSystem = new HtmlSlimTestSystem(pageData.getWikiPage(), dummyListener, new FastTestMode());
         String classPath = new ClassPathBuilder().getClasspath(testPage);
         TestSystem.Descriptor descriptor = TestSystem.getDescriptor(testPage.getData(), false);
         testSystem.getExecutionLog(classPath, descriptor);
         testSystem.start();
-        testSystem.setTestMode(new FastTestMode());
         String html = testSystem.runTestsAndGenerateHtml(pageData);
         testSystem.bye();
 
@@ -121,14 +125,14 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     @Test
     public void slimHostDefaultsTolocalhost() throws Exception {
         WikiPage pageWithoutSlimHostVariable = crawler.addPage(root, PathParser.parse("PageWithoutSlimHostVariable"), "some gunk\n");
-        SlimTestSystem sys = new HtmlSlimTestSystem(pageWithoutSlimHostVariable, dummyListener);
+        SlimTestSystem sys = new HtmlSlimTestSystem(pageWithoutSlimHostVariable, dummyListener, new FastTestMode());
         assertEquals("localhost", sys.determineSlimHost());
     }
 
     @Test
     public void slimHostVariableSetsTheHost() throws Exception {
         WikiPage pageWithSlimHostVariable = crawler.addPage(root, PathParser.parse("PageWithSlimHostVariable"), "!define SLIM_HOST {somehost}\n");
-        SlimTestSystem sys = new HtmlSlimTestSystem(pageWithSlimHostVariable, dummyListener);
+        SlimTestSystem sys = new HtmlSlimTestSystem(pageWithSlimHostVariable, dummyListener, new FastTestMode());
         assertEquals("somehost", sys.determineSlimHost());
     }
 
@@ -155,7 +159,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     @Test
     public void verboseOutputIfSlimFlagSet() throws Exception {
         WikiPage testPage = createTestPageWithContent("!define SLIM_FLAGS {-v}\n");
-        SlimTestSystem testSystem = new HtmlSlimTestSystem(testPage.getData().getWikiPage(), new DummyListener());
+        testSystem = new HtmlSlimTestSystem(testPage.getData().getWikiPage(), dummyListener, new FastTestMode());
         testSystem.getExecutionLog(new ClassPathBuilder().getClasspath(testPage), TestSystem.getDescriptor(testPage.getData(), false));
         assertTrue(testSystem.getCommandLine().contains("fitnesse.slim.SlimService -v"));
     }
@@ -500,7 +504,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         ServerSocket slimSocket = new ServerSocket(slimServerPort);
         try {
             String slimArguments = String.format("%s %d", "", slimServerPort);
-            createSlimService(slimArguments);
+            FastTestMode.createSlimService(slimArguments);
         } finally {
             slimSocket.close();
         }
@@ -510,7 +514,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     public void gettingPrecompiledScenarioWidgetsForChildLibraryPage() throws Exception {
         WikiPage suitePage = crawler.addPage(root, PathParser.parse("MySuite"), "my suite content");
         crawler.addPage(suitePage, PathParser.parse("ScenarioLibrary"), "child library");
-        SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
+        SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener, new FastTestMode());
 
         Symbol scenarios = sys.getPreparsedScenarioLibrary();
 
@@ -525,7 +529,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     public void gettingPrecompiledScenarioWidgetsForUncleLibraryPage() throws Exception {
         WikiPage suitePage = crawler.addPage(root, PathParser.parse("ParentPage.MySuite"), "my suite content");
         crawler.addPage(root, PathParser.parse("ScenarioLibrary"), "uncle library");
-        SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
+        SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener, new FastTestMode());
 
         Symbol scenarios = sys.getPreparsedScenarioLibrary();
 
@@ -540,7 +544,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     @Test
     public void precompiledScenarioWidgetsAreCreatedOnlyOnce() throws Exception {
         WikiPage suitePage = crawler.addPage(root, PathParser.parse("MySuite"), "my suite content");
-        SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener);
+        SlimTestSystem sys = new HtmlSlimTestSystem(suitePage, dummyListener, new FastTestMode());
 
         assertSame(sys.getPreparsedScenarioLibrary(), sys.getPreparsedScenarioLibrary());
     }
@@ -560,26 +564,6 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
         return null;
     }
 
-    private static void createSlimService(String args) throws SocketException {
-        try {
-            while (!tryCreateSlimService(args))
-                Thread.sleep(10);
-        } catch (InterruptedException e) {
-            // ok
-        }
-    }
-
-    private static boolean tryCreateSlimService(String args) throws SocketException {
-        try {
-            SlimService.startSlimService(args.trim().split(" "));
-            return true;
-        } catch (SocketException e) {
-            throw e;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     private static class DummyListener implements TestSystemListener {
         public void acceptOutputFirst(String output) {
         }
@@ -593,16 +577,41 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
     public static class FastTestMode implements SlimTestSystem.SlimTestMode {
 
+        private SlimServer slimServer;
+
+        private static SlimServer createSlimService(String args) throws SocketException {
+            try {
+                SlimServer slimServer;
+                while ((slimServer = tryCreateSlimService(args)) == null)
+                    Thread.sleep(10);
+                return slimServer;
+            } catch (InterruptedException e) {
+                // ok
+            }
+            return null;
+        }
+
+        private static SlimServer tryCreateSlimService(String args) throws SocketException {
+            try {
+                return SlimService.startSlimService(args.trim().split(" "));
+            } catch (SocketException e) {
+                throw e;
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
         @Override
         public CommandRunner createSlimRunner(String classPath, SlimTestSystem testSystem) throws IOException {
             String slimArguments = String.format("%s %d", testSystem.getSlimFlags(), testSystem.getSlimSocket());
-            createSlimService(slimArguments);
+            slimServer = createSlimService(slimArguments);
             return new MockCommandRunner();
         }
 
         @Override
-        public void bye(SlimTestSystem testSystem) {
-
+        public void bye(SlimTestSystem testSystem) throws IOException {
+            if (slimServer != null)
+                slimServer.getSocketService().close();
         }
     }
 }

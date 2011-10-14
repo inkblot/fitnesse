@@ -95,14 +95,17 @@ public class ResponderFactory {
         addResponder("replace", SearchReplaceResponder.class);
     }
 
-    public static Responder makeResponder(Injector injector, String resource, String rootPath) {
-        File requestedFile = new File(rootPath + File.separator + StringUtil.decodeURLText(resource));
+    public static Responder makeFileResponder(Injector injector, String codedResource, String rootPath) {
+        String resource = StringUtil.decodeURLText(codedResource);
+        File requestedFile = new File(rootPath + File.separator + resource);
         if (requestedFile.exists()) {
             // serve the file or directory if it exists
             if (requestedFile.isDirectory())
                 return injector.getInstance(DirectoryResponder.class);
             else
                 return injector.getInstance(FileSystemResponder.class);
+        } else if (ClassPathResponder.exists(resource)) {
+            return injector.getInstance(ClassPathResponder.class);
         } else {
             // it doesn't exist
             return injector.getInstance(NotFoundResponder.class);
@@ -139,7 +142,7 @@ public class ResponderFactory {
         } else if (isEmpty(resource)) {
             return injector.getInstance(WikiPageResponder.class);
         } else if (resource.startsWith("files/") || resource.equals("files")) {
-            return makeResponder(injector, request.getResource(), rootPagePath);
+            return makeFileResponder(injector, request.getResource(), rootPagePath);
         } else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource)) {
             return injector.getInstance(WikiPageResponder.class);
         } else {

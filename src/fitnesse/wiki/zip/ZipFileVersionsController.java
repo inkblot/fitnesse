@@ -2,6 +2,7 @@ package fitnesse.wiki.zip;
 
 import com.google.inject.Inject;
 import fitnesse.wiki.*;
+import org.apache.commons.io.IOUtils;
 import util.Clock;
 import util.StreamReader;
 
@@ -13,6 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class ZipFileVersionsController extends NullVersionsController {
@@ -127,11 +129,11 @@ public class ZipFileVersionsController extends NullVersionsController {
         final ZipEntry entry = new ZipEntry(file.getName());
         zos.putNextEntry(entry);
         final FileInputStream is = new FileInputStream(file);
-        final int size = (int) file.length();
-        final byte[] bytes = new byte[size];
-        is.read(bytes);
-        is.close();
-        zos.write(bytes, 0, size);
+        try {
+            IOUtils.copy(is, zos);
+        } finally {
+            closeQuietly(is);
+        }
     }
 
     private Set<File> getFilesToZip(final String dirPath) {

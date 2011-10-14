@@ -5,6 +5,8 @@ package fitnesse.wiki;
 import com.google.inject.Injector;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.*;
 
 import java.io.*;
@@ -14,6 +16,7 @@ import java.util.Date;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class FileSystemPage extends CachingPage {
+    private static final Logger logger = LoggerFactory.getLogger(FileSystemPage.class);
     private static final long serialVersionUID = 1L;
 
     public static final String contentFilename = "/content.txt";
@@ -112,14 +115,10 @@ public class FileSystemPage extends CachingPage {
             removeAlwaysChangingProperties(propertiesToSave);
             propertiesToSave.save(output);
         } catch (final IOException e) {
-            System.err.println("Failed to save properties file: \""
-                    + propertiesFilePath + "\" (exception: " + e + ").");
-            e.printStackTrace();
+            logger.error("Failed to save properties file: \"" + propertiesFilePath, e);
             throw e;
         } catch (final RuntimeException e) {
-            System.err.println("Failed to save properties file: \""
-                    + propertiesFilePath + "\" (exception: " + e + ").");
-            e.printStackTrace();
+            logger.error("Failed to save properties file: \"" + propertiesFilePath, e);
             throw e;
         } finally {
             if (output != null) {
@@ -140,18 +139,8 @@ public class FileSystemPage extends CachingPage {
     }
 
     private void loadContent(final PageData data) throws IOException {
-        String content = "";
-        final String name = getFileSystemPath() + contentFilename;
-        final File input = new File(name);
-        if (input.exists()) {
-            final byte[] bytes = readContentBytes(input);
-            try {
-                content = new String(bytes, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new ImpossibleException("UTF-8 is a supported encoding", e);
-            }
-        }
-        data.setContent(content);
+        final File input = new File(getFileSystemPath() + contentFilename);
+        data.setContent(input.exists() ? readContent(input) : "");
     }
 
     @Override
@@ -167,13 +156,11 @@ public class FileSystemPage extends CachingPage {
         }
     }
 
-    private byte[] readContentBytes(final File input) throws IOException {
+    private String readContent(final File input) throws IOException {
         FileInputStream inputStream = null;
         try {
-            final byte[] bytes = new byte[(int) input.length()];
             inputStream = new FileInputStream(input);
-            inputStream.read(bytes);
-            return bytes;
+            return IOUtils.toString(inputStream, "UTF-8");
         } finally {
             IOUtils.closeQuietly(inputStream);
         }
@@ -204,8 +191,7 @@ public class FileSystemPage extends CachingPage {
                 long lastModifiedTime = getLastModifiedTime();
                 attemptToReadPropertiesFile(file, data, lastModifiedTime);
             } catch (final Exception e) {
-                System.err.println("Could not read properties file:" + file.getPath());
-                e.printStackTrace();
+                logger.error("Could not read properties file: " + file.getPath(), e);
             }
         }
     }

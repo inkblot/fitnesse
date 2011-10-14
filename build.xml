@@ -197,13 +197,7 @@
         <fail if="test.failed" message="Tests failed"/>
     </target>
 
-    <target name="copy-integration-tests" depends="init">
-        <copy todir="${integration.tests}">
-            <fileset dir="${basedir}/FitNesseRoot" includes="**/*"/>
-        </copy>
-    </target>
-
-    <target name="integration-test" depends="jar, compile-tests, copy-integration-tests">
+    <target name="integration-test" depends="jar, compile-tests">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
                 <pathelement path="${test.resources}"/>
@@ -212,18 +206,15 @@
                 <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
-            <arg value="-d"/>
-            <arg value="${integration}"/>
-            <arg value="-r"/>
-            <arg value="tests"/>
             <arg value="-c"/>
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
             <arg value="-p"/>
             <arg value="9234"/>
+            <arg value="-o"/>
         </java>
     </target>
 
-    <target name="fitnesse" depends="jar, compile-tests, copy-integration-tests" description="Run the fitnesse wiki">
+    <target name="fitnesse" depends="jar, compile-tests" description="Run the fitnesse wiki">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
                 <pathelement path="${test.resources}"/>
@@ -233,10 +224,11 @@
             </classpath>
             <arg value="-p"/>
             <arg value="9234"/>
+            <arg value="-o"/>
         </java>
     </target>
 
-    <target name="debug-fitnesse" depends="jar, compile-tests, copy-integration-tests"
+    <target name="debug-fitnesse" depends="jar, compile-tests"
             description="Run the fitnesse wiki an connect to a listening debugger">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
@@ -251,6 +243,7 @@
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-p"/>
             <arg value="9234"/>
+            <arg value="-o"/>
         </java>
     </target>
 

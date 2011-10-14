@@ -147,7 +147,7 @@
 
     <target name="build-properties" depends="init">
         <tstamp>
-            <format property="version.stamp"/>
+            <format property="version.stamp" pattern="yyyyMMdd"/>
         </tstamp>
         <tstamp>
             <format property="time.init" pattern="yyyy-MM-dd HH:mm:ss"/>

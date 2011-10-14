@@ -3,6 +3,7 @@ package fitnesse.responders.run;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import org.apache.commons.io.IOUtils;
 import util.TimeMeasurement;
 
 import java.io.*;
@@ -30,9 +31,9 @@ public class JavaFormatter extends BaseFormatter {
         private String outputPath;
         private Writer currentWriter;
 
-        public FolderResultsRepository(String outputPath, String fitNesseRoot) throws IOException {
+        public FolderResultsRepository(String outputPath) throws IOException {
             this.outputPath = outputPath;
-            initFolder(fitNesseRoot);
+            initFolder();
         }
 
         public void close() throws IOException {
@@ -61,34 +62,21 @@ public class JavaFormatter extends BaseFormatter {
             currentWriter.write(content.replace("src=\"/files/images/", "src=\"images/"));
         }
 
-        public void addFile(File f, String relativeFilePath) throws IOException {
+        private void addFile(String file, String relativeFilePath) throws IOException {
             File dst = new File(outputPath, relativeFilePath);
             dst.getParentFile().mkdirs();
-            copy(f, dst);
-        }
-
-        private void copy(File src, File dst) throws IOException {
-            InputStream in = new FileInputStream(src);
+            InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
             OutputStream out = new FileOutputStream(dst);
-            // Transfer bytes from in to out
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-            }
+            IOUtils.copy(in, out);
             in.close();
             out.close();
         }
 
-        private void initFolder(String fitnesseRoot) throws IOException {
-            File filesFolder = new File(new File(new File(fitnesseRoot), "FitNesseRoot"), "files");
-            File cssDir = new File(filesFolder, "css");
-            addFile(new File(cssDir, "fitnesse_base.css"), "fitnesse.css");
-            File javascriptDir = new File(filesFolder, "javascript");
-            addFile(new File(javascriptDir, "fitnesse.js"), "fitnesse.js");
-            File imagesDir = new File(filesFolder, "images");
-            addFile(new File(imagesDir, "collapsableOpen.gif"), "images/collapsableOpen.gif");
-            addFile(new File(imagesDir, "collapsableClosed.gif"), "images/collapsableClosed.gif");
+        private void initFolder() throws IOException {
+            addFile("Resources/FitNesseRoot/files/css/fitnesse_base.css", "fitnesse.css");
+            addFile("Resources/FitNesseRoot/files/javascript/fitnesse.js", "fitnesse.js");
+            addFile("Resources/FitNesseRoot/files/images/collapsableOpen.gif", "images/collapsableOpen.gif");
+            addFile("Resources/FitNesseRoot/files/images/collapsableClosed.gif", "images/collapsableClosed.gif");
         }
     }
 
@@ -156,9 +144,7 @@ public class JavaFormatter extends BaseFormatter {
 
     }
 
-    /**
-     * package-private to prevent instantiation apart from getInstance and tests
-     */
+    // package-private to prevent instantiation apart from getInstance and tests
     JavaFormatter(String suiteName) {
         this.mainPageName = suiteName;
     }

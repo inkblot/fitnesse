@@ -40,7 +40,7 @@ public class JUnitHelper {
 
     public TestSummary run(String pageName, String pageType, String suiteFilter, int port) throws Exception {
         JavaFormatter testFormatter = JavaFormatter.getInstance(pageName);
-        testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir, fitNesseDir));
+        testFormatter.setResultsRepository(new JavaFormatter.FolderResultsRepository(outputDir));
         testFormatter.setListener(resultsListener);
         FitNesseMain.Arguments arguments = new FitNesseMain.Arguments();
         arguments.setDaysTillVersionsExpire("0");

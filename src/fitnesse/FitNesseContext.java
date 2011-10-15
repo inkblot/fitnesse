@@ -36,8 +36,6 @@ public class FitNesseContext {
     public static final String ROOT_PAGE_PATH = "fitnesse.rootPagePath";
     public static final String PROPERTIES_FILE = "plugins.properties";
 
-    public static FitNesseContext globalContext;
-
     private final Injector injector;
     public final String rootPath;
     public final WikiPage root;
@@ -96,10 +94,6 @@ public class FitNesseContext {
         buffer.append("\t").append("html page factory: ").append(htmlPageFactory).append(endl);
 
         return buffer.toString();
-    }
-
-    public static int getPort() {
-        return globalContext != null ? globalContext.port : -1;
     }
 
     public File getTestHistoryDirectory() {

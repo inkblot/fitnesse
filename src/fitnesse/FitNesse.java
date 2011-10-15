@@ -54,7 +54,6 @@ public class FitNesse {
         this.updater = updater;
         this.context = context;
         context.fitnesse = this;
-        FitNesseContext.globalContext = context;
         if (makeDirs)
             establishRequiredDirectories();
     }

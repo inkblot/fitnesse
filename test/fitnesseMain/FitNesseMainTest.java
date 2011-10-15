@@ -77,13 +77,6 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
     }
 
     @Test
-    public void testShouldInitializeFitNesseContext() {
-        context.port = FitNesseUtil.DEFAULT_PORT;
-        new FitNesse(context, false);
-        assertNotNull(FitNesseContext.globalContext);
-    }
-
-    @Test
     public void canRunSingleCommand() throws Exception {
         String response = runFitnesseMainWith("-o", "-c", "/root");
         assertThat(response, containsString("Command Output"));

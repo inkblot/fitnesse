@@ -234,7 +234,7 @@ public class WidgetRoot extends ParentWidget {
     public String getLiteral(int literalNumber) {
         if (literalNumber >= literals.size())
             return "literal(" + literalNumber + ") not found.";
-        return (String) literals.get(literalNumber);
+        return literals.get(literalNumber);
     }
 
     public WikiPage getWikiPage() {

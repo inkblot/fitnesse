@@ -8,11 +8,19 @@ import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestSystemTest extends FitnesseBaseTestCase {
+
+    private FitNesseContext context;
+
+    @Before
+    public void setUp() throws Exception {
+        context = makeContext();
+    }
 
     @Test
     public void testCommandPatternCSharp() throws Exception {
@@ -103,14 +111,13 @@ public class TestSystemTest extends FitnesseBaseTestCase {
     }
 
     WikiPage makeTestPage(String pageText) throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
+        WikiPage root = InMemoryPage.makeRoot("RooT", context.getInjector());
         PageCrawler crawler = root.getPageCrawler();
         return crawler.addPage(root, PathParser.parse("TestPage"), pageText);
     }
 
     @Test
     public void testTestRunnerWithRootPathVariable() throws Exception {
-        FitNesseContext context = makeContext();
         new FitNesse(context, false);
 
         String specifiedPageText = "!define TEST_RUNNER (${FITNESSE_ROOTPATH}/rubyslim.rb)\n";

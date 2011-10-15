@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import com.google.inject.Injector;
 import fitnesse.wiki.*;
 import org.apache.commons.lang.StringUtils;
 import util.Maybe;
@@ -206,5 +207,9 @@ public class WikiSourcePage implements SourcePage {
 
     public int compareTo(SourcePage other) {
         return getName().compareTo(other.getName());
+    }
+
+    public Injector getInjector() {
+        return this.page.getInjector();
     }
 }

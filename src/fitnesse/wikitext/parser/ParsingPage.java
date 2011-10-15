@@ -1,14 +1,16 @@
 package fitnesse.wikitext.parser;
 
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import fitnesse.FitNesseContext;
 import util.Maybe;
 
 import java.util.HashMap;
 
 public class ParsingPage {
-    private SourcePage page;
-    private SourcePage namedPage;
-    private HashMap<String, HashMap<String, Maybe<String>>> cache;
+    private final SourcePage page;
+    private final SourcePage namedPage;
+    private final HashMap<String, HashMap<String, Maybe<String>>> cache;
 
     public ParsingPage(SourcePage page) {
         this(page, page, new HashMap<String, HashMap<String, Maybe<String>>>());
@@ -47,9 +49,9 @@ public class ParsingPage {
         else if (key.equals("PAGE_PATH"))
             value = namedPage.getPath();
         else if (key.equals("FITNESSE_PORT"))
-            value = Integer.toString(FitNesseContext.globalContext.port);
+            value = Integer.toString(page.getInjector().getInstance(FitNesseContext.class).port);
         else if (key.equals("FITNESSE_ROOTPATH"))
-            value = FitNesseContext.globalContext.rootPath;
+            value = page.getInjector().getInstance(Key.get(String.class, Names.named("fitnesse.rootPath")));
         else
             return Maybe.noString;
         return new Maybe<String>(value);
@@ -68,11 +70,6 @@ public class ParsingPage {
 
     public Maybe<String> findVariable(String name) {
         return findVariable(page, name);
-    }
-
-    public String findVariable(SourcePage page, String name, String defaultValue) {
-        Maybe<String> result = findVariable(page, name);
-        return result.isNothing() ? defaultValue : result.getValue();
     }
 
     public void putVariable(SourcePage page, String name, Maybe<String> value) {

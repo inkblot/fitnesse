@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import com.google.inject.Injector;
 import util.Maybe;
 
 import java.util.Collection;
@@ -32,4 +33,6 @@ public interface SourcePage extends Comparable<SourcePage> {
     String getProperty(String propertyKey);
 
     String makeUrl(String wikiWordPath);
+
+    Injector getInjector();
 }

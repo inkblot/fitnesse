@@ -1,5 +1,6 @@
 package fitnesse.wikitext.test;
 
+import com.google.inject.Injector;
 import fitnesse.wikitext.parser.SourcePage;
 import util.Maybe;
 
@@ -97,5 +98,10 @@ public class TestSourcePage implements SourcePage {
 
     public int compareTo(SourcePage other) {
         return getName().compareTo(other.getName());
+    }
+
+    @Override
+    public Injector getInjector() {
+        throw new UnsupportedOperationException("Implement this if you start to hit it.  Needs to be a context injector.  See production code for an example.");
     }
 }

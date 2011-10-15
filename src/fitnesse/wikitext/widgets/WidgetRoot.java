@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import fitnesse.FitNesseContext;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PagePointer;
@@ -19,7 +21,7 @@ import java.util.regex.Matcher;
 public class WidgetRoot extends ParentWidget {
     private Map<String, String> variables = new HashMap<String, String>();
     private WidgetBuilder builder;
-    private WikiPage page;
+    private final WikiPage page;
     private boolean doEscaping = true;
     private List<String> literals = new LinkedList<String>();
     private boolean isGatheringInfo = false;
@@ -164,9 +166,9 @@ public class WidgetRoot extends ParentWidget {
         else if (key.equals("PAGE_PATH"))
             value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
         else if (key.equals("FITNESSE_PORT"))
-            value = Integer.toString(FitNesseContext.globalContext.port);
+            value = Integer.toString(page.getInjector().getInstance(FitNesseContext.class).port);
         else if (key.equals("FITNESSE_ROOTPATH"))
-            value = FitNesseContext.globalContext.rootPath;
+            value = page.getInjector().getInstance(Key.get(String.class, Names.named("fitnesse.rootPath")));
         return value;
     }
 

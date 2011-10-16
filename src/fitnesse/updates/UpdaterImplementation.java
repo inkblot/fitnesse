@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import util.FileUtil;
 
 import java.io.File;
@@ -22,7 +23,7 @@ public class UpdaterImplementation extends UpdaterBase {
     private final FitNesseContext context;
 
     @Inject
-    public UpdaterImplementation(FitNesseContext context, @Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath) throws IOException {
+    public UpdaterImplementation(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) throws IOException {
         super(rootPagePath);
         this.context = context;
         createUpdateAndDoNotCopyOverLists();

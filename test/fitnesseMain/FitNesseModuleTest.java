@@ -157,7 +157,7 @@ public class FitNesseModuleTest {
 
     public static class TestPageFactory extends HtmlPageFactory {
         @Inject
-        public TestPageFactory(@Named(FitNesseContext.PROPERTIES_FILE) Properties p) {
+        public TestPageFactory(@Named(FitNesseContextModule.PROPERTIES_FILE) Properties p) {
             p.propertyNames();
         }
     }
@@ -169,13 +169,13 @@ public class FitNesseModuleTest {
         assertNotNull(injector.getInstance(VersionsController.class));
         assertNotNull(injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS))));
         assertNotNull(injector.getInstance(FileSystem.class));
-        assertNotNull(injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContext.PROPERTIES_FILE))));
+        assertNotNull(injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContextModule.PROPERTIES_FILE))));
 
         Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(getClass().getSimpleName(), "RooT", 2156, true));
         assertNotNull(contextInjector.getInstance(FitNesseContext.class));
-        assertNotNull(contextInjector.getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PATH))));
-        assertNotNull(contextInjector.getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_NAME))));
-        assertNotNull(contextInjector.getInstance(Key.get(Integer.class, Names.named(FitNesseContext.PORT))));
+        assertNotNull(contextInjector.getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PATH))));
+        assertNotNull(contextInjector.getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_NAME))));
+        assertNotNull(contextInjector.getInstance(Key.get(Integer.class, Names.named(FitNesseContextModule.PORT))));
         assertNotNull(contextInjector.getInstance(WikiPageFactory.class));
         assertNotNull(contextInjector.getInstance(ResponderFactory.class));
         assertNotNull(contextInjector.getInstance(Updater.class));

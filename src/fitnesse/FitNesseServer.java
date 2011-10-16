@@ -2,15 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Injector;
 import fitnesse.socketservice.SocketServer;
 
 import java.net.Socket;
 
 public class FitNesseServer implements SocketServer {
-    private FitNesseContext context;
+    private final Injector injector;
 
-    public FitNesseServer(FitNesseContext context) {
-        this.context = context;
+    public FitNesseServer(Injector injector) {
+        this.injector = injector;
     }
 
     @Override
@@ -20,7 +21,7 @@ public class FitNesseServer implements SocketServer {
 
     public void serve(Socket s, long requestTimeout) {
         try {
-            FitNesseExpediter sender = new FitNesseExpediter(s, context, requestTimeout, context.getHtmlPageFactory());
+            FitNesseExpediter sender = new FitNesseExpediter(injector, s, requestTimeout);
             sender.start();
         } catch (Exception e) {
             e.printStackTrace();

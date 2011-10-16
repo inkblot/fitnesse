@@ -52,7 +52,7 @@ public class FitNesseMain {
         new PluginsClassLoader().addPluginsToClassLoader();
         FitNesseContext context = FitNesseContext.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.isOmittingUpdates());
 
-        Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContext.PROPERTIES_FILE)));
+        Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContextModule.PROPERTIES_FILE)));
 
         SymbolProvider wikiSymbols = injector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
         String extraOutput = ComponentFactory.loadPlugins(

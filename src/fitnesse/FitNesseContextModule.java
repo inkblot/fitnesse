@@ -14,6 +14,12 @@ import java.io.File;
 * Time: 11:53 PM
 */
 public class FitNesseContextModule extends AbstractModule {
+    public static final String ROOT_PATH = "fitnesse.rootPath";
+    public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
+    public static final String ROOT_PAGE_PATH = "fitnesse.rootPagePath";
+    public static final String PORT = "fitnesse.port";
+    public static final String PROPERTIES_FILE = "plugins.properties";
+
     private final String rootPath;
     private final String rootPageName;
     private final int port;
@@ -28,11 +34,11 @@ public class FitNesseContextModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PATH)).toInstance(rootPath);
-        bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PAGE_NAME)).toInstance(rootPageName);
+        bind(String.class).annotatedWith(Names.named(ROOT_PATH)).toInstance(rootPath);
+        bind(String.class).annotatedWith(Names.named(ROOT_PAGE_NAME)).toInstance(rootPageName);
         String rootPagePath = rootPath + File.separator + rootPageName;
-        bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PAGE_PATH)).toInstance(rootPagePath);
-        bind(Integer.class).annotatedWith(Names.named(FitNesseContext.PORT)).toInstance(port);
+        bind(String.class).annotatedWith(Names.named(ROOT_PAGE_PATH)).toInstance(rootPagePath);
+        bind(Integer.class).annotatedWith(Names.named(PORT)).toInstance(port);
         bindUpdater(omitUpdates);
     }
 

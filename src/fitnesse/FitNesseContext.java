@@ -31,11 +31,6 @@ public class FitNesseContext {
     public static final int DEFAULT_VERSION_DAYS = 14;
     public static final String RECENT_CHANGES_DATE_FORMAT = "kk:mm:ss EEE, MMM dd, yyyy";
     public static final String RFC_COMPLIANT_DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
-    public static final String ROOT_PATH = "fitnesse.rootPath";
-    public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
-    public static final String ROOT_PAGE_PATH = "fitnesse.rootPagePath";
-    public static final String PORT = "fitnesse.port";
-    public static final String PROPERTIES_FILE = "plugins.properties";
 
     private final Injector injector;
     public final String rootPath;
@@ -60,9 +55,9 @@ public class FitNesseContext {
 
     @Inject
     public FitNesseContext(
-            @Named(ROOT_PATH) String rootPath,
-            @Named(ROOT_PAGE_PATH) String rootPagePath,
-            @Named(PORT) Integer port,
+            @Named(FitNesseContextModule.ROOT_PATH) String rootPath,
+            @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath,
+            @Named(FitNesseContextModule.PORT) Integer port,
             WikiPageFactory wikiPageFactory,
             ResponderFactory responderFactory,
             Clock clock,
@@ -108,10 +103,6 @@ public class FitNesseContext {
 
     public WikiPageFactory getWikiPageFactory() {
         return wikiPageFactory;
-    }
-
-    public Clock getClock() {
-        return clock;
     }
 
     public HtmlPageFactory getHtmlPageFactory() {

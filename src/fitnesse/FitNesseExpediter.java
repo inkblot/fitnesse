@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Provider;
 import fitnesse.authentication.Authenticator;
 import fitnesse.html.HtmlPageFactory;
@@ -25,35 +27,41 @@ import java.net.SocketException;
 public class FitNesseExpediter implements ResponseSender {
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final FitNesseContext context;
+    private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
+    private ResponderFactory responderFactory;
+    private Provider<Authenticator> authenticatorProvider;
+    private Clock clock;
+
     private final Socket socket;
     private final InputStream input;
     private final OutputStream output;
     private final long requestParsingTimeLimit;
-    private final HtmlPageFactory htmlPageFactory;
-    private final ResponderFactory responderFactory;
-    private final Provider<Authenticator> authenticatorProvider;
-    private final Clock clock;
 
     private Response response;
     private long requestProgress;
     private long requestParsingDeadline;
     private volatile boolean hasError;
 
-    public FitNesseExpediter(Socket s, FitNesseContext context, HtmlPageFactory htmlPageFactory) throws IOException {
-        this(s, context, 10000L, htmlPageFactory);
+    @Inject
+    public void inject(FitNesseContext context, HtmlPageFactory htmlPageFactory, ResponderFactory responderFactory, Provider<Authenticator> authenticatorProvider, Clock clock) {
+        this.context = context;
+        this.htmlPageFactory = htmlPageFactory;
+        this.responderFactory = responderFactory;
+        this.authenticatorProvider = authenticatorProvider;
+        this.clock = clock;
     }
 
-    public FitNesseExpediter(Socket s, FitNesseContext context, long requestParsingTimeLimit, HtmlPageFactory htmlPageFactory) throws IOException {
-        this.context = context;
+    public FitNesseExpediter(Injector injector, Socket s) throws IOException {
+        this(injector, s, 10000L);
+    }
+
+    public FitNesseExpediter(Injector injector, Socket s, long requestParsingTimeLimit) throws IOException {
+        injector.injectMembers(this);
         socket = s;
-        this.htmlPageFactory = htmlPageFactory;
         input = s.getInputStream();
         output = s.getOutputStream();
         this.requestParsingTimeLimit = requestParsingTimeLimit;
-        responderFactory = context.getResponderFactory();
-        authenticatorProvider = context.authenticatorProvider;
-        clock = context.getClock();
     }
 
     public void start() throws Exception {

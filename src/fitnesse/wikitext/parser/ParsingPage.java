@@ -2,7 +2,7 @@ package fitnesse.wikitext.parser;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import util.Maybe;
 
 import java.util.HashMap;
@@ -49,9 +49,9 @@ public class ParsingPage {
         else if (key.equals("PAGE_PATH"))
             value = namedPage.getPath();
         else if (key.equals("FITNESSE_PORT"))
-            value = page.getInjector().getInstance(Key.get(Integer.class, Names.named(FitNesseContext.PORT))).toString();
+            value = page.getInjector().getInstance(Key.get(Integer.class, Names.named(FitNesseContextModule.PORT))).toString();
         else if (key.equals("FITNESSE_ROOTPATH"))
-            value = page.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PATH)));
+            value = page.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PATH)));
         else
             return Maybe.noString;
         return new Maybe<String>(value);

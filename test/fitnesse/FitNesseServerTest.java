@@ -93,7 +93,7 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
 
     private String getSocketOutput(String requestLine) throws Exception {
         MockSocket s = new MockSocket(requestLine);
-        FitNesseServer server = new FitNesseServer(context);
+        FitNesseServer server = new FitNesseServer(context.getInjector());
         server.serve(s, 1000);
         return s.getOutput();
     }

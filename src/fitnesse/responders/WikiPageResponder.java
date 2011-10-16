@@ -5,6 +5,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -31,7 +32,7 @@ public class WikiPageResponder implements SecureResponder {
     private final Clock clock;
 
     @Inject
-    public WikiPageResponder(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
+    public WikiPageResponder(@Named(FitNesseContextModule.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
         this.properties = properties;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;

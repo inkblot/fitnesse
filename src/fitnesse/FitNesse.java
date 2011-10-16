@@ -3,6 +3,7 @@
 package fitnesse;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import fitnesse.http.*;
@@ -19,7 +20,7 @@ public class FitNesse {
 
     public static final FitNesseVersion VERSION = new FitNesseVersion();
 
-    private final FitNesseContext context;
+    private final Injector injector;
     private final Updater updater;
     private final String rootPagePath;
     private final Integer port;
@@ -46,9 +47,9 @@ public class FitNesse {
     }
 
     @Inject
-    public FitNesse(FitNesseContext context, Updater updater, @Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseContext.PORT) Integer port) {
+    public FitNesse(Updater updater, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseContextModule.PORT) Integer port, Injector injector) {
+        this.injector = injector;
         this.updater = updater;
-        this.context = context;
         this.rootPagePath = rootPagePath;
         this.port = port;
         establishRequiredDirectories();
@@ -57,7 +58,7 @@ public class FitNesse {
     public boolean start() {
         try {
             if (port > 0) {
-                theService = new SocketService(port, new FitNesseServer(context));
+                theService = new SocketService(port, new FitNesseServer(injector));
                 theService.start();
             }
             return true;
@@ -92,7 +93,7 @@ public class FitNesse {
 
     public void executeSingleCommand(String command, OutputStream out) throws Exception {
         Request request = new MockRequestBuilder(command).build();
-        FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(), context, context.getHtmlPageFactory());
+        FitNesseExpediter expediter = new FitNesseExpediter(injector, new MockSocket());
         Response response = expediter.createGoodResponse(request);
         MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
         sender.doSending(response);

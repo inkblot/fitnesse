@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PagePointer;
 import fitnesse.wiki.WikiPage;
@@ -166,9 +166,9 @@ public class WidgetRoot extends ParentWidget {
         else if (key.equals("PAGE_PATH"))
             value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
         else if (key.equals("FITNESSE_PORT"))
-            value = page.getInjector().getInstance(Key.get(Integer.class, Names.named(FitNesseContext.PORT))).toString();
+            value = page.getInjector().getInstance(Key.get(Integer.class, Names.named(FitNesseContextModule.PORT))).toString();
         else if (key.equals("FITNESSE_ROOTPATH"))
-            value = page.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PATH)));
+            value = page.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PATH)));
         return value;
     }
 

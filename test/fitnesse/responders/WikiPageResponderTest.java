@@ -5,6 +5,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.authentication.SecureOperation;
@@ -33,7 +34,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private Properties properties;
 
     @Inject
-    public void inject(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory) {
+    public void inject(@Named(FitNesseContextModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory) {
         this.properties = properties;
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;

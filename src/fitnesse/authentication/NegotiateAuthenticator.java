@@ -3,6 +3,7 @@ package fitnesse.authentication;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.Responder;
 import fitnesse.components.Base64;
 import fitnesse.html.HtmlPage;
@@ -75,7 +76,7 @@ public class NegotiateAuthenticator extends Authenticator {
     }
 
     @Inject
-    public NegotiateAuthenticator(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties) throws Exception {
+    public NegotiateAuthenticator(@Named(FitNesseContextModule.PROPERTIES_FILE) Properties properties) throws Exception {
         this(GSSManager.getInstance(), properties);
     }
 

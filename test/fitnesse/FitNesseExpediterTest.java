@@ -3,13 +3,11 @@
 package fitnesse;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.Provider;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.authentication.UnauthorizedResponder;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.*;
 import fitnesse.http.MockSocket;
 import org.junit.Before;
@@ -29,13 +27,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     private PipedInputStream clientInput;
     private PipedOutputStream clientOutput;
     private ResponseParser response;
-    private HtmlPageFactory htmlPageFactory;
     private Authenticator authenticator;
-
-    @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
-        this.htmlPageFactory = htmlPageFactory;
-    }
 
     @Override
     protected Module getOverrideModule() {
@@ -58,7 +50,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         context = makeContext();
         context.root.addChildPage("FrontPage");
         socket = new MockSocket();
-        expediter = new FitNesseExpediter(socket, context, htmlPageFactory);
+        expediter = new FitNesseExpediter(context.getInjector(), socket);
     }
 
     @Test
@@ -103,7 +95,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         clientInput = new PipedInputStream();
         PipedOutputStream socketOutput = new PipedOutputStream(clientInput);
         MockSocket socket = new MockSocket(socketInput, socketOutput);
-        return new FitNesseExpediter(socket, context, 200, htmlPageFactory);
+        return new FitNesseExpediter(context.getInjector(), socket, 200);
     }
 
     @Test

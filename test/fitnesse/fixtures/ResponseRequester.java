@@ -33,7 +33,7 @@ public class ResponseRequester extends ColumnFixture {
         request.parseRequestUri("/" + uri);
         WikiPagePath path = PathParser.parse(request.getResource()); // uri;
         FitnesseFixtureContext.page = FitnesseFixtureContext.root.getPageCrawler().getPage(FitnesseFixtureContext.root, path);
-        FitNesseExpediter expediter = new FitNesseExpediter(new MockSocket(""), FitnesseFixtureContext.context, FitnesseFixtureContext.context.getHtmlPageFactory());
+        FitNesseExpediter expediter = new FitNesseExpediter(FitnesseFixtureContext.context.getInjector(), new MockSocket(""));
         FitnesseFixtureContext.response = expediter.createGoodResponse(request);
         FitnesseFixtureContext.sender = new MockResponseSender();
         FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);

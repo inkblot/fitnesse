@@ -60,7 +60,7 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     protected final String getRootPagePath() {
         assertNotNull("A context must have already been made", context);
-        return context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH)));
+        return context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
     }
 
     protected final void makeSampleFiles() {

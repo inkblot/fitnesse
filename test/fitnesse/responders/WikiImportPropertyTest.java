@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
@@ -36,7 +37,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private Properties properties;
 
     @Inject
-    public void inject(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory) {
+    public void inject(@Named(FitNesseContextModule.PROPERTIES_FILE) Properties properties, Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory) {
         this.properties = properties;
         this.clockProvider = clockProvider;
         this.htmlPageFactory = htmlPageFactory;

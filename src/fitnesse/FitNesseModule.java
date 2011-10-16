@@ -1,6 +1,7 @@
 package fitnesse;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provider;
 import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import fitnesse.authentication.Authenticator;
@@ -32,7 +33,7 @@ public class FitNesseModule extends AbstractModule {
 
     public FitNesseModule(FitNesseMain.Arguments args) {
         this(
-                FileUtil.loadProperties(new File(args.getRootPath(), FitNesseContext.PROPERTIES_FILE)),
+                FileUtil.loadProperties(new File(args.getRootPath(), FitNesseContextModule.PROPERTIES_FILE)),
                 args.getUserpass());
     }
 
@@ -43,7 +44,7 @@ public class FitNesseModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Properties.class).annotatedWith(Names.named(FitNesseContext.PROPERTIES_FILE)).toInstance(properties);
+        bind(Properties.class).annotatedWith(Names.named(FitNesseContextModule.PROPERTIES_FILE)).toInstance(properties);
         bindAuthenticator();
         bindWikiPageClass();
         bindFromProperty(VersionsController.class);
@@ -56,10 +57,20 @@ public class FitNesseModule extends AbstractModule {
     private void bindAuthenticator() {
         if (userpass != null) {
             if (new File(userpass).exists()) {
-                bind(Authenticator.class).toInstance(new MultiUserAuthenticator(userpass));
+                bind(Authenticator.class).toProvider(new Provider<Authenticator>() {
+                    @Override
+                    public Authenticator get() {
+                        return new MultiUserAuthenticator(userpass);
+                    }
+                });
             } else {
-                String[] values = userpass.split(":");
-                bind(Authenticator.class).toInstance(new OneUserAuthenticator(values[0], values[1]));
+                final String[] values = userpass.split(":");
+                bind(Authenticator.class).toProvider(new Provider<Authenticator>() {
+                    @Override
+                    public Authenticator get() {
+                        return new OneUserAuthenticator(values[0], values[1]);
+                    }
+                });
             }
         } else {
             bindFromProperty(Authenticator.class);

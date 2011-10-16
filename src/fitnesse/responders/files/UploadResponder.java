@@ -5,6 +5,7 @@ package fitnesse.responders.files;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -25,7 +26,7 @@ public class UploadResponder implements SecureResponder {
     private final String rootPagePath;
 
     @Inject
-    public UploadResponder(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath) {
+    public UploadResponder(@Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
     }
 

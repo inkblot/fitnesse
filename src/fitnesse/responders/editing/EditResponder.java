@@ -5,6 +5,7 @@ package fitnesse.responders.editing;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -34,7 +35,7 @@ public class EditResponder implements SecureResponder {
     private final Clock clock;
 
     @Inject
-    public EditResponder(@Named(FitNesseContext.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
+    public EditResponder(@Named(FitNesseContextModule.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
         this.properties = properties;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;

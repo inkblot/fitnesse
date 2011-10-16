@@ -75,7 +75,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         assertEquals(TEST_TIME, clockProvider.get().currentClockDate());
 
         String suitePageName = "SuitePage";
-        context = makeContext();
+        context = makeContext(8084);
         root = context.root;
 
         crawler = root.getPageCrawler();
@@ -91,7 +91,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         responder.turnOffChunking();
         responder.setFastTest(true);
 
-        receiver = new FitSocketReceiver(0, context.socketDealer);
+        receiver = new FitSocketReceiver(context.port, context.socketDealer);
     }
 
     private WikiPage addTestToSuite(String name, String content) throws IOException {
@@ -114,7 +114,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     }
 
     private String runSuite() throws Exception {
-        context.port = receiver.receiveSocket();
+        receiver.receiveSocket();
         Response response = responder.makeResponse(context, request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);

@@ -37,8 +37,7 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        context.port = 9123;
+        context = makeContext(9123);
         root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();

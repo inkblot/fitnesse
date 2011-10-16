@@ -27,16 +27,27 @@ import static util.FileUtil.deleteFileSystemDirectory;
  */
 public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
+    public static final int DEFAULT_PORT = 1999;
+
     private FitNesseContext context;
     protected SampleFileUtility samples;
 
     protected final FitNesseContext makeContext() throws Exception {
-        return makeContext(InMemoryPage.class);
+        return makeContext(DEFAULT_PORT);
+    }
+
+    protected final FitNesseContext makeContext(int port) throws Exception {
+        return makeContext(InMemoryPage.class, port);
     }
 
     protected final FitNesseContext makeContext(Class<? extends WikiPage> wikiPageClass) throws Exception {
+        return makeContext(wikiPageClass, DEFAULT_PORT);
+    }
+
+    protected final FitNesseContext makeContext(Class<? extends WikiPage> wikiPageClass, int port) throws Exception {
         assertNull(context);
         context = FitNesseContext.makeContext(injector, getRootPath(), "RooT");
+        context.port = port;
         assertThat(context.root, instanceOf(wikiPageClass));
         return context;
     }

@@ -27,6 +27,7 @@ public class ImporterTestCase extends FitnesseBaseTestCase {
     @Before
     public void beforeImportTest() throws Exception {
         remoteContext = FitNesseContext.makeContext(injector, FitNesseContext.DEFAULT_PATH, "RooT");
+        remoteContext.port = FitNesseUtil.DEFAULT_PORT;
         remoteRoot = remoteContext.root;
         PageCrawler crawler = remoteRoot.getPageCrawler();
         crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");

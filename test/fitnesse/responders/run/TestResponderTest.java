@@ -73,15 +73,15 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
+        context = makeContext(5067);
         root = context.root;
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
         responder = new TestResponder(htmlPageFactory);
         responder.setFastTest(true);
-        receiver = new FitSocketReceiver(0, context.socketDealer);
-        context.port = receiver.receiveSocket();
+        receiver = new FitSocketReceiver(context.port, context.socketDealer);
+        receiver.receiveSocket();
 
         // holy side-effects, batman!  you wouldn't think from reading this line
         // that it has an effect on anything, but it tweaks some static context

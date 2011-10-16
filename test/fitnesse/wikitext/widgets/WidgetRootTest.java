@@ -17,13 +17,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WidgetRootTest extends FitnesseBaseTestCase {
+    public static final int PORT = 9876;
     private FitNesseContext context;
     private WikiPage rootPage;
     private PageCrawler crawler;
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
+        context = makeContext(PORT);
         rootPage = context.root;
         crawler = rootPage.getPageCrawler();
     }
@@ -141,10 +142,9 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
 
     @Test
     public void testShouldHavePortVariableAvailable() throws Exception {
-        context.port = 9876;
         new FitNesse(context, false);
         WidgetRoot root = new WidgetRoot("", rootPage);
-        assertEquals("9876", root.getVariable("FITNESSE_PORT"));
+        assertEquals(Integer.toString(PORT), root.getVariable("FITNESSE_PORT"));
     }
 
     @Test

@@ -36,8 +36,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
 
         request = new MockRequest();
-        context = makeContext();
-        context.port = 9124;
+        context = makeContext(9124);
     }
 
     @Test

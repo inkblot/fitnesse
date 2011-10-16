@@ -3,7 +3,6 @@
 package fitnesseMain;
 
 import fitnesse.*;
-import fitnesse.testutil.FitNesseUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +48,6 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void testDirCreations() throws Exception {
-        context.port = 80;
         new FitNesse(context);
 
         assertTrue(new File(context.rootPagePath).exists());
@@ -64,7 +62,6 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void testIsRunning() throws Exception {
-        context.port = FitNesseUtil.DEFAULT_PORT;
         FitNesse fitnesse = new FitNesse(context, false);
 
         assertFalse(fitnesse.isRunning());

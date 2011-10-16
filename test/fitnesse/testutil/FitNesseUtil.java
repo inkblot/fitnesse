@@ -15,12 +15,7 @@ public class FitNesseUtil {
 
     private FitNesse instance = null;
 
-    public void startFitnesse(FitNesseContext context) throws Exception {
-        context.port = DEFAULT_PORT;
-        startFitnesseWithContext(context);
-    }
-
-    public void startFitnesseWithContext(FitNesseContext context) {
+    public void startFitnesse(FitNesseContext context) {
         instance = new FitNesse(context);
         instance.start();
     }

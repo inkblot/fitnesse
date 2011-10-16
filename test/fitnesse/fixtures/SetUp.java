@@ -56,7 +56,7 @@ public class SetUp extends Fixture {
 
         context = FitNesseContext.makeContext(injector, baseDir, "RooT", 9123);
         root = context.root;
-        fitnesse = new FitNesse(context, false);
+        fitnesse = new FitNesse(context);
         File historyDirectory = context.getTestHistoryDirectory();
         if (historyDirectory.exists())
             FileUtil.deleteFileSystemDirectory(historyDirectory);

@@ -56,13 +56,13 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void testContextFitNesseGetSet() throws Exception {
-        FitNesse fitnesse = new FitNesse(context, false);
+        FitNesse fitnesse = new FitNesse(context);
         assertSame(fitnesse, context.fitnesse);
     }
 
     @Test
     public void testIsRunning() throws Exception {
-        FitNesse fitnesse = new FitNesse(context, false);
+        FitNesse fitnesse = new FitNesse(context);
 
         assertFalse(fitnesse.isRunning());
 

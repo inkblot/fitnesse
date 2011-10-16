@@ -37,25 +37,14 @@ public class FitNesse {
     }
 
     public FitNesse(FitNesseContext context) {
-        this(context, null, true);
+        this(context, null);
     }
 
     public FitNesse(FitNesseContext context, Updater updater) {
-        this(context, updater, true);
-    }
-
-    public FitNesse(FitNesseContext context, boolean makeDirs) {
-        this(context, null, makeDirs);
-    }
-
-
-    // TODO MdM. This boolean agument is annoying... please fix.
-    public FitNesse(FitNesseContext context, Updater updater, boolean makeDirs) {
         this.updater = updater;
         this.context = context;
         context.fitnesse = this;
-        if (makeDirs)
-            establishRequiredDirectories();
+        establishRequiredDirectories();
     }
 
     public boolean start() {

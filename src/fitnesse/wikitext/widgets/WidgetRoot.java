@@ -166,9 +166,9 @@ public class WidgetRoot extends ParentWidget {
         else if (key.equals("PAGE_PATH"))
             value = getWikiPage().getPageCrawler().getFullPath(page).parentPath().toString();
         else if (key.equals("FITNESSE_PORT"))
-            value = Integer.toString(page.getInjector().getInstance(FitNesseContext.class).port);
+            value = page.getInjector().getInstance(Key.get(Integer.class, Names.named(FitNesseContext.PORT))).toString();
         else if (key.equals("FITNESSE_ROOTPATH"))
-            value = page.getInjector().getInstance(Key.get(String.class, Names.named("fitnesse.rootPath")));
+            value = page.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PATH)));
         return value;
     }
 

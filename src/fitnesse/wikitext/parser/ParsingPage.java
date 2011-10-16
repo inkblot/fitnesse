@@ -49,9 +49,9 @@ public class ParsingPage {
         else if (key.equals("PAGE_PATH"))
             value = namedPage.getPath();
         else if (key.equals("FITNESSE_PORT"))
-            value = Integer.toString(page.getInjector().getInstance(FitNesseContext.class).port);
+            value = page.getInjector().getInstance(Key.get(Integer.class, Names.named(FitNesseContext.PORT))).toString();
         else if (key.equals("FITNESSE_ROOTPATH"))
-            value = page.getInjector().getInstance(Key.get(String.class, Names.named("fitnesse.rootPath")));
+            value = page.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PATH)));
         else
             return Maybe.noString;
         return new Maybe<String>(value);

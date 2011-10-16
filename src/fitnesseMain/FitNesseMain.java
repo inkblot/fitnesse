@@ -54,8 +54,7 @@ public class FitNesseMain {
 
     public static void launchFitNesse(Arguments arguments, Injector injector) throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
-        FitNesseContext context = FitNesseContext.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory());
-        context.port = arguments.getPort();
+        FitNesseContext context = FitNesseContext.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort());
 
         Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContext.PROPERTIES_FILE)));
 

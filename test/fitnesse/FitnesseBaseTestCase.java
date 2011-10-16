@@ -46,8 +46,7 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     protected final FitNesseContext makeContext(Class<? extends WikiPage> wikiPageClass, int port) throws Exception {
         assertNull(context);
-        context = FitNesseContext.makeContext(injector, getRootPath(), "RooT");
-        context.port = port;
+        context = FitNesseContext.makeContext(injector, getRootPath(), "RooT", port);
         assertThat(context.root, instanceOf(wikiPageClass));
         return context;
     }

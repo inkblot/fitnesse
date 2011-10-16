@@ -34,12 +34,14 @@ public class FitNesseContext {
     public static final String ROOT_PATH = "fitnesse.rootPath";
     public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
     public static final String ROOT_PAGE_PATH = "fitnesse.rootPagePath";
+    public static final String PORT = "fitnesse.port";
     public static final String PROPERTIES_FILE = "plugins.properties";
 
     private final Injector injector;
     public final String rootPath;
     public final WikiPage root;
     public final String rootPagePath;
+    public final int port;
     private final ResponderFactory responderFactory;
     private final Clock clock;
     private final WikiPageFactory wikiPageFactory;
@@ -47,14 +49,13 @@ public class FitNesseContext {
     public final Provider<Authenticator> authenticatorProvider;
 
     public FitNesse fitnesse;
-    public int port = DEFAULT_PORT;
     public SocketDealer socketDealer = new SocketDealer();
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
-    public static FitNesseContext makeContext(Injector injector, String rootPath, String rootPageName) throws Exception {
-        Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(rootPath, rootPageName));
+    public static FitNesseContext makeContext(Injector injector, String rootPath, String rootPageName, int port) throws Exception {
+        Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(rootPath, rootPageName, port));
         return contextInjector.getInstance(FitNesseContext.class);
     }
 
@@ -62,6 +63,7 @@ public class FitNesseContext {
     public FitNesseContext(
             @Named(ROOT_PATH) String rootPath,
             @Named(ROOT_PAGE_PATH) String rootPagePath,
+            @Named(PORT) Integer port,
             WikiPageFactory wikiPageFactory,
             ResponderFactory responderFactory,
             Clock clock,
@@ -70,6 +72,7 @@ public class FitNesseContext {
             Injector injector) throws Exception {
         this.rootPath = rootPath;
         this.rootPagePath = rootPagePath;
+        this.port = port;
         this.wikiPageFactory = wikiPageFactory;
         this.responderFactory = responderFactory;
         this.clock = clock;

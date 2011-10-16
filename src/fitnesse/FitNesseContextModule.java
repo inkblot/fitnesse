@@ -14,10 +14,12 @@ import java.io.File;
 public class FitNesseContextModule extends AbstractModule {
     private final String rootPath;
     private final String rootPageName;
+    private final int port;
 
-    public FitNesseContextModule(String rootPath, String rootPageName) {
+    public FitNesseContextModule(String rootPath, String rootPageName, int port) {
         this.rootPath = rootPath;
         this.rootPageName = rootPageName;
+        this.port = port;
     }
 
     @Override
@@ -26,5 +28,6 @@ public class FitNesseContextModule extends AbstractModule {
         bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PAGE_NAME)).toInstance(rootPageName);
         String rootPagePath = rootPath + File.separator + rootPageName;
         bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PAGE_PATH)).toInstance(rootPagePath);
+        bind(Integer.class).annotatedWith(Names.named(FitNesseContext.PORT)).toInstance(port);
     }
 }

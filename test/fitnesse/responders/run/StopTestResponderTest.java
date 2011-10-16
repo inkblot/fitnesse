@@ -12,6 +12,8 @@ import fitnesse.testutil.FitSocketReceiver;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.BindException;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
@@ -35,6 +37,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         context = makeContext();
+        context.port = 9124;
     }
 
     @Test
@@ -81,11 +84,20 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
 
 
     private String runResponder(StopTestResponder responder) throws Exception {
-        context.port = new FitSocketReceiver(0, context.socketDealer).receiveSocket();
-        Response response = responder.makeResponse(context, request);
-        MockResponseSender sender = new MockResponseSender();
-        sender.doSending(response);
-        return sender.sentData();
+        FitSocketReceiver fitSocketReceiver = new FitSocketReceiver(context.port, context.socketDealer);
+        try {
+            fitSocketReceiver.receiveSocket();
+            Response response = responder.makeResponse(context, request);
+            MockResponseSender sender = new MockResponseSender();
+            sender.doSending(response);
+            return sender.sentData();
+        } catch (BindException e) {
+            fitSocketReceiver = null;
+            throw e;
+        } finally {
+            if (fitSocketReceiver != null)
+                fitSocketReceiver.close();
+        }
     }
 
     class StoppedRecorder implements Stoppable {

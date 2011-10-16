@@ -17,42 +17,40 @@ import static org.junit.Assert.*;
 public class RenameFileResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private FitNesseContext context;
-    private String rootPagePath;
 
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
         context = makeContext();
-        rootPagePath = context.rootPagePath;
-        FileUtil.makeDir(rootPagePath);
+        FileUtil.makeDir(getRootPagePath());
     }
 
     @Test
     public void testMakeResponse() throws Exception {
-        File file = new File(context.rootPagePath, "testfile");
+        File file = new File(getRootPagePath(), "testfile");
         assertTrue(file.createNewFile());
-        RenameFileResponder responder = new RenameFileResponder(rootPagePath);
+        RenameFileResponder responder = new RenameFileResponder(getRootPagePath());
         request.addInput("filename", "testfile");
         request.addInput("newName", "newName");
         request.setResource("");
         Response response = responder.makeResponse(context, request);
         assertFalse(file.exists());
-        assertTrue(new File(context.rootPagePath, "newName").exists());
+        assertTrue(new File(getRootPagePath(), "newName").exists());
         assertEquals(303, response.getStatus());
         assertEquals("/", response.getHeader("Location"));
     }
 
     @Test
     public void testRenameWithTrailingSpace() throws Exception {
-        File file = new File(context.rootPagePath, "testfile");
+        File file = new File(getRootPagePath(), "testfile");
         assertTrue(file.createNewFile());
-        RenameFileResponder responder = new RenameFileResponder(rootPagePath);
+        RenameFileResponder responder = new RenameFileResponder(getRootPagePath());
         request.addInput("filename", "testfile");
         request.addInput("newName", "new Name With Space ");
         request.setResource("");
         responder.makeResponse(context, request);
         assertFalse(file.exists());
-        assertTrue(new File(context.rootPagePath, "new Name With Space").exists());
+        assertTrue(new File(getRootPagePath(), "new Name With Space").exists());
     }
 
 }

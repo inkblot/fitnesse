@@ -48,21 +48,21 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void testDirCreations() throws Exception {
-        new FitNesse(context);
+        new FitNesse(context, getRootPagePath());
 
-        assertTrue(new File(context.rootPagePath).exists());
-        assertTrue(new File(context.rootPagePath, "files").exists());
+        assertTrue(new File(getRootPagePath()).exists());
+        assertTrue(new File(getRootPagePath(), "files").exists());
     }
 
     @Test
     public void testContextFitNesseGetSet() throws Exception {
-        FitNesse fitnesse = new FitNesse(context);
+        FitNesse fitnesse = new FitNesse(context, getRootPagePath());
         assertSame(fitnesse, context.fitnesse);
     }
 
     @Test
     public void testIsRunning() throws Exception {
-        FitNesse fitnesse = new FitNesse(context);
+        FitNesse fitnesse = new FitNesse(context, getRootPagePath());
 
         assertFalse(fitnesse.isRunning());
 

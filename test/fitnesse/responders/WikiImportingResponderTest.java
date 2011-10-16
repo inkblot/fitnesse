@@ -2,10 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Module;
-import com.google.inject.Provider;
+import com.google.inject.*;
+import com.google.inject.name.Names;
+import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
@@ -52,7 +51,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     @Before
     public void setUp() throws Exception {
         authenticator = new PromiscuousAuthenticator();
-        fitNesseUtil.startFitnesse(remoteContext);
+        fitNesseUtil.startFitnesse(remoteContext, remoteContext.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH))));
         baseUrl = FitNesseUtil.URL;
 
         createResponder();

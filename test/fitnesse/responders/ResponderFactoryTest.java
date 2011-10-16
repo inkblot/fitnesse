@@ -121,9 +121,9 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
 
     @Test
     public void testFileResponder() throws Exception {
-        assertTrue(new File(context.rootPagePath).mkdir());
-        assertTrue(new File(context.rootPagePath + "/files").mkdir());
-        FileUtil.createFile(context.rootPagePath + "/files/someFile", "this is a test");
+        assertTrue(new File(getRootPagePath()).mkdir());
+        assertTrue(new File(getRootPagePath() + "/files").mkdir());
+        FileUtil.createFile(getRootPagePath() + "/files/someFile", "this is a test");
         request.setResource("files/someFile");
         assertResponderType(FileSystemResponder.class);
     }

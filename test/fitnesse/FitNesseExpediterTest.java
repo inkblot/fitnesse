@@ -173,7 +173,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
 
     class StoneWallAuthenticator extends Authenticator {
         public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
-            return new UnauthorizedResponder();
+            return context.getInjector().getInstance(UnauthorizedResponder.class);
         }
 
         public boolean isAuthenticated(String username, String password) {

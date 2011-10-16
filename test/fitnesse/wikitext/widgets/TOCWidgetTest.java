@@ -218,7 +218,7 @@ public class TOCWidgetTest extends WidgetTestCase {
         data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "ParenT");
         page.commit(data);
         FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse(context, getRootPagePath());
         try {
             TOCWidget widget = new TOCWidget(new WidgetRoot(page), "!contents\n");
             String html = widget.render();

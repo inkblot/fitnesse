@@ -38,7 +38,7 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
         pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
         pageTwo = crawler.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
 
-        updater = new UpdaterBase(context);
+        updater = new UpdaterBase(getRootPagePath());
         update = makeUpdate();
 
     }

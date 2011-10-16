@@ -12,10 +12,14 @@ import java.lang.reflect.Method;
 import java.net.BindException;
 
 public class FitNesse {
-    private FitNesseContext context;
-    private SocketService theService;
-    private Updater updater;
+
     public static final FitNesseVersion VERSION = new FitNesseVersion();
+
+    private final FitNesseContext context;
+    private final Updater updater;
+    private final String rootPagePath;
+
+    private SocketService theService;
 
     public static void main(String[] args) throws Exception {
         System.out.println("DEPRECATED:  use java -jar fitnesse.jar or java -cp fitnesse.jar fitnesseMain.FitNesseMain");
@@ -36,13 +40,14 @@ public class FitNesse {
             filesDir.mkdir();
     }
 
-    public FitNesse(FitNesseContext context) {
-        this(context, null);
+    public FitNesse(FitNesseContext context, String rootPagePath) {
+        this(context, null, rootPagePath);
     }
 
-    public FitNesse(FitNesseContext context, Updater updater) {
+    public FitNesse(FitNesseContext context, Updater updater, String rootPagePath) {
         this.updater = updater;
         this.context = context;
+        this.rootPagePath = rootPagePath;
         context.fitnesse = this;
         establishRequiredDirectories();
     }
@@ -70,8 +75,8 @@ public class FitNesse {
     }
 
     private void establishRequiredDirectories() {
-        establishDirectory(context.rootPagePath);
-        establishDirectory(context.rootPagePath + "/files");
+        establishDirectory(rootPagePath);
+        establishDirectory(rootPagePath + "/files");
     }
 
     public void applyUpdates() throws Exception {

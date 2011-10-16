@@ -2,10 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Provider;
+import com.google.inject.*;
+import com.google.inject.name.Names;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
@@ -56,7 +54,7 @@ public class SetUp extends Fixture {
 
         context = FitNesseContext.makeContext(injector, baseDir, "RooT", 9123);
         root = context.root;
-        fitnesse = new FitNesse(context);
+        fitnesse = new FitNesse(context, context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH))));
         File historyDirectory = context.getTestHistoryDirectory();
         if (historyDirectory.exists())
             FileUtil.deleteFileSystemDirectory(historyDirectory);

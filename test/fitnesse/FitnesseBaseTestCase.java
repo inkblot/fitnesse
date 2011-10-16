@@ -1,6 +1,7 @@
 package fitnesse;
 
 import com.google.inject.*;
+import com.google.inject.name.Names;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -57,9 +58,14 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
         return rootPath.getAbsolutePath();
     }
 
+    protected final String getRootPagePath() {
+        assertNotNull("A context must have already been made", context);
+        return context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH)));
+    }
+
     protected final void makeSampleFiles() {
-        assertNotNull(context);
-        samples = new SampleFileUtility(context.rootPagePath);
+        assertNotNull("A context must have already been made", context);
+        samples = new SampleFileUtility(getRootPagePath());
         samples.makeSampleFiles();
     }
 

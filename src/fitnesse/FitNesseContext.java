@@ -40,7 +40,7 @@ public class FitNesseContext {
     private final Injector injector;
     public final String rootPath;
     public final WikiPage root;
-    public final String rootPagePath;
+    private final String rootPagePath;
     public final int port;
     private final ResponderFactory responderFactory;
     private final Clock clock;

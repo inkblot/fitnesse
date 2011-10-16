@@ -18,7 +18,6 @@ public class DeleteConfirmationResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
-    private String rootPagePath;
 
     @Inject
     public void inject(HtmlPageFactory htmlPageFactory) {
@@ -29,14 +28,13 @@ public class DeleteConfirmationResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         request = new MockRequest();
         context = makeContext();
-        rootPagePath = context.rootPagePath;
     }
 
     @Test
     public void testContentOfPage() throws Exception {
         request.setResource("files");
         request.addInput("filename", "MyFile.txt");
-        Responder responder = new DeleteConfirmationResponder(htmlPageFactory, rootPagePath);
+        Responder responder = new DeleteConfirmationResponder(htmlPageFactory, getRootPagePath());
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String content = response.getContent();
 

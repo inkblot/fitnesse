@@ -33,7 +33,7 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         context = makeContext();
-        fitnesse = new FitNesse(context);
+        fitnesse = new FitNesse(context, getRootPagePath());
         fitnesse.start();
         context.fitnesse = fitnesse;
     }

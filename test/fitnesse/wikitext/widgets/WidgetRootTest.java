@@ -142,14 +142,14 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
 
     @Test
     public void testShouldHavePortVariableAvailable() throws Exception {
-        new FitNesse(context);
+        new FitNesse(context, getRootPagePath());
         WidgetRoot root = new WidgetRoot("", rootPage);
         assertEquals(Integer.toString(PORT), root.getVariable("FITNESSE_PORT"));
     }
 
     @Test
     public void testShouldHaveRootPathVariableAvailable() throws Exception {
-        new FitNesse(context);
+        new FitNesse(context, getRootPagePath());
         WidgetRoot root = new WidgetRoot("", rootPage);
         assertEquals(getRootPath(), root.getVariable("FITNESSE_ROOTPATH"));
     }

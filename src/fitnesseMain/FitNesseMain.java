@@ -70,7 +70,8 @@ public class FitNesseMain {
         WikiImportTestEventListener.register();
 
         PageVersionPruner.daysTillVersionsExpire = arguments.getDaysTillVersionsExpire();
-        FitNesse fitnesse = new FitNesse(context, !arguments.isOmittingUpdates() ? new UpdaterImplementation(context) : null);
+        String rootPagePath = context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH)));
+        FitNesse fitnesse = new FitNesse(context, !arguments.isOmittingUpdates() ? new UpdaterImplementation(context, rootPagePath) : null, rootPagePath);
         updateAndLaunch(arguments, context, fitnesse, extraOutput);
     }
 

@@ -3,6 +3,9 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
+import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -26,7 +29,7 @@ public class ImportAndViewResponderTest extends ImporterTestCase {
 
     @Before
     public void setUp() throws Exception {
-        fitNesseUtil.startFitnesse(remoteContext);
+        fitNesseUtil.startFitnesse(remoteContext, remoteContext.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH))));
         responder = new ImportAndViewResponder(htmlPageFactory);
     }
 

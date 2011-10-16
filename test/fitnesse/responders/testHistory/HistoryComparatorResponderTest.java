@@ -38,9 +38,9 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
     public void setup() throws Exception {
         context = makeContext();
         root = context.root;
-        FIRST_FILE_PATH = context.rootPagePath + "/files/testResults/TestFolder/firstFakeFile"
+        FIRST_FILE_PATH = getRootPagePath() + "/files/testResults/TestFolder/firstFakeFile"
                 .replace('/', File.separatorChar);
-        SECOND_FILE_PATH = context.rootPagePath + "/files/testResults/TestFolder/secondFakeFile"
+        SECOND_FILE_PATH = getRootPagePath() + "/files/testResults/TestFolder/secondFakeFile"
                 .replace('/', File.separatorChar);
         request = new MockRequest();
         mockedComparator = mock(HistoryComparator.class);
@@ -62,9 +62,9 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
         request.addInput("TestResult_firstFakeFile", "");
         request.addInput("TestResult_secondFakeFile", "");
         request.setResource("TestFolder");
-        FileUtil.createFile(context.rootPagePath + "/files/testResults/TestFolder/firstFakeFile",
+        FileUtil.createFile(getRootPagePath() + "/files/testResults/TestFolder/firstFakeFile",
                 "firstFile");
-        FileUtil.createFile(context.rootPagePath + "/files/testResults/TestFolder/secondFakeFile",
+        FileUtil.createFile(getRootPagePath() + "/files/testResults/TestFolder/secondFakeFile",
                 "secondFile");
     }
 

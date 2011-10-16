@@ -17,9 +17,11 @@ public class UpdaterImplementation extends UpdaterBase {
     private ArrayList<String> updateDoNotCopyOver = new ArrayList<String>();
     private ArrayList<String> updateList = new ArrayList<String>();
     private String fitNesseVersion = FitNesse.VERSION.toString();
+    private final FitNesseContext context;
 
-    public UpdaterImplementation(FitNesseContext context) throws IOException {
-        super(context);
+    public UpdaterImplementation(FitNesseContext context, String rootPagePath) throws IOException {
+        super(rootPagePath);
+        this.context = context;
         createUpdateAndDoNotCopyOverLists();
         updates = makeAllUpdates();
     }
@@ -61,8 +63,8 @@ public class UpdaterImplementation extends UpdaterBase {
 
     private void createUpdateAndDoNotCopyOverLists() {
         tryToGetUpdateFilesFromJarFile();
-        File updateFileList = new File(context.rootPagePath, "updateList");
-        File updateDoNotCopyOverFileList = new File(context.rootPagePath, "updateDoNotCopyOverList");
+        File updateFileList = new File(rootPagePath, "updateList");
+        File updateDoNotCopyOverFileList = new File(rootPagePath, "updateDoNotCopyOverList");
         tryToParseTheFileIntoTheList(updateFileList, updateList);
         tryToParseTheFileIntoTheList(updateDoNotCopyOverFileList, updateDoNotCopyOver);
     }
@@ -76,9 +78,9 @@ public class UpdaterImplementation extends UpdaterBase {
     }
 
     public void getUpdateFilesFromJarFile() throws IOException {
-        Update update = new FileUpdate(context.rootPagePath, "Resources/updateList", ".");
+        Update update = new FileUpdate(rootPagePath, "Resources/updateList", ".");
         update.doUpdate();
-        update = new FileUpdate(this.context.rootPagePath, "Resources/updateDoNotCopyOverList", ".");
+        update = new FileUpdate(rootPagePath, "Resources/updateDoNotCopyOverList", ".");
         update.doUpdate();
     }
 

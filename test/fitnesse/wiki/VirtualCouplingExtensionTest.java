@@ -27,7 +27,7 @@ public class VirtualCouplingExtensionTest extends FitnesseBaseTestCase {
         root = context.root;
         crawler = root.getPageCrawler();
         fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse(context, getRootPagePath());
 
         page2 = crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
         crawler.addPage(page2, PathParser.parse("PageTwoChild"), "page two child");

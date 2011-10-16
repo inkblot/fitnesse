@@ -118,7 +118,7 @@ public class TestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void testTestRunnerWithRootPathVariable() throws Exception {
-        new FitNesse(context);
+        new FitNesse(context, getRootPagePath());
 
         String specifiedPageText = "!define TEST_RUNNER (${FITNESSE_ROOTPATH}/rubyslim.rb)\n";
         WikiPage specifiedPage = makeTestPage(specifiedPageText);

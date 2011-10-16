@@ -1,6 +1,5 @@
 package fitnesse.updates;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -13,12 +12,12 @@ import java.util.Properties;
 
 public class UpdaterBase implements Updater {
     private static final Logger logger = LoggerFactory.getLogger(UpdaterBase.class);
-    public FitNesseContext context;
     public Properties rootProperties;
     public Update[] updates;
+    protected final String rootPagePath;
 
-    public UpdaterBase(FitNesseContext context) throws IOException {
-        this.context = context;
+    public UpdaterBase(String rootPagePath) throws IOException {
+        this.rootPagePath = rootPagePath;
         rootProperties = loadProperties();
     }
 
@@ -42,7 +41,7 @@ public class UpdaterBase implements Updater {
     }
 
     private File getPropertiesFile() {
-        String filename = context.rootPagePath + "/properties";
+        String filename = rootPagePath + "/properties";
         return new File(filename);
     }
 

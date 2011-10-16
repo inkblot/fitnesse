@@ -145,7 +145,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
         VirtualCouplingExtensionTest.setVirtualWiki(linkPage, FitNesseUtil.URL + "TargetPage");
 
         FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse(context, getRootPagePath());
         SimpleResponse response = null;
         try {
             response = requestPage("LinkPage.ChildPage");

@@ -25,11 +25,11 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         context = makeContext();
-        FileUtil.makeDir(context.rootPagePath);
-        FileUtil.makeDir(context.rootPagePath + "/files");
-        testFile = FileUtil.createFile(context.rootPagePath + "/tempFile.txt", "test content");
+        FileUtil.makeDir(getRootPagePath());
+        FileUtil.makeDir(getRootPagePath() + "/files");
+        testFile = FileUtil.createFile(getRootPagePath() + "/tempFile.txt", "test content");
 
-        responder = new UploadResponder(context.rootPagePath);
+        responder = new UploadResponder(getRootPagePath());
         request = new MockRequest();
     }
 
@@ -40,7 +40,7 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File(context.rootPagePath, "files/sourceFilename.txt");
+        File file = new File(getRootPagePath(), "files/sourceFilename.txt");
         assertTrue(file.exists());
         assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -55,7 +55,7 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File(context.rootPagePath, "files/source filename.txt");
+        File file = new File(getRootPagePath(), "files/source filename.txt");
         assertTrue(file.exists());
         assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -65,13 +65,13 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testMakeResponseSpaceInDirectoryName() throws Exception {
-        FileUtil.makeDir(context.rootPagePath + "/files/Folder With Space");
+        FileUtil.makeDir(getRootPagePath() + "/files/Folder With Space");
         request.addInput("file", new UploadedFile("filename.txt", "plain/text", testFile));
         request.setResource("files/Folder%20With%20Space/");
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File(context.rootPagePath, "files/Folder With Space/filename.txt");
+        File file = new File(getRootPagePath(), "files/Folder With Space/filename.txt");
         assertTrue(file.exists());
         assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -102,9 +102,9 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testWriteFile() throws Exception {
-        File file = new File(context.rootPagePath, "testFile");
-        File inputFile = FileUtil.createFile(context.rootPagePath + "/testInput", "heres the content");
-        UploadedFile uploaded = new UploadedFile(context.rootPagePath + "/testOutput", "text", inputFile);
+        File file = new File(getRootPagePath(), "testFile");
+        File inputFile = FileUtil.createFile(getRootPagePath() + "/testInput", "heres the content");
+        UploadedFile uploaded = new UploadedFile(getRootPagePath() + "/testOutput", "text", inputFile);
 
         long inputFileLength = inputFile.length();
         String inputFileContent = FileUtil.getFileContent(inputFile);

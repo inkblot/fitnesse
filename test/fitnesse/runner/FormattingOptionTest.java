@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.Request;
 import fitnesse.responders.run.TestSummary;
@@ -87,8 +88,9 @@ public class FormattingOptionTest extends FitnesseBaseTestCase {
     public void testTheWholeDeal() throws Exception {
         sampleFormatter();
 
+        FitNesseContext context = makeContext();
         FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(makeContext());
+        fitNesseUtil.startFitnesse(context, getRootPagePath());
         try {
             option = new FormattingOption("mock", "stdout", output, "localhost", port, "");
             option.process(formatter.getResultStream(), formatter.getByteCount());

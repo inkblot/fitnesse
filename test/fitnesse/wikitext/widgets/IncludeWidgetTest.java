@@ -277,7 +277,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         String virtualWikiURL = FitNesseUtil.URL + "PageTwo";
         VirtualCouplingExtensionTest.setVirtualWiki(page1, virtualWikiURL);
         FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse(context, getRootPagePath());
         try {
             IncludeWidget widget = createIncludeWidget(page1, ".PageOne.ChildOne");
             String result = widget.render();
@@ -305,7 +305,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         VirtualCouplingExtensionTest.setVirtualWiki(virtualHost, virtualWikiURL);
 
         FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse(context, getRootPagePath());
         try {
             WikiPage virtualChild = crawler.getPage(alternateRoot, PathParser.parse("VirtualPage.IncludingPage"));
             PageData data = virtualChild.getData();

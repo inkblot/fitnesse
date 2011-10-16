@@ -149,7 +149,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
         VirtualCouplingExtensionTest.setVirtualWiki(linkPage, FitNesseUtil.URL + "TargetPage");
 
         FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context, getRootPagePath());
+        fitNesseUtil.startFitnesse(context);
         SimpleResponse response = null;
         try {
             response = requestPage("LinkPage.ChildPage");

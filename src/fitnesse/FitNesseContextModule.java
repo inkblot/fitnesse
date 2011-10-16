@@ -2,6 +2,8 @@ package fitnesse;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+import fitnesse.updates.NoOpUpdater;
+import fitnesse.updates.UpdaterImplementation;
 
 import java.io.File;
 
@@ -15,11 +17,13 @@ public class FitNesseContextModule extends AbstractModule {
     private final String rootPath;
     private final String rootPageName;
     private final int port;
+    private final boolean omitUpdates;
 
-    public FitNesseContextModule(String rootPath, String rootPageName, int port) {
+    public FitNesseContextModule(String rootPath, String rootPageName, int port, boolean omitUpdates) {
         this.rootPath = rootPath;
         this.rootPageName = rootPageName;
         this.port = port;
+        this.omitUpdates = omitUpdates;
     }
 
     @Override
@@ -29,5 +33,14 @@ public class FitNesseContextModule extends AbstractModule {
         String rootPagePath = rootPath + File.separator + rootPageName;
         bind(String.class).annotatedWith(Names.named(FitNesseContext.ROOT_PAGE_PATH)).toInstance(rootPagePath);
         bind(Integer.class).annotatedWith(Names.named(FitNesseContext.PORT)).toInstance(port);
+        bindUpdater(omitUpdates);
+    }
+
+    private void bindUpdater(boolean omitUpdates) {
+        if (omitUpdates) {
+            bind(Updater.class).to(NoOpUpdater.class);
+        } else {
+            bind(Updater.class).to(UpdaterImplementation.class);
+        }
     }
 }

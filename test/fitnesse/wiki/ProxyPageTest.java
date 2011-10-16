@@ -46,7 +46,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
         original.commit(data);
 
         fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context, getRootPagePath());
+        fitNesseUtil.startFitnesse(context);
 
         proxy = new ProxyPage(original, injector);
         proxy.setTransientValues("localhost", clockProvider.get().currentClockTimeInMillis());

@@ -48,14 +48,13 @@ public class FitNesseContext {
     private final HtmlPageFactory htmlPageFactory;
     public final Provider<Authenticator> authenticatorProvider;
 
-    public FitNesse fitnesse;
     public SocketDealer socketDealer = new SocketDealer();
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
-    public static FitNesseContext makeContext(Injector injector, String rootPath, String rootPageName, int port) throws Exception {
-        Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(rootPath, rootPageName, port));
+    public static FitNesseContext makeContext(Injector injector, String rootPath, String rootPageName, int port, boolean omitUpdates) throws Exception {
+        Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(rootPath, rootPageName, port, omitUpdates));
         return contextInjector.getInstance(FitNesseContext.class);
     }
 

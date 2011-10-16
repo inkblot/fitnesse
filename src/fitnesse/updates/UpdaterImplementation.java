@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import util.FileUtil;
@@ -19,7 +21,8 @@ public class UpdaterImplementation extends UpdaterBase {
     private String fitNesseVersion = FitNesse.VERSION.toString();
     private final FitNesseContext context;
 
-    public UpdaterImplementation(FitNesseContext context, String rootPagePath) throws IOException {
+    @Inject
+    public UpdaterImplementation(FitNesseContext context, @Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath) throws IOException {
         super(rootPagePath);
         this.context = context;
         createUpdateAndDoNotCopyOverLists();

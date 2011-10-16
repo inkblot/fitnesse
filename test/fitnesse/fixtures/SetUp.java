@@ -3,7 +3,6 @@
 package fitnesse.fixtures;
 
 import com.google.inject.*;
-import com.google.inject.name.Names;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
@@ -52,9 +51,9 @@ public class SetUp extends Fixture {
         //TODO - Inject the test listeners
         WikiImportTestEventListener.register();
 
-        context = FitNesseContext.makeContext(injector, baseDir, "RooT", 9123);
+        context = FitNesseContext.makeContext(injector, baseDir, "RooT", 9123, true);
         root = context.root;
-        fitnesse = new FitNesse(context, context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH))));
+        fitnesse = context.getInjector().getInstance(FitNesse.class);
         File historyDirectory = context.getTestHistoryDirectory();
         if (historyDirectory.exists())
             FileUtil.deleteFileSystemDirectory(historyDirectory);

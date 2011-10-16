@@ -3,10 +3,7 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
-import com.google.inject.Key;
 import com.google.inject.Provider;
-import com.google.inject.name.Names;
-import fitnesse.FitNesseContext;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.After;
@@ -38,7 +35,7 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
 
     @Before
     public void setUp() throws Exception {
-        fitNesseUtil.startFitnesse(remoteContext, remoteContext.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH))));
+        fitNesseUtil.startFitnesse(remoteContext);
 
         importer = new WikiImporter();
         importer.setWikiImporterClient(this);

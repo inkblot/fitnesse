@@ -33,9 +33,8 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         context = makeContext();
-        fitnesse = new FitNesse(context, getRootPagePath());
+        fitnesse = context.getInjector().getInstance(FitNesse.class);
         fitnesse.start();
-        context.fitnesse = fitnesse;
     }
 
     @After
@@ -45,7 +44,7 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testFitNesseGetsShutdown() throws Exception {
-        ShutdownResponder responder = new ShutdownResponder(htmlPageFactory);
+        ShutdownResponder responder = new ShutdownResponder(htmlPageFactory, context.getInjector().getInstance(FitNesse.class));
         responder.makeResponse(context, new MockRequest());
         Thread.sleep(200);
         assertFalse(fitnesse.isRunning());
@@ -74,6 +73,6 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testIsSecure() throws Exception {
-        assertTrue(new ShutdownResponder(htmlPageFactory).getSecureOperation() instanceof AlwaysSecureOperation);
+        assertTrue(new ShutdownResponder(htmlPageFactory, context.getInjector().getInstance(FitNesse.class)).getSecureOperation() instanceof AlwaysSecureOperation);
     }
 }

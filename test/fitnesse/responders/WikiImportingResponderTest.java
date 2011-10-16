@@ -3,8 +3,6 @@
 package fitnesse.responders;
 
 import com.google.inject.*;
-import com.google.inject.name.Names;
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
@@ -51,7 +49,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     @Before
     public void setUp() throws Exception {
         authenticator = new PromiscuousAuthenticator();
-        fitNesseUtil.startFitnesse(remoteContext, remoteContext.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH))));
+        fitNesseUtil.startFitnesse(remoteContext);
         baseUrl = FitNesseUtil.URL;
 
         createResponder();

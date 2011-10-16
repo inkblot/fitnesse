@@ -1,5 +1,8 @@
 package fitnesse.updates;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContext;
 import fitnesse.Updater;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -16,7 +19,8 @@ public class UpdaterBase implements Updater {
     public Update[] updates;
     protected final String rootPagePath;
 
-    public UpdaterBase(String rootPagePath) throws IOException {
+    @Inject
+    public UpdaterBase(@Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath) throws IOException {
         this.rootPagePath = rootPagePath;
         rootProperties = loadProperties();
     }

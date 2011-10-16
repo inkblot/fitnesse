@@ -90,7 +90,7 @@ public class FormattingOptionTest extends FitnesseBaseTestCase {
 
         FitNesseContext context = makeContext();
         FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context, getRootPagePath());
+        fitNesseUtil.startFitnesse(context);
         try {
             option = new FormattingOption("mock", "stdout", output, "localhost", port, "");
             option.process(formatter.getResultStream(), formatter.getByteCount());

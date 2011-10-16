@@ -4,14 +4,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import fitnesse.ComponentFactory;
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseModule;
+import fitnesse.*;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
-import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.PageVersionPruner;
 import fitnesse.wikitext.parser.SymbolProvider;
 import org.slf4j.Logger;
@@ -54,7 +50,7 @@ public class FitNesseMain {
 
     public static void launchFitNesse(Arguments arguments, Injector injector) throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
-        FitNesseContext context = FitNesseContext.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort());
+        FitNesseContext context = FitNesseContext.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.isOmittingUpdates());
 
         Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContext.PROPERTIES_FILE)));
 
@@ -70,8 +66,7 @@ public class FitNesseMain {
         WikiImportTestEventListener.register();
 
         PageVersionPruner.daysTillVersionsExpire = arguments.getDaysTillVersionsExpire();
-        String rootPagePath = context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContext.ROOT_PAGE_PATH)));
-        FitNesse fitnesse = new FitNesse(context, !arguments.isOmittingUpdates() ? new UpdaterImplementation(context, rootPagePath) : null, rootPagePath);
+        FitNesse fitnesse = context.getInjector().getInstance(FitNesse.class);
         updateAndLaunch(arguments, context, fitnesse, extraOutput);
     }
 

@@ -19,10 +19,12 @@ import fitnesse.http.SimpleResponse;
 public class ShutdownResponder implements SecureResponder {
 
     private final HtmlPageFactory htmlPageFactory;
+    private final FitNesse fitNesse;
 
     @Inject
-    public ShutdownResponder(HtmlPageFactory htmlPageFactory) {
+    public ShutdownResponder(HtmlPageFactory htmlPageFactory, FitNesse fitNesse) {
         this.htmlPageFactory = htmlPageFactory;
+        this.fitNesse = fitNesse;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -38,12 +40,11 @@ public class ShutdownResponder implements SecureResponder {
         html.main.use(content);
         response.setContent(html.html());
 
-        final FitNesse fitnesseInstance = context.fitnesse;
 
         Thread shutdownThread = new Thread() {
             public void run() {
                 try {
-                    fitnesseInstance.stop();
+                    fitNesse.stop();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

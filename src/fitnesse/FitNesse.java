@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import fitnesse.http.*;
 import fitnesse.socketservice.SocketService;
 import fitnesse.http.MockSocket;
@@ -11,6 +14,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.BindException;
 
+@Singleton
 public class FitNesse {
 
     public static final FitNesseVersion VERSION = new FitNesseVersion();
@@ -18,6 +22,7 @@ public class FitNesse {
     private final FitNesseContext context;
     private final Updater updater;
     private final String rootPagePath;
+    private final Integer port;
 
     private SocketService theService;
 
@@ -40,27 +45,24 @@ public class FitNesse {
             filesDir.mkdir();
     }
 
-    public FitNesse(FitNesseContext context, String rootPagePath) {
-        this(context, null, rootPagePath);
-    }
-
-    public FitNesse(FitNesseContext context, Updater updater, String rootPagePath) {
+    @Inject
+    public FitNesse(FitNesseContext context, Updater updater, @Named(FitNesseContext.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseContext.PORT) Integer port) {
         this.updater = updater;
         this.context = context;
         this.rootPagePath = rootPagePath;
-        context.fitnesse = this;
+        this.port = port;
         establishRequiredDirectories();
     }
 
     public boolean start() {
         try {
-            if (context.port > 0) {
-                theService = new SocketService(context.port, new FitNesseServer(context));
+            if (port > 0) {
+                theService = new SocketService(port, new FitNesseServer(context));
                 theService.start();
             }
             return true;
         } catch (BindException e) {
-            printBadPortMessage(context.port);
+            printBadPortMessage(port);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,8 +82,7 @@ public class FitNesse {
     }
 
     public void applyUpdates() throws Exception {
-        if (updater != null)
-            updater.update();
+        updater.update();
     }
 
 

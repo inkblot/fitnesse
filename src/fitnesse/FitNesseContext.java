@@ -16,7 +16,6 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.Clock;
 
 import java.io.File;
 
@@ -38,7 +37,6 @@ public class FitNesseContext {
     private final String rootPagePath;
     public final int port;
     private final ResponderFactory responderFactory;
-    private final Clock clock;
     private final WikiPageFactory wikiPageFactory;
     private final HtmlPageFactory htmlPageFactory;
     public final Provider<Authenticator> authenticatorProvider;
@@ -60,7 +58,6 @@ public class FitNesseContext {
             @Named(FitNesseContextModule.PORT) Integer port,
             WikiPageFactory wikiPageFactory,
             ResponderFactory responderFactory,
-            Clock clock,
             HtmlPageFactory htmlPageFactory,
             Provider<Authenticator> authenticatorProvider,
             Injector injector) throws Exception {
@@ -69,7 +66,6 @@ public class FitNesseContext {
         this.port = port;
         this.wikiPageFactory = wikiPageFactory;
         this.responderFactory = responderFactory;
-        this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
         this.authenticatorProvider = authenticatorProvider;
         this.injector = injector;

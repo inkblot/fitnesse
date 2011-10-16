@@ -1,10 +1,10 @@
 package fitnesse.authentication;
 
-import fitnesse.FitNesseContext;
 import fitnesse.http.Request;
+import fitnesse.wiki.WikiPage;
 
 public class InsecureOperation implements SecureOperation {
-    public boolean shouldAuthenticate(FitNesseContext context, Request request) throws Exception {
+    public boolean shouldAuthenticate(WikiPage root, Request request) {
         return false;
     }
 }

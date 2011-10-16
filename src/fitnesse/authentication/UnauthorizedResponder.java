@@ -2,22 +2,28 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.html.HtmlPage;
-import fitnesse.html.HtmlTag;
-import fitnesse.html.HtmlUtil;
-import fitnesse.html.TagGroup;
+import fitnesse.html.*;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 
 public class UnauthorizedResponder implements Responder {
+
+    private final HtmlPageFactory htmlPageFactory;
+
+    @Inject
+    public UnauthorizedResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse(401);
         response.addHeader("WWW-Authenticate", "Basic realm=\"FitNesse\"");
 
-        HtmlPage page = context.getHtmlPageFactory().newPage();
+        HtmlPage page = htmlPageFactory.newPage();
         HtmlUtil.addTitles(page, "401 Unauthorized");
         page.main.use(makeContent(request));
         response.setContent(page.html());

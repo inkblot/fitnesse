@@ -26,7 +26,7 @@ public abstract class Authenticator {
     private Responder verifyOperationIsSecure(Responder privilegedResponder, FitNesseContext context, Request request) {
         SecureOperation so = ((SecureResponder) privilegedResponder).getSecureOperation();
         try {
-            if (so.shouldAuthenticate(context, request))
+            if (so.shouldAuthenticate(context.root, request))
                 return unauthorizedResponder(context, request);
             else
                 return privilegedResponder;
@@ -37,7 +37,7 @@ public abstract class Authenticator {
     }
 
     protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
-        return new UnauthorizedResponder();
+        return context.getInjector().getInstance(UnauthorizedResponder.class);
     }
 
     private boolean isSecureResponder(Responder privilegedResponder) {

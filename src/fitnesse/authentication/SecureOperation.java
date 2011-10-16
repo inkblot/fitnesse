@@ -2,9 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import fitnesse.FitNesseContext;
 import fitnesse.http.Request;
+import fitnesse.wiki.WikiPage;
+
+import java.io.IOException;
 
 public interface SecureOperation {
-    public abstract boolean shouldAuthenticate(FitNesseContext context, Request request) throws Exception;
+    public abstract boolean shouldAuthenticate(WikiPage root, Request request) throws IOException;
 }

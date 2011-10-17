@@ -60,7 +60,8 @@ public class FitNesseContext {
             ResponderFactory responderFactory,
             HtmlPageFactory htmlPageFactory,
             Provider<Authenticator> authenticatorProvider,
-            Injector injector) throws Exception {
+            Injector injector,
+            @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) throws Exception {
         this.rootPath = rootPath;
         this.rootPagePath = rootPagePath;
         this.port = port;
@@ -69,8 +70,8 @@ public class FitNesseContext {
         this.htmlPageFactory = htmlPageFactory;
         this.authenticatorProvider = authenticatorProvider;
         this.injector = injector;
+        this.root = root;
 
-        this.root = wikiPageFactory.makeRootPage();
         String absolutePath = new File(this.rootPath).getAbsolutePath();
         if (!absolutePath.equals(this.rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());

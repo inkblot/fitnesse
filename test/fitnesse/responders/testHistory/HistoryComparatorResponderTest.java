@@ -1,8 +1,10 @@
 package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -19,9 +21,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
+public class HistoryComparatorResponderTest extends SingleContextBaseTestCase {
     public HistoryComparatorResponder responder;
     public FitNesseContext context;
+    private String rootPagePath;
     public WikiPage root;
     public MockRequest request;
     public HistoryComparator mockedComparator;
@@ -30,17 +33,18 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
+        this.context = context;
+        this.rootPagePath = rootPagePath;
     }
 
     @Before
     public void setup() throws Exception {
-        context = makeContext();
-        root = context.root;
-        FIRST_FILE_PATH = getRootPagePath() + "/files/testResults/TestFolder/firstFakeFile"
+        FIRST_FILE_PATH = rootPagePath + "/files/testResults/TestFolder/firstFakeFile"
                 .replace('/', File.separatorChar);
-        SECOND_FILE_PATH = getRootPagePath() + "/files/testResults/TestFolder/secondFakeFile"
+        SECOND_FILE_PATH = rootPagePath + "/files/testResults/TestFolder/secondFakeFile"
                 .replace('/', File.separatorChar);
         request = new MockRequest();
         mockedComparator = mock(HistoryComparator.class);
@@ -62,9 +66,9 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
         request.addInput("TestResult_firstFakeFile", "");
         request.addInput("TestResult_secondFakeFile", "");
         request.setResource("TestFolder");
-        FileUtil.createFile(getRootPagePath() + "/files/testResults/TestFolder/firstFakeFile",
+        FileUtil.createFile(rootPagePath + "/files/testResults/TestFolder/firstFakeFile",
                 "firstFile");
-        FileUtil.createFile(getRootPagePath() + "/files/testResults/TestFolder/secondFakeFile",
+        FileUtil.createFile(rootPagePath + "/files/testResults/TestFolder/secondFakeFile",
                 "secondFile");
     }
 

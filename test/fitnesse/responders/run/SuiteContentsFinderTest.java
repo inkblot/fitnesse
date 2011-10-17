@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +16,7 @@ import static junit.framework.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SuiteContentsFinderTest extends FitnesseBaseTestCase {
+public class SuiteContentsFinderTest extends SingleContextBaseTestCase {
 
     private WikiPage root;
     private WikiPage suite;
@@ -22,9 +25,13 @@ public class SuiteContentsFinderTest extends FitnesseBaseTestCase {
     private WikiPage testPage2;
     private WikiPage testChildPage;
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         PageData data = root.getData();
         root.commit(data);

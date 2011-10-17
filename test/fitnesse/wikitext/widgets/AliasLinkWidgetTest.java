@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +17,13 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
     private WikiPage root;
     private PageCrawler crawler;
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
     }
 

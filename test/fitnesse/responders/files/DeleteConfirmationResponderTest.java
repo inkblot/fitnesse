@@ -3,9 +3,8 @@
 package fitnesse.responders.files;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -14,27 +13,29 @@ import org.junit.Test;
 
 import static util.RegexAssertions.assertSubString;
 
-public class DeleteConfirmationResponderTest extends FitnesseBaseTestCase {
+public class DeleteConfirmationResponderTest extends SingleContextBaseTestCase {
     MockRequest request;
     private FitNesseContext context;
+    private String rootPagePath;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.rootPagePath = rootPagePath;
     }
 
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = makeContext();
     }
 
     @Test
     public void testContentOfPage() throws Exception {
         request.setResource("files");
         request.addInput("filename", "MyFile.txt");
-        Responder responder = new DeleteConfirmationResponder(htmlPageFactory, getRootPagePath());
+        Responder responder = new DeleteConfirmationResponder(htmlPageFactory, rootPagePath);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         String content = response.getContent();
 

@@ -3,8 +3,10 @@
 package fitnesse.responders.search;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -18,21 +20,23 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class WhereUsedResponderTest extends FitnesseBaseTestCase {
+public class WhereUsedResponderTest extends SingleContextBaseTestCase {
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
+    private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        PageCrawler crawler = context.root.getPageCrawler();
-        crawler.addPage(context.root, PathParser.parse("PageOne"), "PageOne");
-        WikiPage pageTwo = crawler.addPage(context.root, PathParser.parse("PageTwo"), "PageOne");
+        PageCrawler crawler = root.getPageCrawler();
+        crawler.addPage(root, PathParser.parse("PageOne"), "PageOne");
+        WikiPage pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageOne");
         crawler.addPage(pageTwo, PathParser.parse("ChildPage"), ".PageOne");
     }
 

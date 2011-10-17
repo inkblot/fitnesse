@@ -1,6 +1,6 @@
 package fitnesse.wiki;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,8 +11,7 @@ import static fitnesse.wiki.PageType.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-
-public class PageTypeTest extends FitnesseBaseTestCase {
+public class PageTypeTest extends SingleContextBaseTestCase {
 
     @Test
     public void fromString() {

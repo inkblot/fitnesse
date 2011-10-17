@@ -2,6 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WikiWidget;
@@ -20,6 +23,11 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
 
     protected String getRegexp() {
         return VariableDefinitionWidget.REGEXP;
+    }
+
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
     }
 
     @Before

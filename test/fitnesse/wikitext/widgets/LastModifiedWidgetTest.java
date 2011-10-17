@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.InMemoryPage;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -22,10 +24,15 @@ import static util.RegexAssertions.assertSubString;
 public class LastModifiedWidgetTest extends WidgetTestCase {
     private WikiPage page;
     private LastModifiedWidget widget;
+    private WikiPage root;
+
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "some text");
         widget = new LastModifiedWidget(new WidgetRoot(page), "!lastmodified");
     }

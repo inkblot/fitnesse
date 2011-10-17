@@ -2,10 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.http.MockRequest;
 import fitnesse.responders.editing.*;
 import fitnesse.responders.files.*;
@@ -36,18 +35,23 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ResponderFactoryTest extends FitnesseBaseTestCase {
-    private ResponderFactory factory;
+public class ResponderFactoryTest extends SingleContextBaseTestCase {
     private MockRequest request;
     private PageCrawler crawler;
-    private FitNesseContext context;
+    private ResponderFactory responderFactory;
+    private WikiPage root;
+    private String rootPagePath;
+
+    @Inject
+    public void inject(ResponderFactory responderFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+        this.responderFactory = responderFactory;
+        this.root = root;
+        this.rootPagePath = rootPagePath;
+    }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        factory = context.getResponderFactory();
         request = new MockRequest();
-        WikiPage root = InMemoryPage.makeRoot("root", injector);
         crawler = root.getPageCrawler();
     }
 
@@ -61,7 +65,7 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     private void checkResponderKey(String queryString, String key) {
         MockRequest request = new MockRequest();
         request.setQueryString(queryString);
-        assertEquals(key, factory.getResponderKey(request));
+        assertEquals(key, responderFactory.getResponderKey(request));
     }
 
     @Test
@@ -121,9 +125,9 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
 
     @Test
     public void testFileResponder() throws Exception {
-        assertTrue(new File(getRootPagePath()).mkdir());
-        assertTrue(new File(getRootPagePath() + "/files").mkdir());
-        FileUtil.createFile(getRootPagePath() + "/files/someFile", "this is a test");
+        assertTrue(new File(rootPagePath).mkdir());
+        assertTrue(new File(rootPagePath + "/files").mkdir());
+        FileUtil.createFile(rootPagePath + "/files/someFile", "this is a test");
         request.setResource("files/someFile");
         assertResponderType(FileSystemResponder.class);
     }
@@ -292,12 +296,12 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
 
     @Test
     public void testAddingResponders() throws Exception {
-        factory.addResponder("custom", WikiPageResponder.class);
+        responderFactory.addResponder("custom", WikiPageResponder.class);
         assertResponderTypeMatchesInput("custom", WikiPageResponder.class);
     }
 
     private void assertResponderType(Class<?> expectedClass) {
-        Responder responder = factory.makeResponder(request);
+        Responder responder = responderFactory.makeResponder(request);
         assertEquals(expectedClass, responder.getClass());
     }
 

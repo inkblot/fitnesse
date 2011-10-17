@@ -3,7 +3,9 @@
 //EvaluatorWidget: Test module
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.InMemoryPage;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -19,10 +21,15 @@ public class EvaluatorWidgetTest extends WidgetTestCase {
     private PageCrawler crawler;
     private WikiPage page;
     private ParentWidget widgetRoot;
+    private WikiPage root;
+
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("root", injector);
         crawler = root.getPageCrawler();
 
         String content = "!define ONE {1}\n"

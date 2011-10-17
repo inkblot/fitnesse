@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -18,12 +21,16 @@ public class TOCWidgetTest extends WidgetTestCase {
     private PageCrawler crawler;
     private FitNesseContext context;
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+        this.root = root;
+        this.context = context;
+    }
+
     //===================================================[ SetUp / TearDown
     //
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
         parent = crawler.addPage(root, PathParser.parse("ParenT"), "parent");
         crawler.addPage(root, PathParser.parse("ParentTwo"), "parent two");

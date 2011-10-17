@@ -1,8 +1,8 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;
@@ -21,16 +21,23 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class SuiteHistoryFormatterTest extends FitnesseBaseTestCase {
+public class SuiteHistoryFormatterTest extends SingleContextBaseTestCase {
     private SuiteHistoryFormatter formatter;
     private WikiPage testPage;
     private StringWriter writer;
     private long testTime;
+    private FitNesseContext context;
+    private WikiPage root;
+
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.context = context;
+        this.root = root;
+    }
 
     @Before
     public void setup() throws Exception {
-        FitNesseContext context = makeContext();
-        WikiPage suitePage = context.root.addChildPage("SuitePage");
+        WikiPage suitePage = root.addChildPage("SuitePage");
         testPage = suitePage.addChildPage("TestPage");
         writer = new StringWriter();
         formatter = new SuiteHistoryFormatter(context, suitePage, writer);

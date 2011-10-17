@@ -1,8 +1,12 @@
 package fitnesse;
 
+import com.google.inject.Key;
 import com.google.inject.Module;
+import com.google.inject.name.Names;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPageFactory;
+import org.junit.After;
+import util.FileUtil;
 
 import java.io.File;
 import java.util.Properties;
@@ -23,6 +27,11 @@ public abstract class SingleContextBaseTestCase extends BaseInjectedTestCase {
                 new FitNesseModule(getProperties(), getUserPass()),
                 new FitNesseContextModule(getRootPath(), getRootPageName(), getPort(), true)
         };
+    }
+
+    @After
+    public void afterContextualText() {
+        FileUtil.deleteFileSystemDirectory(injector.getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PATH))));
     }
 
     protected String getUserPass() {

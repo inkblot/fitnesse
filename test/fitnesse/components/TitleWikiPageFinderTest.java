@@ -1,6 +1,9 @@
 package fitnesse.components;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -13,7 +16,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-public class TitleWikiPageFinderTest extends FitnesseBaseTestCase implements SearchObserver {
+public class TitleWikiPageFinderTest extends SingleContextBaseTestCase implements SearchObserver {
     WikiPage root;
 
     private List<WikiPage> hits = new ArrayList<WikiPage>();
@@ -22,9 +25,13 @@ public class TitleWikiPageFinderTest extends FitnesseBaseTestCase implements Sea
         hits.add(page);
     }
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
         crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"), "PageChild is a child of PageOne");

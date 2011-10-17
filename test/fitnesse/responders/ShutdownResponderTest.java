@@ -5,7 +5,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -19,21 +19,21 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ShutdownResponderTest extends FitnesseBaseTestCase {
-    private FitNesseContext context;
+public class ShutdownResponderTest extends SingleContextBaseTestCase {
     private FitNesse fitnesse;
+    private FitNesseContext context;
     private boolean doneShuttingDown;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesse fitnesse, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.fitnesse = fitnesse;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        fitnesse = context.getInjector().getInstance(FitNesse.class);
         fitnesse.start();
     }
 
@@ -44,7 +44,7 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testFitNesseGetsShutdown() throws Exception {
-        ShutdownResponder responder = new ShutdownResponder(htmlPageFactory, context.getInjector().getInstance(FitNesse.class));
+        ShutdownResponder responder = new ShutdownResponder(htmlPageFactory, fitnesse);
         responder.makeResponse(context, new MockRequest());
         Thread.sleep(200);
         assertFalse(fitnesse.isRunning());
@@ -73,6 +73,6 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testIsSecure() throws Exception {
-        assertTrue(new ShutdownResponder(htmlPageFactory, context.getInjector().getInstance(FitNesse.class)).getSecureOperation() instanceof AlwaysSecureOperation);
+        assertTrue(new ShutdownResponder(htmlPageFactory, fitnesse).getSecureOperation() instanceof AlwaysSecureOperation);
     }
 }

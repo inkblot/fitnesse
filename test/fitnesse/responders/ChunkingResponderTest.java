@@ -4,7 +4,7 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
@@ -17,7 +17,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class ChunkingResponderTest extends FitnesseBaseTestCase {
+public class ChunkingResponderTest extends SingleContextBaseTestCase {
 
     private Exception exception;
     private ChunkedResponse response;
@@ -26,13 +26,13 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
         responder = new ChunkingResponder(htmlPageFactory) {
             protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
                 throw exception;

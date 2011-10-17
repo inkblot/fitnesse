@@ -3,14 +3,14 @@
 
 package fitnesse.wiki;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.testutil.SimpleCachingPage;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class CachingPageTest extends FitnesseBaseTestCase {
+public class CachingPageTest extends SingleContextBaseTestCase {
     private CachingPage root;
     private PageCrawler crawler;
     private WikiPagePath pageOnePath;

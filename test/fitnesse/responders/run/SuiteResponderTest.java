@@ -6,8 +6,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -35,7 +37,7 @@ import static junit.framework.Assert.fail;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.*;
 
-public class SuiteResponderTest extends FitnesseBaseTestCase {
+public class SuiteResponderTest extends SingleContextBaseTestCase {
     private static final Date TEST_TIME = DateTimeUtil.getDateFromString("12/5/2008 01:19:00");
     private MockRequest request;
     private SuiteResponder responder;
@@ -54,12 +56,6 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     private Provider<Clock> clockProvider;
     private HtmlPageFactory htmlPageFactory;
 
-    @Inject
-    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory) {
-        this.clockProvider = clockProvider;
-        this.htmlPageFactory = htmlPageFactory;
-    }
-
     @Override
     protected Module getOverrideModule() {
         return new AbstractModule() {
@@ -70,13 +66,24 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         };
     }
 
+    @Override
+    protected int getPort() {
+        return 8084;
+    }
+
+    @Inject
+    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.clockProvider = clockProvider;
+        this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
         assertEquals(TEST_TIME, clockProvider.get().currentClockDate());
 
         String suitePageName = "SuitePage";
-        context = makeContext(8084);
-        root = context.root;
 
         crawler = root.getPageCrawler();
         PageData data = root.getData();

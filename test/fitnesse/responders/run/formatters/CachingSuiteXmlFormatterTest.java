@@ -1,8 +1,8 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.run.TestExecutionReport;
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
-public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
+public class CachingSuiteXmlFormatterTest extends SingleContextBaseTestCase {
     private CachingSuiteXmlFormatter formatter;
     private FitNesseContext context;
     private WikiPage root;
@@ -32,10 +32,14 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     private WikiPage testPage;
     private long testTime;
 
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.context = context;
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        root = context.root;
         testSummary = new TestSummary(1, 2, 3, 4);
         testPage = root.addChildPage("TestPage");
         formatter = new CachingSuiteXmlFormatter(context, root, null);

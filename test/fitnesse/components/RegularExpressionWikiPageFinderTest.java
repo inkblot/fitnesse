@@ -1,6 +1,9 @@
 package fitnesse.components;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.hamcrest.Description;
@@ -15,7 +18,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase implements SearchObserver {
+public class RegularExpressionWikiPageFinderTest extends SingleContextBaseTestCase implements SearchObserver {
 
     private WikiPage root;
     private WikiPage pageOne;
@@ -29,9 +32,13 @@ public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase im
         foundPages.add(page);
     }
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
         childPage = crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"),

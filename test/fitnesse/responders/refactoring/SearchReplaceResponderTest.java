@@ -1,8 +1,10 @@
 package fitnesse.responders.refactoring;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -15,7 +17,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
 
-public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
+public class SearchReplaceResponderTest extends SingleContextBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private SearchReplaceResponder responder;
@@ -26,14 +28,14 @@ public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
         pagePath = PathParser.parse("SomePage");
         somePage = crawler.addPage(root, pagePath, "has something in it");

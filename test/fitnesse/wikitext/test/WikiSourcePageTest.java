@@ -1,6 +1,6 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.SourcePage;
 import fitnesse.wikitext.parser.WikiSourcePage;
@@ -13,7 +13,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class WikiSourcePageTest extends FitnesseBaseTestCase {
+public class WikiSourcePageTest extends SingleContextBaseTestCase {
 
     @Test
     public void getsChildren() throws Exception {

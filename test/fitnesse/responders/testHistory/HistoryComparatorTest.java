@@ -1,8 +1,8 @@
 package fitnesse.responders.testHistory;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.VelocityFactory;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.wiki.*;
 import org.apache.velocity.app.VelocityEngine;
@@ -18,12 +18,18 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
-public class HistoryComparatorTest extends FitnesseBaseTestCase {
+public class HistoryComparatorTest extends SingleContextBaseTestCase {
     private HistoryComparator comparator;
     public FitNesseContext context;
     public WikiPage root;
     public String firstContent;
     public String secondContent;
+
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.context = context;
+        this.root = root;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -37,8 +43,6 @@ public class HistoryComparatorTest extends FitnesseBaseTestCase {
                     return null;
             }
         };
-        context = makeContext();
-        root = context.root;
         firstContent = getContentWith("pass");
         secondContent = getContentWith("fail");
         comparator.firstTableResults = new ArrayList<String>();

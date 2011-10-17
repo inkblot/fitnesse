@@ -3,9 +3,8 @@
 package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -21,25 +20,27 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static util.RegexAssertions.assertSubString;
 
-public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
+public class SymbolicLinkResponderTest extends SingleContextBaseTestCase {
     private WikiPage pageOne;
     private WikiPage childTwo;
     private MockRequest request;
     private Responder responder;
     private FitNesseContext context;
+    private WikiPage root;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();                      //#  root
-        pageOne = context.root.addChildPage("PageOne");             //#    |--PageOne
+        pageOne = root.addChildPage("PageOne");             //#    |--PageOne
         pageOne.addChildPage("ChildOne");                           //#    |    `--ChildOne
-        WikiPage pageTwo = context.root.addChildPage("PageTwo");    //#    `--PageTwo
+        WikiPage pageTwo = root.addChildPage("PageTwo");    //#    `--PageTwo
         childTwo = pageTwo.addChildPage("ChildTwo");                //#         |--ChildTwo
         pageTwo.addChildPage("ChildThree");                         //#         `--ChildThree
 

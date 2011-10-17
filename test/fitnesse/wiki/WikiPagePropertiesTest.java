@@ -3,8 +3,7 @@
 package fitnesse.wiki;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
@@ -16,7 +15,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class WikiPagePropertiesTest extends FitnesseBaseTestCase {
+public class WikiPagePropertiesTest extends SingleContextBaseTestCase {
     private WikiPageProperties properties;
 
     static String endl = System.getProperty("line.separator"),
@@ -42,11 +41,11 @@ public class WikiPagePropertiesTest extends FitnesseBaseTestCase {
                     "</properties>" + endl;
     static String[] sampleXmlFragments = sampleXml.split("\t*" + endl);
 
-    private Provider<Clock> clockProvider;
+    private Clock clock;
 
     @Inject
-    public void inject(Provider<Clock> clockProvider) {
-        this.clockProvider = clockProvider;
+    public void inject(Clock clock) {
+        this.clock = clock;
     }
 
     @Before
@@ -119,7 +118,7 @@ public class WikiPagePropertiesTest extends FitnesseBaseTestCase {
     public void testLastModificationTime() throws Exception {
         SimpleDateFormat format = WikiPageProperty.getTimeFormat();
         WikiPageProperties props = new WikiPageProperties();
-        assertEquals(format.format(clockProvider.get().currentClockDate()), format.format(props.getLastModificationTime()));
+        assertEquals(format.format(clock.currentClockDate()), format.format(props.getLastModificationTime()));
         Date date = format.parse("20040101000001");
         props.setLastModificationTime(date);
         assertEquals("20040101000001", props.get(PageData.PropertyLAST_MODIFIED));

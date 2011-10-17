@@ -1,6 +1,6 @@
 package fitnesse.wikitext.widgets;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wikitext.WikiWidget;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-public class HashWidgetTest extends FitnesseBaseTestCase {
+public class HashWidgetTest extends SingleContextBaseTestCase {
     private static final String HTML_FOR_ABCD_HASH = "<table class=\"hash_table\">" +
             "\\s*<tr class=\"hash_row\">" +
             "\\s*<td class=\"hash_key\">" +

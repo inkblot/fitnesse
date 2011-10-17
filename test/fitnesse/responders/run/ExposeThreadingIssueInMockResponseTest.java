@@ -3,8 +3,10 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -21,7 +23,7 @@ import org.junit.Test;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase {
+public class ExposeThreadingIssueInMockResponseTest extends SingleContextBaseTestCase {
     private WikiPage root;
     private MockRequest request;
     private TestResponder responder;
@@ -30,15 +32,20 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     private FitSocketReceiver receiver;
     private HtmlPageFactory htmlPageFactory;
 
+    @Override
+    protected int getPort() {
+        return 9123;
+    }
+
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext(9123);
-        root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
         responder = new TestResponder(htmlPageFactory);

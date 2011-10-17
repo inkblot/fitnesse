@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static util.RegexAssertions.assertSubString;
 
-public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
+public class MultipleTestsRunnerTest extends SingleContextBaseTestCase {
     private WikiPage root;
     private WikiPage suite;
     private WikiPage testPage;
@@ -31,11 +34,15 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
     private List<WikiPage> testPages;
     private FitNesseContext context;
 
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.context = context;
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
         String suitePageName = "SuitePage";
-        context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
         PageData data = root.getData();
         data.setContent(classpathWidgets());

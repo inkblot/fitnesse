@@ -1,13 +1,13 @@
 package fitnesse.junit;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class JUnitHelperTest extends FitnesseBaseTestCase {
+public class JUnitHelperTest extends SingleContextBaseTestCase {
 
     private JUnitHelper helper;
 

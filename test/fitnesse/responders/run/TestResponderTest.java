@@ -5,9 +5,8 @@ package fitnesse.responders.run;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
 import fitnesse.html.HtmlPageFactory;
@@ -39,7 +38,7 @@ import static org.junit.Assert.*;
 import static util.RegexAssertions.*;
 import static util.XmlUtil.getElementByTagName;
 
-public class TestResponderTest extends FitnesseBaseTestCase {
+public class TestResponderTest extends SingleContextBaseTestCase {
     private static final String TEST_TIME = "12/5/2008 01:19:00";
     private WikiPage root;
     private MockRequest request;
@@ -66,15 +65,20 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         };
     }
 
+    @Override
+    protected int getPort() {
+        return 5067;
+    }
+
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext(5067);
-        root = context.root;
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();

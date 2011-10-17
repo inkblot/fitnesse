@@ -2,8 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.TestSummary;
@@ -15,14 +16,19 @@ import util.TimeMeasurement;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SuiteHtmlFormatterTest extends FitnesseBaseTestCase {
+public class SuiteHtmlFormatterTest extends SingleContextBaseTestCase {
     private HtmlPage htmlPage;
     private SuiteHtmlFormatter formatter;
     private StringBuffer pageBuffer = new StringBuffer();
+    private FitNesseContext context;
+
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
 
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = makeContext();
         htmlPage = new HtmlPageFactory().newPage();
         formatter = new SuiteHtmlFormatter(context) {
             @Override

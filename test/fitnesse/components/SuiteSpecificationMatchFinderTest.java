@@ -1,7 +1,9 @@
 package fitnesse.components;
 
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.wiki.InMemoryPage;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -15,15 +17,19 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SuiteSpecificationMatchFinderTest extends FitnesseBaseTestCase implements SearchObserver {
+public class SuiteSpecificationMatchFinderTest extends SingleContextBaseTestCase implements SearchObserver {
 
     WikiPage root;
     private List<WikiPage> hits = new ArrayList<WikiPage>();
     SuiteSpecificationMatchFinder finder;
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child\nThe meaning of life, the universe, and evertything is 42");
         crawler.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne\nDo you believe in love after life?");

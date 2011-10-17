@@ -1,10 +1,7 @@
 package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseVersion;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.VelocityFactory;
+import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -35,7 +32,7 @@ import static org.mockito.Mockito.when;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class PageHistoryResponderTest extends FitnesseBaseTestCase {
+public class PageHistoryResponderTest extends SingleContextBaseTestCase {
     private File resultsDirectory;
     private TestHistory history;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
@@ -47,8 +44,9 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
     }
 
     @Before
@@ -59,7 +57,6 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
         history = new TestHistory();
         responder = new PageHistoryResponder(htmlPageFactory);
         responder.setResultsDirectory(resultsDirectory);
-        context = makeContext();
     }
 
     @After

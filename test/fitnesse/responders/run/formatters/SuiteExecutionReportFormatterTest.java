@@ -1,7 +1,7 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SuiteExecutionReportFormatterTest extends FitnesseBaseTestCase {
+public class SuiteExecutionReportFormatterTest extends SingleContextBaseTestCase {
 
     @Test
     public void testCompleteShouldSetRunTimeForCurrentReference() throws Exception {

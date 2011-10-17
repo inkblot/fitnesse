@@ -3,8 +3,10 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -21,7 +23,7 @@ import static junit.framework.Assert.assertEquals;
 import static util.RegexAssertions.assertDoesNotHaveRegexp;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class NameWikiPageResponderTest extends FitnesseBaseTestCase {
+public class NameWikiPageResponderTest extends SingleContextBaseTestCase {
     private WikiPage root;
     private NameWikiPageResponder responder;
     private MockRequest request;
@@ -36,14 +38,14 @@ public class NameWikiPageResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
         responder = new NameWikiPageResponder(htmlPageFactory);
         request = new MockRequest();

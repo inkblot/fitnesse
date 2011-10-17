@@ -1,9 +1,8 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -14,7 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
-public class AddChildPageResponderTest extends FitnesseBaseTestCase {
+public class AddChildPageResponderTest extends SingleContextBaseTestCase {
     private WikiPage root;
     private PageData childPageData;
     private PageCrawler crawler;
@@ -26,14 +25,14 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory,@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("TestPage"));
         childName = "ChildPage";

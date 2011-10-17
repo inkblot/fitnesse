@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import org.junit.Before;
@@ -15,14 +18,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class DeleteFileResponderTest extends FitnesseBaseTestCase {
+public class DeleteFileResponderTest extends SingleContextBaseTestCase {
     public MockRequest request;
     private FitNesseContext context;
+    private String rootPagePath;
+
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+        this.context = context;
+        this.rootPagePath = rootPagePath;
+    }
 
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = makeContext();
         assertTrue(new File(getRootPath(), "RooT").mkdir());
     }
 
@@ -30,7 +39,7 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
     public void testDelete() throws Exception {
         File file = new File(new File(getRootPath(), "RooT"), "testfile");
         assertTrue(file.createNewFile());
-        DeleteFileResponder responder = new DeleteFileResponder(getRootPagePath());
+        DeleteFileResponder responder = new DeleteFileResponder(rootPagePath);
         request.addInput("filename", "testfile");
         request.setResource("");
         Response response = responder.makeResponse(context, request);
@@ -45,7 +54,7 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
         assertTrue(dir.mkdir());
         File file = new File(dir, "testChildFile");
         assertTrue(file.createNewFile());
-        DeleteFileResponder responder = new DeleteFileResponder(getRootPagePath());
+        DeleteFileResponder responder = new DeleteFileResponder(rootPagePath);
         request.addInput("filename", "dir");
         request.setResource("");
         responder.makeResponse(context, request);

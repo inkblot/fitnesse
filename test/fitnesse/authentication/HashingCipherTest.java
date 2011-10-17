@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Test;
 import util.TimeMeasurement;
 
@@ -10,7 +10,7 @@ import java.util.Random;
 
 import static org.junit.Assert.*;
 
-public class HashingCipherTest extends FitnesseBaseTestCase {
+public class HashingCipherTest extends SingleContextBaseTestCase {
     private String[] inputs = new String[]{"123", "abc", "12345678901234567890", "this is a test", "!@#$%^&*()"};
     private HashingCipher crypter = new HashingCipher();
 

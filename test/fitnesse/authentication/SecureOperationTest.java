@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -12,7 +14,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SecureOperationTest extends FitnesseBaseTestCase {
+public class SecureOperationTest extends SingleContextBaseTestCase {
     private SecureReadOperation sro;
     private WikiPage root;
     private MockRequest request;
@@ -20,10 +22,13 @@ public class SecureOperationTest extends FitnesseBaseTestCase {
     private WikiPagePath parentPagePath;
     private WikiPagePath childPagePath;
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = makeContext();
-        root = context.root;
         sro = new SecureReadOperation();
         request = new MockRequest();
         crawler = root.getPageCrawler();

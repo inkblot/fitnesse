@@ -1,13 +1,13 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class ContentsTest extends FitnesseBaseTestCase {
+public class ContentsTest extends SingleContextBaseTestCase {
     @Test
     public void scansContents() {
         ParserTestHelper.assertScansTokenType("!contents", "Contents", true);

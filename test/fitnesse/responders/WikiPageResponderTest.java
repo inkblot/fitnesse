@@ -4,10 +4,7 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import fitnesse.*;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -25,7 +22,7 @@ import java.util.Properties;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.*;
 
-public class WikiPageResponderTest extends FitnesseBaseTestCase {
+public class WikiPageResponderTest extends SingleContextBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private FitNesseContext context;
@@ -34,16 +31,16 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private Properties properties;
 
     @Inject
-    public void inject(@Named(FitNesseContextModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory) {
+    public void inject(@Named(FitNesseContextModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.properties = properties;
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
     }
 

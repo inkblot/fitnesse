@@ -1,7 +1,8 @@
 package fitnesse.responders.run.formatters;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.TestSummary;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestFormatterTest extends FitnesseBaseTestCase {
+public class TestFormatterTest extends SingleContextBaseTestCase {
 
     private WikiPageDummy page;
     private TestSummary right;
@@ -28,9 +29,13 @@ public class TestFormatterTest extends FitnesseBaseTestCase {
     private WikiPageDummy testPage;
     private FitNesseContext context;
 
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
+
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
         response = mock(ChunkedResponse.class);
         testPage = new WikiPageDummy("testPage", "testContent", injector);
         writerFactory = mock(XmlFormatter.WriterFactory.class);

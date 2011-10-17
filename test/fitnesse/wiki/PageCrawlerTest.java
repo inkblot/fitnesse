@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.components.TraversalListener;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +16,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class PageCrawlerTest extends FitnesseBaseTestCase implements TraversalListener {
+public class PageCrawlerTest extends SingleContextBaseTestCase implements TraversalListener {
     private WikiPage root;
     private WikiPage page1;
     private WikiPage page2;
@@ -26,9 +29,13 @@ public class PageCrawlerTest extends FitnesseBaseTestCase implements TraversalLi
     private WikiPagePath page2Path;
     private WikiPagePath grandChild1FullPath;
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = new PageCrawlerImpl();
 
         page1Path = PathParser.parse("PageOne");

@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.wiki.InMemoryPage;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
@@ -15,26 +17,30 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class RecentChangesTest extends FitnesseBaseTestCase {
-    private WikiPage rootPage;
+public class RecentChangesTest extends SingleContextBaseTestCase {
     private WikiPage newPage;
     private WikiPage page1;
     private WikiPage page2;
+    private WikiPage root;
+
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
 
     @Before
     public void setUp() throws Exception {
-        rootPage = InMemoryPage.makeRoot("RooT", injector);
-        newPage = rootPage.addChildPage("SomeNewPage");
-        page1 = rootPage.addChildPage("PageOne");
-        page2 = rootPage.addChildPage("PageTwo");
+        newPage = root.addChildPage("SomeNewPage");
+        page1 = root.addChildPage("PageOne");
+        page2 = root.addChildPage("PageTwo");
     }
 
     @Test
     public void testFirstRecentChange() throws Exception {
-        assertEquals(false, rootPage.hasChildPage("RecentChanges"));
+        assertEquals(false, root.hasChildPage("RecentChanges"));
         RecentChanges.updateRecentChanges(newPage.getData());
-        assertEquals(true, rootPage.hasChildPage("RecentChanges"));
-        WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
+        assertEquals(true, root.hasChildPage("RecentChanges"));
+        WikiPage recentChanges = root.getChildPage("RecentChanges");
         List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
         assertEquals(1, lines.size());
         assertHasRegexp("SomeNewPage", lines.get(0));
@@ -44,7 +50,7 @@ public class RecentChangesTest extends FitnesseBaseTestCase {
     public void testTwoChanges() throws Exception {
         RecentChanges.updateRecentChanges(page1.getData());
         RecentChanges.updateRecentChanges(page2.getData());
-        WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
+        WikiPage recentChanges = root.getChildPage("RecentChanges");
         List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
         assertEquals(2, lines.size());
         assertHasRegexp("PageTwo", lines.get(0));
@@ -55,7 +61,7 @@ public class RecentChangesTest extends FitnesseBaseTestCase {
     public void testNoDuplicates() throws Exception {
         RecentChanges.updateRecentChanges(page1.getData());
         RecentChanges.updateRecentChanges(page1.getData());
-        WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
+        WikiPage recentChanges = root.getChildPage("RecentChanges");
         List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
         assertEquals(1, lines.size());
         assertHasRegexp("PageOne", lines.get(0));
@@ -67,11 +73,11 @@ public class RecentChangesTest extends FitnesseBaseTestCase {
             StringBuilder b = new StringBuilder("LotsOfAs");
             for (int j = 0; j < i; j++)
                 b.append("a");
-            WikiPage page = rootPage.addChildPage(b.toString());
+            WikiPage page = root.addChildPage(b.toString());
             RecentChanges.updateRecentChanges(page.getData());
         }
 
-        WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
+        WikiPage recentChanges = root.getChildPage("RecentChanges");
         List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
         assertEquals(100, lines.size());
     }
@@ -79,7 +85,7 @@ public class RecentChangesTest extends FitnesseBaseTestCase {
     @Test
     public void testUsernameColumnWithoutUser() throws Exception {
         RecentChanges.updateRecentChanges(page1.getData());
-        WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
+        WikiPage recentChanges = root.getChildPage("RecentChanges");
         List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
         String line = lines.get(0);
         assertSubString("|PageOne||", line);
@@ -92,7 +98,7 @@ public class RecentChangesTest extends FitnesseBaseTestCase {
         page1.commit(data);
 
         RecentChanges.updateRecentChanges(page1.getData());
-        WikiPage recentChanges = rootPage.getChildPage("RecentChanges");
+        WikiPage recentChanges = root.getChildPage("RecentChanges");
         List<String> lines = RecentChanges.getRecentChangesLines(recentChanges.getData());
         String line = lines.get(0);
         assertSubString("|PageOne|Aladdin|", line);

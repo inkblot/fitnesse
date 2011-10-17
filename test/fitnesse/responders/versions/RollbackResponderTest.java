@@ -3,9 +3,8 @@
 package fitnesse.responders.versions;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -15,20 +14,26 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class RollbackResponderTest extends FitnesseBaseTestCase {
+public class RollbackResponderTest extends SingleContextBaseTestCase {
     private WikiPage page;
-    private Response response;
     private HtmlPageFactory htmlPageFactory;
+    private FitNesseContext context;
+    private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = makeContext();
-        page = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "original content");
+        page = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "original content");
+    }
+
+    @Test
+    public void testStuff() throws Exception {
         PageData data = page.getData();
         data.setContent("new stuff");
         data.setProperties(new WikiPageProperties());
@@ -39,15 +44,12 @@ public class RollbackResponderTest extends FitnesseBaseTestCase {
         request.addInput("version", commitRecord.getName());
 
         Responder responder = new RollbackResponder(htmlPageFactory);
-        response = responder.makeResponse(context, request);
-    }
+        Response response = responder.makeResponse(context, request);
 
-    @Test
-    public void testStuff() throws Exception {
         assertEquals(303, response.getStatus());
         assertEquals("PageOne", response.getHeader("Location"));
 
-        PageData data = page.getData();
+        data = page.getData();
         assertEquals("original content", data.getContent());
         assertEquals(true, data.hasAttribute("Edit"));
     }

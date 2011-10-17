@@ -3,8 +3,9 @@ package fitnesse.wiki;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileSystem;
@@ -14,7 +15,7 @@ import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 
-public class PageRepositoryTest extends FitnesseBaseTestCase {
+public class PageRepositoryTest extends SingleContextBaseTestCase {
     private PageRepository pageRepository;
     private FileSystemPage rootPage;
 
@@ -36,17 +37,20 @@ public class PageRepositoryTest extends FitnesseBaseTestCase {
     }
 
     @Override
-    protected Properties getFitNesseProperties() {
-        Properties properties = super.getFitNesseProperties();
+    protected Properties getProperties() {
+        Properties properties = super.getProperties();
         properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
         return properties;
     }
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage rootPage) {
+        this.rootPage = (FileSystemPage) rootPage;
+    }
+
     @Before
     public void SetUp() throws Exception {
-        FitNesseContext context = makeContext(FileSystemPage.class);
         pageRepository = new PageRepository(fileSystem);
-        rootPage = (FileSystemPage) context.root;
     }
 
     @Test

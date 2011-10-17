@@ -2,7 +2,7 @@ package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -21,7 +21,7 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 
-public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
+public class PurgeHistoryResponderTest extends SingleContextBaseTestCase {
     private File resultsDirectory;
     private TestHistory history;
     private FitNesseContext context;
@@ -31,9 +31,10 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
     }
 
     @Before
@@ -44,7 +45,6 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
         history = new TestHistory();
         responder = new PurgeHistoryResponder(htmlPageFactory, clock);
         responder.setResultsDirectory(resultsDirectory);
-        context = makeContext();
         request = new MockRequest();
         request.setResource("TestPage");
     }

@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SimpleCachingPage;
 import org.junit.After;
@@ -14,17 +17,22 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class VirtualCouplingExtensionTest extends FitnesseBaseTestCase {
+public class VirtualCouplingExtensionTest extends SingleContextBaseTestCase {
     private FitNesseUtil fitNesseUtil;
     public WikiPage root;
     public BaseWikiPage page1;
     public WikiPage page2;
     private PageCrawler crawler;
+    private FitNesseContext context;
+
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.context = context;
+        this.root = root;
+    }
 
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
         fitNesseUtil = new FitNesseUtil();
         fitNesseUtil.startFitnesse(context);

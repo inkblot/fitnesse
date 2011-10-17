@@ -1,9 +1,9 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Test;
 
-public class EMailTest extends FitnesseBaseTestCase {
+public class EMailTest extends SingleContextBaseTestCase {
     @Test
     public void parsesEMail() throws Exception {
         ParserTestHelper.assertParses("bob@bl.org", "SymbolList[EMail]", injector);

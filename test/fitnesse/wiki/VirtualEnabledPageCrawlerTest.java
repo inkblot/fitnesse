@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class VirtualEnabledPageCrawlerTest extends FitnesseBaseTestCase {
+public class VirtualEnabledPageCrawlerTest extends SingleContextBaseTestCase {
     private WikiPage root;
     private WikiPage target;
     private WikiPage vlink;
@@ -18,9 +21,13 @@ public class VirtualEnabledPageCrawlerTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private WikiPagePath child1Path = PathParser.parse("ChildOne");
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         target = crawler.addPage(root, PathParser.parse("TargetPage"));

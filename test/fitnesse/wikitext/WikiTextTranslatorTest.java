@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.ParentWidget;
@@ -12,7 +15,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class WikiTextTranslatorTest extends FitnesseBaseTestCase {
+public class WikiTextTranslatorTest extends SingleContextBaseTestCase {
     private WikiPage page;
     private String expectedHtmlFromWikiText =
             "<table border=\"1\" cellspacing=\"0\">\n<tr><td>this</td>" + HtmlElement.endl +
@@ -25,10 +28,15 @@ public class WikiTextTranslatorTest extends FitnesseBaseTestCase {
                     "<td>four</td>" + HtmlElement.endl +
                     "<td>columns</td>" + HtmlElement.endl +
                     "</tr>\n</table>\n";
+    private WikiPage root;
+
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         PageCrawler crawler = root.getPageCrawler();
         page = crawler.addPage(root, PathParser.parse("WidgetRoot"));
     }

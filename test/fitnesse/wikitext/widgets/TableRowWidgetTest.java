@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wikitext.WikiWidget;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class TableRowWidgetTest extends FitnesseBaseTestCase {
+public class TableRowWidgetTest extends SingleContextBaseTestCase {
     @Test
     public void testSimpleRow() throws Exception {
         StandardTableWidget table = new StandardTableWidget(new MockWidgetRoot(injector), "");

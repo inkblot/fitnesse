@@ -2,7 +2,7 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -18,8 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-
-public class StopTestResponderTest extends FitnesseBaseTestCase {
+public class StopTestResponderTest extends SingleContextBaseTestCase {
 
     private Request request = null;
     private FitNesseContext context = null;
@@ -27,16 +26,20 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
     private StoppedRecorder stoppableB = new StoppedRecorder();
     private HtmlPageFactory htmlPageFactory;
 
+    @Override
+    protected int getPort() {
+        return 9124;
+    }
+
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-
         request = new MockRequest();
-        context = makeContext(9124);
     }
 
     @Test

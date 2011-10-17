@@ -3,9 +3,8 @@
 package fitnesse.responders.versions;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -14,19 +13,22 @@ import org.junit.Test;
 
 import static util.RegexAssertions.*;
 
-public class VersionResponderTest extends FitnesseBaseTestCase {
+public class VersionResponderTest extends SingleContextBaseTestCase {
     private String oldVersion;
     private SimpleResponse response;
     private HtmlPageFactory htmlPageFactory;
+    private FitNesseContext context;
+    private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     private void makeTestResponse(String pageName) throws Exception {
-        FitNesseContext context = makeContext();
-        WikiPage page = context.root.getPageCrawler().addPage(context.root, PathParser.parse(pageName), "original content");
+        WikiPage page = root.getPageCrawler().addPage(root, PathParser.parse(pageName), "original content");
         PageData data = page.getData();
         data.setContent("new stuff");
         VersionInfo commitRecord = page.commit(data);

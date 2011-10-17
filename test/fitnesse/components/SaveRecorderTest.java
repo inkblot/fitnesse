@@ -3,7 +3,9 @@
 package fitnesse.components;
 
 import com.google.inject.Inject;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,20 +14,20 @@ import util.Clock;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SaveRecorderTest extends FitnesseBaseTestCase {
+public class SaveRecorderTest extends SingleContextBaseTestCase {
     public WikiPage somePage;
-    public WikiPage root;
     private PageCrawler crawler;
     private Clock clock;
+    private WikiPage root;
 
     @Inject
-    public void inject(Clock clock) {
+    public void inject(Clock clock, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         somePage = crawler.addPage(root, PathParser.parse("SomePage"), "some page");
     }

@@ -3,9 +3,8 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -16,20 +15,22 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
+public class PageDataWikiPageResponderTest extends SingleContextBaseTestCase {
     private WikiPage pageOne;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
+    private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        pageOne = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "Line one\nLine two");
+        pageOne = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "Line one\nLine two");
     }
 
     @Test

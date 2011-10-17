@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertMatches;
 
-public class ItalicWidgetTest extends FitnesseBaseTestCase {
+public class ItalicWidgetTest extends SingleContextBaseTestCase {
     @Test
     public void testRegexp() throws Exception {
         assertMatches(ItalicWidget.REGEXP, "''italic''");

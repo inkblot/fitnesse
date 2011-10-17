@@ -3,7 +3,7 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.SuiteResponder;
@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
+public class WikiImportTestEventListenerTest extends SingleContextBaseTestCase {
     private WikiImportTestEventListener eventListener;
     private MockTestResponder testResponder;
     private MockSuiteResponder suiteResponder;

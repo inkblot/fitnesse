@@ -2,9 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PageCrawler;
@@ -16,16 +16,20 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class RefactorPageResponderTest extends FitnesseBaseTestCase {
-    WikiPage root;
+public class RefactorPageResponderTest extends SingleContextBaseTestCase {
+    private WikiPage root;
     private MockRequest request;
     private Responder responder;
     private FitNesseContext context;
 
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.context = context;
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        root = context.root;
         PageCrawler crawler = root.getPageCrawler();
         String childPage = "ChildPage";
         crawler.addPage(root, PathParser.parse(childPage));

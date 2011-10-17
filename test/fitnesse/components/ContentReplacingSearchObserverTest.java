@@ -1,6 +1,6 @@
 package fitnesse.components;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
@@ -11,7 +11,7 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 
 import static org.junit.Assert.assertThat;
 
-public class ContentReplacingSearchObserverTest extends FitnesseBaseTestCase {
+public class ContentReplacingSearchObserverTest extends SingleContextBaseTestCase {
 
     private WikiPage wikiPage;
     private ContentReplacingSearchObserver observer;

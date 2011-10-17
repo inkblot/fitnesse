@@ -1,9 +1,6 @@
 package fitnesse;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.ProvisionException;
+import com.google.inject.*;
 import com.google.inject.name.Names;
 import fitnesse.updates.NoOpUpdater;
 import fitnesse.updates.UpdaterImplementation;
@@ -57,21 +54,23 @@ public class FitNesseContextModule extends AbstractModule {
         }
     }
 
+    @Singleton
     public static class RootPageProvider implements Provider<WikiPage> {
-        private final WikiPageFactory wikiPageFactory;
+        private final WikiPage rootPage;
 
         @Inject
         public RootPageProvider(WikiPageFactory wikiPageFactory) {
-            this.wikiPageFactory = wikiPageFactory;
-        }
-
-        @Override
-        public WikiPage get() {
             try {
-                return wikiPageFactory.makeRootPage();
+                this.rootPage = wikiPageFactory.makeRootPage();
             } catch (Exception e) {
                 throw new ProvisionException("Could not create root page", e);
             }
         }
+
+        @Override
+        public WikiPage get() {
+            return rootPage;
+        }
+
     }
 }

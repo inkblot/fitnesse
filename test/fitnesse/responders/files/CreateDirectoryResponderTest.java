@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import org.junit.Before;
@@ -14,19 +17,25 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class CreateDirectoryResponderTest extends FitnesseBaseTestCase {
+public class CreateDirectoryResponderTest extends SingleContextBaseTestCase {
     private FitNesseContext context;
+    private String rootPagePath;
+
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+        this.context = context;
+        this.rootPagePath = rootPagePath;
+    }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
         assertTrue(new File(getRootPath(), "RooT").mkdir());
         assertTrue(new File(new File(getRootPath(), "RooT"), "files").mkdir());
     }
 
     @Test
     public void testMakeResponse() throws Exception {
-        CreateDirectoryResponder responder = new CreateDirectoryResponder(getRootPagePath());
+        CreateDirectoryResponder responder = new CreateDirectoryResponder(rootPagePath);
         MockRequest request = new MockRequest();
         request.addInput("dirname", "subdir");
         request.setResource("");

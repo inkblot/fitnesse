@@ -1,6 +1,6 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.Parser;
@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DefineTest extends FitnesseBaseTestCase {
+public class DefineTest extends SingleContextBaseTestCase {
     @Test
     public void scansDefine() {
         ParserTestHelper.assertScansTokenType("!define x {y}", "Define", true);

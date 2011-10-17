@@ -2,9 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -16,7 +17,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class AuthenticatorTest extends FitnesseBaseTestCase {
+public class AuthenticatorTest extends SingleContextBaseTestCase {
     SimpleAuthenticator authenticator;
     private MockRequest request;
     private Class<? extends Responder> responderType;
@@ -35,9 +36,13 @@ public class AuthenticatorTest extends FitnesseBaseTestCase {
 
     }
 
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
+
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
         WikiPage root = context.root;
         WikiPage frontpage = root.addChildPage("FrontPage");
         makeReadSecure(frontpage);

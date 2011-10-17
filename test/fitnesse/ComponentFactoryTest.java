@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Inject;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.EditResponder;
@@ -22,15 +23,20 @@ import java.util.Properties;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class ComponentFactoryTest extends FitnesseBaseTestCase {
+public class ComponentFactoryTest extends SingleContextBaseTestCase {
     private Properties testProperties;
     private SymbolProvider testProvider;
     private WikiPageFactory wikiPageFactory;
     private ResponderFactory responderFactory;
+    private FitNesseContext context;
+
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
 
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = makeContext();
         wikiPageFactory = context.getWikiPageFactory();
         testProperties = new Properties();
         testProvider = new SymbolProvider(new SymbolType[]{});

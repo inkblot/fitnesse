@@ -1,9 +1,9 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Test;
 
-public class ImageTest extends FitnesseBaseTestCase {
+public class ImageTest extends SingleContextBaseTestCase {
     @Test
     public void scansImages() {
         ParserTestHelper.assertScansTokenType("!img name", "Image", true);

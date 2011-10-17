@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
-public class SeeTest extends FitnesseBaseTestCase {
+public class SeeTest extends SingleContextBaseTestCase {
     @Test
     public void scansSees() {
         ParserTestHelper.assertScansTokenType("!see Stuff", "See", true);

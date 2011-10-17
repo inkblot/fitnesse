@@ -2,10 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -23,7 +24,7 @@ import java.io.PipedOutputStream;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
+public class TestResultFormattingResponderTest extends SingleContextBaseTestCase {
     private PipedOutputStream output;
     private PipedInputStream input;
     private TestResultFormattingResponder responder;
@@ -31,6 +32,11 @@ public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
     private PageResult result1;
     private PageResult result2;
     private FitNesseContext context;
+
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -43,8 +49,6 @@ public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
 
         result1 = new PageResult("Result1Title", new TestSummary(1, 2, 3, 4), "result1 data");
         result2 = new PageResult("Result2Title", new TestSummary(4, 3, 2, 1), "result2 data");
-
-        context = makeContext();
     }
 
     @Test

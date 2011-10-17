@@ -3,8 +3,10 @@
 package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -24,7 +26,7 @@ import static org.junit.Assert.assertFalse;
 import static util.RegexAssertions.assertMatches;
 import static util.RegexAssertions.assertSubString;
 
-public class EditResponderTest extends FitnesseBaseTestCase {
+public class EditResponderTest extends SingleContextBaseTestCase {
     public static final String TEST_DEFAULT_PAGE_CONTENT = "Will the real slim shady please stand up";
     private WikiPage root;
     private MockRequest request;
@@ -35,25 +37,25 @@ public class EditResponderTest extends FitnesseBaseTestCase {
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     @Override
-    protected Properties getFitNesseProperties() {
-        Properties properties = super.getFitNesseProperties();
+    protected Properties getProperties() {
+        Properties properties = super.getProperties();
         properties.setProperty(EditResponder.DEFAULT_PAGE_CONTENT_PROPERTY, TEST_DEFAULT_PAGE_CONTENT);
         return properties;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new EditResponder(getFitNesseProperties(), htmlPageFactory, clock);
+        responder = new EditResponder(getProperties(), htmlPageFactory, clock);
     }
 
     @Test

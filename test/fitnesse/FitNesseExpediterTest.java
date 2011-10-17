@@ -3,6 +3,7 @@
 package fitnesse;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.Provider;
 import fitnesse.authentication.Authenticator;
@@ -20,7 +21,7 @@ import java.io.PipedOutputStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class FitNesseExpediterTest extends FitnesseBaseTestCase {
+public class FitNesseExpediterTest extends SingleContextBaseTestCase {
     private FitNesseExpediter expediter;
     private MockSocket socket;
     private FitNesseContext context;
@@ -44,10 +45,14 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         };
     }
 
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
+
     @Before
     public void setUp() throws Exception {
         authenticator = new PromiscuousAuthenticator();
-        context = makeContext();
         context.root.addChildPage("FrontPage");
         socket = new MockSocket();
         expediter = new FitNesseExpediter(context.getInjector(), socket);

@@ -3,20 +3,27 @@
  */
 package fitnesse.responders.run;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SuiteFilterTestCase extends FitnesseBaseTestCase {
-    private WikiPage root;
+public class SuiteFilterTestCase extends SingleContextBaseTestCase {
     private PageCrawler crawler;
+    private WikiPage root;
+
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         PageData data = root.getData();
         root.commit(data);

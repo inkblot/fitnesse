@@ -1,11 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-
-public class PlainTextTableTest extends FitnesseBaseTestCase {
+public class PlainTextTableTest extends SingleContextBaseTestCase {
     @Test
     public void scansPlainTextTables() {
         ParserTestHelper.assertScansTokenType("![\nstuff\n]!", "PlainTextTable", true);

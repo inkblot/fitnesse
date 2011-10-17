@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -19,16 +22,20 @@ import static org.junit.Assert.assertNotSame;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class PageXmlizerTest extends FitnesseBaseTestCase {
+public class PageXmlizerTest extends SingleContextBaseTestCase {
     private PageXmlizer xmlizer;
     private WikiPage root;
     private PageCrawler crawler;
     private SimpleDateFormat format = WikiPageProperty.getTimeFormat();
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
         xmlizer = new PageXmlizer();
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
     }
 

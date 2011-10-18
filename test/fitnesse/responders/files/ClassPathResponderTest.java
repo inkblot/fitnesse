@@ -2,7 +2,7 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,20 +19,20 @@ import static util.RegexAssertions.assertSubString;
  * Date: 10/13/11
  * Time: 7:29 PM
  */
-public class ClassPathResponderTest extends FitnesseBaseTestCase {
+public class ClassPathResponderTest extends SingleContextBaseTestCase {
 
     private ClassPathResponder responder;
     private Clock clock;
     private FitNesseContext context;
 
     @Inject
-    public void inject(Clock clock) {
+    public void inject(Clock clock, FitNesseContext context) {
         this.clock = clock;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
         responder = new ClassPathResponder(clock);
     }
 

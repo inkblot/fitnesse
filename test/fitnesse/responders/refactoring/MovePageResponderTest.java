@@ -26,12 +26,6 @@ public class MovePageResponderTest extends ResponderTestCase {
     private WikiPage pageA;
     private WikiPage pageTwo;
     private MovePageResponder moveResponder;
-    private HtmlPageFactory htmlPageFactory;
-
-    @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
-        this.htmlPageFactory = htmlPageFactory;
-    }
 
     protected Responder responderInstance() {
         return new MovePageResponder(htmlPageFactory);

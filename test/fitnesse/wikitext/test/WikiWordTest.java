@@ -1,6 +1,7 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import org.junit.Before;
@@ -8,16 +9,20 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class WikiWordTest extends FitnesseBaseTestCase {
+public class WikiWordTest extends SingleContextBaseTestCase {
     private TestRoot root;
     private WikiPage pageOne;
     private WikiPage pageOneTwo;
     private WikiPage pageOneTwoThree;
     private WikiPage pageOneThree;
 
+    @Inject
+    public void inject(TestRoot root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = new TestRoot(injector);
         pageOne = root.makePage("PageOne");
         pageOneTwo = root.makePage(pageOne, "PageOne2");
         pageOneTwoThree = root.makePage(pageOneTwo, "PageThree");

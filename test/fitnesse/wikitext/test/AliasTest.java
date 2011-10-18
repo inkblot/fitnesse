@@ -1,10 +1,21 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
-public class AliasTest extends FitnesseBaseTestCase {
+public class AliasTest extends SingleContextBaseTestCase {
+
+    private WikiPage root;
+
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Test
     public void scansAliases() {
         ParserTestHelper.assertScansTokenType("[[tag][link]]", "Alias", true);
@@ -39,7 +50,7 @@ public class AliasTest extends FitnesseBaseTestCase {
 
     @Test
     public void evaluatesVariablesInLink() throws Exception {
-        TestRoot root = new TestRoot(injector);
+        TestRoot root = new TestRoot(this.root);
         WikiPage page = root.makePage("PageOne", "[[tag][PageTwo${x}]]");
         root.makePage("PageTwo3", "hi");
         ParserTestHelper.assertTranslatesTo(page, new TestVariableSource("x", "3"), link("tag", "PageTwo3"));

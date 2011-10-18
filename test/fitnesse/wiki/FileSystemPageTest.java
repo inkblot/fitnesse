@@ -4,9 +4,10 @@
 package fitnesse.wiki;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
@@ -21,34 +22,33 @@ import java.util.Properties;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
-public class FileSystemPageTest extends FitnesseBaseTestCase {
-    private WikiPage root;
+public class FileSystemPageTest extends SingleContextBaseTestCase {
     private PageCrawler crawler;
-    private FitNesseContext context;
-
     private static List<String> cmMethodCalls = new ArrayList<String>();
 
-    private Provider<Clock> clockProvider;
+    private Clock clock;
+    private WikiPage root;
+    private FitNesseContext context;
+
+    @Override
+    protected Properties getProperties() {
+        Properties properties = super.getProperties();
+        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        return properties;
+    }
 
     @Inject
-    public void inject(Provider<Clock> clockProvider) {
-        this.clockProvider = clockProvider;
+    public void inject(Clock clock, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+        this.clock = clock;
+        this.root = root;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
         cmMethodCalls.clear();
-        context = makeContext(FileSystemPage.class);
-        root = context.root;
         assertThat(root, instanceOf(FileSystemPage.class));
         crawler = root.getPageCrawler();
-    }
-
-    @Override
-    protected Properties getFitNesseProperties() {
-        Properties properties = super.getFitNesseProperties();
-        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
-        return properties;
     }
 
     @Test
@@ -181,7 +181,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     public void testLastModifiedTime() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("SomePage"), "some text");
         page.commit(page.getData());
-        long now = clockProvider.get().currentClockTimeInMillis();
+        long now = clock.currentClockTimeInMillis();
         Date lastModified = page.getData().getProperties().getLastModificationTime();
         assertTrue(now - lastModified.getTime() <= 5000);
     }

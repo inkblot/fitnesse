@@ -1,15 +1,18 @@
 package fitnesse.wikitext.test;
 
-import com.google.inject.Injector;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
 import fitnesse.wiki.*;
 
 public class TestRoot {
     public WikiPage root;
     private PageCrawler crawler;
 
-    public TestRoot(Injector injector) throws Exception {
-        root = InMemoryPage.makeRoot("root", injector);
-        crawler = root.getPageCrawler();
+    @Inject
+    public TestRoot(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) throws Exception {
+        this.root = root;
+        crawler = this.root.getPageCrawler();
     }
 
     public WikiPage makePage(String pageName) throws Exception {

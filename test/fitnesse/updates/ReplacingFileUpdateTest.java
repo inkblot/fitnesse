@@ -31,7 +31,7 @@ public class ReplacingFileUpdateTest extends UpdateTestCase {
     }
 
     protected Update makeUpdate() throws Exception {
-        return new ReplacingFileUpdate(getRootPagePath(), "testFile", destDirName);
+        return new ReplacingFileUpdate(rootPagePath, "testFile", destDirName);
     }
 
     @Test

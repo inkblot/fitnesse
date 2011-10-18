@@ -1,7 +1,8 @@
 package fitnesse.responders.testHistory;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.run.TestSummary;
@@ -22,13 +23,18 @@ import static org.junit.Assert.*;
 import static util.RegexAssertions.assertDoesNotHaveRegexp;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class TestHistoryResponderTest extends FitnesseBaseTestCase {
+public class TestHistoryResponderTest extends SingleContextBaseTestCase {
     private File resultsDirectory;
     private TestHistory history;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
     private TestHistoryResponder responder;
     private SimpleResponse response;
     private FitNesseContext context;
+
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
 
     @Before
     public void setup() throws Exception {
@@ -38,7 +44,6 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
         history = new TestHistory();
         responder = new TestHistoryResponder();
         responder.setResultsDirectory(resultsDirectory);
-        context = makeContext();
     }
 
     private void makeResponse() throws Exception {

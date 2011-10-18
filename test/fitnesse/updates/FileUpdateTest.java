@@ -16,7 +16,7 @@ public class FileUpdateTest extends UpdateTestCase {
     public final File testFile = new File("classes/testFile");
 
     protected Update makeUpdate() throws Exception {
-        return new FileUpdate(getRootPagePath(), "testFile", "files" + File.separator + "images");
+        return new FileUpdate(rootPagePath, "testFile", "files" + File.separator + "images");
     }
 
     @Before
@@ -40,7 +40,7 @@ public class FileUpdateTest extends UpdateTestCase {
     public void testUpdateWithMissingDirectories() throws Exception {
         update.doUpdate();
 
-        File file = new File(getRootPagePath() + File.separator + "files" + File.separator + "images" + File.separator + "testFile");
+        File file = new File(rootPagePath + File.separator + "files" + File.separator + "images" + File.separator + "testFile");
         assertTrue(file.exists());
 
         assertFalse(update.shouldBeApplied());
@@ -48,7 +48,7 @@ public class FileUpdateTest extends UpdateTestCase {
 
     @Test(expected = Exception.class)
     public void testFileMissing() throws Exception {
-        update = new FileUpdate(getRootPagePath(), "images/missingFile", "files/images");
+        update = new FileUpdate(rootPagePath, "images/missingFile", "files/images");
         update.doUpdate();
     }
 }

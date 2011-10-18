@@ -1,6 +1,7 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.SingleContextBaseTestCase;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class SeeTest extends SingleContextBaseTestCase {
 
     @Test
     public void translatesSees() throws Exception {
-        TestRoot root = new TestRoot(injector);
+        TestRoot root = new TestRoot(InMemoryPage.makeRoot("root", injector));
         WikiPage page = root.makePage("PageOne", "!see PageTwo");
         root.makePage("PageTwo", "hi");
         ParserTestHelper.assertTranslatesTo(page, "<b>See: <a href=\"PageTwo\">PageTwo</a></b>");

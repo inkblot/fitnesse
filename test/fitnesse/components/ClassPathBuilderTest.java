@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class ClassPathBuilderTest extends FitnesseBaseTestCase {
+public class ClassPathBuilderTest extends SingleContextBaseTestCase {
     private WikiPage root;
     private ClassPathBuilder builder;
     String pathSeparator = System.getProperty("path.separator");
@@ -20,9 +23,13 @@ public class ClassPathBuilderTest extends FitnesseBaseTestCase {
     private WikiPagePath somePagePath;
     private static final String TEST_DIR = "testDir";
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         builder = new ClassPathBuilder();
         somePagePath = PathParser.parse("SomePage");

@@ -23,12 +23,6 @@ public class RenamePageResponderTest extends ResponderTestCase {
     private WikiPagePath pageTwoPath;
     private String pageOneName;
     private String pageTwoName;
-    private HtmlPageFactory htmlPageFactory;
-
-    @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
-        this.htmlPageFactory = htmlPageFactory;
-    }
 
     protected Responder responderInstance() {
         return new RenamePageResponder(htmlPageFactory);

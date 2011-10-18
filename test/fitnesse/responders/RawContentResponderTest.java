@@ -13,12 +13,6 @@ import org.junit.Test;
 import static util.RegexAssertions.assertSubString;
 
 public class RawContentResponderTest extends ResponderTestCase {
-    private HtmlPageFactory htmlPageFactory;
-
-    @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
-        this.htmlPageFactory = htmlPageFactory;
-    }
 
     protected Responder responderInstance() {
         return new RawContentResponder(htmlPageFactory);

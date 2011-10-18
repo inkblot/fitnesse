@@ -1,6 +1,9 @@
 package fitnesse.components;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
@@ -14,7 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class WhereUsedPageFinderTest extends FitnesseBaseTestCase implements SearchObserver {
+public class WhereUsedPageFinderTest extends SingleContextBaseTestCase implements SearchObserver {
     private WikiPage root;
     private InMemoryPage pageOne;
     private WikiPage pageTwo;
@@ -28,9 +31,13 @@ public class WhereUsedPageFinderTest extends FitnesseBaseTestCase implements Sea
         hits.add(page);
     }
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         pageOne = (InMemoryPage) crawler.addPage(root, PathParser.parse("PageOne"), "this is page one ^ChildPage");
         pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");

@@ -2,6 +2,7 @@ package fitnesse.wikitext.test;
 
 import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlElement;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.Parser;
 import fitnesse.wikitext.parser.ParsingPage;
@@ -43,14 +44,14 @@ public class DefineTest extends SingleContextBaseTestCase {
     }
 
     private void assertDefinesValue(String input, String name, String definedValue) throws Exception {
-        WikiPage pageOne = new TestRoot(injector).makePage("PageOne", input);
+        WikiPage pageOne = new TestRoot(InMemoryPage.makeRoot("root", injector)).makePage("PageOne", input);
         ParsingPage page = new ParsingPage(new WikiSourcePage(pageOne));
         Parser.make(page, input).parse();
         assertEquals(definedValue, page.findVariable(name).getValue());
     }
 
     private void assertTranslatesDefine(String input, String definition) throws Exception {
-        WikiPage pageOne = new TestRoot(injector).makePage("PageOne");
+        WikiPage pageOne = new TestRoot(InMemoryPage.makeRoot("root", injector)).makePage("PageOne");
         ParserTestHelper.assertTranslatesTo(pageOne, input,
                 "<span class=\"meta\">variable defined: " + definition + "</span>" + HtmlElement.endl);
     }

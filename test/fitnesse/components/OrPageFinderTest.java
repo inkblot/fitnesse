@@ -17,9 +17,9 @@ public class OrPageFinderTest extends CompositePageFinderTestCase {
 
         sut.add(delegate);
 
-        sut.search(page);
+        sut.search(root);
 
-        verify(delegate, times(1)).search(page);
+        verify(delegate, times(1)).search(root);
     }
 
     @Test
@@ -31,9 +31,9 @@ public class OrPageFinderTest extends CompositePageFinderTestCase {
         sut.add(delegate);
         sut.add(delegate);
 
-        sut.search(page);
+        sut.search(root);
 
-        verify(delegate, times(3)).search(page);
+        verify(delegate, times(3)).search(root);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class OrPageFinderTest extends CompositePageFinderTestCase {
         sut.add(delegate);
         sut.add(delegate2);
 
-        List<WikiPage> results = sut.search(page);
+        List<WikiPage> results = sut.search(root);
 
         assertFoundResultsEqualsExpectation(expected, results);
     }
@@ -69,7 +69,7 @@ public class OrPageFinderTest extends CompositePageFinderTestCase {
         sut.add(delegate2);
         sut.add(delegate);
 
-        List<WikiPage> results = sut.search(page);
+        List<WikiPage> results = sut.search(root);
 
         assertFoundResultsEqualsExpectation(expected, results);
     }

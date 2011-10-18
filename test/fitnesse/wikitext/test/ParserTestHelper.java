@@ -1,6 +1,7 @@
 package fitnesse.wikitext.test;
 
 import com.google.inject.Injector;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 
@@ -105,7 +106,7 @@ public class ParserTestHelper {
     }
 
     public static void assertParses(String input, String expected, Injector injector) throws Exception {
-        WikiPage page = new TestRoot(injector).makePage("TestPage", input);
+        WikiPage page = new TestRoot(InMemoryPage.makeRoot("root", injector)).makePage("TestPage", input);
         Symbol result = parse(page, input);
         assertEquals(expected, serialize(result));
     }

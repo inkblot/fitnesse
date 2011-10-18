@@ -2,7 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
+import fitnesse.TestCaseHelper;
 import fitnesse.http.MockSocket;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSummary;
@@ -22,7 +23,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class FitClientTest extends FitnesseBaseTestCase implements TestSystemListener {
+public class FitClientTest extends SingleContextBaseTestCase implements TestSystemListener {
     private List<String> outputs = new ArrayList<String>();
     private List<TestSummary> counts = new ArrayList<TestSummary>();
     private CommandRunningFitClient client;
@@ -34,7 +35,7 @@ public class FitClientTest extends FitnesseBaseTestCase implements TestSystemLis
     @Before
     public void setUp() throws Exception {
         CommandRunningFitClient.TIMEOUT = 5000;
-        client = new CommandRunningFitClient(this, "java -cp " + classPath() + " fit.FitServer ", port, new SocketDealer());
+        client = new CommandRunningFitClient(this, "java -cp " + TestCaseHelper.classPath() + " fit.FitServer ", port, new SocketDealer());
         receiver = new CustomFitSocketReceiver(port);
     }
 

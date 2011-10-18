@@ -29,12 +29,6 @@ public class DeletePageResponderTest extends ResponderTestCase {
     private final WikiPagePath level2Path = PathParser.parse(this.level2Name);
     private final WikiPagePath level2FullPath = this.level1Path.copy().addNameToEnd(this.level2Name);
     private final String qualifiedLevel2Name = PathParser.render(this.level2FullPath);
-    private HtmlPageFactory htmlPageFactory;
-
-    @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
-        this.htmlPageFactory = htmlPageFactory;
-    }
 
     @Test
     public void testDeleteConfirmation() throws Exception {

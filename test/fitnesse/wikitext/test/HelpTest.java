@@ -1,6 +1,7 @@
 package fitnesse.wikitext.test;
 
 import fitnesse.SingleContextBaseTestCase;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class HelpTest extends SingleContextBaseTestCase {
     }
 
     private void assertTranslates(String expected, String content, String property) throws Exception {
-        WikiPage pageWithHelp = new TestRoot(injector).makePage("TestHelp", content);
+        WikiPage pageWithHelp = new TestRoot(InMemoryPage.makeRoot("root", injector)).makePage("TestHelp", content);
         PageData pageData = pageWithHelp.getData();
         pageData.setAttribute(property, "help me");
         pageWithHelp.commit(pageData);

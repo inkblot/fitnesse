@@ -17,7 +17,7 @@ public class WikiSourcePageTest extends SingleContextBaseTestCase {
 
     @Test
     public void getsChildren() throws Exception {
-        TestRoot root = new TestRoot(injector);
+        TestRoot root = new TestRoot(InMemoryPage.makeRoot("root", injector));
         WikiPage page = root.makePage("PageOne");
         root.makePage(page, "PageTwo");
         root.makePage(page, "PageThree");
@@ -32,7 +32,7 @@ public class WikiSourcePageTest extends SingleContextBaseTestCase {
 
     @Test
     public void getsVirtualChildren() throws Exception {
-        TestRoot root = new TestRoot(injector);
+        TestRoot root = new TestRoot(InMemoryPage.makeRoot("root", injector));
         WikiPage page = root.makePage("PageOne");
         root.makePage(page, "PageTwo");
         root.makePage(page, "PageThree");
@@ -64,7 +64,7 @@ public class WikiSourcePageTest extends SingleContextBaseTestCase {
 
     @Test
     public void getsUrlForPage() throws Exception {
-        WikiPage test = new TestRoot(injector).makePage("MyPage");
+        WikiPage test = new TestRoot(InMemoryPage.makeRoot("root", injector)).makePage("MyPage");
         assertEquals("WikiPath", new WikiSourcePage(test).makeUrl("WikiPath"));
     }
 

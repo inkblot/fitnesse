@@ -3,7 +3,7 @@ package fitnesse.responders.run.formatters;
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.responders.run.TestExecutionReport.TestResult;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.formatters.XmlFormatter.WriterFactory;
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class XmlFormatterTest extends FitnesseBaseTestCase {
+public class XmlFormatterTest extends SingleContextBaseTestCase {
     private static final String TEST_TIME = "4/13/2009 15:21:43";
 
     @Inject

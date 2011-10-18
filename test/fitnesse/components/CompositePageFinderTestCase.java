@@ -1,7 +1,9 @@
 package fitnesse.components;
 
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.wiki.InMemoryPage;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -17,28 +19,28 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CompositePageFinderTestCase extends FitnesseBaseTestCase {
+public abstract class CompositePageFinderTestCase extends SingleContextBaseTestCase {
 
     protected PageFinder delegate;
     protected CompositePageFinder sut;
-    protected WikiPage page;
+    protected WikiPage root;
     PageCrawler crawler;
     protected WikiPage pageOne;
     protected WikiPage pageTwo;
     protected WikiPage pageThree;
 
-    public CompositePageFinderTestCase() {
-        super();
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
     }
 
     @Before
     public void init() throws Exception {
         delegate = mock(PageFinder.class);
-        page = InMemoryPage.makeRoot("RooT", injector);
-        crawler = page.getPageCrawler();
-        pageOne = crawler.addPage(page, PathParser.parse("PageOne"), "this is page one ^ChildPage");
-        pageTwo = crawler.addPage(page, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");
-        pageThree = crawler.addPage(page, PathParser.parse("PageThree"), "This is !-PageThree-!, I Have \n!include PageTwo");
+        crawler = root.getPageCrawler();
+        pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "this is page one ^ChildPage");
+        pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "I am Page Two my brother is PageOne . SomeMissingPage");
+        pageThree = crawler.addPage(root, PathParser.parse("PageThree"), "This is !-PageThree-!, I Have \n!include PageTwo");
         crawler.addPage(pageTwo, PathParser.parse("ChildPage"), "I will be a virtual page to .PageOne ");
     }
 

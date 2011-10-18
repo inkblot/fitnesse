@@ -1,25 +1,24 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.responders.run.TestSystem.Descriptor;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestSystemTest extends FitnesseBaseTestCase {
-
+public class TestSystemTest extends SingleContextBaseTestCase {
     private FitNesseContext context;
+    private WikiPage root;
 
-    @Before
-    public void setUp() throws Exception {
-        context = makeContext();
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.context = context;
+        this.root = root;
     }
 
     @Test
@@ -111,7 +110,6 @@ public class TestSystemTest extends FitnesseBaseTestCase {
     }
 
     WikiPage makeTestPage(String pageText) throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT", context.getInjector());
         PageCrawler crawler = root.getPageCrawler();
         return crawler.addPage(root, PathParser.parse("TestPage"), pageText);
     }

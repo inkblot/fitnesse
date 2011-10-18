@@ -1,6 +1,7 @@
 package fitnesse.wikitext;
 
 import fitnesse.SingleContextBaseTestCase;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.test.TestRoot;
@@ -35,7 +36,7 @@ public class PerformanceTest extends SingleContextBaseTestCase {
 
     private void runNewParser(String input) throws Exception {
         long start = System.currentTimeMillis();
-        WikiPage page = new TestRoot(injector).makePage("NewTest");
+        WikiPage page = new TestRoot(InMemoryPage.makeRoot("root", injector)).makePage("NewTest");
         //String result = ParserTest.translateTo(new TestRoot().makePage("NewTest"), pageContent);
         Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
         System.out.println(System.currentTimeMillis() - start);

@@ -2,6 +2,7 @@ package fitnesse.wikitext.test;
 
 import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlElement;
+import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
@@ -59,7 +60,7 @@ public class ContentsTest extends SingleContextBaseTestCase {
     }
 
     private WikiPage makePages() throws Exception {
-        TestRoot root = new TestRoot(injector);
+        TestRoot root = new TestRoot(InMemoryPage.makeRoot("root", injector));
         WikiPage pageOne = root.makePage("PageOne");
         WikiPage pageTwo = root.makePage(pageOne, "PageTwo", "!contents");
         WikiPage pageTwoChild = root.makePage(pageTwo, "PageTwoChild");

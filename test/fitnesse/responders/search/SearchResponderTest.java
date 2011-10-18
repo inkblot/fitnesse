@@ -3,14 +3,17 @@
 package fitnesse.responders.search;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,22 +21,24 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SearchResponderTest extends FitnesseBaseTestCase {
+public class SearchResponderTest extends SingleContextBaseTestCase {
     private SearchResponder responder;
     private MockRequest request;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
+    private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        PageCrawler crawler = context.root.getPageCrawler();
-        crawler.addPage(context.root, PathParser.parse("SomePage"), "has something in it");
+        PageCrawler crawler = root.getPageCrawler();
+        crawler.addPage(root, PathParser.parse("SomePage"), "has something in it");
         responder = new SearchResponder(htmlPageFactory);
         request = new MockRequest();
         request.addInput("searchString", "blah");

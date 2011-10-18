@@ -16,7 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.CommandLine;
 import util.CommandLineParseException;
+import util.FileUtil;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -26,7 +28,10 @@ public class FitNesseMain {
     public static void main(String[] argv) throws Exception {
         try {
             Arguments args = new Arguments(argv);
-            Injector injector = Guice.createInjector(new FitNesseModule(args));
+            Injector injector = Guice.createInjector(
+                    new FitNesseModule(
+                            FileUtil.loadProperties(new File(args.getRootPath(), FitNesseContextModule.PROPERTIES_FILE)),
+                            args.getUserpass()));
             launchFitNesse(args, injector);
             if (args.getCommand() != null) {
                 System.exit(BaseFormatter.finalErrorCount);
@@ -52,10 +57,12 @@ public class FitNesseMain {
 
     public static void launchFitNesse(Arguments arguments, Injector injector) throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
-        Injector contextInjector = FitNesseContextModule.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.isOmittingUpdates());
+
+        Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContextModule.PROPERTIES_FILE)));
+
+        Injector contextInjector = FitNesseContextModule.makeContext(injector, pluginProperties, arguments.getUserpass(), arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.isOmittingUpdates());
 
         FitNesseContext context = contextInjector.getInstance(FitNesseContext.class);
-        Properties pluginProperties = contextInjector.getInstance(Key.get(Properties.class, Names.named(FitNesseContextModule.PROPERTIES_FILE)));
         SymbolProvider wikiSymbols = contextInjector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
         ResponderFactory responderFactory = contextInjector.getInstance(ResponderFactory.class);
         FitNesse fitnesse = contextInjector.getInstance(FitNesse.class);

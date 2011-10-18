@@ -25,7 +25,7 @@ public abstract class SingleContextBaseTestCase extends BaseInjectedTestCase {
     protected Module[] getBaseModules() {
         return new Module[]{
                 new FitNesseModule(getProperties(), getUserPass()),
-                new FitNesseContextModule(getRootPath(), getRootPageName(), getPort(), true)
+                new FitNesseContextModule(getProperties(), getUserPass(), getRootPath(), getRootPageName(), getPort(), true)
         };
     }
 

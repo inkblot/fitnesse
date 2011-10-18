@@ -30,7 +30,7 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     protected final FitNesseContext makeContext() throws Exception {
         assertNull(context);
-        context = FitNesseContextModule.makeContext(injector, getRootPath(), "RooT", DEFAULT_PORT, true).getInstance(FitNesseContext.class);
+        context = FitNesseContextModule.makeContext(injector, getFitNesseProperties(), getUserpass(), getRootPath(), "RooT", DEFAULT_PORT, true).getInstance(FitNesseContext.class);
         return context;
     }
 

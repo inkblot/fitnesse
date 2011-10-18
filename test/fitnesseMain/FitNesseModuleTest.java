@@ -171,7 +171,7 @@ public class FitNesseModuleTest {
         assertNotNull(injector.getInstance(FileSystem.class));
         assertNotNull(injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContextModule.PROPERTIES_FILE))));
 
-        Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(getClass().getSimpleName(), "RooT", 2156, true));
+        Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(testProperties, null, getClass().getSimpleName(), "RooT", 2156, true));
         assertNotNull(contextInjector.getInstance(FitNesseContext.class));
         assertNotNull(contextInjector.getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PATH))));
         assertNotNull(contextInjector.getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_NAME))));

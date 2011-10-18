@@ -8,6 +8,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 
 import java.io.File;
+import java.util.Properties;
 
 /**
 * Created by IntelliJ IDEA.
@@ -23,20 +24,24 @@ public class FitNesseContextModule extends AbstractModule {
     public static final String PORT = "fitnesse.port";
     public static final String PROPERTIES_FILE = "plugins.properties";
 
+    private final Properties properties;
+    private final String userpass;
     private final String rootPath;
     private final String rootPageName;
     private final int port;
     private final boolean omitUpdates;
 
-    public FitNesseContextModule(String rootPath, String rootPageName, int port, boolean omitUpdates) {
+    public FitNesseContextModule(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) {
+        this.properties = properties;
+        this.userpass = userpass;
         this.rootPath = rootPath;
         this.rootPageName = rootPageName;
         this.port = port;
         this.omitUpdates = omitUpdates;
     }
 
-    public static Injector makeContext(Injector injector, String rootPath, String rootPageName, int port, boolean omitUpdates) throws Exception {
-        return injector.createChildInjector(new FitNesseContextModule(rootPath, rootPageName, port, omitUpdates));
+    public static Injector makeContext(Injector injector, Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) throws Exception {
+        return injector.createChildInjector(new FitNesseContextModule(properties, userpass, rootPath, rootPageName, port, omitUpdates));
     }
 
     @Override

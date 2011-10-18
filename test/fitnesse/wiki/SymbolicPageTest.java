@@ -129,7 +129,7 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     }
 
     private void CreateExternalRoot() throws Exception {
-        FitNesseContext externalContext = FitNesseContextModule.makeContext(injector, "testDir/ExternalRoot", "ExternalRoot", FitNesseContext.DEFAULT_PORT, true).getInstance(FitNesseContext.class);
+        FitNesseContext externalContext = FitNesseContextModule.makeContext(injector, getFitNesseProperties(), getUserpass(), "testDir/ExternalRoot", "ExternalRoot", FitNesseContext.DEFAULT_PORT, true).getInstance(FitNesseContext.class);
         externalRoot = externalContext.root;
         assertThat(externalRoot, instanceOf(InMemoryPage.class));
         PageCrawler externalCrawler = externalRoot.getPageCrawler();

@@ -1,12 +1,19 @@
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import fitnesse.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.After;
 import org.junit.Before;
+
+import java.util.Properties;
+
+import static com.google.inject.util.Modules.override;
+import static util.FileUtil.deleteFileSystemDirectory;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,27 +21,41 @@ import org.junit.Before;
  * Date: 9/11/11
  * Time: 8:55 PM
  */
-public class ImporterTestCase extends FitnesseBaseTestCase {
+public class ImporterTestCase {
+
+    private final String TEST_ROOT_PATH = TestCaseHelper.getRootPath(getClass().getSimpleName());
 
     protected FitNesseUtil fitNesseUtil = new FitNesseUtil();
-    public WikiPage pageOne;
-    public FitNesseContext remoteContext;
-    public WikiPage remoteRoot;
-    public FitNesseContext localContext;
-    public WikiPage localRoot;
-    public WikiPage childPageOne;
-    public WikiPage pageTwo;
+    protected WikiPage pageOne;
+    protected Injector remoteInjector;
+    protected FitNesseContext remoteContext;
+    protected WikiPage remoteRoot;
+    protected FitNesseContext localContext;
+    protected WikiPage localRoot;
+    protected WikiPage childPageOne;
+    protected WikiPage pageTwo;
+    protected Injector localInjector;
+
+    protected Properties getFitNesseProperties() {
+        Properties properties = new Properties();
+        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        return properties;
+    }
 
     @Before
     public void beforeImportTest() throws Exception {
-        remoteContext = FitNesseContextModule.makeContext(injector, getFitNesseProperties(), getUserpass(), FitNesseContext.DEFAULT_PATH, "RooT", DEFAULT_PORT, true).getInstance(FitNesseContext.class);
+        Injector injector = Guice.createInjector(override(new FitNesseModule(getFitNesseProperties(), null)).with(getOverrideModule()));
+
+        remoteInjector = FitNesseContextModule.makeContext(injector, getFitNesseProperties(), null, TEST_ROOT_PATH + "/remote", "RooT", 1999, true);
+        remoteContext = remoteInjector.getInstance(FitNesseContext.class);
         remoteRoot = remoteContext.root;
         PageCrawler crawler = remoteRoot.getPageCrawler();
         crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
         crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
         crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
 
-        localContext = FitNesseContextModule.makeContext(injector, getFitNesseProperties(), getUserpass(), getRootPath(), "local", FitNesseContext.DEFAULT_PORT, true).getInstance(FitNesseContext.class);
+        localInjector = FitNesseContextModule.makeContext(injector, getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseContext.DEFAULT_PORT, true);
+        localContext = localInjector.getInstance(FitNesseContext.class);
         localRoot = localContext.root;
         pageOne = localRoot.addChildPage("PageOne");
         childPageOne = pageOne.addChildPage("ChildOne");
@@ -43,7 +64,14 @@ public class ImporterTestCase extends FitnesseBaseTestCase {
 
     @After
     public void afterImportTest() {
-
+        deleteFileSystemDirectory(TEST_ROOT_PATH);
     }
 
+    protected Module getOverrideModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
+            }
+        };
+    }
 }

@@ -3,6 +3,8 @@
 package fitnesse.responders;
 
 import com.google.inject.*;
+import fitnesse.FitNesseContext;
+import fitnesse.Responder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
@@ -22,7 +24,7 @@ import static util.RegexAssertions.*;
 
 public class WikiImportingResponderTest extends ImporterTestCase {
     private WikiImportingResponder responder;
-    private String baseUrl;
+    private String remoteUrl;
     private HtmlPageFactory htmlPageFactory;
     private Authenticator authenticator;
 
@@ -41,26 +43,23 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         };
     }
 
-    @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
-        this.htmlPageFactory = htmlPageFactory;
-    }
-
     @Before
     public void setUp() throws Exception {
+        htmlPageFactory = localInjector.getInstance(HtmlPageFactory.class);
         authenticator = new PromiscuousAuthenticator();
         fitNesseUtil.startFitnesse(remoteContext);
-        baseUrl = FitNesseUtil.URL;
+        remoteUrl = FitNesseUtil.URL;
 
-        createResponder();
+        responder = createResponder(htmlPageFactory);
     }
 
-    private void createResponder() throws Exception {
-        responder = new WikiImportingResponder(htmlPageFactory);
+    private static WikiImportingResponder createResponder(HtmlPageFactory htmlPageFactory) throws Exception {
+        WikiImportingResponder responder = new WikiImportingResponder(htmlPageFactory);
         ChunkedResponse response = new ChunkedResponse("html");
         response.readyToSend(new MockResponseSender());
         responder.setResponse(response);
         responder.getImporter().setDeleteOrphanOption(false);
+        return responder;
     }
 
     @After
@@ -70,7 +69,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Test
     public void testActionsOfMakeResponse() throws Exception {
-        Response response = makeSampleResponse(baseUrl);
+        Response response = makeSampleResponse(remoteUrl, responder, localContext);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 
@@ -92,12 +91,12 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     @Test
     public void testImportingFromNonRootPageUpdatesPageContent() throws Exception {
         PageData data = pageTwo.getData();
-        WikiImportProperty importProperty = new WikiImportProperty(baseUrl + "PageOne");
+        WikiImportProperty importProperty = new WikiImportProperty(remoteUrl + "PageOne");
         importProperty.addTo(data.getProperties());
         data.setContent("nonsense");
         pageTwo.commit(data);
 
-        Response response = makeSampleResponse("blah");
+        Response response = makeSampleResponse("blah", responder, localContext);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 
@@ -109,20 +108,20 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Test
     public void testImportPropertiesGetAdded() throws Exception {
-        Response response = makeSampleResponse(baseUrl);
+        Response response = makeSampleResponse(remoteUrl, responder, localContext);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 
-        checkProperties(pageTwo, baseUrl, true, null);
+        checkProperties(pageTwo, remoteUrl, true, null);
 
         WikiPage importedPageOne = pageTwo.getChildPage("PageOne");
-        checkProperties(importedPageOne, baseUrl + "PageOne", false, remoteRoot.getChildPage("PageOne"));
+        checkProperties(importedPageOne, remoteUrl + "PageOne", false, remoteRoot.getChildPage("PageOne"));
 
         WikiPage importedPageTwo = pageTwo.getChildPage("PageTwo");
-        checkProperties(importedPageTwo, baseUrl + "PageTwo", false, remoteRoot.getChildPage("PageTwo"));
+        checkProperties(importedPageTwo, remoteUrl + "PageTwo", false, remoteRoot.getChildPage("PageTwo"));
 
         WikiPage importedChildOne = importedPageOne.getChildPage("ChildOne");
-        checkProperties(importedChildOne, baseUrl + "PageOne.ChildOne", false, remoteRoot.getChildPage("PageOne").getChildPage("ChildOne"));
+        checkProperties(importedChildOne, remoteUrl + "PageOne.ChildOne", false, remoteRoot.getChildPage("PageOne").getChildPage("ChildOne"));
     }
 
     private void checkProperties(WikiPage page, String source, boolean isRoot, WikiPage remotePage) throws Exception {
@@ -144,7 +143,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Test
     public void testHtmlOfMakeResponse() throws Exception {
-        Response response = makeSampleResponse(baseUrl);
+        Response response = makeSampleResponse(remoteUrl, responder, localContext);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         String content = sender.sentData();
@@ -162,13 +161,13 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Test
     public void testHtmlOfMakeResponseWithNoModifications() throws Exception {
-        Response response = makeSampleResponse(baseUrl);
+        Response response = makeSampleResponse(remoteUrl, responder, localContext);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 
         // import a second time... nothing was modified
-        createResponder();
-        response = makeSampleResponse(baseUrl);
+        WikiImportingResponder secondResponder = createResponder(htmlPageFactory);
+        response = makeSampleResponse(remoteUrl, secondResponder, localContext);
         sender = new MockResponseSender();
         sender.doSending(response);
         String content = sender.sentData();
@@ -185,19 +184,17 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         assertSubString("3 pages were unmodified.", content);
     }
 
-    private ChunkedResponse makeSampleResponse(String remoteUrl) throws Exception {
-        MockRequest request = makeRequest(remoteUrl);
-
-        return getResponse(request);
+    private static ChunkedResponse makeSampleResponse(String remoteUrl, Responder responder, FitNesseContext context) throws Exception {
+        return getResponse(responder, context, makeRequest(remoteUrl));
     }
 
-    private ChunkedResponse getResponse(MockRequest request) throws Exception {
-        Response response = responder.makeResponse(localContext, request);
+    private static ChunkedResponse getResponse(Responder responder, FitNesseContext context, MockRequest request) throws Exception {
+        Response response = responder.makeResponse(context, request);
         assertTrue(response instanceof ChunkedResponse);
         return (ChunkedResponse) response;
     }
 
-    private MockRequest makeRequest(String remoteUrl) {
+    private static MockRequest makeRequest(String remoteUrl) {
         MockRequest request = new MockRequest();
         request.setResource("PageTwo");
         request.addInput("responder", "import");
@@ -207,7 +204,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Test
     public void testMakeResponseImportingNonRootPage() throws Exception {
-        MockRequest request = makeRequest(baseUrl + "PageOne");
+        MockRequest request = makeRequest(remoteUrl + "PageOne");
 
         Response response = responder.makeResponse(localContext, request);
         MockResponseSender sender = new MockResponseSender();
@@ -221,8 +218,8 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Test
     public void testRemoteUrlNotFound() throws Exception {
-        String remoteUrl = baseUrl + "PageDoesntExist";
-        Response response = makeSampleResponse(remoteUrl);
+        String remoteUrl = this.remoteUrl + "PageDoesntExist";
+        Response response = makeSampleResponse(remoteUrl, responder, localContext);
 
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
@@ -232,8 +229,8 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Test
     public void testErrorMessageForBadUrlProvided() throws Exception {
-        String remoteUrl = baseUrl + "blah";
-        Response response = makeSampleResponse(remoteUrl);
+        String remoteUrl = this.remoteUrl + "blah";
+        Response response = makeSampleResponse(remoteUrl, responder, localContext);
 
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
@@ -245,7 +242,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     public void testUnauthorizedResponse() throws Exception {
         makeSecurePage(remoteRoot);
 
-        Response response = makeSampleResponse(baseUrl);
+        Response response = makeSampleResponse(remoteUrl, responder, localContext);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         String content = sender.sentData();
@@ -271,11 +268,11 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         WikiPage childPage = remoteRoot.getChildPage("PageOne");
         makeSecurePage(childPage);
 
-        Response response = makeSampleResponse(baseUrl);
+        Response response = makeSampleResponse(remoteUrl, responder, localContext);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         String content = sender.sentData();
-        assertSubString("The wiki at " + baseUrl + "PageOne requires authentication.", content);
+        assertSubString("The wiki at " + remoteUrl + "PageOne requires authentication.", content);
         assertSubString("<form", content);
     }
 
@@ -283,10 +280,10 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     public void testImportingFromSecurePageWithCredentials() throws Exception {
         makeSecurePage(remoteRoot);
 
-        MockRequest request = makeRequest(baseUrl);
+        MockRequest request = makeRequest(remoteUrl);
         request.addInput("remoteUsername", "joe");
         request.addInput("remotePassword", "blow");
-        Response response = getResponse(request);
+        Response response = getResponse(responder, localContext, request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         String content = sender.sentData();
@@ -320,9 +317,9 @@ public class WikiImportingResponderTest extends ImporterTestCase {
 
     @Test
     public void testAutoUpdatingTurnedOn() throws Exception {
-        MockRequest request = makeRequest(baseUrl);
+        MockRequest request = makeRequest(remoteUrl);
         responder.setRequest(request);
-        responder.data = new PageData(new WikiPageDummy(injector));
+        responder.data = new PageData(new WikiPageDummy(localInjector));
 
         responder.initializeImporter(ChunkingResponder.getWikiPagePath(request));
         assertFalse(responder.getImporter().getAutoUpdateSetting());

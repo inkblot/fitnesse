@@ -1,7 +1,9 @@
 package fitnesse.wiki;
 
-import fitnesse.FitnesseBaseTestCase;
-import org.junit.Before;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -10,7 +12,8 @@ import java.util.List;
 import java.util.Properties;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,10 +22,10 @@ import static org.junit.Assert.assertNotNull;
  * Time: 10:41 AM
  */
 @RunWith(Parameterized.class)
-public class WikiPageFactoryWikiPageClassesTest extends FitnesseBaseTestCase {
+public class RootPageTypeTest extends SingleContextBaseTestCase {
 
     private final Class<? extends WikiPage> wikiPageClass;
-    private WikiPageFactory wikiPageFactory;
+    private WikiPage root;
 
     @Parameterized.Parameters
     public static List parameters() {
@@ -31,24 +34,24 @@ public class WikiPageFactoryWikiPageClassesTest extends FitnesseBaseTestCase {
                 new Object[]{FileSystemPage.class});
     }
 
-    public WikiPageFactoryWikiPageClassesTest(Class<? extends WikiPage> wikiPageClass) {
+    public RootPageTypeTest(Class<? extends WikiPage> wikiPageClass) {
         this.wikiPageClass = wikiPageClass;
     }
 
     @Override
-    protected Properties getFitNesseProperties() {
-        Properties properties = super.getFitNesseProperties();
+    protected Properties getProperties() {
+        Properties properties = super.getProperties();
         properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, wikiPageClass.getName());
         return properties;
     }
 
-    @Before
-    public void setUp() throws Exception {
-        wikiPageFactory = makeContext(wikiPageClass).getWikiPageFactory();
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
     }
 
     @Test
-    public void createRoot() throws Exception {
-        assertNotNull(wikiPageFactory.makeRootPage());
+    public void testRootType() throws Exception {
+        assertThat(root, instanceOf(wikiPageClass));
     }
 }

@@ -7,7 +7,7 @@ import fitnesse.wiki.CachingPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.VersionInfo;
 import fitnesse.wiki.WikiPage;
-import util.ClockUtil;
+import util.Clock;
 
 public class SimpleCachingPage extends CachingPage {
     private static final long serialVersionUID = 1L;
@@ -37,7 +37,7 @@ public class SimpleCachingPage extends CachingPage {
     }
 
     protected VersionInfo makeVersion() {
-        return new VersionInfo("abc", "Jon", ClockUtil.currentDate());
+        return new VersionInfo("abc", "Jon", getInjector().getInstance(Clock.class).currentClockDate());
     }
 
     protected void doCommit(PageData data) {

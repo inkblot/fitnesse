@@ -45,7 +45,7 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
         setTheRoot();
         createFakeJarFileResources();
         createFakeUpdateListFiles();
-        updater = new UpdaterImplementation(context, getRootPagePath());
+        updater = new UpdaterImplementation(context, getRootPagePath(), context.rootPath);
     }
 
     private void setTheRoot() throws Exception {

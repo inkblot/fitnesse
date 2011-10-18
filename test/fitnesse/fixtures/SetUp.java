@@ -6,6 +6,7 @@ import com.google.inject.*;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
@@ -51,7 +52,7 @@ public class SetUp extends Fixture {
         //TODO - Inject the test listeners
         WikiImportTestEventListener.register();
 
-        context = FitNesseContext.makeContext(injector, baseDir, "RooT", 9123, true);
+        context = FitNesseContextModule.makeContext(injector, baseDir, "RooT", 9123, true).getInstance(FitNesseContext.class);
         root = context.root;
         fitnesse = context.getInjector().getInstance(FitNesse.class);
         File historyDirectory = context.getTestHistoryDirectory();

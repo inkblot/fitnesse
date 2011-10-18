@@ -46,11 +46,6 @@ public class FitNesseContext {
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
-    public static FitNesseContext makeContext(Injector injector, String rootPath, String rootPageName, int port, boolean omitUpdates) throws Exception {
-        Injector contextInjector = injector.createChildInjector(new FitNesseContextModule(rootPath, rootPageName, port, omitUpdates));
-        return contextInjector.getInstance(FitNesseContext.class);
-    }
-
     @Inject
     public FitNesseContext(
             @Named(FitNesseContextModule.ROOT_PATH) String rootPath,

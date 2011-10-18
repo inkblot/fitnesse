@@ -6,9 +6,11 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 import fitnesse.*;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.wiki.PageVersionPruner;
+import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,23 +52,26 @@ public class FitNesseMain {
 
     public static void launchFitNesse(Arguments arguments, Injector injector) throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
-        FitNesseContext context = FitNesseContext.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.isOmittingUpdates());
+        Injector contextInjector = FitNesseContextModule.makeContext(injector, arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.isOmittingUpdates());
 
-        Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContextModule.PROPERTIES_FILE)));
+        FitNesseContext context = contextInjector.getInstance(FitNesseContext.class);
+        Properties pluginProperties = contextInjector.getInstance(Key.get(Properties.class, Names.named(FitNesseContextModule.PROPERTIES_FILE)));
+        SymbolProvider wikiSymbols = contextInjector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
+        ResponderFactory responderFactory = contextInjector.getInstance(ResponderFactory.class);
+        FitNesse fitnesse = contextInjector.getInstance(FitNesse.class);
+        WikiPageFactory wikiPageFactory = contextInjector.getInstance(WikiPageFactory.class);
 
-        SymbolProvider wikiSymbols = injector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
         String extraOutput = ComponentFactory.loadPlugins(
-                context.getResponderFactory(),
-                context.getWikiPageFactory(),
+                responderFactory,
+                wikiPageFactory,
                 wikiSymbols,
                 pluginProperties);
-        extraOutput += ComponentFactory.loadResponders(context.getResponderFactory(), pluginProperties);
+        extraOutput += ComponentFactory.loadResponders(responderFactory, pluginProperties);
         extraOutput += ComponentFactory.loadSymbolTypes(pluginProperties, wikiSymbols);
 
         WikiImportTestEventListener.register();
 
         PageVersionPruner.daysTillVersionsExpire = arguments.getDaysTillVersionsExpire();
-        FitNesse fitnesse = context.getInjector().getInstance(FitNesse.class);
         updateAndLaunch(arguments, context, fitnesse, extraOutput);
     }
 

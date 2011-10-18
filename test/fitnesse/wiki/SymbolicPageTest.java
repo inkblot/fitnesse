@@ -3,6 +3,7 @@
 package fitnesse.wiki;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.After;
 import org.junit.Before;
@@ -128,7 +129,7 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     }
 
     private void CreateExternalRoot() throws Exception {
-        FitNesseContext externalContext = FitNesseContext.makeContext(injector, "testDir/ExternalRoot", "ExternalRoot", FitNesseContext.DEFAULT_PORT, true);
+        FitNesseContext externalContext = FitNesseContextModule.makeContext(injector, "testDir/ExternalRoot", "ExternalRoot", FitNesseContext.DEFAULT_PORT, true).getInstance(FitNesseContext.class);
         externalRoot = externalContext.root;
         assertThat(externalRoot, instanceOf(InMemoryPage.class));
         PageCrawler externalCrawler = externalRoot.getPageCrawler();

@@ -6,14 +6,12 @@ import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
-import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import util.Clock;
 import util.ClockUtil;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.Properties;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -47,7 +45,7 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     protected final FitNesseContext makeContext(Class<? extends WikiPage> wikiPageClass, int port) throws Exception {
         assertNull(context);
-        context = FitNesseContext.makeContext(injector, getRootPath(), "RooT", port, true);
+        context = FitNesseContextModule.makeContext(injector, getRootPath(), "RooT", port, true).getInstance(FitNesseContext.class);
         assertThat(context.root, instanceOf(wikiPageClass));
         return context;
     }

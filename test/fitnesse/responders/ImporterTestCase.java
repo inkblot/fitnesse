@@ -1,6 +1,7 @@
 package fitnesse.responders;
 
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
@@ -26,14 +27,14 @@ public class ImporterTestCase extends FitnesseBaseTestCase {
 
     @Before
     public void beforeImportTest() throws Exception {
-        remoteContext = FitNesseContext.makeContext(injector, FitNesseContext.DEFAULT_PATH, "RooT", DEFAULT_PORT, true);
+        remoteContext = FitNesseContextModule.makeContext(injector, FitNesseContext.DEFAULT_PATH, "RooT", DEFAULT_PORT, true).getInstance(FitNesseContext.class);
         remoteRoot = remoteContext.root;
         PageCrawler crawler = remoteRoot.getPageCrawler();
         crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
         crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
         crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
 
-        localContext = FitNesseContext.makeContext(injector, getRootPath(), "local", FitNesseContext.DEFAULT_PORT, true);
+        localContext = FitNesseContextModule.makeContext(injector, getRootPath(), "local", FitNesseContext.DEFAULT_PORT, true).getInstance(FitNesseContext.class);
         localRoot = localContext.root;
         pageOne = localRoot.addChildPage("PageOne");
         childPageOne = pageOne.addChildPage("ChildOne");

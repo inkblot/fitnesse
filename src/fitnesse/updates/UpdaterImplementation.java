@@ -21,11 +21,13 @@ public class UpdaterImplementation extends UpdaterBase {
     private ArrayList<String> updateList = new ArrayList<String>();
     private String fitNesseVersion = FitNesse.VERSION.toString();
     private final FitNesseContext context;
+    private final String rootPath;
 
     @Inject
-    public UpdaterImplementation(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) throws IOException {
+    public UpdaterImplementation(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseContextModule.ROOT_PATH) String rootPath) throws IOException {
         super(rootPagePath);
         this.context = context;
+        this.rootPath = rootPath;
         createUpdateAndDoNotCopyOverLists();
         updates = makeAllUpdates();
     }
@@ -42,7 +44,7 @@ public class UpdaterImplementation extends UpdaterBase {
         for (String nonCopyableFile : updateDoNotCopyOver) {
             String path = getCorrectPathForTheDestination(nonCopyableFile);
             String source = getCorrectPathFromJar(nonCopyableFile);
-            updates.add(new FileUpdate(context.rootPath, source, path));
+            updates.add(new FileUpdate(rootPath, source, path));
         }
     }
 
@@ -50,7 +52,7 @@ public class UpdaterImplementation extends UpdaterBase {
         for (String updatableFile : updateList) {
             String path = getCorrectPathForTheDestination(updatableFile);
             String source = getCorrectPathFromJar(updatableFile);
-            updates.add(new ReplacingFileUpdate(context.rootPath, source, path));
+            updates.add(new ReplacingFileUpdate(rootPath, source, path));
         }
     }
 

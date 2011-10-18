@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext;
 
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.wiki.InMemoryPage;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.*;
 import org.junit.Before;
@@ -14,7 +16,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class WidgetVisitorTest extends FitnesseBaseTestCase implements WidgetVisitor {
+public class WidgetVisitorTest extends SingleContextBaseTestCase implements WidgetVisitor {
     List<WikiWidget> visits = new ArrayList<WikiWidget>();
     private WikiPage root;
 
@@ -29,10 +31,14 @@ public class WidgetVisitorTest extends FitnesseBaseTestCase implements WidgetVis
     public void visit(AliasLinkWidget widget) {
     }
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
         visits.clear();
-        root = InMemoryPage.makeRoot("RooT", injector);
     }
 
     @Test

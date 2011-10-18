@@ -2,8 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
+public class SocketCatchingResponderTest extends SingleContextBaseTestCase {
     private SocketDealer dealer;
     private SimpleSocketSeeker seeker;
     private MockResponseSender sender;
@@ -23,14 +24,18 @@ public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private MockRequest request;
 
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
+
     @Before
     public void setUp() throws Exception {
         dealer = new SocketDealer();
         seeker = new SimpleSocketSeeker();
         sender = new MockResponseSender();
         responder = new SocketCatchingResponder();
-        context = makeContext();
-        context.socketDealer = dealer;
+        dealer = context.socketDealer;
         request = new MockRequest();
     }
 

@@ -2,12 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,18 +17,23 @@ import util.TimeMeasurement;
 
 import static util.RegexAssertions.assertSubString;
 
-public class TestHtmlFormatterTest extends FitnesseBaseTestCase {
+public class TestHtmlFormatterTest extends SingleContextBaseTestCase {
     private BaseFormatter formatter;
     private StringBuffer pageBuffer = new StringBuffer();
     private WikiPage page;
     private WikiPage root;
+    private FitNesseContext context;
+
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+        this.root = root;
+        this.context = context;
+    }
 
     @Before
     public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("RooT", injector);
         page = root.addChildPage("NewPage");
         page.getData().setContent("page content here");
-        FitNesseContext context = makeContext();
 
         formatter = new TestHtmlFormatter(context, page, new HtmlPageFactory()) {
             @Override

@@ -3,9 +3,8 @@
 package fitnesse.responders.versions;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -18,20 +17,22 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class VersionSelectionResponderTest extends FitnesseBaseTestCase {
+public class VersionSelectionResponderTest extends SingleContextBaseTestCase {
     private WikiPage page;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
+    private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        page = context.root.getPageCrawler().addPage(context.root, PathParser.parse("PageOne"), "some content");
+        page = root.getPageCrawler().addPage(root, PathParser.parse("PageOne"), "some content");
     }
 
     @Test

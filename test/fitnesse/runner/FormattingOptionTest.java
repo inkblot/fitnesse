@@ -2,8 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.Request;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
@@ -22,13 +23,19 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class FormattingOptionTest extends FitnesseBaseTestCase {
+public class FormattingOptionTest extends SingleContextBaseTestCase {
     private ByteArrayOutputStream output;
     private FormattingOption option;
     private CachingResultFormatter formatter;
     private PageResult result1;
     private PageResult result2;
     private int port = FitNesseUtil.DEFAULT_PORT;
+    private FitNesseContext context;
+
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -88,7 +95,6 @@ public class FormattingOptionTest extends FitnesseBaseTestCase {
     public void testTheWholeDeal() throws Exception {
         sampleFormatter();
 
-        FitNesseContext context = makeContext();
         FitNesseUtil fitNesseUtil = new FitNesseUtil();
         fitNesseUtil.startFitnesse(context);
         try {

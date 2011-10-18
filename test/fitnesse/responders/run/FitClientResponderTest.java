@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -16,20 +19,26 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class FitClientResponderTest extends FitnesseBaseTestCase {
+public class FitClientResponderTest extends SingleContextBaseTestCase {
     private FitClientResponder responder;
     private MockRequest request;
     private FitNesseContext context;
     private static PageCrawler crawler;
     private static WikiPage suite;
+    private WikiPage root;
+
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.context = context;
+        this.root = root;
+    }
 
     @Before
     public void setUp() throws Exception {
         responder = new FitClientResponder();
         request = new MockRequest();
-        context = makeContext();
 
-        buildSuite(context.root);
+        buildSuite(root);
     }
 
     public static void buildSuite(WikiPage root) throws Exception {

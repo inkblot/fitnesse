@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class TextIgnoringWidgetRootTest extends FitnesseBaseTestCase {
+public class TextIgnoringWidgetRootTest extends SingleContextBaseTestCase {
     @Test
     public void testNoTextWidgetAreCreated() throws Exception {
         String text = "Here is some text with '''bold''' and ''italics''.";

@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,12 +18,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class BaseWikiPageTest extends FitnesseBaseTestCase {
+public class BaseWikiPageTest extends SingleContextBaseTestCase {
     private WikiPage linkingPage;
+    private BaseWikiPage root;
+
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = (BaseWikiPage) root;
+    }
 
     @Before
     public void setUp() throws Exception {
-        BaseWikiPage root = (BaseWikiPage) InMemoryPage.makeRoot("RooT", injector);
         root.addChildPage("LinkedPage");
         linkingPage = root.addChildPage("LinkingPage");
         linkingPage.addChildPage("ChildPage");

@@ -2,8 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import org.junit.Before;
@@ -13,12 +14,17 @@ import static fitnesse.responders.search.SearchFormResponder.SEARCH_ACTION_ATTRI
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SearchFormResponderTest extends FitnesseBaseTestCase {
+public class SearchFormResponderTest extends SingleContextBaseTestCase {
     private String content;
+    private FitNesseContext context;
+
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
 
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = makeContext();
         SearchFormResponder responder = new SearchFormResponder();
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
         content = response.getContent();

@@ -2,15 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Test;
 
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-
-public class StyleWidgetTest extends FitnesseBaseTestCase {
+public class StyleWidgetTest extends SingleContextBaseTestCase {
     @Test
     public void parenRegexp() throws Exception {
         String r = StyleWidget.ParenFormat.REGEXP;

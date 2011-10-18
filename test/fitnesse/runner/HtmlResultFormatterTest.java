@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import fitnesse.FitNesseContext;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.responders.run.TestSummary;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,12 +17,18 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class HtmlResultFormatterTest extends FitnesseBaseTestCase {
+public class HtmlResultFormatterTest extends SingleContextBaseTestCase {
     private HtmlResultFormatter formatter;
+    private FitNesseContext context;
+
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
+    }
 
     @Before
     public void setUp() throws Exception {
-        formatter = new HtmlResultFormatter(makeContext(), "somehost.com:8080", "FitNesse");
+        formatter = new HtmlResultFormatter(context, "somehost.com:8080", "FitNesse");
     }
 
     @Test

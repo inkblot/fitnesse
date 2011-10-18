@@ -2,8 +2,8 @@ package fitnesse.authentication;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.components.Base64;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -23,15 +23,17 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 import static util.RegexAssertions.assertSubString;
 
-public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
+public class NegotiateAuthenticatorTest extends SingleContextBaseTestCase {
     private GSSManager manager;
     private Properties properties;
     private final String TOKEN = "xxxxxxxx";
     private HtmlPageFactory htmlPageFactory;
+    private FitNesseContext context;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
     }
 
     @Before
@@ -68,7 +70,6 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
 
     @Test
     public void negotiationErrorScreenForFailureToComplete() throws Exception {
-        FitNesseContext context = makeContext();
         Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token", htmlPageFactory);
         Request request = new MockRequest();
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
@@ -80,7 +81,6 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
 
     @Test
     public void negotiationErrorScreenForNeedingAuthentication() throws Exception {
-        FitNesseContext context = makeContext();
         Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token", htmlPageFactory);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, null);
         String content = response.getContent();

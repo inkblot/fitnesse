@@ -1,6 +1,9 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
@@ -16,16 +19,19 @@ import static org.junit.Assert.*;
 //|Title|titleRegEx|
 //|Content|contentRegEx|
 
-public class SuiteSpecificationRunnerTest extends FitnesseBaseTestCase {
+public class SuiteSpecificationRunnerTest extends SingleContextBaseTestCase {
     private SuiteSpecificationRunner runner;
     private WikiPage root;
     private PageCrawler crawler;
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
 
     @Before
     public void setUp() throws Exception {
         String suitePageName = "SuitePage";
-        root = InMemoryPage.makeRoot("RooT", injector);
         crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("TestPageOne"), "TestPageOne has some testing content and a child");
         WikiPage child = crawler.addPage(root, PathParser.parse("TestPageOne.ChildPage"), "ChildPage is a child of TestPageOne");

@@ -3,8 +3,9 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -13,12 +14,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class NotFoundResponderTest extends FitnesseBaseTestCase {
+public class NotFoundResponderTest extends SingleContextBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
+    private FitNesseContext context;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
     }
 
     @Test
@@ -27,7 +30,7 @@ public class NotFoundResponderTest extends FitnesseBaseTestCase {
         request.setResource("some page");
 
         Responder responder = new NotFoundResponder(htmlPageFactory);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(makeContext(), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertEquals(404, response.getStatus());
 
@@ -45,7 +48,7 @@ public class NotFoundResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageOne.PageTwo");
 
         Responder responder = new NotFoundResponder(htmlPageFactory);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(makeContext(), request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertHasRegexp("\"PageOne[.]PageTwo[?]edit\"", response.getContent());
     }

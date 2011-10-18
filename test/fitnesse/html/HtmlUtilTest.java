@@ -1,23 +1,24 @@
 package fitnesse.html;
 
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.wiki.InMemoryPage;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.wiki.WikiPage;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static util.RegexAssertions.assertSubString;
 
-public class HtmlUtilTest extends FitnesseBaseTestCase {
+public class HtmlUtilTest extends SingleContextBaseTestCase {
     private static final String endl = HtmlElement.endl;
 
     private WikiPage root;
 
-    @Before
-    public void setUp() throws Exception {
-        root = InMemoryPage.makeRoot("root", injector);
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
     }
 
     @Test

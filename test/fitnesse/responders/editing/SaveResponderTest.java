@@ -6,9 +6,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.Provider;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.components.SaveRecorder;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -24,20 +23,23 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SaveResponderTest extends FitnesseBaseTestCase {
-    private WikiPage root;
+public class SaveResponderTest extends SingleContextBaseTestCase {
     private Response response;
     public MockRequest request;
     public Responder responder;
     private PageCrawler crawler;
-    private FitNesseContext context;
 
-    private Provider<Clock> clockProvider;
     private ContentFilter contentFilter;
 
+    private WikiPage root;
+    private FitNesseContext context;
+    private Clock clock;
+
     @Inject
-    public void inject(Provider<Clock> clockProvider) {
-        this.clockProvider = clockProvider;
+    public void inject(Clock clock, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.clock = clock;
+        this.context = context;
+        this.root = root;
     }
 
     @Override
@@ -58,8 +60,6 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         contentFilter = new DefaultContentFilter();
-        context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
         request = new MockRequest();
         responder = injector.getInstance(SaveResponder.class);
@@ -139,7 +139,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
 
         request.setResource(simplePageName);
         request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
-        request.addInput(EditResponder.TIME_STAMP, "" + (clockProvider.get().currentClockTimeInMillis() - 10000));
+        request.addInput(EditResponder.TIME_STAMP, "" + (clock.currentClockTimeInMillis() - 10000));
         request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
@@ -154,14 +154,14 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         String newContent = "some new Content work damn you!";
         request.setResource(pageName);
         request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent);
-        request.addInput(EditResponder.TIME_STAMP, "" + clockProvider.get().currentClockTimeInMillis());
+        request.addInput(EditResponder.TIME_STAMP, "" + clock.currentClockTimeInMillis());
         request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
         Response response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
 
         request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent + " Ok I'm working now");
-        request.addInput(EditResponder.TIME_STAMP, "" + clockProvider.get().currentClockTimeInMillis());
+        request.addInput(EditResponder.TIME_STAMP, "" + clock.currentClockTimeInMillis());
         response = responder.makeResponse(context, request);
         assertEquals(303, response.getStatus());
     }
@@ -197,7 +197,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         WikiPage simplePage = crawler.addPage(root, PathParser.parse(pageName));
 
         PageData data = simplePage.getData();
-        SaveRecorder.pageSaved(data, 0, clockProvider.get());
+        SaveRecorder.pageSaved(data, 0, clock);
         simplePage.commit(data);
     }
 

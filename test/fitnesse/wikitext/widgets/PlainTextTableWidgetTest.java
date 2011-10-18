@@ -1,6 +1,6 @@
 package fitnesse.wikitext.widgets;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.SingleContextBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-public class PlainTextTableWidgetTest extends FitnesseBaseTestCase {
+public class PlainTextTableWidgetTest extends SingleContextBaseTestCase {
     private Pattern pattern;
 
     @Before
@@ -21,7 +21,7 @@ public class PlainTextTableWidgetTest extends FitnesseBaseTestCase {
         String matchingStrings[] = {
                 "![\nsingle row\n]!\n",
                 "![\nrow1\nrow2\n]!\n",
-                "![:\nrow\n]!\n",     // cell seperation punctuation
+                "![:\nrow\n]!\n",     // cell separation punctuation
                 "![: firstRow\nsecondRow\n]!\n",
                 "![ firstRow\nsecondRow\n]!\n",
                 "![\na\nb\nc\nd\n]!\n",
@@ -36,7 +36,7 @@ public class PlainTextTableWidgetTest extends FitnesseBaseTestCase {
                 "![single row\n]!\n", //no line break after ![
                 "![\nsingle row]!\n", // no line end before closing ]!
                 " ![\nrow\n]!\n",   // ![ not at start of line.
-                "![a\nrow\n]!\n",   // cell seperation should be punctuation
+                "![a\nrow\n]!\n",   // cell separation should be punctuation
         };
         for (String matchingString : matchingStrings)
             assertFalse(matchingString + " should not match", pattern.matcher(matchingString).matches());

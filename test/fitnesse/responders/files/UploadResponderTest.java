@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.UploadedFile;
@@ -16,20 +19,26 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class UploadResponderTest extends FitnesseBaseTestCase {
+public class UploadResponderTest extends SingleContextBaseTestCase {
     private FitNesseContext context;
     private UploadResponder responder;
     private MockRequest request;
     private File testFile;
+    private String rootPagePath;
+
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+        this.context = context;
+        this.rootPagePath = rootPagePath;
+    }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        FileUtil.makeDir(getRootPagePath());
-        FileUtil.makeDir(getRootPagePath() + "/files");
-        testFile = FileUtil.createFile(getRootPagePath() + "/tempFile.txt", "test content");
+        FileUtil.makeDir(rootPagePath);
+        FileUtil.makeDir(rootPagePath + "/files");
+        testFile = FileUtil.createFile(rootPagePath + "/tempFile.txt", "test content");
 
-        responder = new UploadResponder(getRootPagePath());
+        responder = new UploadResponder(rootPagePath);
         request = new MockRequest();
     }
 
@@ -40,7 +49,7 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File(getRootPagePath(), "files/sourceFilename.txt");
+        File file = new File(rootPagePath, "files/sourceFilename.txt");
         assertTrue(file.exists());
         assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -55,7 +64,7 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File(getRootPagePath(), "files/source filename.txt");
+        File file = new File(rootPagePath, "files/source filename.txt");
         assertTrue(file.exists());
         assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -65,13 +74,13 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testMakeResponseSpaceInDirectoryName() throws Exception {
-        FileUtil.makeDir(getRootPagePath() + "/files/Folder With Space");
+        FileUtil.makeDir(rootPagePath + "/files/Folder With Space");
         request.addInput("file", new UploadedFile("filename.txt", "plain/text", testFile));
         request.setResource("files/Folder%20With%20Space/");
 
         Response response = responder.makeResponse(context, request);
 
-        File file = new File(getRootPagePath(), "files/Folder With Space/filename.txt");
+        File file = new File(rootPagePath, "files/Folder With Space/filename.txt");
         assertTrue(file.exists());
         assertEquals("test content", FileUtil.getFileContent(file));
 
@@ -102,9 +111,9 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testWriteFile() throws Exception {
-        File file = new File(getRootPagePath(), "testFile");
-        File inputFile = FileUtil.createFile(getRootPagePath() + "/testInput", "heres the content");
-        UploadedFile uploaded = new UploadedFile(getRootPagePath() + "/testOutput", "text", inputFile);
+        File file = new File(rootPagePath, "testFile");
+        File inputFile = FileUtil.createFile(rootPagePath + "/testInput", "heres the content");
+        UploadedFile uploaded = new UploadedFile(rootPagePath + "/testOutput", "text", inputFile);
 
         long inputFileLength = inputFile.length();
         String inputFileContent = FileUtil.getFileContent(inputFile);

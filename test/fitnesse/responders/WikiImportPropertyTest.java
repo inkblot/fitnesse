@@ -3,12 +3,8 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import fitnesse.*;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -21,26 +17,25 @@ import util.Clock;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class WikiImportPropertyTest extends FitnesseBaseTestCase {
+public class WikiImportPropertyTest extends SingleContextBaseTestCase {
     private WikiImportProperty property;
     private WikiPage page;
     private FitNesseContext context;
 
-    private Provider<Clock> clockProvider;
+    private Clock clock;
     private HtmlPageFactory htmlPageFactory;
-    private Properties properties;
 
     @Inject
-    public void inject(@Named(FitNesseContextModule.PROPERTIES_FILE) Properties properties, Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory) {
-        this.properties = properties;
-        this.clockProvider = clockProvider;
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.root = root;
     }
 
     @Before
@@ -80,7 +75,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     @Test
     public void testLastUpdated() throws Exception {
         SimpleDateFormat format = WikiPageProperty.getTimeFormat();
-        Date date = clockProvider.get().currentClockDate();
+        Date date = clock.currentClockDate();
         property.setLastRemoteModificationTime(date);
 
         assertEquals(format.format(date), format.format(property.getLastRemoteModificationTime()));
@@ -99,7 +94,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
         rawImportProperty.set("IsRoot");
         rawImportProperty.set("AutoUpdate");
         rawImportProperty.set("Source", "some source");
-        Date date = clockProvider.get().currentClockDate();
+        Date date = clock.currentClockDate();
         rawImportProperty.set("LastRemoteModification", WikiPageProperty.getTimeFormat().format(date));
 
         WikiImportProperty importProperty = WikiImportProperty.createFrom(property);
@@ -128,15 +123,13 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
 
     public void pageRenderingSetUp() throws Exception {
-        context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
     }
 
     private SimpleResponse requestPage(String name) throws Exception {
         MockRequest request = new MockRequest();
         request.setResource(name);
-        Responder responder = new WikiPageResponder(properties, htmlPageFactory, clockProvider.get());
+        Responder responder = new WikiPageResponder(getProperties(), htmlPageFactory, clock);
         return (SimpleResponse) responder.makeResponse(context, request);
     }
 

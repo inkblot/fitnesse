@@ -3,9 +3,10 @@
 package fitnesse.wiki;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -18,24 +19,25 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class ProxyPageTest extends FitnesseBaseTestCase {
+public class ProxyPageTest extends SingleContextBaseTestCase {
     private ProxyPage proxy;
     public WikiPage child1;
     private PageCrawler crawler;
     private FitNesseUtil fitNesseUtil;
-
-    private Provider<Clock> clockProvider;
+    private Clock clock;
+    private FitNesseContext context;
+    private WikiPage root;
 
     @Inject
-    public void inject(Provider<Clock> clockProvider) {
-        this.clockProvider = clockProvider;
+    public void inject(Clock clock, FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.clock = clock;
+        this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
         CachingPage.cacheTime = 0;
-        FitNesseContext context = makeContext();
-        WikiPage root = context.root;
         crawler = root.getPageCrawler();
         WikiPagePath page1Path = PathParser.parse("PageOne");
         WikiPage original = crawler.addPage(root, page1Path, "page one content");
@@ -49,7 +51,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
         fitNesseUtil.startFitnesse(context);
 
         proxy = new ProxyPage(original, injector);
-        proxy.setTransientValues("localhost", clockProvider.get().currentClockTimeInMillis());
+        proxy.setTransientValues("localhost", clock.currentClockTimeInMillis());
         proxy.setHostPort(FitNesseUtil.DEFAULT_PORT);
     }
 
@@ -93,7 +95,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
     @Test
     public void testSetHostAndPort() throws Exception {
         List<WikiPage> children = proxy.getChildren();
-        proxy.setTransientValues("a.new.host", clockProvider.get().currentClockTimeInMillis());
+        proxy.setTransientValues("a.new.host", clock.currentClockTimeInMillis());
         proxy.setHostPort(123);
 
         assertEquals("a.new.host", proxy.getHost());

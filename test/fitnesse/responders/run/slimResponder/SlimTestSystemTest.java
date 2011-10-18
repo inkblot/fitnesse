@@ -2,8 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseContextModule;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.CommandRunner;
 import fitnesse.http.MockCommandRunner;
@@ -37,16 +39,19 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
-public class SlimTestSystemTest extends FitnesseBaseTestCase {
+public class SlimTestSystemTest extends SingleContextBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private TestSystemListener dummyListener = new DummyListener();
     private SlimTestSystem testSystem;
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
     }
 

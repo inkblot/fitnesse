@@ -3,35 +3,37 @@
 package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
 
 import static util.RegexAssertions.assertHasRegexp;
 
-public class MergeResponderTest extends FitnesseBaseTestCase {
+public class MergeResponderTest extends SingleContextBaseTestCase {
     private MockRequest request;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
+    private WikiPage root;
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
+        this.context = context;
     }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        context.root.getPageCrawler().addPage(context.root, PathParser.parse("SimplePage"), "this is SimplePage");
+        root.getPageCrawler().addPage(context.root, PathParser.parse("SimplePage"), "this is SimplePage");
         request = new MockRequest();
         request.setResource("SimplePage");
         request.addInput(EditResponder.TIME_STAMP, "");

@@ -1,9 +1,11 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.FitNesseContextModule;
 import fitnesse.Responder;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -21,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
  * Date: 9/30/11
  * Time: 8:22 AM
  */
-public class SerializedPageResponderTestCase extends FitnesseBaseTestCase {
+public abstract class SerializedPageResponderTestCase extends SingleContextBaseTestCase {
     protected PageCrawler crawler;
     protected WikiPage root;
     protected MockRequest request;
@@ -29,8 +31,10 @@ public class SerializedPageResponderTestCase extends FitnesseBaseTestCase {
     protected HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
+        this.context = context;
     }
 
     protected void doTestWith(Object obj) throws Exception {

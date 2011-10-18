@@ -1,6 +1,9 @@
 package fitnesse.updates;
 
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseContextModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.PageCrawler;
@@ -15,6 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
@@ -40,30 +44,24 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext(FileSystemPage.class);
+        context = makeContext();
+        assertThat(context.root, instanceOf(FileSystemPage.class));
+        String rootPagePath = this.context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
         root = context.root;
-        setTheRoot();
-        createFakeJarFileResources();
-        createFakeUpdateListFiles();
-        updater = new UpdaterImplementation(context, getRootPagePath(), context.rootPath);
-    }
 
-    private void setTheRoot() throws Exception {
         FileUtil.makeDir(getRootPath());
         crawler = root.getPageCrawler();
-    }
 
-    private void createFakeJarFileResources() {
         FileUtil.createFile("classes/Resources/files/TestFile", "");
         FileUtil.createFile("classes/Resources/files/BestFile", "");
         FileUtil.createFile("classes/Resources/SpecialFile", "");
-    }
 
-    private void createFakeUpdateListFiles() {
         updateList = new File("classes/Resources/updateList");
         updateDoNotCopyOver = new File("classes/Resources/updateDoNotCopyOverList");
         FileUtil.createFile(updateList, "files/TestFile\nfiles/BestFile\n");
         FileUtil.createFile(updateDoNotCopyOver, "SpecialFile");
+
+        updater = new UpdaterImplementation(context, rootPagePath, context.rootPath);
     }
 
     @Test

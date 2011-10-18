@@ -4,17 +4,14 @@ import com.google.inject.*;
 import com.google.inject.name.Names;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
 import org.junit.Before;
 import util.Clock;
 import util.ClockUtil;
 
-import java.io.File;
 import java.util.Properties;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static util.FileUtil.deleteFileSystemDirectory;
 
@@ -32,38 +29,18 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
     protected SampleFileUtility samples;
 
     protected final FitNesseContext makeContext() throws Exception {
-        return makeContext(DEFAULT_PORT);
-    }
-
-    protected final FitNesseContext makeContext(int port) throws Exception {
-        return makeContext(InMemoryPage.class, port);
-    }
-
-    protected final FitNesseContext makeContext(Class<? extends WikiPage> wikiPageClass) throws Exception {
-        return makeContext(wikiPageClass, DEFAULT_PORT);
-    }
-
-    protected final FitNesseContext makeContext(Class<? extends WikiPage> wikiPageClass, int port) throws Exception {
         assertNull(context);
-        context = FitNesseContextModule.makeContext(injector, getRootPath(), "RooT", port, true).getInstance(FitNesseContext.class);
-        assertThat(context.root, instanceOf(wikiPageClass));
+        context = FitNesseContextModule.makeContext(injector, getRootPath(), "RooT", DEFAULT_PORT, true).getInstance(FitNesseContext.class);
         return context;
     }
 
     protected final String getRootPath() {
-        File rootPath = new File(System.getProperty("java.io.tmpdir"), getClass().getSimpleName());
-        assertTrue(rootPath.exists() || rootPath.mkdirs());
-        return rootPath.getAbsolutePath();
-    }
-
-    protected final String getRootPagePath() {
-        assertNotNull("A context must have already been made", context);
-        return context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
+        return TestCaseHelper.getRootPath(getClass().getSimpleName());
     }
 
     protected final void makeSampleFiles() {
         assertNotNull("A context must have already been made", context);
-        samples = new SampleFileUtility(getRootPagePath());
+        samples = new SampleFileUtility(context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH))));
         samples.makeSampleFiles();
     }
 

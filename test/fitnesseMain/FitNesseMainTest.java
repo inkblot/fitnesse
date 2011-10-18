@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import fitnesse.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,8 +52,10 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
     public void testDirCreations() throws Exception {
         context.getInjector().getInstance(FitNesse.class);
 
-        assertTrue(new File(getRootPagePath()).exists());
-        assertTrue(new File(getRootPagePath(), "files").exists());
+        String rootPagePath = this.context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
+
+        assertTrue(new File(rootPagePath).exists());
+        assertTrue(new File(rootPagePath, "files").exists());
     }
 
     @Test

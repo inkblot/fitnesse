@@ -12,7 +12,6 @@ import static org.junit.Assert.assertTrue;
  * User: inkblot
  * Date: 10/17/11
  * Time: 8:11 PM
- * To change this template use File | Settings | File Templates.
  */
 public class TestCaseHelper {
     public static String classPath() {
@@ -56,5 +55,11 @@ public class TestCaseHelper {
             jarPaths[index] = jarList[index].getAbsolutePath();
         }
         return StringUtils.join(jarPaths, File.pathSeparator);
+    }
+
+    public static String getRootPath(String wikiName) {
+        File rootPath = new File(System.getProperty("java.io.tmpdir"), wikiName);
+        assertTrue(rootPath.exists() || rootPath.mkdirs());
+        return rootPath.getAbsolutePath();
     }
 }

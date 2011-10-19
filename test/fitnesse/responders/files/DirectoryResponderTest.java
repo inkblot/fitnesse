@@ -2,12 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import com.google.inject.Key;
-import com.google.inject.name.Names;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -18,19 +15,25 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class DirectoryResponderTest extends FitnesseBaseTestCase {
+public class DirectoryResponderTest extends SingleContextBaseTestCase {
 
-    MockRequest request;
+    private MockRequest request;
     private SimpleResponse response;
     private FitNesseContext context;
     private String rootPagePath;
+    private SampleFileUtility samples;
+
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath, SampleFileUtility samples) {
+        this.context = context;
+        this.rootPagePath = rootPagePath;
+        this.samples = samples;
+    }
 
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = makeContext();
-        rootPagePath = this.context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
-        makeSampleFiles();
+        samples.makeSampleFiles();
         request.setResource("files/testDir/");
         Responder responder = ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
         response = (SimpleResponse) responder.makeResponse(context, request);

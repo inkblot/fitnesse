@@ -2,12 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.files;
 
-import com.google.inject.Key;
-import com.google.inject.name.Names;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.Responder;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.*;
 import fitnesse.http.*;
 import fitnesse.responders.ResponderFactory;
 import org.junit.After;
@@ -23,7 +20,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static util.RegexAssertions.*;
 
-public class FileSystemResponderTest extends FitnesseBaseTestCase {
+public class FileSystemResponderTest extends SingleContextBaseTestCase {
     MockRequest request;
     // Example: "Tue, 02 Apr 2003 22:18:49 GMT"
     private final String HTTP_DATE_REGEXP = "[SMTWF][a-z]{2}\\,\\s[0-9]{2}\\s[JFMASOND][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}\\:[0-9]{2}\\:[0-9]{2}\\sGMT";
@@ -33,13 +30,19 @@ public class FileSystemResponderTest extends FitnesseBaseTestCase {
     private FileResponder responder;
     private Locale saveLocale;
     private String rootPagePath;
+    private SampleFileUtility samples;
+
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath, SampleFileUtility samples) {
+        this.context = context;
+        this.rootPagePath = rootPagePath;
+        this.samples = samples;
+    }
 
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = makeContext();
-        rootPagePath = this.context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
-        makeSampleFiles();
+        samples.makeSampleFiles();
         response = null;
         saveLocale = Locale.getDefault();
     }

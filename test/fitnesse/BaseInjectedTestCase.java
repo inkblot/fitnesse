@@ -26,7 +26,7 @@ public abstract class BaseInjectedTestCase {
         return NOOP_MODULE;
     }
 
-    protected void inject() {
+    protected final void inject() {
         inject(getOverrideModule());
     }
 

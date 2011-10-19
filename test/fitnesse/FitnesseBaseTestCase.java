@@ -1,8 +1,6 @@
 package fitnesse;
 
 import com.google.inject.*;
-import com.google.inject.name.Names;
-import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
@@ -12,7 +10,7 @@ import util.ClockUtil;
 
 import java.util.Properties;
 
-import static org.junit.Assert.*;
+import static com.google.inject.util.Modules.override;
 import static util.FileUtil.deleteFileSystemDirectory;
 
 /**
@@ -25,23 +23,24 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     public static final int DEFAULT_PORT = 1999;
 
-    private FitNesseContext context;
-    protected SampleFileUtility samples;
+    private Injector contextInjector;
 
-    protected final FitNesseContext makeContext() throws Exception {
-        assertNull(context);
-        context = FitNesseContextModule.makeContext(injector, getFitNesseProperties(), getUserpass(), getRootPath(), "RooT", DEFAULT_PORT, true).getInstance(FitNesseContext.class);
-        return context;
+    protected final FitNesseContext getContext() {
+        return getContextInjector().getInstance(FitNesseContext.class);
+    }
+
+    protected final Injector getContextInjector() {
+        if (contextInjector == null) {
+            contextInjector = Guice.createInjector(override(
+                    new FitNesseModule(getFitNesseProperties(), getUserpass()),
+                    new FitNesseContextModule(getFitNesseProperties(), getUserpass(), getRootPath(), "RooT", DEFAULT_PORT, true))
+                    .with(getOverrideModule()));
+        }
+        return contextInjector;
     }
 
     protected final String getRootPath() {
         return TestCaseHelper.getRootPath(getClass().getSimpleName());
-    }
-
-    protected final void makeSampleFiles() {
-        assertNotNull("A context must have already been made", context);
-        samples = new SampleFileUtility(context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH))));
-        samples.makeSampleFiles();
     }
 
     protected final Module[] getBaseModules() {
@@ -66,8 +65,7 @@ public class FitnesseBaseTestCase extends BaseInjectedTestCase {
     @After
     public final void afterAllFitNesseTests() {
         deleteFileSystemDirectory(getRootPath());
-        context = null;
-        samples = null;
+        contextInjector = null;
         inject(NOOP_MODULE);
         ClockUtil.inject((Clock) null);
     }

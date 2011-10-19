@@ -4,8 +4,8 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Responder;
+import fitnesse.SingleContextBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -14,22 +14,24 @@ import org.junit.Test;
 
 import static util.RegexAssertions.assertSubString;
 
-public class RenameFileConfirmationResponderTest extends FitnesseBaseTestCase {
+public class RenameFileConfirmationResponderTest extends SingleContextBaseTestCase {
     MockRequest request;
     private FitNesseContext context;
     private String content;
     private HtmlPageFactory htmlPageFactory;
+    private SampleFileUtility samples;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, SampleFileUtility samples) {
         this.htmlPageFactory = htmlPageFactory;
+        this.context = context;
+        this.samples = samples;
     }
 
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        context = makeContext();
-        makeSampleFiles();
+        samples.makeSampleFiles();
     }
 
     @Test

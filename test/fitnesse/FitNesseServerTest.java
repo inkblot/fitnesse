@@ -2,7 +2,9 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
+import com.google.inject.Inject;
 import fitnesse.http.MockSocket;
+import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,19 +15,25 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class FitNesseServerTest extends FitnesseBaseTestCase {
+public class FitNesseServerTest extends SingleContextBaseTestCase {
     private PageCrawler crawler;
     private WikiPagePath pageOnePath;
     private WikiPagePath pageOneTwoPath;
     private FitNesseContext context;
+    private SampleFileUtility samples;
+
+    @Inject
+    public void inject(FitNesseContext context, SampleFileUtility samples) {
+        this.context = context;
+        this.samples = samples;
+    }
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
         pageOnePath = PathParser.parse("PageOne");
         pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
         crawler = context.root.getPageCrawler();
-        makeSampleFiles();
+        samples.makeSampleFiles();
     }
 
     @Test

@@ -6,7 +6,6 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
@@ -26,14 +25,9 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     private File updateList;
     private File updateDoNotCopyOver;
 
-    protected WikiPage root;
-    protected Update update;
-    protected UpdaterImplementation updater;
-    protected WikiPage pageOne;
-    protected WikiPage pageTwo;
-    protected FitNesseContext context;
-    protected PageCrawler crawler;
+    private UpdaterImplementation updater;
     private boolean updateDone = false;
+    private String rootPath;
 
     @Override
     protected Properties getFitNesseProperties() {
@@ -44,13 +38,13 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context = makeContext();
-        assertThat(context.root, instanceOf(FileSystemPage.class));
-        String rootPagePath = this.context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
-        root = context.root;
+        FitNesseContext context = getContext();
+        WikiPage root = getContextInjector().getInstance(Key.get(WikiPage.class, Names.named(FitNesseContextModule.ROOT_PAGE)));
+        assertThat(root, instanceOf(FileSystemPage.class));
+        String rootPagePath = getContextInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
+        rootPath = getContextInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PATH)));
 
         FileUtil.makeDir(getRootPath());
-        crawler = root.getPageCrawler();
 
         FileUtil.createFile("classes/Resources/files/TestFile", "");
         FileUtil.createFile("classes/Resources/files/BestFile", "");
@@ -61,11 +55,11 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
         FileUtil.createFile(updateList, "files/TestFile\nfiles/BestFile\n");
         FileUtil.createFile(updateDoNotCopyOver, "SpecialFile");
 
-        updater = new UpdaterImplementation(context, rootPagePath, context.rootPath);
+        updater = new UpdaterImplementation(context, rootPagePath, rootPath);
     }
 
     @Test
-    public void shouldBeAbleToGetUpdateFilesAndMakeAlistFromThem() throws Exception {
+    public void shouldBeAbleToGetUpdateFilesAndMakeAListFromThem() throws Exception {
         ArrayList<String> updateArrayList = new ArrayList<String>();
         updater.tryToParseTheFileIntoTheList(updateList, updateArrayList);
         assertEquals("files/TestFile", updateArrayList.get(0));
@@ -97,9 +91,9 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
             if (update.getClass() == ReplacingFileUpdate.class || update.getClass() == FileUpdate.class)
                 update.doUpdate();
         }
-        File testFile = new File(context.rootPath, "files/TestFile");
-        File bestFile = new File(context.rootPath, "files/BestFile");
-        File specialFile = new File(context.rootPath, "SpecialFile");
+        File testFile = new File(rootPath, "files/TestFile");
+        File bestFile = new File(rootPath, "files/BestFile");
+        File specialFile = new File(rootPath, "SpecialFile");
         assertTrue(testFile.exists());
         assertTrue(bestFile.exists());
         assertTrue(specialFile.exists());

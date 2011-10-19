@@ -3,6 +3,7 @@
 package fitnesse.fixtures;
 
 import com.google.inject.*;
+import com.google.inject.name.Names;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
@@ -13,6 +14,7 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import util.Clock;
 import util.FileUtil;
@@ -31,6 +33,7 @@ public class SetUp extends Fixture {
         FitnesseFixtureContext.authenticator = new PromiscuousAuthenticator();
         Injector injector = Guice.createInjector(
                 new FitNesseModule(properties, null),
+                new FitNesseContextModule(properties, null, baseDir, "RooT", 9123, true),
                 new AbstractModule() {
                     @Override
                     protected void configure() {
@@ -52,9 +55,9 @@ public class SetUp extends Fixture {
         //TODO - Inject the test listeners
         WikiImportTestEventListener.register();
 
-        context = FitNesseContextModule.makeContext(injector, properties, null, baseDir, "RooT", 9123, true).getInstance(FitNesseContext.class);
-        root = context.root;
-        fitnesse = context.getInjector().getInstance(FitNesse.class);
+        context = injector.getInstance(FitNesseContext.class);
+        root = injector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseContextModule.ROOT_PAGE)));
+        fitnesse = injector.getInstance(FitNesse.class);
         File historyDirectory = context.getTestHistoryDirectory();
         if (historyDirectory.exists())
             FileUtil.deleteFileSystemDirectory(historyDirectory);

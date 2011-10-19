@@ -2,9 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
-import fitnesse.FitnesseBaseTestCase;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Named;
+import com.google.inject.name.Names;
+import fitnesse.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +19,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
-public class SymbolicPageTest extends FitnesseBaseTestCase {
+public class SymbolicPageTest extends SingleContextBaseTestCase {
     private PageCrawler crawler;
     private WikiPage root;
     private WikiPage pageOne;
@@ -26,10 +30,13 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     private String pageTwoContent = "page two";
     private WikiPage externalRoot;
 
+    @Inject
+    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
+
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = makeContext();
-        root = context.root;
         crawler = root.getPageCrawler();
         String pageOneContent = "page one";
         pageOne = crawler.addPage(root, PathParser.parse(pageOnePath), pageOneContent);
@@ -129,8 +136,10 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     }
 
     private void CreateExternalRoot() throws Exception {
-        FitNesseContext externalContext = FitNesseContextModule.makeContext(injector, getFitNesseProperties(), getUserpass(), "testDir/ExternalRoot", "ExternalRoot", FitNesseContext.DEFAULT_PORT, true).getInstance(FitNesseContext.class);
-        externalRoot = externalContext.root;
+        Injector externalInjector = Guice.createInjector(
+                new FitNesseModule(getProperties(), getUserPass()),
+                new FitNesseContextModule(getProperties(), getUserPass(), TestCaseHelper.getRootPath(getClass().getSimpleName()) + "/external", "ExternalRoot", FitNesseContext.DEFAULT_PORT, true));
+        externalRoot = externalInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseContextModule.ROOT_PAGE)));
         assertThat(externalRoot, instanceOf(InMemoryPage.class));
         PageCrawler externalCrawler = externalRoot.getPageCrawler();
         WikiPage externalPageOne = externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");

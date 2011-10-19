@@ -50,7 +50,7 @@ public class SuiteExecutionReportFormatterTest extends SingleContextBaseTestCase
             Thread.sleep(50);
         }
 
-        formatter.allTestingComplete(totalTimeMeasurement);
+        formatter.allTestingComplete(totalTimeMeasurement.stop());
         assertThat(formatter.suiteExecutionReport.getTotalRunTimeInMillis(),
                 is(totalTimeMeasurement.elapsed()));
     }

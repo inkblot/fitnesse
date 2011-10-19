@@ -40,10 +40,6 @@ public class FitNesseContextModule extends AbstractModule {
         this.omitUpdates = omitUpdates;
     }
 
-    public static Injector makeContext(Injector injector, Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) throws Exception {
-        return injector.createChildInjector(new FitNesseContextModule(properties, userpass, rootPath, rootPageName, port, omitUpdates));
-    }
-
     @Override
     protected void configure() {
         bind(String.class).annotatedWith(Names.named(ROOT_PATH)).toInstance(rootPath);

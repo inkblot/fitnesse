@@ -1,8 +1,6 @@
 package fitnesse.junit;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestSummary;
-import fitnesse.wiki.WikiPageFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +11,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-public class JUnitXmlTestListenerIntegrationTest extends FitnesseBaseTestCase {
+public class JUnitXmlTestListenerIntegrationTest {
     String htmlOutputDir = new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath();
     String xmlOutputDir = new File(System.getProperty("java.io.tmpdir"), "fitnesse-xml").getAbsolutePath();
     String fitNesseRootDir = "..";
@@ -27,16 +25,9 @@ public class JUnitXmlTestListenerIntegrationTest extends FitnesseBaseTestCase {
                     " time=\"[0-9\\.]*\" name=\"FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim\">" +
                     "</testcase></testsuite>";
 
-    @Override
-    protected Properties getFitNesseProperties() {
-        Properties properties = super.getFitNesseProperties();
-        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
-        return properties;
-    }
-
     @Test
     public void checkJunitXmlTestListenerPrintsXmlFiles() throws Exception {
-        JUnitHelper helper = new JUnitHelper(fitNesseRootDir, htmlOutputDir, xmlTestListener, injector);
+        JUnitHelper helper = new JUnitHelper(fitNesseRootDir, htmlOutputDir, xmlTestListener, new Properties());
         helper.assertTestPasses("FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim");
 
         File expectedFile = new File(new File(xmlOutputDir), "TEST-FitNesse.SuiteAcceptanceTests.SuiteSlimTests.MultiByteCharsInSlim.xml");

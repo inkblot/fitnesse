@@ -1,6 +1,5 @@
 package fitnesseMain;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
@@ -28,11 +27,8 @@ public class FitNesseMain {
     public static void main(String[] argv) throws Exception {
         try {
             Arguments args = new Arguments(argv);
-            Injector injector = Guice.createInjector(
-                    new FitNesseModule(
-                            FileUtil.loadProperties(new File(args.getRootPath(), FitNesseContextModule.PROPERTIES_FILE)),
-                            args.getUserpass()));
-            launchFitNesse(args, injector);
+            Properties properties = FileUtil.loadProperties(new File(args.getRootPath(), FitNesseContextModule.PROPERTIES_FILE));
+            launchFitNesse(args, properties);
             if (args.getCommand() != null) {
                 System.exit(BaseFormatter.finalErrorCount);
             }
@@ -55,26 +51,24 @@ public class FitNesseMain {
         }
     }
 
-    public static void launchFitNesse(Arguments arguments, Injector injector) throws Exception {
+    public static void launchFitNesse(Arguments arguments, Properties properties) throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
 
-        Properties pluginProperties = injector.getInstance(Key.get(Properties.class, Names.named(FitNesseContextModule.PROPERTIES_FILE)));
+        Injector injector = GuiceHelper.makeContext(arguments, properties);
 
-        Injector contextInjector = FitNesseContextModule.makeContext(injector, pluginProperties, arguments.getUserpass(), arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.isOmittingUpdates());
-
-        FitNesseContext context = contextInjector.getInstance(FitNesseContext.class);
-        SymbolProvider wikiSymbols = contextInjector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
-        ResponderFactory responderFactory = contextInjector.getInstance(ResponderFactory.class);
-        FitNesse fitnesse = contextInjector.getInstance(FitNesse.class);
-        WikiPageFactory wikiPageFactory = contextInjector.getInstance(WikiPageFactory.class);
+        FitNesseContext context = injector.getInstance(FitNesseContext.class);
+        SymbolProvider wikiSymbols = injector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
+        ResponderFactory responderFactory = injector.getInstance(ResponderFactory.class);
+        FitNesse fitnesse = injector.getInstance(FitNesse.class);
+        WikiPageFactory wikiPageFactory = injector.getInstance(WikiPageFactory.class);
 
         String extraOutput = ComponentFactory.loadPlugins(
                 responderFactory,
                 wikiPageFactory,
                 wikiSymbols,
-                pluginProperties);
-        extraOutput += ComponentFactory.loadResponders(responderFactory, pluginProperties);
-        extraOutput += ComponentFactory.loadSymbolTypes(pluginProperties, wikiSymbols);
+                properties);
+        extraOutput += ComponentFactory.loadResponders(responderFactory, properties);
+        extraOutput += ComponentFactory.loadSymbolTypes(properties, wikiSymbols);
 
         WikiImportTestEventListener.register();
 

@@ -1,8 +1,5 @@
 package fitnesse.junit;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import fitnesse.FitNesseModule;
 import fitnesse.responders.run.JavaFormatter;
 import junit.framework.AssertionFailedError;
 import org.junit.runner.Description;
@@ -23,8 +20,6 @@ import java.util.Properties;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class FitNesseSuite extends ParentRunner<String> {
-
-    private Injector injector;
 
     /**
      * The <code>Name</code> annotation specifies the name of the Fitnesse suite
@@ -114,7 +109,6 @@ public class FitNesseSuite extends ParentRunner<String> {
         this.suiteFilter = getSuiteFilter(suiteClass);
         this.debugMode = useDebugMode(suiteClass);
         this.port = getPort(suiteClass);
-        this.injector = Guice.createInjector(new FitNesseModule(new Properties(), null));
     }
 
     @Override
@@ -211,7 +205,7 @@ public class FitNesseSuite extends ParentRunner<String> {
     }
 
     private JUnitHelper createJUnitHelper(final RunNotifier notifier) {
-        JUnitHelper jUnitHelper = new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier, suiteClass), injector);
+        JUnitHelper jUnitHelper = new JUnitHelper(this.fitNesseDir, this.outputDir, new JUnitRunNotifierResultsListener(notifier, suiteClass), new Properties());
         jUnitHelper.setDebugMode(debugMode);
         jUnitHelper.setPort(port);
         return jUnitHelper;

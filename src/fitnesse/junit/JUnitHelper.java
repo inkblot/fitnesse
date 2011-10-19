@@ -1,12 +1,12 @@
 package fitnesse.junit;
 
-
-import com.google.inject.Injector;
 import fitnesse.responders.run.JavaFormatter;
 import fitnesse.responders.run.ResultsListener;
 import fitnesse.responders.run.TestSummary;
 import fitnesseMain.FitNesseMain;
 import junit.framework.Assert;
+
+import java.util.Properties;
 
 public class JUnitHelper {
 
@@ -17,25 +17,20 @@ public class JUnitHelper {
 
     private int port = 0;
     private boolean debug = true;
-    private String fitNesseDir;
-    private String outputDir;
-    private ResultsListener resultsListener;
-    private Injector injector;
+    private final String rootPath;
+    private final String outputDir;
+    private final ResultsListener resultsListener;
+    private final Properties properties;
 
     public void setPort(int port) {
         this.port = port;
     }
 
-    public JUnitHelper(String fitNesseRootPath, String outputPath, Injector injector) {
-        this(fitNesseRootPath, outputPath, new PrintTestListener(), injector);
-    }
-
-    public JUnitHelper(String fitNesseDir, String outputDir,
-                       ResultsListener resultsListener, Injector injector) {
-        this.fitNesseDir = fitNesseDir;
-        this.outputDir = outputDir;
+    public JUnitHelper(String rootPath, String outputPath, ResultsListener resultsListener, Properties properties) {
+        this.rootPath = rootPath;
+        this.outputDir = outputPath;
         this.resultsListener = resultsListener;
-        this.injector = injector;
+        this.properties = properties;
     }
 
     public TestSummary run(String pageName, String pageType, String suiteFilter, int port) throws Exception {
@@ -47,9 +42,9 @@ public class JUnitHelper {
         arguments.setInstallOnly(false);
         arguments.setOmitUpdates(true);
         arguments.setPort(String.valueOf(port));
-        arguments.setRootPath(fitNesseDir);
+        arguments.setRootPath(rootPath);
         arguments.setCommand(getCommand(pageName, pageType, suiteFilter));
-        FitNesseMain.launchFitNesse(arguments, injector);
+        FitNesseMain.launchFitNesse(arguments, properties);
         return testFormatter.getTotalSummary();
     }
 

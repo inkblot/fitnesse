@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import fitnesse.socketservice.SocketService;
 import util.CommandLine;
@@ -13,12 +12,7 @@ import java.io.IOException;
 
 public class SlimService {
     public static void main(String[] argv) throws IOException {
-        Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                install(new UtilModule());
-            }
-        });
+        Guice.createInjector(new UtilModule());
         startSlimService(argv);
     }
 

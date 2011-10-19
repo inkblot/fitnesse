@@ -1,24 +1,33 @@
 package fitnesse.junit;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Properties;
+
 import static org.junit.Assert.assertEquals;
 
-public class JUnitHelperTest extends SingleContextBaseTestCase {
+public class JUnitHelperTest {
 
     private JUnitHelper helper;
 
     @Before
     public void setUp() {
-        helper = new JUnitHelper("", "", injector);
+        helper = new JUnitHelper("", "", new PrintTestListener(), getProperties());
     }
 
     @After
     public void tearDown() {
         helper = null;
+    }
+
+    protected Properties getProperties() {
+        Properties properties = new Properties();
+        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        return properties;
     }
 
     @Test

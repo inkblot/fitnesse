@@ -87,7 +87,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
         PrintStream out = System.out;
         ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputBytes));
-        FitNesseMain.launchFitNesse(new FitNesseMain.Arguments(args), injector);
+        FitNesseMain.launchFitNesse(new FitNesseMain.Arguments(args), getFitNesseProperties());
         System.setOut(out);
         return outputBytes.toString();
     }

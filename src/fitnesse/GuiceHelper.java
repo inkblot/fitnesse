@@ -1,8 +1,6 @@
 package fitnesse;
 
-import com.google.inject.Binder;
-import com.google.inject.Provider;
-import com.google.inject.TypeLiteral;
+import com.google.inject.*;
 import com.google.inject.name.Names;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -10,6 +8,7 @@ import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.wiki.FileSystemPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesseMain.FitNesseMain;
 
 import java.io.File;
 import java.util.Properties;
@@ -19,7 +18,6 @@ import java.util.Properties;
  * User: inkblot
  * Date: 10/18/11
  * Time: 7:25 AM
- * To change this template use File | Settings | File Templates.
  */
 public class GuiceHelper {
     static void bindAuthenticator(Binder binder, Properties properties, final String userpass) {
@@ -73,5 +71,15 @@ public class GuiceHelper {
             }
         }
         return defaultImplClass;
+    }
+
+    public static Injector makeContext(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) throws Exception {
+        return Guice.createInjector(
+                new FitNesseModule(properties, userpass),
+                new FitNesseContextModule(properties, userpass, rootPath, rootPageName, port, omitUpdates));
+    }
+
+    public static Injector makeContext(FitNesseMain.Arguments arguments, Properties pluginProperties) throws Exception {
+        return makeContext(pluginProperties, arguments.getUserpass(), arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.isOmittingUpdates());
     }
 }

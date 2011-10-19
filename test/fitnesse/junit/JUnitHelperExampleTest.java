@@ -1,8 +1,6 @@
 package fitnesse.junit;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.JavaFormatter;
-import fitnesse.wiki.WikiPageFactory;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +10,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Properties;
 
-public class JUnitHelperExampleTest extends FitnesseBaseTestCase {
+public class JUnitHelperExampleTest {
     JUnitHelper helper;
     private String[] expectedTestsWithSuiteFilter = new String[]{
             "FitNesse.SuiteAcceptanceTests.SuiteSlimTests.ErikPragtBug",
@@ -22,15 +20,8 @@ public class JUnitHelperExampleTest extends FitnesseBaseTestCase {
     @Before
     public void prepare() {
         helper = new JUnitHelper("..",
-                new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath(), injector);
+                new File(System.getProperty("java.io.tmpdir"), "fitnesse").getAbsolutePath(), new PrintTestListener(), new Properties());
         JavaFormatter.dropInstance("FitNesse.SuiteAcceptanceTests.SuiteSlimTests");
-    }
-
-    @Override
-    protected Properties getFitNesseProperties() {
-        Properties properties = super.getFitNesseProperties();
-        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
-        return properties;
     }
 
     @Test

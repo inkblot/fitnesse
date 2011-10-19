@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -28,7 +28,7 @@ public class FitClientResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+    public void inject(FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
         this.context = context;
         this.root = root;
     }

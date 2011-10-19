@@ -5,7 +5,7 @@ package fitnesse.wikitext.widgets;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -22,7 +22,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     private FitNesseContext context;
 
     @Inject
-    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.root = root;
         this.context = context;
     }

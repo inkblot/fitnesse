@@ -7,8 +7,7 @@ import com.google.inject.name.Names;
 import fit.Fixture;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
-import fitnesse.FitNesseModule;
+import fitnesse.FitNeseModule;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.SaveRecorder;
@@ -32,8 +31,7 @@ public class SetUp extends Fixture {
         FitnesseFixtureContext.clock = new SystemClock();
         FitnesseFixtureContext.authenticator = new PromiscuousAuthenticator();
         Injector injector = Guice.createInjector(
-                new FitNesseModule(properties, null),
-                new FitNesseContextModule(properties, null, baseDir, "RooT", 9123, true),
+                new FitNeseModule(properties, null, baseDir, "RooT", 9123, true),
                 new AbstractModule() {
                     @Override
                     protected void configure() {
@@ -56,7 +54,7 @@ public class SetUp extends Fixture {
         WikiImportTestEventListener.register();
 
         context = injector.getInstance(FitNesseContext.class);
-        root = injector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseContextModule.ROOT_PAGE)));
+        root = injector.getInstance(Key.get(WikiPage.class, Names.named(FitNeseModule.ROOT_PAGE)));
         fitnesse = injector.getInstance(FitNesse.class);
         File historyDirectory = context.getTestHistoryDirectory();
         if (historyDirectory.exists())

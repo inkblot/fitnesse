@@ -5,7 +5,7 @@ package fitnesse.responders.files;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import util.FileUtil;
 
 import java.io.File;
@@ -17,7 +17,7 @@ public class SampleFileUtility {
     public final File testFile1;
 
     @Inject
-    public SampleFileUtility(@Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public SampleFileUtility(@Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
         testDir = new File(new File(rootPagePath, "files"), "testDir");
         testFile1 = new File(rootPagePath, "files/testFile1");

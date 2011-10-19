@@ -4,7 +4,7 @@ package fitnesse.responders.run.slimResponder;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.PageCrawler;
@@ -19,7 +19,7 @@ public class TestSystemBaseTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
 
     @Inject
-    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

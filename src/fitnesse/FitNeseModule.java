@@ -2,10 +2,15 @@ package fitnesse;
 
 import com.google.inject.*;
 import com.google.inject.name.Names;
+import fitnesse.html.HtmlPageFactory;
+import fitnesse.responders.editing.ContentFilter;
 import fitnesse.updates.NoOpUpdater;
 import fitnesse.updates.UpdaterImplementation;
+import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wikitext.parser.SymbolProviderModule;
+import util.UtilModule;
 
 import java.io.File;
 import java.util.Properties;
@@ -16,7 +21,7 @@ import java.util.Properties;
 * Date: 9/28/11
 * Time: 11:53 PM
 */
-public class FitNesseContextModule extends AbstractModule {
+public class FitNeseModule extends AbstractModule {
     public static final String ROOT_PAGE = "fitnesse.rootPage";
     public static final String ROOT_PATH = "fitnesse.rootPath";
     public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
@@ -31,7 +36,7 @@ public class FitNesseContextModule extends AbstractModule {
     private final int port;
     private final boolean omitUpdates;
 
-    public FitNesseContextModule(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) {
+    public FitNeseModule(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) {
         this.properties = properties;
         this.userpass = userpass;
         this.rootPath = rootPath;
@@ -42,6 +47,14 @@ public class FitNesseContextModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(Properties.class).annotatedWith(Names.named(FitNeseModule.PROPERTIES_FILE)).toInstance(properties);
+        GuiceHelper.bindAuthenticator(binder(), properties, userpass);
+        GuiceHelper.bindWikiPageClass(binder(), properties);
+        GuiceHelper.bindFromProperty(binder(), VersionsController.class, properties);
+        GuiceHelper.bindFromProperty(binder(), ContentFilter.class, properties);
+        GuiceHelper.bindFromProperty(binder(), HtmlPageFactory.class, properties);
+        install(new SymbolProviderModule());
+        install(new UtilModule());
         bind(String.class).annotatedWith(Names.named(ROOT_PATH)).toInstance(rootPath);
         bind(String.class).annotatedWith(Names.named(ROOT_PAGE_NAME)).toInstance(rootPageName);
         String rootPagePath = rootPath + File.separator + rootPageName;

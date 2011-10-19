@@ -75,8 +75,7 @@ public class GuiceHelper {
 
     public static Injector makeContext(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) throws Exception {
         return Guice.createInjector(
-                new FitNesseModule(properties, userpass),
-                new FitNesseContextModule(properties, userpass, rootPath, rootPageName, port, omitUpdates));
+                new FitNeseModule(properties, userpass, rootPath, rootPageName, port, omitUpdates));
     }
 
     public static Injector makeContext(FitNesseMain.Arguments arguments, Properties pluginProperties) throws Exception {

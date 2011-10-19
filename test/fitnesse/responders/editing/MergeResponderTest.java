@@ -24,7 +24,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;

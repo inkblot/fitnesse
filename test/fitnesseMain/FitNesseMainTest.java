@@ -52,7 +52,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
     public void testDirCreations() throws Exception {
         context.getInjector().getInstance(FitNesse.class);
 
-        String rootPagePath = this.context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
+        String rootPagePath = this.context.getInjector().getInstance(Key.get(String.class, Names.named(FitNeseModule.ROOT_PAGE_PATH)));
 
         assertTrue(new File(rootPagePath).exists());
         assertTrue(new File(rootPagePath, "files").exists());

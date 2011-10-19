@@ -48,15 +48,15 @@ public class FitNesseContext {
 
     @Inject
     public FitNesseContext(
-            @Named(FitNesseContextModule.ROOT_PATH) String rootPath,
-            @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath,
-            @Named(FitNesseContextModule.PORT) Integer port,
+            @Named(FitNeseModule.ROOT_PATH) String rootPath,
+            @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath,
+            @Named(FitNeseModule.PORT) Integer port,
             WikiPageFactory wikiPageFactory,
             ResponderFactory responderFactory,
             HtmlPageFactory htmlPageFactory,
             Provider<Authenticator> authenticatorProvider,
             Injector injector,
-            @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) throws Exception {
+            @Named(FitNeseModule.ROOT_PAGE) WikiPage root) throws Exception {
         this.rootPath = rootPath;
         this.rootPagePath = rootPagePath;
         this.port = port;

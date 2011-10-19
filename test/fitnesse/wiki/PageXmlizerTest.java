@@ -4,7 +4,7 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class PageXmlizerTest extends FitnesseBaseTestCase {
     private SimpleDateFormat format = WikiPageProperty.getTimeFormat();
 
     @Inject
-    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

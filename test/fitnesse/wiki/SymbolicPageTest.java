@@ -31,7 +31,7 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
     private WikiPage externalRoot;
 
     @Inject
-    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 
@@ -137,9 +137,8 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
 
     private void CreateExternalRoot() throws Exception {
         Injector externalInjector = Guice.createInjector(
-                new FitNesseModule(getProperties(), getUserPass()),
-                new FitNesseContextModule(getProperties(), getUserPass(), TestCaseHelper.getRootPath(getClass().getSimpleName()) + "/external", "ExternalRoot", FitNesseContext.DEFAULT_PORT, true));
-        externalRoot = externalInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseContextModule.ROOT_PAGE)));
+                new FitNeseModule(getProperties(), getUserPass(), TestCaseHelper.getRootPath(getClass().getSimpleName()) + "/external", "ExternalRoot", FitNesseContext.DEFAULT_PORT, true));
+        externalRoot = externalInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNeseModule.ROOT_PAGE)));
         assertThat(externalRoot, instanceOf(InMemoryPage.class));
         PageCrawler externalCrawler = externalRoot.getPageCrawler();
         WikiPage externalPageOne = externalCrawler.addPage(externalRoot, PathParser.parse("ExternalPageOne"), "external page one");

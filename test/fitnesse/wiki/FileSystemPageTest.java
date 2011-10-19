@@ -6,7 +6,7 @@ package fitnesse.wiki;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(Clock clock, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(Clock clock, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.clock = clock;
         this.root = root;
         this.context = context;

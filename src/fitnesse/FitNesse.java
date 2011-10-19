@@ -47,7 +47,7 @@ public class FitNesse {
     }
 
     @Inject
-    public FitNesse(Updater updater, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseContextModule.PORT) Integer port, Injector injector) {
+    public FitNesse(Updater updater, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNeseModule.PORT) Integer port, Injector injector) {
         this.injector = injector;
         this.updater = updater;
         this.rootPagePath = rootPagePath;

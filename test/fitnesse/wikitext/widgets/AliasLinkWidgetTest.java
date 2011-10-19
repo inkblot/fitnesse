@@ -4,7 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
     private PageCrawler crawler;
 
     @Inject
-    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

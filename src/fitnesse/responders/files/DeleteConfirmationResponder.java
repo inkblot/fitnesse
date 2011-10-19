@@ -5,7 +5,7 @@ package fitnesse.responders.files;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -22,7 +22,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
     private final String rootPagePath;
 
     @Inject
-    public DeleteConfirmationResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public DeleteConfirmationResponder(HtmlPageFactory htmlPageFactory, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.htmlPageFactory = htmlPageFactory;
         this.rootPagePath = rootPagePath;
     }

@@ -43,7 +43,7 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     private String rootPagePath;
 
     @Inject
-    public void inject(ResponderFactory responderFactory, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(ResponderFactory responderFactory, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.responderFactory = responderFactory;
         this.root = root;
         this.rootPagePath = rootPagePath;

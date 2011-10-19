@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Updater;
 import fitnesse.wiki.*;
@@ -45,7 +45,7 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath, Updater updater) {
+    public void inject(FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath, Updater updater) {
         this.context = context;
         this.root = root;
         this.rootPagePath = rootPagePath;

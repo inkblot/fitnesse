@@ -2,7 +2,7 @@ package fitnesse.updates;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.Updater;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ public class UpdaterBase implements Updater {
     protected final String rootPagePath;
 
     @Inject
-    public UpdaterBase(@Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) throws IOException {
+    public UpdaterBase(@Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath) throws IOException {
         this.rootPagePath = rootPagePath;
         rootProperties = loadProperties();
     }

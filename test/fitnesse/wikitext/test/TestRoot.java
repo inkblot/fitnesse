@@ -2,7 +2,7 @@ package fitnesse.wikitext.test;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.wiki.*;
 
 public class TestRoot {
@@ -10,7 +10,7 @@ public class TestRoot {
     private PageCrawler crawler;
 
     @Inject
-    public TestRoot(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) throws Exception {
+    public TestRoot(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) throws Exception {
         this.root = root;
         crawler = this.root.getPageCrawler();
     }

@@ -5,7 +5,7 @@ package fitnesse.responders.files;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -23,7 +23,7 @@ public class RenameFileResponderTest extends FitnesseBaseTestCase {
     private String rootPagePath;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.context = context;
         this.rootPagePath = rootPagePath;
     }

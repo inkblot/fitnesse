@@ -3,7 +3,7 @@ package fitnesse.updates;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
@@ -36,7 +36,7 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PATH) String rootPath, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(FitNesseContext context, @Named(FitNeseModule.ROOT_PATH) String rootPath, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.context = context;
         this.rootPath = rootPath;
         this.rootPagePath = rootPagePath;

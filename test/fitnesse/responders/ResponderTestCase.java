@@ -5,7 +5,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -23,7 +23,7 @@ public abstract class ResponderTestCase extends FitnesseBaseTestCase {
     protected HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public final void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root, FitNesseContext context, HtmlPageFactory htmlPageFactory) {
+    public final void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, HtmlPageFactory htmlPageFactory) {
         this.root = root;
         this.context = context;
         this.htmlPageFactory = htmlPageFactory;

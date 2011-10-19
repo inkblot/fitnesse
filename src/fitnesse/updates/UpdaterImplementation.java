@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import util.FileUtil;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class UpdaterImplementation extends UpdaterBase {
     private final String rootPath;
 
     @Inject
-    public UpdaterImplementation(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseContextModule.ROOT_PATH) String rootPath) throws IOException {
+    public UpdaterImplementation(FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNeseModule.ROOT_PATH) String rootPath) throws IOException {
         super(rootPagePath);
         this.context = context;
         this.rootPath = rootPath;

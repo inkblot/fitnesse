@@ -2,7 +2,7 @@ package fitnesse.components;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContextModule;
+import fitnesse.FitNeseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -30,7 +30,7 @@ public abstract class CompositePageFinderTestCase extends FitnesseBaseTestCase {
     protected WikiPage pageThree;
 
     @Inject
-    public void inject(@Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

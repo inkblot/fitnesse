@@ -33,7 +33,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     private long testTime;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PAGE) WikiPage root) {
+    public void inject(FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
         this.context = context;
         this.root = root;
     }

@@ -108,9 +108,9 @@ public class VirtualCouplingExtensionTest extends SingleContextBaseTestCase {
     }
 
     @Test
-    public void testNoNastyExceptionIsThrownWhenVirutalChildrenAreLoaded() throws Exception {
+    public void testNoNastyExceptionIsThrownWhenVirtualChildrenAreLoaded() throws Exception {
         WikiPage page3 = crawler.addPage(root, PathParser.parse("PageThree"), "page three content");
-        setVirtualWiki(page3, "http://google.com/SomePage");
+        setVirtualWiki(page3, "http://dorothy.movealong.org/SomePage");
         VirtualCouplingExtension extension = (VirtualCouplingExtension) page3.getExtension(VirtualCouplingExtension.NAME);
         extension.getVirtualCoupling().getChildren();
         assertNotNull(page3.getChildPage("VirtualWikiNetworkError"));

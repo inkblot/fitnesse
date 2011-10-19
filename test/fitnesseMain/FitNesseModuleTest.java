@@ -69,7 +69,7 @@ public class FitNesseModuleTest {
     public void testMakeOneUserAuthenticator() throws Exception {
         Injector injector = Guice.createInjector(
                 new FitNesseModule(testProperties, "bob:uncle"),
-                new FitNesseContextModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseContextModule(testProperties, "bob:uncle", ROOT_PATH, "RooT", 2156, true));
         Authenticator auth = injector.getInstance(Authenticator.class);
         assertTrue(auth instanceof OneUserAuthenticator);
         OneUserAuthenticator oua = (OneUserAuthenticator) auth;
@@ -81,7 +81,7 @@ public class FitNesseModuleTest {
     public void testMakeMultiUserAuthenticator() throws Exception {
         Injector injector = Guice.createInjector(
                 new FitNesseModule(testProperties, passwordFilename),
-                new FitNesseContextModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseContextModule(testProperties, passwordFilename, ROOT_PATH, "RooT", 2156, true));
         Authenticator auth = injector.getInstance(Authenticator.class);
         assertTrue(auth instanceof MultiUserAuthenticator);
     }

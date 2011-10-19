@@ -5,7 +5,7 @@ package fitnesse.components;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class ClassPathBuilderTest extends SingleContextBaseTestCase {
+public class ClassPathBuilderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private ClassPathBuilder builder;
     String pathSeparator = System.getProperty("path.separator");

@@ -1,6 +1,6 @@
 package fitnesse.wikitext;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class PerformanceTest extends SingleContextBaseTestCase {
+public class PerformanceTest extends FitnesseBaseTestCase {
     private String tablePageContent = "";
     private String definePageContent = "";
 

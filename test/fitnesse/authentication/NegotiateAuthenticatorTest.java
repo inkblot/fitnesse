@@ -3,7 +3,7 @@ package fitnesse.authentication;
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.components.Base64;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 import static util.RegexAssertions.assertSubString;
 
-public class NegotiateAuthenticatorTest extends SingleContextBaseTestCase {
+public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     private GSSManager manager;
     private Properties properties;
     private final String TOKEN = "xxxxxxxx";

@@ -4,7 +4,7 @@ package fitnesse.runner;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.Request;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.testutil.FitNesseUtil;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class FormattingOptionTest extends SingleContextBaseTestCase {
+public class FormattingOptionTest extends FitnesseBaseTestCase {
     private ByteArrayOutputStream output;
     private FormattingOption option;
     private CachingResultFormatter formatter;

@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import static util.RegexAssertions.assertSubString;
 
-public class DeleteConfirmationResponderTest extends SingleContextBaseTestCase {
+public class DeleteConfirmationResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
     private FitNesseContext context;
     private String rootPagePath;

@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static util.RegexAssertions.assertSubString;
 
-public class SymbolicLinkResponderTest extends SingleContextBaseTestCase {
+public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     private WikiPage pageOne;
     private WikiPage childTwo;
     private MockRequest request;

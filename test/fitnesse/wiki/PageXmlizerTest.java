@@ -5,7 +5,7 @@ package fitnesse.wiki;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotSame;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class PageXmlizerTest extends SingleContextBaseTestCase {
+public class PageXmlizerTest extends FitnesseBaseTestCase {
     private PageXmlizer xmlizer;
     private WikiPage root;
     private PageCrawler crawler;

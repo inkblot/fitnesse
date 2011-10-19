@@ -23,7 +23,7 @@ import java.util.Properties;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class ComponentFactoryTest extends SingleContextBaseTestCase {
+public class ComponentFactoryTest extends FitnesseBaseTestCase {
     private Properties testProperties;
     private SymbolProvider testProvider;
     private WikiPageFactory wikiPageFactory;

@@ -35,7 +35,7 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ResponderFactoryTest extends SingleContextBaseTestCase {
+public class ResponderFactoryTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private PageCrawler crawler;
     private ResponderFactory responderFactory;

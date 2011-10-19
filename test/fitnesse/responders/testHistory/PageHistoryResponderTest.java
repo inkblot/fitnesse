@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class PageHistoryResponderTest extends SingleContextBaseTestCase {
+public class PageHistoryResponderTest extends FitnesseBaseTestCase {
     private File resultsDirectory;
     private TestHistory history;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);

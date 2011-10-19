@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import static util.RegexAssertions.*;
 
-public class VersionResponderTest extends SingleContextBaseTestCase {
+public class VersionResponderTest extends FitnesseBaseTestCase {
     private String oldVersion;
     private SimpleResponse response;
     private HtmlPageFactory htmlPageFactory;

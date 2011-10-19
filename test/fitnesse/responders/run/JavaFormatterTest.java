@@ -1,6 +1,6 @@
 package fitnesse.responders.run;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageDummy;
 import org.junit.Before;
@@ -10,7 +10,7 @@ import util.TimeMeasurement;
 import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class JavaFormatterTest extends SingleContextBaseTestCase {
+public class JavaFormatterTest extends FitnesseBaseTestCase {
 
     private final String nestedPageName = "ParentTest.ChildTest";
     private final String suiteName = "MySuite";

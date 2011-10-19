@@ -3,7 +3,7 @@ package fitnesse.html;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static util.RegexAssertions.assertSubString;
 
-public class HtmlUtilTest extends SingleContextBaseTestCase {
+public class HtmlUtilTest extends FitnesseBaseTestCase {
     private static final String endl = HtmlElement.endl;
 
     private WikiPage root;

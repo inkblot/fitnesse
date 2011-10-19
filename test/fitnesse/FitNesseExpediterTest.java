@@ -21,7 +21,7 @@ import java.io.PipedOutputStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class FitNesseExpediterTest extends SingleContextBaseTestCase {
+public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     private FitNesseExpediter expediter;
     private MockSocket socket;
     private FitNesseContext context;

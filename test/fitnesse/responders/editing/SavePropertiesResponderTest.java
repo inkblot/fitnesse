@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SavePropertiesResponderTest extends SingleContextBaseTestCase {
+public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     private MockRequest request;

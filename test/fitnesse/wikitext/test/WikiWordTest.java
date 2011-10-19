@@ -1,7 +1,7 @@
 package fitnesse.wikitext.test;
 
 import com.google.inject.Inject;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.WikiWordWidget;
 import org.junit.Before;
@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class WikiWordTest extends SingleContextBaseTestCase {
+public class WikiWordTest extends FitnesseBaseTestCase {
     private TestRoot root;
     private WikiPage pageOne;
     private WikiPage pageOneTwo;

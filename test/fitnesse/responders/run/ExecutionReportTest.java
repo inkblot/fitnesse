@@ -1,6 +1,6 @@
 package fitnesse.responders.run;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.VelocityFactory;
 import org.junit.Test;
 import org.w3c.dom.Element;
@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ExecutionReportTest extends SingleContextBaseTestCase {
+public class ExecutionReportTest extends FitnesseBaseTestCase {
 
     @Test
     public void canReadTestExecutionReport() throws Exception {

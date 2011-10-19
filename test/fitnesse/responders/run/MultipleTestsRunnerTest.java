@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static util.RegexAssertions.assertSubString;
 
-public class MultipleTestsRunnerTest extends SingleContextBaseTestCase {
+public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private WikiPage suite;
     private WikiPage testPage;

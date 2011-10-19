@@ -5,7 +5,7 @@ package fitnesse.responders.files;
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import static util.RegexAssertions.assertSubString;
 
-public class RenameFileConfirmationResponderTest extends SingleContextBaseTestCase {
+public class RenameFileConfirmationResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
     private FitNesseContext context;
     private String content;

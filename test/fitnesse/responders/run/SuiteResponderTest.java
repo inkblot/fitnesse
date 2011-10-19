@@ -9,7 +9,7 @@ import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -37,7 +37,7 @@ import static junit.framework.Assert.fail;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.*;
 
-public class SuiteResponderTest extends SingleContextBaseTestCase {
+public class SuiteResponderTest extends FitnesseBaseTestCase {
     private static final Date TEST_TIME = DateTimeUtil.getDateFromString("12/5/2008 01:19:00");
     private MockRequest request;
     private SuiteResponder responder;

@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SaveResponderTest extends SingleContextBaseTestCase {
+public class SaveResponderTest extends FitnesseBaseTestCase {
     private Response response;
     public MockRequest request;
     public Responder responder;

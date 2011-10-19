@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSummary;
@@ -17,7 +17,7 @@ import util.TimeMeasurement;
 
 import static util.RegexAssertions.assertSubString;
 
-public class TestHtmlFormatterTest extends SingleContextBaseTestCase {
+public class TestHtmlFormatterTest extends FitnesseBaseTestCase {
     private BaseFormatter formatter;
     private StringBuffer pageBuffer = new StringBuffer();
     private WikiPage page;

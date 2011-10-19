@@ -4,7 +4,7 @@ package fitnesse.runner;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestSummary;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class HtmlResultFormatterTest extends SingleContextBaseTestCase {
+public class HtmlResultFormatterTest extends FitnesseBaseTestCase {
     private HtmlResultFormatter formatter;
     private FitNesseContext context;
 

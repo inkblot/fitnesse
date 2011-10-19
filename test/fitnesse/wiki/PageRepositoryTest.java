@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileSystem;
@@ -15,7 +15,7 @@ import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 
-public class PageRepositoryTest extends SingleContextBaseTestCase {
+public class PageRepositoryTest extends FitnesseBaseTestCase {
     private PageRepository pageRepository;
     private FileSystemPage rootPage;
 

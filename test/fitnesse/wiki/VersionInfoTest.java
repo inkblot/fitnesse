@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class VersionInfoTest extends SingleContextBaseTestCase {
+public class VersionInfoTest extends FitnesseBaseTestCase {
     @Test
     public void testRegex() throws Exception {
         Matcher match = VersionInfo.COMPEX_NAME_PATTERN.matcher("01234567890123");

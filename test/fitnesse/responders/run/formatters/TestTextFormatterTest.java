@@ -1,6 +1,6 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;
@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 
 import static org.mockito.Mockito.*;
 
-public class TestTextFormatterTest extends SingleContextBaseTestCase {
+public class TestTextFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void testCompleteShouldAddPageAndSummaryAndTimingToResponse() throws Exception {

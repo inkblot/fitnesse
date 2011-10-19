@@ -2,10 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
+import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import fitnesse.*;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -20,9 +20,9 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     private FitNesseContext context;
 
-    @Before
-    public void setUp() throws Exception {
-        context = getContext();
+    @Inject
+    public void inject(FitNesseContext context) {
+        this.context = context;
     }
 
     @Test
@@ -87,7 +87,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
         PrintStream out = System.out;
         ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputBytes));
-        FitNesseMain.launchFitNesse(new FitNesseMain.Arguments(args), getFitNesseProperties());
+        FitNesseMain.launchFitNesse(new FitNesseMain.Arguments(args), getProperties());
         System.setOut(out);
         return outputBytes.toString();
     }

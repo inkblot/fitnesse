@@ -4,7 +4,7 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
@@ -17,7 +17,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class ChunkingResponderTest extends SingleContextBaseTestCase {
+public class ChunkingResponderTest extends FitnesseBaseTestCase {
 
     private Exception exception;
     private ChunkedResponse response;

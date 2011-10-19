@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.TestCaseHelper;
 import fitnesse.http.MockSocket;
 import fitnesse.responders.run.SocketDealer;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class FitClientTest extends SingleContextBaseTestCase implements TestSystemListener {
+public class FitClientTest extends FitnesseBaseTestCase implements TestSystemListener {
     private List<String> outputs = new ArrayList<String>();
     private List<TestSummary> counts = new ArrayList<TestSummary>();
     private CommandRunningFitClient client;

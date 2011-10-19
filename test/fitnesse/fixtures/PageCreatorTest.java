@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.fixtures;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class PageCreatorTest extends SingleContextBaseTestCase {
+public class PageCreatorTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         FitnesseFixtureContext.root = InMemoryPage.makeRoot("root", injector);

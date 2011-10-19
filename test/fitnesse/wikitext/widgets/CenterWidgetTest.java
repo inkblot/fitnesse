@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 
 import java.util.regex.Pattern;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class CenterWidgetTest extends SingleContextBaseTestCase {
+public class CenterWidgetTest extends FitnesseBaseTestCase {
     @Test
     public void testRegexp() throws Exception {
         assertTrue("match1", Pattern.matches(CenterWidget.REGEXP, "!c centered text\n"));

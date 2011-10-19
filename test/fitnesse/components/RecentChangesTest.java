@@ -5,7 +5,7 @@ package fitnesse.components;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class RecentChangesTest extends SingleContextBaseTestCase {
+public class RecentChangesTest extends FitnesseBaseTestCase {
     private WikiPage newPage;
     private WikiPage page1;
     private WikiPage page2;

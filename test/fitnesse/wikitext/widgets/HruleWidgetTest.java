@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class HruleWidgetTest extends SingleContextBaseTestCase {
+public class HruleWidgetTest extends FitnesseBaseTestCase {
     private static String endl = HtmlElement.endl;
 
     @Test

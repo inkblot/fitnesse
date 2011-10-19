@@ -38,7 +38,7 @@ import static org.junit.Assert.*;
 import static util.RegexAssertions.*;
 import static util.XmlUtil.getElementByTagName;
 
-public class TestResponderTest extends SingleContextBaseTestCase {
+public class TestResponderTest extends FitnesseBaseTestCase {
     private static final String TEST_TIME = "12/5/2008 01:19:00";
     private WikiPage root;
     private MockRequest request;

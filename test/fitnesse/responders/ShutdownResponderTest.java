@@ -5,7 +5,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -19,7 +19,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ShutdownResponderTest extends SingleContextBaseTestCase {
+public class ShutdownResponderTest extends FitnesseBaseTestCase {
     private FitNesse fitnesse;
     private FitNesseContext context;
     private boolean doneShuttingDown;

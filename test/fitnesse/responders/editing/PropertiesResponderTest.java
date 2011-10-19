@@ -19,7 +19,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.*;
 
-public class PropertiesResponderTest extends SingleContextBaseTestCase {
+public class PropertiesResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private MockRequest request;

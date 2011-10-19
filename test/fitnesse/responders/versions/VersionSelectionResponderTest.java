@@ -17,7 +17,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class VersionSelectionResponderTest extends SingleContextBaseTestCase {
+public class VersionSelectionResponderTest extends FitnesseBaseTestCase {
     private WikiPage page;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;

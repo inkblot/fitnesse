@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class RollbackResponderTest extends SingleContextBaseTestCase {
+public class RollbackResponderTest extends FitnesseBaseTestCase {
     private WikiPage page;
     private HtmlPageFactory htmlPageFactory;
     private FitNesseContext context;

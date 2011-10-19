@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class ExecuteSearchPropertiesResponderTest extends SingleContextBaseTestCase {
+public class ExecuteSearchPropertiesResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private ExecuteSearchPropertiesResponder responder;

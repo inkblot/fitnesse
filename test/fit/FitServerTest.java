@@ -3,7 +3,7 @@
 // Released under the terms of the GNU General Public License version 2 or later.
 package fit;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.TestCaseHelper;
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import java.net.Socket;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
-public class FitServerTest extends SingleContextBaseTestCase {
+public class FitServerTest extends FitnesseBaseTestCase {
     private static final int PORT_NUMBER = 1634;
     private Process process;
     private Socket socket;

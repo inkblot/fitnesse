@@ -5,7 +5,7 @@ package fitnesse.wikitext;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.*;
 import org.junit.Before;
@@ -16,7 +16,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class WidgetVisitorTest extends SingleContextBaseTestCase implements WidgetVisitor {
+public class WidgetVisitorTest extends FitnesseBaseTestCase implements WidgetVisitor {
     List<WikiWidget> visits = new ArrayList<WikiWidget>();
     private WikiPage root;
 

@@ -19,7 +19,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
-public class SymbolicPageTest extends SingleContextBaseTestCase {
+public class SymbolicPageTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private WikiPage root;
     private WikiPage pageOne;

@@ -2,13 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class WikiPagePathTest extends SingleContextBaseTestCase {
+public class WikiPagePathTest extends FitnesseBaseTestCase {
     public WikiPagePath path;
 
     @Before

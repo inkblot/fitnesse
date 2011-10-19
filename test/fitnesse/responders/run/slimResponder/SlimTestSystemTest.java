@@ -5,7 +5,7 @@ package fitnesse.responders.run.slimResponder;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.CommandRunner;
 import fitnesse.http.MockCommandRunner;
@@ -39,7 +39,7 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
-public class SlimTestSystemTest extends SingleContextBaseTestCase {
+public class SlimTestSystemTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private TestSystemListener dummyListener = new DummyListener();

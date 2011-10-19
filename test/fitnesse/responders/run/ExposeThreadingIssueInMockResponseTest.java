@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -23,7 +23,7 @@ import org.junit.Test;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExposeThreadingIssueInMockResponseTest extends SingleContextBaseTestCase {
+public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private MockRequest request;
     private TestResponder responder;

@@ -16,7 +16,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class RefactorPageResponderTest extends SingleContextBaseTestCase {
+public class RefactorPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private MockRequest request;
     private Responder responder;

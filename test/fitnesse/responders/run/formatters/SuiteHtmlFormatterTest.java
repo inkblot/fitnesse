@@ -4,7 +4,7 @@ package fitnesse.responders.run.formatters;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.TestSummary;
@@ -16,7 +16,7 @@ import util.TimeMeasurement;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class SuiteHtmlFormatterTest extends SingleContextBaseTestCase {
+public class SuiteHtmlFormatterTest extends FitnesseBaseTestCase {
     private HtmlPage htmlPage;
     private SuiteHtmlFormatter formatter;
     private StringBuffer pageBuffer = new StringBuffer();

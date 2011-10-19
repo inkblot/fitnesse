@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wikitext.WikiWidget;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class TableCellWidgetTest extends SingleContextBaseTestCase {
+public class TableCellWidgetTest extends FitnesseBaseTestCase {
     public TableRowWidget row;
     private StandardTableWidget table;
 

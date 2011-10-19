@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class HistoryComparatorResponderTest extends SingleContextBaseTestCase {
+public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
     public HistoryComparatorResponder responder;
     public FitNesseContext context;
     private String rootPagePath;

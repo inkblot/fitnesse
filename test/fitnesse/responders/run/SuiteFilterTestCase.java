@@ -6,14 +6,14 @@ package fitnesse.responders.run;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SuiteFilterTestCase extends SingleContextBaseTestCase {
+public class SuiteFilterTestCase extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private WikiPage root;
 

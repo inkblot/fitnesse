@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SimpleCachingPage;
 import org.junit.After;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class VirtualCouplingExtensionTest extends SingleContextBaseTestCase {
+public class VirtualCouplingExtensionTest extends FitnesseBaseTestCase {
     private FitNesseUtil fitNesseUtil;
     public WikiPage root;
     public BaseWikiPage page1;

@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestSystemTest extends SingleContextBaseTestCase {
+public class TestSystemTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private WikiPage root;
 

@@ -1,6 +1,6 @@
 package fitnesse.wikitext.widgets;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-public class PlainTextTableWidgetTest extends SingleContextBaseTestCase {
+public class PlainTextTableWidgetTest extends FitnesseBaseTestCase {
     private Pattern pattern;
 
     @Before

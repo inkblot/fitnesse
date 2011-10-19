@@ -2,14 +2,14 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class PageReferenceRenamerTest extends SingleContextBaseTestCase {
+public class PageReferenceRenamerTest extends FitnesseBaseTestCase {
     WikiPage root;
     WikiPage subWiki;
     WikiPage subWiki_pageOne;

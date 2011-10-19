@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.UploadedFile;
@@ -19,7 +19,7 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class UploadResponderTest extends SingleContextBaseTestCase {
+public class UploadResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private UploadResponder responder;
     private MockRequest request;

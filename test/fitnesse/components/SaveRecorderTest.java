@@ -5,7 +5,7 @@ package fitnesse.components;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import util.Clock;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SaveRecorderTest extends SingleContextBaseTestCase {
+public class SaveRecorderTest extends FitnesseBaseTestCase {
     public WikiPage somePage;
     private PageCrawler crawler;
     private Clock clock;

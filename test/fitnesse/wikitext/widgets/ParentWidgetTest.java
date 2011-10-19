@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WikiWidget;
@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ParentWidgetTest extends SingleContextBaseTestCase {
+public class ParentWidgetTest extends FitnesseBaseTestCase {
     private ParentWidget parent;
     private WikiPage rootPage;
 

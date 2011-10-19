@@ -21,7 +21,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class SuiteHistoryFormatterTest extends SingleContextBaseTestCase {
+public class SuiteHistoryFormatterTest extends FitnesseBaseTestCase {
     private SuiteHistoryFormatter formatter;
     private WikiPage testPage;
     private StringWriter writer;

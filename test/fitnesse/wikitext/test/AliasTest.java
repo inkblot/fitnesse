@@ -3,11 +3,11 @@ package fitnesse.wikitext.test;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
-public class AliasTest extends SingleContextBaseTestCase {
+public class AliasTest extends FitnesseBaseTestCase {
 
     private WikiPage root;
 

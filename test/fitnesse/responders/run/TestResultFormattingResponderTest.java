@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import fit.Counts;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -24,7 +24,7 @@ import java.io.PipedOutputStream;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertSubString;
 
-public class TestResultFormattingResponderTest extends SingleContextBaseTestCase {
+public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
     private PipedOutputStream output;
     private PipedInputStream input;
     private TestResultFormattingResponder responder;

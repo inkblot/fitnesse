@@ -1,73 +1,61 @@
 package fitnesse;
 
-import com.google.inject.*;
+import com.google.inject.Key;
+import com.google.inject.Module;
+import com.google.inject.name.Names;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
-import org.junit.Before;
-import util.Clock;
-import util.ClockUtil;
+import util.FileUtil;
 
+import java.io.File;
 import java.util.Properties;
 
-import static com.google.inject.util.Modules.override;
-import static util.FileUtil.deleteFileSystemDirectory;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by IntelliJ IDEA.
  * User: inkblot
- * Date: 8/22/11
- * Time: 10:24 PM
+ * Date: 10/16/11
+ * Time: 10:14 PM
  */
-public class FitnesseBaseTestCase extends BaseInjectedTestCase {
+public abstract class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
-    public static final int DEFAULT_PORT = 1999;
-
-    private Injector contextInjector;
-
-    protected final FitNesseContext getContext() {
-        return getContextInjector().getInstance(FitNesseContext.class);
+    @Override
+    protected Module[] getBaseModules() {
+        return new Module[]{
+                new FitNesseModule(getProperties(), getUserPass()),
+                new FitNesseContextModule(getProperties(), getUserPass(), getRootPath(), getRootPageName(), getPort(), true)
+        };
     }
 
-    protected final Injector getContextInjector() {
-        if (contextInjector == null) {
-            contextInjector = Guice.createInjector(override(
-                    new FitNesseModule(getFitNesseProperties(), getUserpass()),
-                    new FitNesseContextModule(getFitNesseProperties(), getUserpass(), getRootPath(), "RooT", DEFAULT_PORT, true))
-                    .with(getOverrideModule()));
-        }
-        return contextInjector;
+    @After
+    public void afterContextualText() {
+        FileUtil.deleteFileSystemDirectory(injector.getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PATH))));
     }
 
-    protected final String getRootPath() {
-        return TestCaseHelper.getRootPath(getClass().getSimpleName());
-    }
-
-    protected final Module[] getBaseModules() {
-        return new Module[]{new FitNesseModule(getFitNesseProperties(), getUserpass())};
-    }
-
-    protected String getUserpass() {
+    protected String getUserPass() {
         return null;
     }
 
-    protected Properties getFitNesseProperties() {
+    protected Properties getProperties() {
         Properties properties = new Properties();
         properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         return properties;
     }
 
-    @Before
-    public final void beforeAllFitNesseTests() {
-        inject();
+    protected final String getRootPath() {
+        File rootPath = new File(System.getProperty("java.io.tmpdir"), getClass().getSimpleName());
+        assertTrue(rootPath.exists() || rootPath.mkdirs());
+        return rootPath.getAbsolutePath();
     }
 
-    @After
-    public final void afterAllFitNesseTests() {
-        deleteFileSystemDirectory(getRootPath());
-        contextInjector = null;
-        inject(NOOP_MODULE);
-        ClockUtil.inject((Clock) null);
+    protected String getRootPageName() {
+        return "RooT";
+    }
+
+    protected int getPort() {
+        return 1999;
     }
 
 }

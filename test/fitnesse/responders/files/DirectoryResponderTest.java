@@ -15,7 +15,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class DirectoryResponderTest extends SingleContextBaseTestCase {
+public class DirectoryResponderTest extends FitnesseBaseTestCase {
 
     private MockRequest request;
     private SimpleResponse response;

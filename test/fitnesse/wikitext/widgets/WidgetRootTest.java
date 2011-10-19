@@ -7,7 +7,7 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesse;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class WidgetRootTest extends SingleContextBaseTestCase {
+public class WidgetRootTest extends FitnesseBaseTestCase {
     public static final int PORT = 9876;
     private FitNesseContext context;
     private WikiPage root;

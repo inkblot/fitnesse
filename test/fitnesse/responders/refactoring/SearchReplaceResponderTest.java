@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -17,7 +17,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.internal.matchers.StringContains.containsString;
 
-public class SearchReplaceResponderTest extends SingleContextBaseTestCase {
+public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private SearchReplaceResponder responder;

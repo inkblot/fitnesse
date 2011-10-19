@@ -5,7 +5,7 @@ package fitnesse.authentication;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -14,7 +14,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class SecureOperationTest extends SingleContextBaseTestCase {
+public class SecureOperationTest extends FitnesseBaseTestCase {
     private SecureReadOperation sro;
     private WikiPage root;
     private MockRequest request;

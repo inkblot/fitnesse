@@ -5,7 +5,7 @@ package fitnesse.wikitext.widgets;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 import static org.junit.Assert.*;
 
-public class WikiWordWidgetTest extends SingleContextBaseTestCase {
+public class WikiWordWidgetTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
 

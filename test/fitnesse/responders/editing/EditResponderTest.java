@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertFalse;
 import static util.RegexAssertions.assertMatches;
 import static util.RegexAssertions.assertSubString;
 
-public class EditResponderTest extends SingleContextBaseTestCase {
+public class EditResponderTest extends FitnesseBaseTestCase {
     public static final String TEST_DEFAULT_PAGE_CONTENT = "Will the real slim shady please stand up";
     private WikiPage root;
     private MockRequest request;

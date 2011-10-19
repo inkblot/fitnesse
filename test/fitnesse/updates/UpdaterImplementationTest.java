@@ -1,12 +1,10 @@
 package fitnesse.updates;
 
-import com.google.inject.Key;
-import com.google.inject.name.Names;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
 import fitnesse.FitnesseBaseTestCase;
-import fitnesse.wiki.FileSystemPage;
-import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -17,7 +15,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
@@ -27,23 +24,26 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
 
     private UpdaterImplementation updater;
     private boolean updateDone = false;
+    private FitNesseContext context;
     private String rootPath;
+    private String rootPagePath;
 
     @Override
-    protected Properties getFitNesseProperties() {
-        Properties properties = super.getFitNesseProperties();
+    protected Properties getProperties() {
+        Properties properties = super.getProperties();
         properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
         return properties;
     }
 
+    @Inject
+    public void inject(FitNesseContext context, @Named(FitNesseContextModule.ROOT_PATH) String rootPath, @Named(FitNesseContextModule.ROOT_PAGE_PATH) String rootPagePath) {
+        this.context = context;
+        this.rootPath = rootPath;
+        this.rootPagePath = rootPagePath;
+    }
+
     @Before
     public void setUp() throws Exception {
-        FitNesseContext context = getContext();
-        WikiPage root = getContextInjector().getInstance(Key.get(WikiPage.class, Names.named(FitNesseContextModule.ROOT_PAGE)));
-        assertThat(root, instanceOf(FileSystemPage.class));
-        String rootPagePath = getContextInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PAGE_PATH)));
-        rootPath = getContextInjector().getInstance(Key.get(String.class, Names.named(FitNesseContextModule.ROOT_PATH)));
-
         FileUtil.makeDir(getRootPath());
 
         FileUtil.createFile("classes/Resources/files/TestFile", "");

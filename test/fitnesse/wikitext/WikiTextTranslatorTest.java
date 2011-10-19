@@ -5,7 +5,7 @@ package fitnesse.wikitext;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.ParentWidget;
@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class WikiTextTranslatorTest extends SingleContextBaseTestCase {
+public class WikiTextTranslatorTest extends FitnesseBaseTestCase {
     private WikiPage page;
     private String expectedHtmlFromWikiText =
             "<table border=\"1\" cellspacing=\"0\">\n<tr><td>this</td>" + HtmlElement.endl +

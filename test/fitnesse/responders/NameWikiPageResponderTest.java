@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -23,7 +23,7 @@ import static junit.framework.Assert.assertEquals;
 import static util.RegexAssertions.assertDoesNotHaveRegexp;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class NameWikiPageResponderTest extends SingleContextBaseTestCase {
+public class NameWikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private NameWikiPageResponder responder;
     private MockRequest request;

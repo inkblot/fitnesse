@@ -13,7 +13,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
-public class AddChildPageResponderTest extends SingleContextBaseTestCase {
+public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageData childPageData;
     private PageCrawler crawler;

@@ -2,7 +2,7 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import static util.RegexAssertions.assertSubString;
  * Date: 10/13/11
  * Time: 7:29 PM
  */
-public class ClassPathResponderTest extends SingleContextBaseTestCase {
+public class ClassPathResponderTest extends FitnesseBaseTestCase {
 
     private ClassPathResponder responder;
     private Clock clock;

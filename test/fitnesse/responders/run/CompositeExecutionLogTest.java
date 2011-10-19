@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockCommandRunner;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -12,7 +12,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static util.RegexAssertions.assertSubString;
 
-public class CompositeExecutionLogTest extends SingleContextBaseTestCase {
+public class CompositeExecutionLogTest extends FitnesseBaseTestCase {
     private WikiPage testPage;
     private MockCommandRunner runner;
     private CompositeExecutionLog log;

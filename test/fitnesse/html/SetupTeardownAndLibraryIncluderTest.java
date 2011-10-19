@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.html;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class SetupTeardownAndLibraryIncluderTest extends SingleContextBaseTestCase {
+public class SetupTeardownAndLibraryIncluderTest extends FitnesseBaseTestCase {
     private PageData pageData;
     private PageCrawler crawler;
     private WikiPage root;

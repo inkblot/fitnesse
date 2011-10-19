@@ -5,7 +5,7 @@ package fitnesse.responders.run.slimResponder;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
@@ -14,7 +14,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestSystemBaseTest extends SingleContextBaseTestCase {
+public class TestSystemBaseTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
 

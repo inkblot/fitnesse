@@ -5,7 +5,7 @@ package fitnesse.authentication;
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class AuthenticatorTest extends SingleContextBaseTestCase {
+public class AuthenticatorTest extends FitnesseBaseTestCase {
     SimpleAuthenticator authenticator;
     private MockRequest request;
     private Class<? extends Responder> responderType;

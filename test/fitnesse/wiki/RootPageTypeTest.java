@@ -3,7 +3,7 @@ package fitnesse.wiki;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
  * Time: 10:41 AM
  */
 @RunWith(Parameterized.class)
-public class RootPageTypeTest extends SingleContextBaseTestCase {
+public class RootPageTypeTest extends FitnesseBaseTestCase {
 
     private final Class<? extends WikiPage> wikiPageClass;
     private WikiPage root;

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 import static util.RegexAssertions.assertSubString;
 
-public class HistoryComparatorTest extends SingleContextBaseTestCase {
+public class HistoryComparatorTest extends FitnesseBaseTestCase {
     private HistoryComparator comparator;
     public FitNesseContext context;
     public WikiPage root;

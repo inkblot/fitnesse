@@ -4,7 +4,7 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class SocketCatchingResponderTest extends SingleContextBaseTestCase {
+public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
     private SocketDealer dealer;
     private SimpleSocketSeeker seeker;
     private MockResponseSender sender;

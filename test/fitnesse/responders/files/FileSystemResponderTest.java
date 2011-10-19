@@ -20,7 +20,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static util.RegexAssertions.*;
 
-public class FileSystemResponderTest extends SingleContextBaseTestCase {
+public class FileSystemResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
     // Example: "Tue, 02 Apr 2003 22:18:49 GMT"
     private final String HTTP_DATE_REGEXP = "[SMTWF][a-z]{2}\\,\\s[0-9]{2}\\s[JFMASOND][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}\\:[0-9]{2}\\:[0-9]{2}\\sGMT";

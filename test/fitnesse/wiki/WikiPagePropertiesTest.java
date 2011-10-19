@@ -3,7 +3,7 @@
 package fitnesse.wiki;
 
 import com.google.inject.Inject;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
@@ -15,7 +15,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class WikiPagePropertiesTest extends SingleContextBaseTestCase {
+public class WikiPagePropertiesTest extends FitnesseBaseTestCase {
     private WikiPageProperties properties;
 
     static String endl = System.getProperty("line.separator"),

@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class PageDataWikiPageResponderTest extends SingleContextBaseTestCase {
+public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage pageOne;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;

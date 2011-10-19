@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import static junit.framework.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SuiteContentsFinderTest extends SingleContextBaseTestCase {
+public class SuiteContentsFinderTest extends FitnesseBaseTestCase {
 
     private WikiPage root;
     private WikiPage suite;

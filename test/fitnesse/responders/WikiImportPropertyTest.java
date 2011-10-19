@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 import static util.RegexAssertions.assertNotSubString;
 import static util.RegexAssertions.assertSubString;
 
-public class WikiImportPropertyTest extends SingleContextBaseTestCase {
+public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private WikiImportProperty property;
     private WikiPage page;
     private FitNesseContext context;

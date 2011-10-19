@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import org.junit.Before;
@@ -17,7 +17,7 @@ import java.io.File;
 
 import static org.junit.Assert.*;
 
-public class RenameFileResponderTest extends SingleContextBaseTestCase {
+public class RenameFileResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private FitNesseContext context;
     private String rootPagePath;

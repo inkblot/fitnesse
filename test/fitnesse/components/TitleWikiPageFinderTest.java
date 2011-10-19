@@ -3,7 +3,7 @@ package fitnesse.components;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -16,7 +16,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
-public class TitleWikiPageFinderTest extends SingleContextBaseTestCase implements SearchObserver {
+public class TitleWikiPageFinderTest extends FitnesseBaseTestCase implements SearchObserver {
     WikiPage root;
 
     private List<WikiPage> hits = new ArrayList<WikiPage>();

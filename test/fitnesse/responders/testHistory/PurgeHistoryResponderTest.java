@@ -2,7 +2,7 @@ package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
@@ -21,7 +21,7 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 
-public class PurgeHistoryResponderTest extends SingleContextBaseTestCase {
+public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     private File resultsDirectory;
     private TestHistory history;
     private FitNesseContext context;

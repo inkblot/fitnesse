@@ -5,7 +5,7 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
 import fitnesse.Responder;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
  * Date: 9/30/11
  * Time: 8:22 AM
  */
-public abstract class SerializedPageResponderTestCase extends SingleContextBaseTestCase {
+public abstract class SerializedPageResponderTestCase extends FitnesseBaseTestCase {
     protected PageCrawler crawler;
     protected WikiPage root;
     protected MockRequest request;

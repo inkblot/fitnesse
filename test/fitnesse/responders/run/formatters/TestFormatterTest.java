@@ -2,7 +2,7 @@ package fitnesse.responders.run.formatters;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.TestSummary;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestFormatterTest extends SingleContextBaseTestCase {
+public class TestFormatterTest extends FitnesseBaseTestCase {
 
     private WikiPageDummy page;
     private TestSummary right;

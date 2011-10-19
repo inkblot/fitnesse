@@ -16,7 +16,7 @@ import util.Clock;
 
 import static util.RegexAssertions.assertHasRegexp;
 
-public class MergeResponderTest extends SingleContextBaseTestCase {
+public class MergeResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;

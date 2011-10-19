@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
-public class CachingSuiteXmlFormatterTest extends SingleContextBaseTestCase {
+public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     private CachingSuiteXmlFormatter formatter;
     private FitNesseContext context;
     private WikiPage root;

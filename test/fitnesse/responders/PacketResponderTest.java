@@ -5,7 +5,7 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
 import fitnesse.Responder;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PageCrawler;
@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class PacketResponderTest extends SingleContextBaseTestCase {
+public class PacketResponderTest extends FitnesseBaseTestCase {
     protected WikiPage root;
     protected MockRequest request;
     protected Responder responder;

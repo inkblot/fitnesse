@@ -5,7 +5,7 @@ package fitnesse.wiki;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.components.TraversalListener;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class PageCrawlerTest extends SingleContextBaseTestCase implements TraversalListener {
+public class PageCrawlerTest extends FitnesseBaseTestCase implements TraversalListener {
     private WikiPage root;
     private WikiPage page1;
     private WikiPage page2;

@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
@@ -22,7 +22,7 @@ import java.util.Properties;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
-public class FileSystemPageTest extends SingleContextBaseTestCase {
+public class FileSystemPageTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private static List<String> cmMethodCalls = new ArrayList<String>();
 

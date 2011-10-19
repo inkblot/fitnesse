@@ -1,6 +1,6 @@
 package fitnesse.components;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import static fitnesse.wiki.PageType.*;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-public class AttributeWikiPageFinderTest extends SingleContextBaseTestCase implements SearchObserver {
+public class AttributeWikiPageFinderTest extends FitnesseBaseTestCase implements SearchObserver {
 
     private WikiPage root;
     private PageCrawler crawler;

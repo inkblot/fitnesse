@@ -1,14 +1,14 @@
 package fitnesse.wikitext.test;
 
 import com.google.inject.Inject;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
 import static fitnesse.wikitext.test.ParserTestHelper.assertParses;
 import static org.junit.Assert.assertTrue;
 
-public class IncludeTest extends SingleContextBaseTestCase {
+public class IncludeTest extends FitnesseBaseTestCase {
 
     private TestRoot root;
 

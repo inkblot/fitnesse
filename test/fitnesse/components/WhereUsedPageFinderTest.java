@@ -3,7 +3,7 @@ package fitnesse.components;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class WhereUsedPageFinderTest extends SingleContextBaseTestCase implements SearchObserver {
+public class WhereUsedPageFinderTest extends FitnesseBaseTestCase implements SearchObserver {
     private WikiPage root;
     private InMemoryPage pageOne;
     private WikiPage pageTwo;

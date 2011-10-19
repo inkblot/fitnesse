@@ -1,6 +1,6 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class PathTest extends SingleContextBaseTestCase {
+public class PathTest extends FitnesseBaseTestCase {
     @Test
     public void scansPaths() {
         ParserTestHelper.assertScansTokenType("!path stuff", "Path", true);

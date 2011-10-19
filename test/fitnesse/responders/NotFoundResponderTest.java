@@ -5,7 +5,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -14,7 +14,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class NotFoundResponderTest extends SingleContextBaseTestCase {
+public class NotFoundResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
     private FitNesseContext context;
 

@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class PreformattedWidgetTest extends SingleContextBaseTestCase {
+public class PreformattedWidgetTest extends FitnesseBaseTestCase {
     @Test
     public void testRegexp() throws Exception {
         Pattern pattern = Pattern.compile(PreformattedWidget.REGEXP, Pattern.DOTALL);

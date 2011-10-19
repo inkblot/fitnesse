@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.schedule;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ScheduleTest extends SingleContextBaseTestCase {
+public class ScheduleTest extends FitnesseBaseTestCase {
     private boolean shouldAddCounters;
 
     @Test

@@ -3,7 +3,7 @@ package fitnesse.components;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -19,7 +19,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public abstract class CompositePageFinderTestCase extends SingleContextBaseTestCase {
+public abstract class CompositePageFinderTestCase extends FitnesseBaseTestCase {
 
     protected PageFinder delegate;
     protected CompositePageFinder sut;

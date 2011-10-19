@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class DeleteFileResponderTest extends SingleContextBaseTestCase {
+public class DeleteFileResponderTest extends FitnesseBaseTestCase {
     public MockRequest request;
     private FitNesseContext context;
     private String rootPagePath;

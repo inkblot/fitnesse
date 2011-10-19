@@ -22,7 +22,7 @@ import java.util.Properties;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.*;
 
-public class WikiPageResponderTest extends SingleContextBaseTestCase {
+public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private FitNesseContext context;

@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-public class ProxyPageTest extends SingleContextBaseTestCase {
+public class ProxyPageTest extends FitnesseBaseTestCase {
     private ProxyPage proxy;
     public WikiPage child1;
     private PageCrawler crawler;

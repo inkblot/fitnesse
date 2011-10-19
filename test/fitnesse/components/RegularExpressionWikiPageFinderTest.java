@@ -3,7 +3,7 @@ package fitnesse.components;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.hamcrest.Description;
@@ -18,7 +18,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-public class RegularExpressionWikiPageFinderTest extends SingleContextBaseTestCase implements SearchObserver {
+public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase implements SearchObserver {
 
     private WikiPage root;
     private WikiPage pageOne;

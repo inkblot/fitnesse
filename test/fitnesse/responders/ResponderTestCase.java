@@ -7,14 +7,14 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
 import fitnesse.Responder;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 
-public abstract class ResponderTestCase extends SingleContextBaseTestCase {
+public abstract class ResponderTestCase extends FitnesseBaseTestCase {
     protected WikiPage root;
     protected MockRequest request;
     protected Responder responder;

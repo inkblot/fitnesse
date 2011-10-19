@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 import static util.RegexAssertions.assertSubString;
 
-public class FitNesseServerTest extends SingleContextBaseTestCase {
+public class FitNesseServerTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private WikiPagePath pageOnePath;
     private WikiPagePath pageOneTwoPath;

@@ -2,7 +2,7 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertSubString;
 
-public class StopTestResponderTest extends SingleContextBaseTestCase {
+public class StopTestResponderTest extends FitnesseBaseTestCase {
 
     private Request request = null;
     private FitNesseContext context = null;

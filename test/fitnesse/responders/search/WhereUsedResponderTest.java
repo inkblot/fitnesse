@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -20,7 +20,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class WhereUsedResponderTest extends SingleContextBaseTestCase {
+public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;

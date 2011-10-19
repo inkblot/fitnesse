@@ -8,7 +8,7 @@ import com.google.inject.Module;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
 import fitnesse.FitNesseContextModule;
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Updater;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -16,7 +16,7 @@ import util.FileUtil;
 
 import java.util.Properties;
 
-public abstract class UpdateTestCase extends SingleContextBaseTestCase {
+public abstract class UpdateTestCase extends FitnesseBaseTestCase {
 
     protected WikiPage root;
     protected String rootPagePath;

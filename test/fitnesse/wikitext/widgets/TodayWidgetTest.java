@@ -1,6 +1,6 @@
 package fitnesse.wikitext.widgets;
 
-import fitnesse.SingleContextBaseTestCase;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class TodayWidgetTest extends SingleContextBaseTestCase {
+public class TodayWidgetTest extends FitnesseBaseTestCase {
     @Before
     public void setup() {
         TodayWidget.todayForTest = new GregorianCalendar(1952, Calendar.DECEMBER, 5, 1, 13, 23);  //GDTH unix date!!!  Eleven == Dec

@@ -23,25 +23,23 @@ public class FitClientResponderTest extends FitnesseBaseTestCase {
     private FitClientResponder responder;
     private MockRequest request;
     private FitNesseContext context;
-    private static PageCrawler crawler;
-    private static WikiPage suite;
+    private PageCrawler crawler;
+    private WikiPage suite;
     private WikiPage root;
+    private SocketDealer socketDealer;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
         this.context = context;
         this.root = root;
+        this.socketDealer = socketDealer;
     }
 
     @Before
     public void setUp() throws Exception {
-        responder = new FitClientResponder(root, getPort());
+        responder = new FitClientResponder(root, getPort(), socketDealer);
         request = new MockRequest();
 
-        buildSuite(root);
-    }
-
-    public static void buildSuite(WikiPage root) throws Exception {
         crawler = root.getPageCrawler();
         suite = crawler.addPage(root, PathParser.parse("SuitePage"), "!path classes\n");
         WikiPage page1 = crawler.addPage(suite, PathParser.parse("TestPassing"), "!|fitnesse.testutil.PassFixture|\n");

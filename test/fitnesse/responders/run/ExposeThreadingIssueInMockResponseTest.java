@@ -31,6 +31,7 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     private PageCrawler crawler;
     private FitSocketReceiver receiver;
     private HtmlPageFactory htmlPageFactory;
+    private SocketDealer socketDealer;
 
     @Override
     protected int getPort() {
@@ -38,19 +39,20 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     }
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
+        this.socketDealer = socketDealer;
     }
 
     @Before
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root, getPort());
+        responder = new TestResponder(htmlPageFactory, root, getPort(), socketDealer);
 
-        receiver = new FitSocketReceiver(getPort(), context.socketDealer);
+        receiver = new FitSocketReceiver(getPort(), socketDealer);
         receiver.receiveSocket();
     }
 

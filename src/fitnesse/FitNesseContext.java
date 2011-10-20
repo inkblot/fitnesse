@@ -11,7 +11,6 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
-import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 
@@ -34,9 +33,8 @@ public class FitNesseContext {
     private final ResponderFactory responderFactory;
     private final WikiPageFactory wikiPageFactory;
     private final HtmlPageFactory htmlPageFactory;
-    public final Provider<Authenticator> authenticatorProvider;
+    private final Provider<Authenticator> authenticatorProvider;
 
-    public SocketDealer socketDealer = new SocketDealer();
     public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;

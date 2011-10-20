@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
-    private SocketDealer dealer;
+    private SocketDealer socketDealer;
     private SimpleSocketSeeker seeker;
     private MockResponseSender sender;
     private SocketCatchingResponder responder;
@@ -25,23 +25,22 @@ public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
 
     @Inject
-    public void inject(FitNesseContext context) {
+    public void inject(FitNesseContext context, SocketDealer socketDealer) {
         this.context = context;
+        this.socketDealer = socketDealer;
     }
 
     @Before
     public void setUp() throws Exception {
-        dealer = new SocketDealer();
         seeker = new SimpleSocketSeeker();
         sender = new MockResponseSender();
-        responder = new SocketCatchingResponder();
-        dealer = context.socketDealer;
+        responder = new SocketCatchingResponder(socketDealer);
         request = new MockRequest();
     }
 
     @Test
     public void testSuccess() throws Exception {
-        int ticket = dealer.seekingSocket(seeker);
+        int ticket = socketDealer.seekingSocket(seeker);
         request.addInput("ticket", ticket + "");
         Response response = responder.makeResponse(context, request);
         response.readyToSend(sender);

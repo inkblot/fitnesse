@@ -12,6 +12,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.editing.ContentFilter;
 import fitnesse.responders.editing.DefaultContentFilter;
+import fitnesse.responders.run.SocketDealer;
 import fitnesse.testutil.SimpleAuthenticator;
 import fitnesse.wiki.*;
 import fitnesse.wiki.zip.ZipFileVersionsController;
@@ -195,6 +196,7 @@ public class FitNesseModuleTest {
         assertNotNull(injector.getInstance(ResponderFactory.class));
         assertNotNull(injector.getInstance(Updater.class));
         assertNotNull(injector.getInstance(FitNesse.class));
+        assertNotNull(injector.getInstance(SocketDealer.class));
     }
 
 }

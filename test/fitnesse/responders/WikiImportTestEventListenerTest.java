@@ -8,6 +8,7 @@ import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
@@ -33,11 +34,13 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     private StandardOutAndErrorRecorder standardOutAndErrorRecorder;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
+    private SocketDealer socketDealer;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
+        this.socketDealer = socketDealer;
     }
 
     @Before
@@ -150,7 +153,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockTestResponder extends TestResponder {
         private MockTestResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
-            super(htmlPageFactory, root, getPort());
+            super(htmlPageFactory, root, getPort(), WikiImportTestEventListenerTest.this.socketDealer);
             response = new ChunkedResponse("html");
         }
 
@@ -165,7 +168,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockSuiteResponder extends SuiteResponder {
         private MockSuiteResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
-            super(htmlPageFactory, root, getPort());
+            super(htmlPageFactory, root, getPort(), WikiImportTestEventListenerTest.this.socketDealer);
             response = new ChunkedResponse("html");
         }
 

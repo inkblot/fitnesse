@@ -20,6 +20,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     private final WikiPage page;
     private final List<WikiPage> testPagesToRun;
     private final int port;
+    private final SocketDealer socketDealer;
 
     private boolean isFastTest = false;
     private boolean isRemoteDebug = false;
@@ -37,12 +38,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
                                final FitNesseContext context,
                                final WikiPage page,
                                final ResultsListener resultsListener,
-                               WikiPage root, int port) {
+                               WikiPage root, int port, SocketDealer socketDealer) {
         this.testPagesToRun = testPagesToRun;
         this.resultsListener = resultsListener;
         this.page = page;
         this.context = context;
         this.port = port;
+        this.socketDealer = socketDealer;
         surrounder = new PageListSetUpTearDownSurrounder(root);
     }
 
@@ -73,7 +75,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
     private void internalExecuteTestPages() throws IOException {
         synchronized (this) {
-            testSystemGroup = new TestSystemGroup(context, page, this, port);
+            testSystemGroup = new TestSystemGroup(page, this, port, socketDealer);
             stopId = context.runningTestingTracker.addStartedProcess(this);
         }
         testSystemGroup.setFastTest(isFastTest);

@@ -44,6 +44,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private TestResponder responder;
     private FitNesseContext context;
+    private SocketDealer socketDealer;
     private Response response;
     private MockResponseSender sender;
     private WikiPage testPage;
@@ -71,10 +72,11 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, SocketDealer socketDealer) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
+        this.socketDealer = socketDealer;
     }
 
     @Before
@@ -82,9 +84,9 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root, getPort());
+        responder = new TestResponder(htmlPageFactory, root, getPort(), socketDealer);
         responder.setFastTest(true);
-        receiver = new FitSocketReceiver(getPort(), context.socketDealer);
+        receiver = new FitSocketReceiver(getPort(), socketDealer);
         receiver.receiveSocket();
 
         // holy side-effects, batman!  you wouldn't think from reading this line

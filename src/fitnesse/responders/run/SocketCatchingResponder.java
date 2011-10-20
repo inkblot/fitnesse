@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
@@ -15,14 +16,18 @@ import java.io.OutputStream;
 
 public class SocketCatchingResponder implements Responder, SocketDonor, ResponsePuppeteer {
     private int ticketNumber;
-    private SocketDealer dealer;
     private ResponseSender sender;
     private PuppetResponse response;
     private InputStream input;
     private OutputStream output;
+    private final SocketDealer socketDealer;
+
+    @Inject
+    public SocketCatchingResponder(SocketDealer socketDealer) {
+        this.socketDealer = socketDealer;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        dealer = context.socketDealer;
         ticketNumber = Integer.parseInt(request.getInput("ticket").toString());
         response = new PuppetResponse(this);
         return response;
@@ -32,8 +37,8 @@ public class SocketCatchingResponder implements Responder, SocketDonor, Response
         input = sender.getInputStream();
         output = sender.getOutputStream();
         this.sender = sender;
-        if (dealer.isWaiting(ticketNumber))
-            dealer.dealSocketTo(ticketNumber, this);
+        if (socketDealer.isWaiting(ticketNumber))
+            socketDealer.dealSocketTo(ticketNumber, this);
         else {
             String errorMessage = "There are no clients waiting for a socket with ticketNumber " + ticketNumber;
             FitProtocol.writeData(errorMessage, output);

@@ -30,11 +30,13 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     private String suiteFilter;
     private final WikiPage root;
     private final Integer port;
+    private final SocketDealer socketDealer;
 
     @Inject
-    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port) {
+    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer) {
         this.root = root;
         this.port = port;
+        this.socketDealer = socketDealer;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) {
@@ -86,7 +88,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         List<WikiPage> testPages = suiteTestFinder.makePageList();
 
         if (shouldIncludePaths) {
-            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, page, null, root, port);
+            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, page, null, root, port, socketDealer);
             String classpath = runner.buildClassPath();
             client.send(classpath);
         }

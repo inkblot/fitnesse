@@ -25,6 +25,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
     private StoppedRecorder stoppableA = new StoppedRecorder();
     private StoppedRecorder stoppableB = new StoppedRecorder();
     private HtmlPageFactory htmlPageFactory;
+    private SocketDealer socketDealer;
 
     @Override
     protected int getPort() {
@@ -32,9 +33,10 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, SocketDealer socketDealer) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
+        this.socketDealer = socketDealer;
     }
 
     @Before
@@ -86,7 +88,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
 
 
     private String runResponder(StopTestResponder responder) throws Exception {
-        FitSocketReceiver fitSocketReceiver = new FitSocketReceiver(getPort(), context.socketDealer);
+        FitSocketReceiver fitSocketReceiver = new FitSocketReceiver(getPort(), socketDealer);
         try {
             fitSocketReceiver.receiveSocket();
             Response response = responder.makeResponse(context, request);

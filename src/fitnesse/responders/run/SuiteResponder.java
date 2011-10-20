@@ -14,8 +14,8 @@ public class SuiteResponder extends TestResponder {
     private boolean includeHtml;
 
     @Inject
-    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port) {
-        super(htmlPageFactory, root, port);
+    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer) {
+        super(htmlPageFactory, root, port, socketDealer);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SuiteResponder extends TestResponder {
     protected void performExecution(FitNesseContext context, WikiPage root, WikiPage page) throws Exception {
         SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest(page));
         SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
-        MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters, root, port);
+        MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters, root, port, socketDealer);
         runner.setDebug(isRemoteDebug());
         runner.setFastTest(isFastTest());
         runner.executeTestPages();

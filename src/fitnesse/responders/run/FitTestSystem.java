@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
 import fitnesse.components.CommandRunningFitClient;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
@@ -11,23 +10,23 @@ import java.io.IOException;
 import java.util.Map;
 
 public class FitTestSystem extends TestSystem {
-    private final FitNesseContext context;
     private final boolean fastTest;
     private final int port;
+    private final SocketDealer socketDealer;
 
     private CommandRunningFitClient client;
 
-    public FitTestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener, boolean fastTest, int port) {
+    public FitTestSystem(WikiPage page, TestSystemListener listener, boolean fastTest, int port, SocketDealer socketDealer) {
         super(page, listener);
-        this.context = context;
         this.fastTest = fastTest;
         this.port = port;
+        this.socketDealer = socketDealer;
     }
 
     protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws IOException {
         String command = buildCommand(descriptor, classPath);
         Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
-        client = new CommandRunningFitClient(this, command, port, environmentVariables, context.socketDealer, fastTest);
+        client = new CommandRunningFitClient(this, command, port, environmentVariables, socketDealer, fastTest);
         return new ExecutionLog(page, client.commandRunner);
     }
 

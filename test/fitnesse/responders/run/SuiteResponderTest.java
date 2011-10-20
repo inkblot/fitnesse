@@ -42,6 +42,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private SuiteResponder responder;
     private WikiPage root;
+    private SocketDealer socketDealer;
     private WikiPage suite;
     private FitNesseContext context;
     private FitSocketReceiver receiver;
@@ -72,11 +73,12 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
         this.clockProvider = clockProvider;
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
+        this.socketDealer = socketDealer;
     }
 
     @Before
@@ -94,11 +96,11 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource(suitePageName);
-        responder = new SuiteResponder(htmlPageFactory, root, getPort());
+        responder = new SuiteResponder(htmlPageFactory, root, getPort(), socketDealer);
         responder.turnOffChunking();
         responder.setFastTest(true);
 
-        receiver = new FitSocketReceiver(getPort(), context.socketDealer);
+        receiver = new FitSocketReceiver(getPort(), socketDealer);
     }
 
     private WikiPage addTestToSuite(String name, String content) throws IOException {

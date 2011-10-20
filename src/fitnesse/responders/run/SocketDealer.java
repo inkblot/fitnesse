@@ -2,10 +2,13 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Singleton;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Singleton
 public class SocketDealer {
     private Map<Integer, SocketSeeker> waitingList = new HashMap<Integer, SocketSeeker>(17);
     private int ticketCounter = 1;

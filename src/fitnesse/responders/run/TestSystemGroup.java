@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
 import fitnesse.responders.run.slimResponder.HtmlSlimTestSystem;
 import fitnesse.wiki.WikiPage;
 
@@ -12,19 +11,19 @@ import java.util.Map;
 
 public class TestSystemGroup {
     private final Map<TestSystem.Descriptor, TestSystem> testSystems = new HashMap<TestSystem.Descriptor, TestSystem>();
-    private final FitNesseContext context;
     private final WikiPage page;
     private final TestSystemListener testSystemListener;
     private final CompositeExecutionLog log;
     private final int port;
+    private final SocketDealer socketDealer;
 
     private boolean fastTest = false;
 
-    public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener, int port) {
-        this.context = context;
+    public TestSystemGroup(WikiPage page, TestSystemListener listener, int port, SocketDealer socketDealer) {
         this.page = page;
         this.testSystemListener = listener;
         this.port = port;
+        this.socketDealer = socketDealer;
         log = new CompositeExecutionLog(page);
     }
 
@@ -70,7 +69,7 @@ public class TestSystemGroup {
         if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.testSystemName)))
             return new HtmlSlimTestSystem(page, testSystemListener);
         else
-            return new FitTestSystem(context, page, testSystemListener, fastTest, port);
+            return new FitTestSystem(page, testSystemListener, fastTest, port, socketDealer);
     }
 
 }

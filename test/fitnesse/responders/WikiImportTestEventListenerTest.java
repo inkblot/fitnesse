@@ -9,6 +9,7 @@ import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
@@ -35,15 +36,28 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     private StandardOutAndErrorRecorder standardOutAndErrorRecorder;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
+    private String testResultsPath;
+    private Integer port;
     private SocketDealer socketDealer;
     private FitNesseContext context;
+    private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, FitNesseContext context) {
+    public void inject(
+            HtmlPageFactory htmlPageFactory,
+            @Named(FitNesseModule.ROOT_PAGE) WikiPage root,
+            @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath,
+            @Named(FitNesseModule.PORT) Integer port,
+            SocketDealer socketDealer,
+            FitNesseContext context,
+            RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
+        this.testResultsPath = testResultsPath;
+        this.port = port;
         this.socketDealer = socketDealer;
         this.context = context;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
@@ -56,8 +70,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
         importerFactory = new MockWikiImporterFactory();
         eventListener = new WikiImportTestEventListener(importerFactory);
-        testResponder = new MockTestResponder(htmlPageFactory, root);
-        suiteResponder = new MockSuiteResponder(htmlPageFactory, root);
+        testResponder = new MockTestResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
+        suiteResponder = new MockSuiteResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
     }
 
     @After
@@ -155,8 +169,9 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     }
 
     private class MockTestResponder extends TestResponder {
-        private MockTestResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
-            super(htmlPageFactory, root, getPort(), WikiImportTestEventListenerTest.this.socketDealer, context);
+        private MockTestResponder(HtmlPageFactory htmlPageFactory, WikiPage root, String testResultsPath, Integer port,
+                                  SocketDealer socketDealer, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+            super(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
             response = new ChunkedResponse("html");
         }
 
@@ -170,8 +185,9 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     }
 
     private class MockSuiteResponder extends SuiteResponder {
-        private MockSuiteResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
-            super(htmlPageFactory, root, getPort(), WikiImportTestEventListenerTest.this.socketDealer, context);
+        public MockSuiteResponder(HtmlPageFactory htmlPageFactory, WikiPage root, String testResultsPath, Integer port,
+                                  SocketDealer socketDealer, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+            super(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
             response = new ChunkedResponse("html");
         }
 

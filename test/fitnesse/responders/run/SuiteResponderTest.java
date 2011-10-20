@@ -43,6 +43,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     private SuiteResponder responder;
     private WikiPage root;
     private SocketDealer socketDealer;
+    private RunningTestingTracker runningTestingTracker;
     private WikiPage suite;
     private FitNesseContext context;
     private FitSocketReceiver receiver;
@@ -56,6 +57,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
     private Provider<Clock> clockProvider;
     private HtmlPageFactory htmlPageFactory;
+    private File testResultsPath;
 
     @Override
     protected Module getOverrideModule() {
@@ -73,12 +75,14 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
+    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, RunningTestingTracker runningTestingTracker) {
         this.clockProvider = clockProvider;
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
         this.socketDealer = socketDealer;
+        this.runningTestingTracker = runningTestingTracker;
+        this.testResultsPath = new File(testResultsPath);
     }
 
     @Before
@@ -97,7 +101,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource(suitePageName);
-        responder = new SuiteResponder(htmlPageFactory, root, getPort(), socketDealer, context);
+        responder = new SuiteResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, context, runningTestingTracker);
         responder.setFastTest(true);
 
         receiver = new FitSocketReceiver(getPort(), socketDealer);
@@ -434,7 +438,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     private File expectedXmlResultsFile() {
         TestSummary counts = new TestSummary(3, 0, 0, 0);
         String resultsFileName = String.format("%s/SuitePage/20081205011900_%d_%d_%d_%d.xml",
-                context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
+                testResultsPath, counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
         return new File(resultsFileName);
     }
 
@@ -442,7 +446,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     public void normalSuiteRunProducesIndivualTestHistoryFile() throws Exception {
         TestSummary counts = new TestSummary(1, 0, 0, 0);
         String resultsFileName = String.format("%s/SuitePage.SlimTest/20081205011900_%d_%d_%d_%d.xml",
-                context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
+                testResultsPath, counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
         File xmlResultsFile = new File(resultsFileName);
 
         assertFalse("Unclean test environment.  tearDown did not successfully tear down.", xmlResultsFile.exists());

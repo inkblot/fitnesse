@@ -55,6 +55,8 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     private File xmlResultsFile;
     private XmlChecker xmlChecker = new XmlChecker();
     private HtmlPageFactory htmlPageFactory;
+    private File testResultsPath;
+    private RunningTestingTracker runningTestingTracker;
 
     @Override
     protected Module getOverrideModule() {
@@ -72,11 +74,13 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, SocketDealer socketDealer) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, SocketDealer socketDealer, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
         this.socketDealer = socketDealer;
+        this.runningTestingTracker = runningTestingTracker;
+        this.testResultsPath = new File(testResultsPath);
     }
 
     @Before
@@ -85,7 +89,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root, getPort(), socketDealer, context);
+        responder = new TestResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, context, runningTestingTracker);
         responder.setFastTest(true);
         receiver = new FitSocketReceiver(getPort(), socketDealer);
         receiver.receiveSocket();
@@ -301,7 +305,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     private void ensureXmlResultFileDoesNotExist(TestSummary counts) {
         String resultsFileName = String.format("%s/TestPage/20081205011900_%d_%d_%d_%d.xml",
-                context.getTestHistoryDirectory(), counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
+                testResultsPath, counts.getRight(), counts.getWrong(), counts.getIgnores(), counts.getExceptions());
         xmlResultsFile = new File(resultsFileName);
 
         if (xmlResultsFile.exists())
@@ -461,7 +465,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
         public void run() {
             waitForSemaphore();
-            context.runningTestingTracker.stopAllProcesses();
+            runningTestingTracker.stopAllProcesses();
         }
 
         private void waitForSemaphore() {

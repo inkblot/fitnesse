@@ -11,6 +11,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import org.junit.Before;
@@ -27,18 +28,20 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private ChunkingResponder responder;
     private HtmlPageFactory htmlPageFactory;
+    private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
     public void setUp() throws Exception {
-        responder = new ChunkingResponder(htmlPageFactory, root, context) {
-            protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
+        responder = new ChunkingResponder(htmlPageFactory, root, context, runningTestingTracker) {
+            protected void doSending(WikiPage root, WikiPagePath path, WikiPage page, RunningTestingTracker runningTestingTracker) throws Exception {
                 throw exception;
             }
         };

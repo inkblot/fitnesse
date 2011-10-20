@@ -11,6 +11,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -27,19 +28,21 @@ public class SearchResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
+    private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
     public void setUp() throws Exception {
         PageCrawler crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("SomePage"), "has something in it");
-        responder = new SearchResponder(htmlPageFactory, root, context);
+        responder = new SearchResponder(htmlPageFactory, root, context, runningTestingTracker);
         request = new MockRequest();
         request.addInput("searchString", "blah");
         request.addInput("searchType", "blah");

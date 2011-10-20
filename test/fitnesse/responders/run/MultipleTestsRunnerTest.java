@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
@@ -32,14 +31,14 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
             "|string|get string arg?|\n" +
             "|wow|wow|\n";
     private List<WikiPage> testPages;
-    private FitNesseContext context;
     private SocketDealer socketDealer;
+    private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker) {
         this.root = root;
         this.socketDealer = socketDealer;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
@@ -56,7 +55,7 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
 
     @Test
     public void testBuildClassPath() throws Exception {
-        MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context.runningTestingTracker, suite, null, root, getPort(), socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(testPages, runningTestingTracker, suite, null, root, getPort(), socketDealer);
 
         String classpath = runner.buildClassPath();
         assertSubString("classes", classpath);
@@ -67,7 +66,7 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
     public void testGenerateSuiteMapWithMultipleTestSystems() throws Exception {
         WikiPage slimPage = addTestPage(suite, "SlimTest", simpleSlimDecisionTable);
 
-        MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context.runningTestingTracker, suite, null, root, getPort(), socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(testPages, runningTestingTracker, suite, null, root, getPort(), socketDealer);
         Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = runner.makeMapOfPagesByTestSystem();
 
         TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData(), false);
@@ -93,7 +92,7 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
         testPages.add(testPage);
         testPages.add(tearDown);
 
-        MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context.runningTestingTracker, suite, null, root, getPort(), socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(testPages, runningTestingTracker, suite, null, root, getPort(), socketDealer);
         Map<TestSystem.Descriptor, LinkedList<WikiPage>> map = runner.makeMapOfPagesByTestSystem();
         TestSystem.Descriptor fitDescriptor = TestSystem.getDescriptor(testPage.getData(), false);
         TestSystem.Descriptor slimDescriptor = TestSystem.getDescriptor(slimPage.getData(), false);
@@ -133,10 +132,9 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
     public void startingNewTestShouldStartTimeMeasurementAndNotifyListener() throws Exception {
         List<WikiPage> testPagesToRun = mock(List.class);
         WikiPage page = mock(WikiPage.class);
-        FitNesseContext fitNesseContext = mock(FitNesseContext.class);
         ResultsListener resultsListener = mock(ResultsListener.class);
 
-        MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext.runningTestingTracker, page, resultsListener, root, getPort(), socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, runningTestingTracker, page, resultsListener, root, getPort(), socketDealer);
 
         runner.startingNewTest(page);
         verify(resultsListener).newTestStarted(same(page), same(runner.currentTestTime));
@@ -156,10 +154,9 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
     public void testCompleteShouldRemoveHeadOfQueueAndNotifyListener() throws Exception {
         List<WikiPage> testPagesToRun = mock(List.class);
         WikiPage page = mock(WikiPage.class);
-        FitNesseContext fitNesseContext = mock(FitNesseContext.class);
         ResultsListener resultsListener = mock(ResultsListener.class);
 
-        MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext.runningTestingTracker, page, resultsListener, root, getPort(), socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, runningTestingTracker, page, resultsListener, root, getPort(), socketDealer);
         runner.addToProcessingQueue(page);
 
         TestSummary testSummary = mock(TestSummary.class);
@@ -183,9 +180,8 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
     public void announceTotalTestsToRunShouldStartTotalTimeMeasurement() throws Exception {
         List<WikiPage> testPagesToRun = mock(List.class);
         WikiPage page = mock(WikiPage.class);
-        FitNesseContext fitNesseContext = mock(FitNesseContext.class);
         ResultsListener resultsListener = mock(ResultsListener.class);
-        MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext.runningTestingTracker, page, resultsListener, root, getPort(), socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, runningTestingTracker, page, resultsListener, root, getPort(), socketDealer);
 
         runner.announceTotalTestsToRun(new PagesByTestSystem());
         verify(resultsListener).announceNumberTestsToRun(0);
@@ -196,9 +192,8 @@ public class MultipleTestsRunnerTest extends FitnesseBaseTestCase {
     public void allTestingCompleteShouldStopTotalTimeMeasurement() throws Exception {
         List<WikiPage> testPagesToRun = mock(List.class);
         WikiPage page = mock(WikiPage.class);
-        FitNesseContext fitNesseContext = mock(FitNesseContext.class);
         ResultsListener resultsListener = mock(ResultsListener.class);
-        MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, fitNesseContext.runningTestingTracker, page, resultsListener, root, getPort(), socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(testPagesToRun, runningTestingTracker, page, resultsListener, root, getPort(), socketDealer);
         runner.announceTotalTestsToRun(new PagesByTestSystem());
 
         runner.allTestingComplete();

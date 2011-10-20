@@ -5,7 +5,6 @@ package fitnesse.responders.run;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fit.FitProtocol;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
@@ -33,11 +32,11 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, FitNesseContext context) {
+    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker) {
         this.root = root;
         this.port = port;
         this.socketDealer = socketDealer;
-        runningTestingTracker = context.runningTestingTracker;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     public Response makeResponse(Request request) {

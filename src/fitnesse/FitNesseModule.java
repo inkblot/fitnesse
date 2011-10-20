@@ -32,6 +32,7 @@ public class FitNesseModule extends AbstractModule {
     public static final String ROOT_PAGE_PATH = "fitnesse.rootPagePath";
     public static final String PORT = "fitnesse.port";
     public static final String PROPERTIES_FILE = "plugins.properties";
+    public static final String TEST_RESULTS_PATH = "fitnesse.testResultsPath";
 
     private final Properties properties;
     private final String userpass;
@@ -68,6 +69,8 @@ public class FitNesseModule extends AbstractModule {
         bind(String.class).annotatedWith(Names.named(ROOT_PAGE_NAME)).toInstance(rootPageName);
         String rootPagePath = rootPath + File.separator + rootPageName;
         bind(String.class).annotatedWith(Names.named(ROOT_PAGE_PATH)).toInstance(rootPagePath);
+        String testResultPath = rootPagePath + File.separator + "files" + File.separator + "testResults";
+        bind(String.class).annotatedWith(Names.named(TEST_RESULTS_PATH)).toInstance(testResultPath);
         bind(Integer.class).annotatedWith(Names.named(PORT)).toInstance(port);
         bindUpdater(omitUpdates);
         bind(WikiPage.class).annotatedWith(Names.named(ROOT_PAGE)).toProvider(RootPageProvider.class);

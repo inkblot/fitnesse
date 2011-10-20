@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static fitnesse.fixtures.FitnesseFixtureContext.context;
+import static fitnesse.fixtures.FitnesseFixtureContext.testResultsPath;
 
 public class PageHistory {
     private String name;
@@ -49,7 +49,7 @@ public class PageHistory {
 
 
     private File addPageDirectory(String pageName) {
-        File pageDirectory = new File(context.getTestHistoryDirectory(), pageName);
+        File pageDirectory = new File(new File(testResultsPath), pageName);
         if (!pageDirectory.exists())
             pageDirectory.mkdir();
         return pageDirectory;

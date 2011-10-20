@@ -38,26 +38,33 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     private boolean remoteDebug = false;
     protected TestSystem testSystem;
     private final HtmlPageFactory htmlPageFactory;
+    private final String testResultsPath;
     protected final int port;
     protected final SocketDealer socketDealer;
 
     @Inject
-    public TestResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, FitNesseContext context) {
-        super(htmlPageFactory, root, context);
+    public TestResponder(HtmlPageFactory htmlPageFactory,
+                         @Named(FitNesseModule.ROOT_PAGE) WikiPage root,
+                         @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath,
+                         @Named(FitNesseModule.PORT) Integer port,
+                         SocketDealer socketDealer,
+                         FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+        super(htmlPageFactory, root, context, runningTestingTracker);
         this.htmlPageFactory = htmlPageFactory;
+        this.testResultsPath = testResultsPath;
         this.port = port;
         this.socketDealer = socketDealer;
         formatters = new CompositeFormatter();
     }
 
     @Override
-    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
+    protected void doSending(WikiPage root, WikiPagePath path, WikiPage page, RunningTestingTracker runningTestingTracker) throws Exception {
         checkArguments();
         data = page.getData();
 
-        createFormatterAndWriteHead(context.getTestHistoryDirectory(), page);
+        createFormatterAndWriteHead(new File(testResultsPath), page);
         sendPreTestNotification();
-        performExecution(context.runningTestingTracker, root, page);
+        performExecution(runningTestingTracker, root, page);
 
         int exitCode = formatters.getErrorCount();
         closeHtmlResponse(exitCode);

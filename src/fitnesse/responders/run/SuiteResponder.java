@@ -16,8 +16,8 @@ public class SuiteResponder extends TestResponder {
     private boolean includeHtml;
 
     @Inject
-    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, FitNesseContext context) {
-        super(htmlPageFactory, root, port, socketDealer, context);
+    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+        super(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
     }
 
     @Override

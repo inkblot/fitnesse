@@ -1,7 +1,8 @@
 package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
@@ -28,19 +29,19 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
     private SimpleDateFormat dateFormat = new SimpleDateFormat(TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
     private TestHistoryResponder responder;
     private SimpleResponse response;
-    private FitNesseContext context;
+    private File testResultsPath;
 
     @Inject
-    public void inject(FitNesseContext context) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
+        this.testResultsPath = new File(testResultsPath);
     }
 
     @Before
     public void setup() throws Exception {
         removeResultsDirectory();
-        context.getTestHistoryDirectory().mkdirs();
+        testResultsPath.mkdirs();
         history = new TestHistory();
-        responder = new TestHistoryResponder(context);
+        responder = new TestHistoryResponder(testResultsPath.getAbsolutePath());
     }
 
     private void makeResponse() throws Exception {
@@ -48,8 +49,8 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
     }
 
     private void removeResultsDirectory() {
-        if (context.getTestHistoryDirectory().exists())
-            FileUtil.deleteFileSystemDirectory(context.getTestHistoryDirectory());
+        if (testResultsPath.exists())
+            FileUtil.deleteFileSystemDirectory(testResultsPath);
     }
 
     private void addPageDirectoryWithOneResult(String pageName, String testResultFileName) throws IOException {
@@ -58,7 +59,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
     }
 
     private File addPageDirectory(String pageName) {
-        File pageDirectory = new File(context.getTestHistoryDirectory(), pageName);
+        File pageDirectory = new File(testResultsPath, pageName);
         pageDirectory.mkdir();
         return pageDirectory;
     }
@@ -70,14 +71,14 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void emptyHistoryDirectoryShouldShowNoPages() throws Exception {
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         assertEquals(0, history.getPageNames().size());
     }
 
     @Test
     public void historyDirectoryWithOnePageDirectoryShouldShowOnePage() throws Exception {
         addPageDirectoryWithOneResult("SomePage", "20090418123103_1_2_3_4");
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         assertEquals(1, history.getPageNames().size());
         assertTrue(history.getPageNames().contains("SomePage"));
     }
@@ -85,7 +86,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
     @Test
     public void historyDirectoryWithOneEmptyPageDirectoryShouldShowNoPages() throws Exception {
         addPageDirectory("SomePage");
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         assertEquals(0, history.getPageNames().size());
         assertFalse(history.getPageNames().contains("SomePage"));
     }
@@ -94,7 +95,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
     public void historyDirectoryWithTwoPageDirectoriesShouldShowTwoPages() throws Exception {
         addPageDirectoryWithOneResult("PageOne", "20090418123103_1_2_3_4");
         addPageDirectoryWithOneResult("PageTwo", "20090418123103_1_2_3_4");
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         assertEquals(2, history.getPageNames().size());
         assertTrue(history.getPageNames().contains("PageOne"));
         assertTrue(history.getPageNames().contains("PageTwo"));
@@ -104,7 +105,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
     public void historyDirectoryWithTwoEmptyPageDirectoriesShouldShowNoPages() throws Exception {
         addPageDirectory("SomePage");
         addPageDirectory("SomeOtherPage");
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         assertEquals(0, history.getPageNames().size());
         assertFalse(history.getPageNames().contains("SomePage"));
         assertFalse(history.getPageNames().contains("SomeOtherPage"));
@@ -116,7 +117,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
         addPageDirectoryWithOneResult("ParentOne.PageTwo", "20090418123103_1_2_3_4");
         addPageDirectoryWithOneResult("ParentTwo.PageThree", "20090418123103_1_2_3_4");
 
-        history.readPageHistoryDirectory(context.getTestHistoryDirectory(), "ParentOne");
+        history.readPageHistoryDirectory(testResultsPath, "ParentOne");
         Set<String> pageNames = history.getPageNames();
         assertEquals(2, pageNames.size());
         assertTrue(pageNames.contains("ParentOne.PageOne"));
@@ -126,7 +127,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
     @Test
     public void pageDirectoryWithNoResultsShouldShowNoHistory() throws Exception {
         addPageDirectory("SomePage");
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         PageHistory pageHistory = history.getPageHistory("SomePage");
         assertNull(pageHistory);
     }
@@ -135,7 +136,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
     public void pageDirectoryWithOneResultShouldShowOneHistoryRecord() throws Exception {
         addPageDirectoryWithOneResult("SomePage", "20090418123103_1_2_3_4");
 
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         PageHistory pageHistory = history.getPageHistory("SomePage");
         assertEquals(1, pageHistory.getFailures());
         assertEquals(0, pageHistory.getPasses());
@@ -161,7 +162,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
         addTestResult(pageDirectory, "20090418000000_1_0_0_0");
         addTestResult(pageDirectory, "20090419000000_1_1_0_0");
         addTestResult(pageDirectory, "20090417000000_1_0_0_1");
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         PageHistory pageHistory = history.getPageHistory("SomePage");
         assertEquals(3, pageHistory.size());
         assertEquals(dateFormat.parse("20090417000000"), pageHistory.getMinDate());
@@ -185,7 +186,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
         for (String fileName : testResultFilenames)
             addTestResult(pageDirectory, fileName);
 
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         PageHistory pageHistory = history.getPageHistory("SomePage");
         return pageHistory.getBarGraph();
     }
@@ -298,7 +299,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
     public void shouldNotCountABadDirectoryNameAsAHistoryDirectory() throws Exception {
         addPageDirectoryWithOneResult("SomePage", "20090419123103_1_0_0_0");
         addPageDirectoryWithOneResult("bad-directory-name", "20090419123103_1_0_0_0");
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         assertEquals(1, history.getPageNames().size());
         assertTrue(history.getPageNames().contains("SomePage"));
     }
@@ -315,7 +316,7 @@ public class TestHistoryResponderTest extends FitnesseBaseTestCase {
         addTestResult(pageDirectory, "bad_file_page_thing");        //bad
 
         makeResponse();
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         PageHistory pageHistory = history.getPageHistory("SomePage");
         assertEquals(3, pageHistory.size());
     }

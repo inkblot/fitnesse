@@ -9,6 +9,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,15 +24,17 @@ public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
     private SearchReplaceResponder responder;
     private MockRequest request;
     private FitNesseContext context;
+    private RunningTestingTracker runningTestingTracker;
     private WikiPagePath pagePath;
     private WikiPage somePage;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
@@ -39,7 +42,7 @@ public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         pagePath = PathParser.parse("SomePage");
         somePage = crawler.addPage(root, pagePath, "has something in it");
-        responder = new SearchReplaceResponder(htmlPageFactory, root, context);
+        responder = new SearchReplaceResponder(htmlPageFactory, root, context, runningTestingTracker);
         request = new MockRequest();
         request.setResource("SomePage");
     }

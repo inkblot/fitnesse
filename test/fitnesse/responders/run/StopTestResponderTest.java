@@ -1,7 +1,6 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -21,11 +20,11 @@ import static util.RegexAssertions.assertSubString;
 public class StopTestResponderTest extends FitnesseBaseTestCase {
 
     private Request request = null;
-    private FitNesseContext context = null;
     private StoppedRecorder stoppableA = new StoppedRecorder();
     private StoppedRecorder stoppableB = new StoppedRecorder();
     private HtmlPageFactory htmlPageFactory;
     private SocketDealer socketDealer;
+    private RunningTestingTracker runningTestingTracker;
 
     @Override
     protected int getPort() {
@@ -33,10 +32,10 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, SocketDealer socketDealer) {
+    public void inject(HtmlPageFactory htmlPageFactory, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.socketDealer = socketDealer;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
@@ -46,10 +45,10 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testStopAll() throws Exception {
-        context.runningTestingTracker.addStartedProcess(stoppableA);
-        context.runningTestingTracker.addStartedProcess(stoppableB);
+        runningTestingTracker.addStartedProcess(stoppableA);
+        runningTestingTracker.addStartedProcess(stoppableB);
 
-        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory, context);
+        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory, runningTestingTracker);
         String response = runResponder(stopResponder);
 
         assertTrue(stoppableA.wasStopped());
@@ -62,8 +61,8 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testStopB() throws Exception {
-        context.runningTestingTracker.addStartedProcess(stoppableA);
-        final String bId = context.runningTestingTracker.addStartedProcess(stoppableB);
+        runningTestingTracker.addStartedProcess(stoppableA);
+        final String bId = runningTestingTracker.addStartedProcess(stoppableB);
 
         request = new MockRequest() {
             @Override
@@ -77,7 +76,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
             }
         };
 
-        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory, context);
+        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory, runningTestingTracker);
         String response = runResponder(stopResponder);
 
         assertFalse(stoppableA.wasStopped());

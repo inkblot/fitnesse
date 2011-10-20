@@ -9,6 +9,7 @@ import fitnesse.FitNesseModule;
 import fitnesse.components.RegularExpressionWikiPageFinder;
 import fitnesse.components.TitleWikiPageFinder;
 import fitnesse.html.HtmlPageFactory;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -21,8 +22,8 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 public class SearchResponder extends ResultResponder {
 
     @Inject
-    public SearchResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
-        super(htmlPageFactory, root, context);
+    public SearchResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+        super(htmlPageFactory, root, context, runningTestingTracker);
     }
 
     private String getSearchString() {

@@ -1,7 +1,6 @@
 package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.VelocityFactory;
 import fitnesse.html.HtmlPageFactory;
@@ -24,7 +23,7 @@ import java.util.Set;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class HistoryComparatorResponder implements Responder {
-    public HistoryComparator comparator;
+    public HistoryComparator historyComparator;
     private SimpleDateFormat dateFormat = new SimpleDateFormat(
             TestHistory.TEST_RESULT_FILE_DATE_PATTERN);
     private VelocityContext velocityContext;
@@ -35,18 +34,17 @@ public class HistoryComparatorResponder implements Responder {
     public boolean testing = false;
 
     private final HtmlPageFactory htmlPageFactory;
-    private File testHistoryDirectory;
+    private final File testResultsPath;
 
-    public HistoryComparatorResponder(HistoryComparator historyComparator, HtmlPageFactory htmlPageFactory, FitNesseContext context) {
-        testHistoryDirectory = context.getTestHistoryDirectory();
-        comparator = historyComparator;
+    public HistoryComparatorResponder(HistoryComparator historyComparator, HtmlPageFactory htmlPageFactory, String testResultsPath) {
+        this.historyComparator = historyComparator;
         this.htmlPageFactory = htmlPageFactory;
+        this.testResultsPath = new File(testResultsPath);
     }
 
     @Inject
-    public HistoryComparatorResponder(HtmlPageFactory htmlPageFactory) {
-        this.htmlPageFactory = htmlPageFactory;
-        comparator = new HistoryComparator();
+    public HistoryComparatorResponder(HtmlPageFactory htmlPageFactory, String testResultsPath) {
+        this(new HistoryComparator(), htmlPageFactory, testResultsPath);
     }
 
     public Response makeResponse(Request request)
@@ -67,7 +65,7 @@ public class HistoryComparatorResponder implements Responder {
     }
 
     private Response makeResponseFromComparison(Request request) throws Exception {
-        if (comparator.compare(firstFilePath, secondFilePath))
+        if (historyComparator.compare(firstFilePath, secondFilePath))
             return makeValidResponse();
         else {
             String message = String.format("These files could not be compared."
@@ -82,14 +80,14 @@ public class HistoryComparatorResponder implements Responder {
     }
 
     private void initializeResponseComponents(Request request) throws IOException {
-        if (comparator == null)
-            comparator = new HistoryComparator();
+        if (historyComparator == null)
+            historyComparator = new HistoryComparator();
         velocityContext = new VelocityContext();
         velocityContext.put("pageTitle", makePageTitle(request.getResource()));
     }
 
     private String composeFileName(Request request, String fileName) {
-        return testHistoryDirectory.getPath() + File.separator
+        return testResultsPath.getPath() + File.separator
                 + request.getResource() + File.separator + fileName;
     }
 
@@ -125,12 +123,12 @@ public class HistoryComparatorResponder implements Responder {
         if (!testing) {
             velocityContext.put("firstFileName", dateFormat.parse(firstFileName));
             velocityContext.put("secondFileName", dateFormat.parse(secondFileName));
-            velocityContext.put("completeMatch", comparator.allTablesMatch());
-            velocityContext.put("comparator", comparator);
+            velocityContext.put("completeMatch", historyComparator.allTablesMatch());
+            velocityContext.put("comparator", historyComparator);
         }
-        velocityContext.put("resultContent", comparator.getResultContent());
-        velocityContext.put("firstTables", comparator.firstTableResults);
-        velocityContext.put("secondTables", comparator.secondTableResults);
+        velocityContext.put("resultContent", historyComparator.getResultContent());
+        velocityContext.put("firstTables", historyComparator.firstTableResults);
+        velocityContext.put("secondTables", historyComparator.secondTableResults);
         velocityContext.put("count", count);
         String velocityTemplate = "fitnesse/templates/compareHistory.vm";
         Template template = VelocityFactory.getVelocityEngine().getTemplate(

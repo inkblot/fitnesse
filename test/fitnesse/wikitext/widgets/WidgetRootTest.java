@@ -154,14 +154,14 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
 
     @Test
     public void testShouldHavePortVariableAvailable() throws Exception {
-        context.getInjector().getInstance(FitNesse.class);
+        context.injector.getInstance(FitNesse.class);
         WidgetRoot root = new WidgetRoot("", this.root);
         assertEquals(Integer.toString(PORT), root.getVariable("FITNESSE_PORT"));
     }
 
     @Test
     public void testShouldHaveRootPathVariableAvailable() throws Exception {
-        context.getInjector().getInstance(FitNesse.class);
+        context.injector.getInstance(FitNesse.class);
         WidgetRoot root = new WidgetRoot("", this.root);
         assertEquals(getRootPath(), root.getVariable("FITNESSE_ROOTPATH"));
     }

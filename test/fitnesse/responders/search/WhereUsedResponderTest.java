@@ -11,6 +11,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -22,14 +23,16 @@ import static util.RegexAssertions.assertHasRegexp;
 
 public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
+    private RunningTestingTracker runningTestingTracker;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
@@ -44,7 +47,7 @@ public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     public void testResponse() throws Exception {
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
-        WhereUsedResponder responder = new WhereUsedResponder(htmlPageFactory, root, context);
+        WhereUsedResponder responder = new WhereUsedResponder(htmlPageFactory, root, context, runningTestingTracker);
 
         Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();

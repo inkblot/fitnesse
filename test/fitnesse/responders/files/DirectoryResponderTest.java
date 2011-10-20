@@ -19,13 +19,11 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
 
     private MockRequest request;
     private SimpleResponse response;
-    private FitNesseContext context;
     private String rootPagePath;
     private SampleFileUtility samples;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, SampleFileUtility samples) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, SampleFileUtility samples) {
         this.rootPagePath = rootPagePath;
         this.samples = samples;
     }
@@ -35,7 +33,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         samples.makeSampleFiles();
         request.setResource("files/testDir/");
-        Responder responder = ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
+        Responder responder = ResponderFactory.makeFileResponder(injector, request.getResource(), rootPagePath);
         response = (SimpleResponse) responder.makeResponse(request);
     }
 
@@ -61,7 +59,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testRedirectForDirectory() throws Exception {
         request.setResource("files/testDir");
-        Responder responder = ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
+        Responder responder = ResponderFactory.makeFileResponder(injector, request.getResource(), rootPagePath);
         Response response = responder.makeResponse(request);
 
         assertEquals(303, response.getStatus());

@@ -9,6 +9,7 @@ import fitnesse.components.PageFinder;
 import fitnesse.components.RegularExpressionWikiPageFinder;
 import fitnesse.components.SearchObserver;
 import fitnesse.html.HtmlPageFactory;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.search.ResultResponder;
 import fitnesse.wiki.WikiPage;
 
@@ -19,8 +20,8 @@ public class SearchReplaceResponder extends ResultResponder {
     private SearchObserver observer;
 
     @Inject
-    public SearchReplaceResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
-        super(htmlPageFactory, root, context);
+    public SearchReplaceResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+        super(htmlPageFactory, root, context, runningTestingTracker);
     }
 
     protected String getTitle() {

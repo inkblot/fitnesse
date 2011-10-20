@@ -15,6 +15,7 @@ import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.After;
@@ -30,6 +31,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     private HtmlPageFactory htmlPageFactory;
     private Authenticator remoteAuthenticator;
     private WikiPage root;
+    private RunningTestingTracker runningTestingTracker;
 
     @Override
     protected Module getRemoteOverrides() {
@@ -50,15 +52,16 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     public void setUp() throws Exception {
         htmlPageFactory = localInjector.getInstance(HtmlPageFactory.class);
         root = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
+        runningTestingTracker = localInjector.getInstance(RunningTestingTracker.class);
         remoteAuthenticator = new PromiscuousAuthenticator(remoteRoot, remoteInjector);
         fitNesseUtil.startFitnesse(remoteContext);
         remoteUrl = FitNesseUtil.URL;
 
-        responder = createResponder(htmlPageFactory, root, localContext);
+        responder = createResponder(htmlPageFactory, root, localContext, runningTestingTracker);
     }
 
-    private static WikiImportingResponder createResponder(HtmlPageFactory htmlPageFactory, WikiPage root, FitNesseContext context) throws Exception {
-        WikiImportingResponder responder = new WikiImportingResponder(htmlPageFactory, root, context);
+    private static WikiImportingResponder createResponder(HtmlPageFactory htmlPageFactory, WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) throws Exception {
+        WikiImportingResponder responder = new WikiImportingResponder(htmlPageFactory, root, context, runningTestingTracker);
         ChunkedResponse response = new ChunkedResponse("html");
         response.readyToSend(new MockResponseSender());
         responder.setResponse(response);
@@ -170,7 +173,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         sender.doSending(response);
 
         // import a second time... nothing was modified
-        WikiImportingResponder secondResponder = createResponder(htmlPageFactory, root, localContext);
+        WikiImportingResponder secondResponder = createResponder(htmlPageFactory, root, localContext, runningTestingTracker);
         response = makeSampleResponse(remoteUrl, secondResponder);
         sender = new MockResponseSender();
         sender.doSending(response);

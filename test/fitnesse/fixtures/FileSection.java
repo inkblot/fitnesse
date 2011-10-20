@@ -11,13 +11,13 @@ public class FileSection {
 
     public FileSection(String type) throws Exception {
         if ("setup".equals(type.toLowerCase())) {
-            new File(FitnesseFixtureContext.baseDir).mkdir();
-            File dir = new File(FitnesseFixtureContext.baseDir + "/" + FitnesseFixtureContext.root.getName());
+            new File(FitnesseFixtureContext.rootPath).mkdir();
+            File dir = new File(FitnesseFixtureContext.rootPath + "/" + FitnesseFixtureContext.root.getName());
             dir.mkdir();
             fileSection = new File(dir, "files");
             fileSection.mkdir();
         } else {
-            FileUtil.deleteFileSystemDirectory(FitnesseFixtureContext.baseDir);
+            FileUtil.deleteFileSystemDirectory(FitnesseFixtureContext.rootPath);
             fileSection = null;
         }
     }

@@ -9,41 +9,26 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import fitnesse.authentication.Authenticator;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.WikiPage;
-
-import java.io.File;
 
 @Singleton
 public class FitNesseContext {
-    public static final String DEFAULT_PATH = ".";
-    public static final String DEFAULT_ROOT = "FitNesseRoot";
-    public static final int DEFAULT_PORT = 80;
-    public static final int DEFAULT_COMMAND_PORT = 9123;
-    public static final int DEFAULT_VERSION_DAYS = 14;
-    public static final String RECENT_CHANGES_DATE_FORMAT = "kk:mm:ss EEE, MMM dd, yyyy";
-    public static final String RFC_COMPLIANT_DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
 
-    private final Injector injector;
+    public final Injector injector;
     private final WikiPage root;
-    private final String rootPagePath;
     private final int port;
     private final HtmlPageFactory htmlPageFactory;
     private final Provider<Authenticator> authenticatorProvider;
 
-    public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
-    public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
     @Inject
     public FitNesseContext(
-            @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath,
             @Named(FitNesseModule.PORT) Integer port,
             HtmlPageFactory htmlPageFactory,
             Provider<Authenticator> authenticatorProvider,
             Injector injector,
             @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.rootPagePath = rootPagePath;
         this.port = port;
         this.htmlPageFactory = htmlPageFactory;
         this.authenticatorProvider = authenticatorProvider;
@@ -63,11 +48,4 @@ public class FitNesseContext {
         return buffer.toString();
     }
 
-    public File getTestHistoryDirectory() {
-        return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
-    }
-
-    public Injector getInjector() {
-        return injector;
-    }
 }

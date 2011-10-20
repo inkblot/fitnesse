@@ -50,9 +50,9 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void testDirCreations() throws Exception {
-        context.getInjector().getInstance(FitNesse.class);
+        injector.getInstance(FitNesse.class);
 
-        String rootPagePath = this.context.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PAGE_PATH)));
+        String rootPagePath = injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PAGE_PATH)));
 
         assertTrue(new File(rootPagePath).exists());
         assertTrue(new File(rootPagePath, "files").exists());
@@ -60,7 +60,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void testIsRunning() throws Exception {
-        FitNesse fitnesse = context.getInjector().getInstance(FitNesse.class);
+        FitNesse fitnesse = injector.getInstance(FitNesse.class);
 
         assertFalse(fitnesse.isRunning());
 

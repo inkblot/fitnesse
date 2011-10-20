@@ -11,6 +11,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
 import fitnesse.html.*;
 import fitnesse.http.ChunkedResponse;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.*;
 
 import java.io.ByteArrayOutputStream;
@@ -29,12 +30,12 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public WikiImportingResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
-        super(htmlPageFactory, root, context);
+    public WikiImportingResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+        super(htmlPageFactory, root, context, runningTestingTracker);
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
+    protected void doSending(WikiPage root, WikiPagePath path, WikiPage page, RunningTestingTracker runningTestingTracker) throws Exception {
         data = page.getData();
         HtmlPage html = makeHtml(path);
         response.add(html.preDivision);

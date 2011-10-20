@@ -2,10 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
-import com.google.inject.Module;
-import com.google.inject.Provider;
+import com.google.inject.*;
 import com.google.inject.name.Named;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
@@ -26,7 +23,6 @@ import static org.junit.Assert.fail;
 public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     private FitNesseExpediter expediter;
     private MockSocket socket;
-    private FitNesseContext context;
     private WikiPage root;
     private PipedInputStream clientInput;
     private PipedOutputStream clientOutput;
@@ -49,8 +45,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 
@@ -59,7 +54,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         authenticator = new PromiscuousAuthenticator(root, injector);
         root.addChildPage("FrontPage");
         socket = new MockSocket();
-        expediter = new FitNesseExpediter(context.getInjector(), socket);
+        expediter = new FitNesseExpediter(injector, socket);
     }
 
     @Test
@@ -104,7 +99,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         clientInput = new PipedInputStream();
         PipedOutputStream socketOutput = new PipedOutputStream(clientInput);
         MockSocket socket = new MockSocket(socketInput, socketOutput);
-        return new FitNesseExpediter(context.getInjector(), socket, 200);
+        return new FitNesseExpediter(injector, socket, 200);
     }
 
     @Test

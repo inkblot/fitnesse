@@ -1,7 +1,8 @@
 package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -25,10 +26,10 @@ public class PurgeHistoryResponder implements SecureResponder {
     private final File testHistoryDirectory;
 
     @Inject
-    public PurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock, FitNesseContext context) {
+    public PurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;
-        this.testHistoryDirectory = context.getTestHistoryDirectory();
+        this.testHistoryDirectory = new File(testResultsPath);
     }
 
     public Response makeResponse(Request request) throws Exception {

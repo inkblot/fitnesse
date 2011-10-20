@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Singleton;
+
 import java.util.HashMap;
 
+@Singleton
 public class RunningTestingTracker {
 
     private HashMap<String, Stoppable> processes = new HashMap<String, Stoppable>();
@@ -14,10 +17,7 @@ public class RunningTestingTracker {
      * @returnid used to identify this process for use with the stop responder
      */
     public synchronized String addStartedProcess(Stoppable process) {
-        int ticketNumber = 0;
-        synchronized (this) {
-            ticketNumber = nextTicketNumber++;
-        }
+        int ticketNumber = nextTicketNumber++;
         String ticket = Integer.toString(ticketNumber);
         processes.put(ticket, process);
         return ticket;

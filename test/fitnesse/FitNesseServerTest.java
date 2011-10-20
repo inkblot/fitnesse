@@ -20,13 +20,11 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private WikiPagePath pageOnePath;
     private WikiPagePath pageOneTwoPath;
-    private FitNesseContext context;
     private SampleFileUtility samples;
     private WikiPage root;
 
     @Inject
-    public void inject(FitNesseContext context, SampleFileUtility samples, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(SampleFileUtility samples, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.samples = samples;
         this.root = root;
     }
@@ -104,7 +102,7 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
 
     private String getSocketOutput(String requestLine) throws Exception {
         MockSocket s = new MockSocket(requestLine);
-        FitNesseServer server = new FitNesseServer(context.getInjector());
+        FitNesseServer server = new FitNesseServer(injector);
         server.serve(s, 1000);
         return s.getOutput();
     }

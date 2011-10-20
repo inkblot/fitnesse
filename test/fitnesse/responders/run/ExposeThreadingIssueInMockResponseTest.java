@@ -4,10 +4,8 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -27,10 +25,8 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     private WikiPage root;
     private MockRequest request;
     private TestResponder responder;
-    private FitNesseContext context;
     private PageCrawler crawler;
     private FitSocketReceiver receiver;
-    private HtmlPageFactory htmlPageFactory;
     private SocketDealer socketDealer;
 
     @Override
@@ -39,18 +35,16 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     }
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
-        this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
+    public void inject(TestResponder responder, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
         this.root = root;
         this.socketDealer = socketDealer;
+        this.responder = responder;
     }
 
     @Before
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root, getPort(), socketDealer, context);
 
         receiver = new FitSocketReceiver(getPort(), socketDealer);
         receiver.receiveSocket();

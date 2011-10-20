@@ -1,7 +1,8 @@
 package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -23,25 +24,25 @@ import static org.junit.Assert.*;
 
 public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     private TestHistory history;
-    private FitNesseContext context;
+    private File testResultsPath;
     private PurgeHistoryResponder responder;
     private MockRequest request;
     private HtmlPageFactory htmlPageFactory;
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
+        this.testResultsPath = new File(testResultsPath);
     }
 
     @Before
     public void setup() throws Exception {
         removeResultsDirectory();
-        context.getTestHistoryDirectory().mkdirs();
+        testResultsPath.mkdirs();
         history = new TestHistory();
-        responder = new PurgeHistoryResponder(htmlPageFactory, clock, context);
+        responder = new PurgeHistoryResponder(htmlPageFactory, clock, testResultsPath.getAbsolutePath());
         request = new MockRequest();
         request.setResource("TestPage");
     }
@@ -52,8 +53,8 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     }
 
     private void removeResultsDirectory() {
-        if (context.getTestHistoryDirectory().exists())
-            FileUtil.deleteFileSystemDirectory(context.getTestHistoryDirectory());
+        if (testResultsPath.exists())
+            FileUtil.deleteFileSystemDirectory(testResultsPath);
     }
 
     private File addTestResult(File pageDirectory, String testResultFileName) throws IOException {
@@ -63,7 +64,7 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     }
 
     private File addPageDirectory(String pageName) {
-        File pageDirectory = new File(context.getTestHistoryDirectory(), pageName);
+        File pageDirectory = new File(testResultsPath, pageName);
         pageDirectory.mkdir();
         return pageDirectory;
     }
@@ -89,11 +90,11 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
         addTestResult(pageDirectory, "20090614000000_1_0_0_0");
         addTestResult(pageDirectory, "20090615000000_1_0_0_0");
 
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         PageHistory pageHistory = history.getPageHistory("SomePage");
         assertEquals(2, pageHistory.size());
         responder.deleteTestHistoryOlderThanDays(1);
-        history.readHistoryDirectory(context.getTestHistoryDirectory());
+        history.readHistoryDirectory(testResultsPath);
         pageHistory = history.getPageHistory("SomePage");
         assertEquals(1, pageHistory.size());
         assertNotNull(pageHistory.get(makeDate("20090615000000")));
@@ -106,13 +107,13 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
         File pageDirectory = addPageDirectory("SomePage");
         addTestResult(pageDirectory, "20090614000000_1_0_0_0");
         responder.deleteTestHistoryOlderThanDays(1);
-        String[] files = context.getTestHistoryDirectory().list();
+        String[] files = testResultsPath.list();
         assertEquals(0, files.length);
     }
 
     @Test
     public void shouldDeleteHistoryFromRequestAndRedirect() throws Exception {
-        StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder(htmlPageFactory, clock, context);
+        StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder(htmlPageFactory, clock, testResultsPath.getAbsolutePath());
         request.addInput("days", "30");
         SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals(30, responder.daysDeleted);
@@ -138,8 +139,8 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     private static class StubbedPurgeHistoryResponder extends PurgeHistoryResponder {
         public int daysDeleted = -1;
 
-        private StubbedPurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock, FitNesseContext context) {
-            super(htmlPageFactory, clock, context);
+        private StubbedPurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock, String testResultsPath) {
+            super(htmlPageFactory, clock, testResultsPath);
         }
 
         @Override

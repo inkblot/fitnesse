@@ -67,7 +67,7 @@ public class PageDriver {
         request.parseRequestUri("/" + pageName);
         WikiPagePath path = PathParser.parse(request.getResource()); // uri;
         FitnesseFixtureContext.page = FitnesseFixtureContext.root.getPageCrawler().getPage(FitnesseFixtureContext.root, path);
-        FitNesseExpediter expediter = new FitNesseExpediter(FitnesseFixtureContext.context.getInjector(), new MockSocket(""));
+        FitNesseExpediter expediter = new FitNesseExpediter(FitnesseFixtureContext.injector, new MockSocket(""));
         FitnesseFixtureContext.response = expediter.createGoodResponse(request);
         FitnesseFixtureContext.sender = new MockResponseSender();
         FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);
@@ -244,7 +244,7 @@ public class PageDriver {
     }
 
     public void givenUserWithPassword(String user, String password) {
-        FitnesseFixtureContext.authenticator = new OneUserAuthenticator(user, password, FitnesseFixtureContext.root, FitnesseFixtureContext.context.getInjector());
+        FitnesseFixtureContext.authenticator = new OneUserAuthenticator(user, password, FitnesseFixtureContext.root, FitnesseFixtureContext.injector);
     }
 
     public void sendAsHash(Map<String, String> hash) {

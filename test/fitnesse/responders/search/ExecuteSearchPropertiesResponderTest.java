@@ -9,6 +9,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,19 +34,21 @@ public class ExecuteSearchPropertiesResponderTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private ExecuteSearchPropertiesResponder responder;
     private FitNesseContext context;
+    private RunningTestingTracker runningTestingTracker;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory,@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory,@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
-        responder = new ExecuteSearchPropertiesResponder(htmlPageFactory, root, context);
+        responder = new ExecuteSearchPropertiesResponder(htmlPageFactory, root, context, runningTestingTracker);
     }
 
     @Test

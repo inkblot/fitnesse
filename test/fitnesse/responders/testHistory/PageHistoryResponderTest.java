@@ -1,6 +1,7 @@
 package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -39,14 +40,14 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
     private PageHistoryResponder responder;
     private SimpleResponse response;
     private MockRequest request;
-    private FitNesseContext context;
     private FitNesseVersion fitNesseVersion = new FitNesseVersion();
     private HtmlPageFactory htmlPageFactory;
+    private String testResultsPath;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
+        this.testResultsPath = testResultsPath;
     }
 
     @Before
@@ -55,7 +56,7 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
         removeResultsDirectory();
         resultsDirectory.mkdir();
         history = new TestHistory();
-        responder = new PageHistoryResponder(htmlPageFactory, context);
+        responder = new PageHistoryResponder(htmlPageFactory, testResultsPath);
         responder.setResultsDirectory(resultsDirectory);
     }
 

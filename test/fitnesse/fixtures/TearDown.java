@@ -8,12 +8,13 @@ import util.FileUtil;
 import java.io.File;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.*;
+import static fitnesse.fixtures.FitnesseFixtureContext.testResultsPath;
 
 public class TearDown extends Fixture {
     public TearDown() throws Exception {
         fitnesse.stop();
         root = null;
-        File historyDirectory = context.getTestHistoryDirectory();
+        File historyDirectory = new File(testResultsPath);
         if (historyDirectory.exists())
             FileUtil.deleteFileSystemDirectory(historyDirectory);
     }

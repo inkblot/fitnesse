@@ -3,7 +3,6 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlUtil;
@@ -19,10 +18,10 @@ public class StopTestResponder extends BasicResponder {
     private final RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public StopTestResponder(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
+    public StopTestResponder(HtmlPageFactory htmlPageFactory, RunningTestingTracker runningTestingTracker) {
         super(htmlPageFactory);
         this.htmlPageFactory = htmlPageFactory;
-        runningTestingTracker = context.runningTestingTracker;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     public Response makeResponse(Request request) throws Exception {

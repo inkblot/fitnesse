@@ -2,13 +2,11 @@ package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
@@ -22,22 +20,20 @@ import static org.mockito.Mockito.*;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
-    public HistoryComparatorResponder responder;
-    public FitNesseContext context;
+    private HistoryComparatorResponder responder;
     private String rootPagePath;
-    public WikiPage root;
-    public MockRequest request;
-    public HistoryComparator mockedComparator;
+    private String testResultsPath;
+    private MockRequest request;
+    private HistoryComparator mockedComparator;
     private String FIRST_FILE_PATH;
     private String SECOND_FILE_PATH;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
         this.htmlPageFactory = htmlPageFactory;
-        this.root = root;
-        this.context = context;
         this.rootPagePath = rootPagePath;
+        this.testResultsPath = testResultsPath;
     }
 
     @Before
@@ -49,7 +45,7 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         mockedComparator = mock(HistoryComparator.class);
 
-        responder = new HistoryComparatorResponder(mockedComparator, htmlPageFactory, context);
+        responder = new HistoryComparatorResponder(mockedComparator, htmlPageFactory, testResultsPath);
         responder.testing = true;
         List<String> resultContent = new ArrayList<String>();
         resultContent.add("pass");

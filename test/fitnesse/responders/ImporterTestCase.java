@@ -53,7 +53,7 @@ public class ImporterTestCase {
         crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
 
         localInjector = Guice.createInjector(
-                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseContext.DEFAULT_PORT, true));
+                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseConstants.DEFAULT_PORT, true));
         localContext = localInjector.getInstance(FitNesseContext.class);
         localRoot = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         pageOne = localRoot.addChildPage("PageOne");

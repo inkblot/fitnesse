@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
-import fitnesse.FitNesseContext;
+import fitnesse.FitNesseConstants;
 import fitnesse.wiki.*;
 import util.ClockUtil;
 
@@ -18,7 +18,7 @@ public class RecentChanges {
 
     private static SimpleDateFormat makeDateFormat() {
         //SimpleDateFormat is not thread safe, so we need to create each instance independently.
-        return new SimpleDateFormat(FitNesseContext.RECENT_CHANGES_DATE_FORMAT);
+        return new SimpleDateFormat(FitNesseConstants.RECENT_CHANGES_DATE_FORMAT);
     }
 
     public static void updateRecentChanges(PageData pageData) throws Exception {

@@ -26,23 +26,23 @@ import static org.mockito.Mockito.*;
 
 public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     private CachingSuiteXmlFormatter formatter;
-    private FitNesseContext context;
     private WikiPage root;
     private TestSummary testSummary;
     private WikiPage testPage;
     private long testTime;
+    private File testResultsPath;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
         this.root = root;
+        this.testResultsPath = new File(testResultsPath);
     }
 
     @Before
     public void setUp() throws Exception {
         testSummary = new TestSummary(1, 2, 3, 4);
         testPage = root.addChildPage("TestPage");
-        formatter = new CachingSuiteXmlFormatter(root, null, context.getTestHistoryDirectory());
+        formatter = new CachingSuiteXmlFormatter(root, null, testResultsPath);
         testTime = DateTimeUtil.getTimeFromString("10/8/1988 10:52:12");
     }
 
@@ -77,7 +77,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     }
 
     private CachingSuiteXmlFormatter newNonWritingCachingSuiteXmlFormatter() throws Exception {
-        return new CachingSuiteXmlFormatter(root, null, context.getTestHistoryDirectory()) {
+        return new CachingSuiteXmlFormatter(root, null, testResultsPath) {
             @Override
             protected void writeOutSuiteXML() {
             }
@@ -107,7 +107,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
         Writer writer = mock(Writer.class);
         formatter.setVelocityForTests(velocityContext, writer);
         formatter.allTestingComplete(new TimeMeasurement().start().stop());
-        verify(testHistory).readHistoryDirectory(context.getTestHistoryDirectory());
+        verify(testHistory).readHistoryDirectory(testResultsPath);
         verify(velocityContext).put("formatter", formatter);
         verify(writer).close();
     }
@@ -119,7 +119,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
         PageHistory.TestResultRecord expectedRecord = mock(PageHistory.TestResultRecord.class);
         File file = mock(File.class);
         final TestExecutionReport expectedReport = mock(TestExecutionReport.class);
-        CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(testPage, null, context.getTestHistoryDirectory()) {
+        CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(testPage, null, testResultsPath) {
             @Override
             TestExecutionReport makeTestExecutionReport() {
                 return expectedReport;

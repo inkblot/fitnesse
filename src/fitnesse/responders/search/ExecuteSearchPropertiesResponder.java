@@ -10,6 +10,7 @@ import fitnesse.components.AttributeWikiPageFinder;
 import fitnesse.components.PageFinder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.PageType;
 import fitnesse.wiki.WikiPage;
 
@@ -31,8 +32,8 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     public static final String SPECIAL = "Special";
 
     @Inject
-    public ExecuteSearchPropertiesResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
-        super(htmlPageFactory, root, context);
+    public ExecuteSearchPropertiesResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+        super(htmlPageFactory, root, context, runningTestingTracker);
     }
 
     public SecureOperation getSecureOperation() {

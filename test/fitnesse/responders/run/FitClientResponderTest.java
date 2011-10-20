@@ -27,17 +27,19 @@ public class FitClientResponderTest extends FitnesseBaseTestCase {
     private WikiPage suite;
     private WikiPage root;
     private SocketDealer socketDealer;
+    private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
+    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker) {
         this.context = context;
         this.root = root;
         this.socketDealer = socketDealer;
+        this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
     public void setUp() throws Exception {
-        responder = new FitClientResponder(root, getPort(), socketDealer, context);
+        responder = new FitClientResponder(root, getPort(), socketDealer, runningTestingTracker);
         request = new MockRequest();
 
         crawler = root.getPageCrawler();

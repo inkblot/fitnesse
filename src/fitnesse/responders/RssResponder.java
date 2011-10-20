@@ -4,7 +4,7 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
+import fitnesse.FitNesseConstants;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -163,8 +163,8 @@ public class RssResponder implements SecureResponder {
         Pattern timePattern = Pattern.compile("\\d*:\\d*:\\d* \\w*, \\w* \\d*, \\d*");
         Matcher m = timePattern.matcher(dateIn);
         if (m.matches())
-            return (new SimpleDateFormat(FitNesseContext.RFC_COMPLIANT_DATE_FORMAT)).format((new SimpleDateFormat(
-                    FitNesseContext.RECENT_CHANGES_DATE_FORMAT)).parse(dateIn, new ParsePosition(0)));
+            return (new SimpleDateFormat(FitNesseConstants.RFC_COMPLIANT_DATE_FORMAT)).format((new SimpleDateFormat(
+                    FitNesseConstants.RECENT_CHANGES_DATE_FORMAT)).parse(dateIn, new ParsePosition(0)));
         else
             return dateIn;
     }

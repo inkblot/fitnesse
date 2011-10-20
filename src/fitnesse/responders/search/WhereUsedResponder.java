@@ -8,6 +8,7 @@ import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.components.WhereUsedPageFinder;
 import fitnesse.html.HtmlPageFactory;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -15,8 +16,8 @@ import java.io.IOException;
 public class WhereUsedResponder extends ResultResponder {
 
     @Inject
-    public WhereUsedResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
-        super(htmlPageFactory, root, context);
+    public WhereUsedResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+        super(htmlPageFactory, root, context, runningTestingTracker);
     }
 
     protected void startSearching(WikiPage root, WikiPage page) throws IOException {

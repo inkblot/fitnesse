@@ -10,6 +10,7 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.components.SearchObserver;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ChunkingResponder;
+import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.templateUtilities.PageTitle;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -26,12 +27,12 @@ public abstract class ResultResponder extends ChunkingResponder implements
         SearchObserver, SecureResponder {
     private int hits;
 
-    public ResultResponder(HtmlPageFactory htmlPageFactory, WikiPage root, FitNesseContext context) {
-        super(htmlPageFactory, root, context);
+    public ResultResponder(HtmlPageFactory htmlPageFactory, WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+        super(htmlPageFactory, root, context, runningTestingTracker);
     }
 
     @Override
-    protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
+    protected void doSending(WikiPage root, WikiPagePath path, WikiPage page, RunningTestingTracker runningTestingTracker) throws Exception {
         response.add(createSearchResultsHeader());
 
         startSearching(root, page);

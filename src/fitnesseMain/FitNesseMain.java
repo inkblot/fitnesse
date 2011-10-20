@@ -35,13 +35,13 @@ public class FitNesseMain {
         } catch (CommandLineParseException e) {
             logger.error("Invalid command line: ", Arrays.asList(argv));
             System.err.println("Usage: java -jar fitnesse.jar [-pdrleoa]");
-            System.err.println("\t-p <port number> {" + FitNesseContext.DEFAULT_PORT + "}");
-            System.err.println("\t-d <working directory> {" + FitNesseContext.DEFAULT_PATH
+            System.err.println("\t-p <port number> {" + FitNesseConstants.DEFAULT_PORT + "}");
+            System.err.println("\t-d <working directory> {" + FitNesseConstants.DEFAULT_PATH
                     + "}");
-            System.err.println("\t-r <page root directory> {" + FitNesseContext.DEFAULT_ROOT
+            System.err.println("\t-r <page root directory> {" + FitNesseConstants.DEFAULT_ROOT
                     + "}");
             System.err.println("\t-l <log directory> {no logging}");
-            System.err.println("\t-e <days> {" + FitNesseContext.DEFAULT_VERSION_DAYS
+            System.err.println("\t-e <days> {" + FitNesseConstants.DEFAULT_VERSION_DAYS
                     + "} Number of days before page versions expire");
             System.err.println("\t-o omit updates");
             System.err
@@ -103,12 +103,12 @@ public class FitNesseMain {
     }
 
     public static class Arguments {
-        private String rootPath = FitNesseContext.DEFAULT_PATH;
+        private String rootPath = FitNesseConstants.DEFAULT_PATH;
         private int port = -1;
-        private String rootDirectory = FitNesseContext.DEFAULT_ROOT;
+        private String rootDirectory = FitNesseConstants.DEFAULT_ROOT;
         private String logDirectory;
         private boolean omitUpdate = false;
-        private int daysTillVersionsExpire = FitNesseContext.DEFAULT_VERSION_DAYS;
+        private int daysTillVersionsExpire = FitNesseConstants.DEFAULT_VERSION_DAYS;
         private String userpass;
         private boolean installOnly;
         private String command = null;
@@ -146,7 +146,7 @@ public class FitNesseMain {
         }
 
         private int getDefaultPort() {
-            return command == null ? FitNesseContext.DEFAULT_PORT : FitNesseContext.DEFAULT_COMMAND_PORT;
+            return command == null ? FitNesseConstants.DEFAULT_PORT : FitNesseConstants.DEFAULT_COMMAND_PORT;
         }
 
         public void setPort(String port) {

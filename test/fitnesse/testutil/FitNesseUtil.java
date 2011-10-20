@@ -16,7 +16,7 @@ public class FitNesseUtil {
     private FitNesse instance = null;
 
     public void startFitnesse(FitNesseContext context) {
-        instance = context.getInjector().getInstance(FitNesse.class);
+        instance = context.injector.getInstance(FitNesse.class);
         instance.start();
     }
 

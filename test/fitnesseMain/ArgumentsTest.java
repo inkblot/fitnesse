@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import fitnesse.FitNesseContext;
+import fitnesse.FitNesseConstants;
 import org.junit.Test;
 import util.CommandLineParseException;
 
@@ -73,7 +73,7 @@ public class ArgumentsTest {
     public void commandShouldUseDifferentDefaultPort() throws Exception {
         FitNesseMain.Arguments args = new FitNesseMain.Arguments("-c", "someCommand");
         assertNotNull(args);
-        assertEquals(FitNesseContext.DEFAULT_COMMAND_PORT, args.getPort());
+        assertEquals(FitNesseConstants.DEFAULT_COMMAND_PORT, args.getPort());
     }
 
     @Test

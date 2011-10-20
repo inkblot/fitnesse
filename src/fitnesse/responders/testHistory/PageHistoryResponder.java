@@ -1,7 +1,8 @@
 package fitnesse.responders.testHistory;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -36,9 +37,9 @@ public class PageHistoryResponder implements SecureResponder {
     private final File testHistoryDirectory;
 
     @Inject
-    public PageHistoryResponder(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
+    public PageHistoryResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
         this.htmlPageFactory = htmlPageFactory;
-        this.testHistoryDirectory = context.getTestHistoryDirectory();
+        this.testHistoryDirectory = new File(testResultsPath);
     }
 
     public Response makeResponse(Request request) throws Exception {

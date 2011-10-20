@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.Properties;
 
 import static fitnesse.fixtures.FitnesseFixtureContext.*;
+import static fitnesse.fixtures.FitnesseFixtureContext.testResultsPath;
 
 public class SetUp extends Fixture {
     public SetUp() throws Exception {
@@ -30,7 +31,7 @@ public class SetUp extends Fixture {
         properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         FitnesseFixtureContext.clock = new SystemClock();
         Injector injector = Guice.createInjector(
-                new FitNesseModule(properties, null, baseDir, "RooT", 9123, true),
+                new FitNesseModule(properties, null, rootPath, "RooT", 9123, true),
                 new AbstractModule() {
                     @Override
                     protected void configure() {
@@ -54,10 +55,11 @@ public class SetUp extends Fixture {
         //TODO - Inject the test listeners
         WikiImportTestEventListener.register();
 
-        context = injector.getInstance(FitNesseContext.class);
+        FitnesseFixtureContext.injector = injector;
+        testResultsPath = injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.TEST_RESULTS_PATH)));
         root = injector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         fitnesse = injector.getInstance(FitNesse.class);
-        File historyDirectory = context.getTestHistoryDirectory();
+        File historyDirectory = new File(testResultsPath);
         if (historyDirectory.exists())
             FileUtil.deleteFileSystemDirectory(historyDirectory);
         historyDirectory.mkdirs();

@@ -2,23 +2,31 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
+import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class RunningTestingTrackerTest {
+public class RunningTestingTrackerTest extends FitnesseBaseTestCase {
+
+    private RunningTestingTracker runningTestingTracker;
+
+    @Inject
+    public void inject(RunningTestingTracker runningTestingTracker) {
+        this.runningTestingTracker = runningTestingTracker;
+    }
 
     @Test
     public void testAddStoppable() {
         StoppedRecorder stoppableA = new StoppedRecorder();
         StoppedRecorder stoppableB = new StoppedRecorder();
 
-        RunningTestingTracker tracker = new RunningTestingTracker();
-        tracker.addStartedProcess(stoppableA);
-        tracker.addStartedProcess(stoppableB);
+        runningTestingTracker.addStartedProcess(stoppableA);
+        runningTestingTracker.addStartedProcess(stoppableB);
 
-        tracker.stopAllProcesses();
+        runningTestingTracker.stopAllProcesses();
         assertTrue(stoppableA.wasStopped());
         assertTrue(stoppableB.wasStopped());
     }
@@ -29,14 +37,13 @@ public class RunningTestingTrackerTest {
         StoppedRecorder stoppableB = new StoppedRecorder();
         StoppedRecorder stoppableC = new StoppedRecorder();
 
-        RunningTestingTracker tracker = new RunningTestingTracker();
-        tracker.addStartedProcess(stoppableA);
-        String idB = tracker.addStartedProcess(stoppableB);
-        tracker.addStartedProcess(stoppableC);
+        runningTestingTracker.addStartedProcess(stoppableA);
+        String idB = runningTestingTracker.addStartedProcess(stoppableB);
+        runningTestingTracker.addStartedProcess(stoppableC);
 
-        tracker.removeEndedProcess(idB);
+        runningTestingTracker.removeEndedProcess(idB);
 
-        tracker.stopAllProcesses();
+        runningTestingTracker.stopAllProcesses();
         assertTrue(stoppableA.wasStopped());
         assertFalse(stoppableB.wasStopped());
         assertTrue(stoppableC.wasStopped());
@@ -49,11 +56,10 @@ public class RunningTestingTrackerTest {
         StoppedRecorder stoppableB = new StoppedRecorder();
         StoppedRecorder stoppableC = new StoppedRecorder();
 
-        RunningTestingTracker tracker = new RunningTestingTracker();
-        tracker.addStartedProcess(stoppableA);
-        String idB = tracker.addStartedProcess(stoppableB);
-        tracker.addStartedProcess(stoppableC);
-        String results = tracker.stopProcess(idB);
+        runningTestingTracker.addStartedProcess(stoppableA);
+        String idB = runningTestingTracker.addStartedProcess(stoppableB);
+        runningTestingTracker.addStartedProcess(stoppableC);
+        String results = runningTestingTracker.stopProcess(idB);
 
         assertFalse(stoppableA.wasStopped());
         assertTrue(stoppableB.wasStopped());
@@ -68,12 +74,11 @@ public class RunningTestingTrackerTest {
         StoppedRecorder stoppableB = new StoppedRecorder();
         StoppedRecorder stoppableC = new StoppedRecorder();
 
-        RunningTestingTracker tracker = new RunningTestingTracker();
-        tracker.addStartedProcess(stoppableA);
-        tracker.addStartedProcess(stoppableB);
-        tracker.addStartedProcess(stoppableC);
+        runningTestingTracker.addStartedProcess(stoppableA);
+        runningTestingTracker.addStartedProcess(stoppableB);
+        runningTestingTracker.addStartedProcess(stoppableC);
 
-        String results = tracker.stopAllProcesses();
+        String results = runningTestingTracker.stopAllProcesses();
 
         assertTrue(stoppableA.wasStopped());
         assertTrue(stoppableB.wasStopped());

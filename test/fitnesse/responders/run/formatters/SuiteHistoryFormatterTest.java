@@ -26,12 +26,10 @@ public class SuiteHistoryFormatterTest extends FitnesseBaseTestCase {
     private WikiPage testPage;
     private StringWriter writer;
     private long testTime;
-    private FitNesseContext context;
     private WikiPage root;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 
@@ -40,7 +38,7 @@ public class SuiteHistoryFormatterTest extends FitnesseBaseTestCase {
         WikiPage suitePage = root.addChildPage("SuitePage");
         testPage = suitePage.addChildPage("TestPage");
         writer = new StringWriter();
-        formatter = new SuiteHistoryFormatter(context, suitePage, writer);
+        formatter = new SuiteHistoryFormatter(suitePage, writer);
         testTime = DateTimeUtil.getTimeFromString("12/5/1952 1:19:00");
     }
 

@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.FitNesseContext;
 import fitnesse.components.ContentBuffer;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
@@ -18,25 +17,23 @@ public class HtmlResultFormatter implements ResultFormatter {
     private ContentBuffer buffer;
     private boolean closed = false;
     private SuiteHtmlFormatter suiteFormatter;
-    private FitNesseContext context;
     private String host;
     private String rootPath;
     private HtmlPage htmlPage;
 
-    public HtmlResultFormatter(FitNesseContext context, String host, String rootPath) throws Exception {
-        this.context = context;
+    public HtmlResultFormatter(String host, String rootPath, HtmlPageFactory htmlPageFactory) throws Exception {
         this.host = host;
         this.rootPath = rootPath;
 
         buffer = new ContentBuffer(".html");
 
-        createPage(context.getHtmlPageFactory(), rootPath);
+        createPage(htmlPageFactory, rootPath);
         suiteFormatter = createCustomFormatter();
         suiteFormatter.writeHead(null);
     }
 
     private SuiteHtmlFormatter createCustomFormatter() {
-        return new SuiteHtmlFormatter(context) {
+        return new SuiteHtmlFormatter() {
             @Override
             protected void writeData(String output) throws IOException {
                 buffer.append(output);

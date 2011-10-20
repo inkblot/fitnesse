@@ -1,6 +1,5 @@
 package fitnesse.responders.files;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
@@ -49,7 +48,7 @@ public abstract class FileResponder implements Responder {
         return response;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         InputStreamResponse response = new InputStreamResponse();
 
         if (isNotModified(request))

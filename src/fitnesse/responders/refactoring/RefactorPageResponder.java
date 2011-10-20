@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -19,7 +18,7 @@ import java.io.StringWriter;
 
 public class RefactorPageResponder implements SecureResponder {
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         String resource = request.getResource();
 
         VelocityContext velocityContext = new VelocityContext();

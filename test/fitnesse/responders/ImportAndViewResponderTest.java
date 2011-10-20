@@ -38,7 +38,7 @@ public class ImportAndViewResponderTest extends ImporterTestCase {
     private Response getResponse() throws Exception {
         MockRequest request = new MockRequest();
         request.setResource("PageTwo");
-        return responder.makeResponse(localContext, request);
+        return responder.makeResponse(request);
     }
 
     @Test

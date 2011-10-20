@@ -3,8 +3,8 @@
 package fitnesse.runner;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.TestSummary;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,16 +19,16 @@ import static util.RegexAssertions.assertSubString;
 
 public class HtmlResultFormatterTest extends FitnesseBaseTestCase {
     private HtmlResultFormatter formatter;
-    private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(FitNesseContext context) {
-        this.context = context;
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
     }
 
     @Before
     public void setUp() throws Exception {
-        formatter = new HtmlResultFormatter(context, "somehost.com:8080", "FitNesse");
+        formatter = new HtmlResultFormatter("somehost.com:8080", "FitNesse", htmlPageFactory);
     }
 
     @Test

@@ -4,6 +4,7 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -35,12 +36,14 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
     private SocketDealer socketDealer;
+    private FitNesseContext context;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.socketDealer = socketDealer;
+        this.context = context;
     }
 
     @Before
@@ -153,7 +156,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockTestResponder extends TestResponder {
         private MockTestResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
-            super(htmlPageFactory, root, getPort(), WikiImportTestEventListenerTest.this.socketDealer);
+            super(htmlPageFactory, root, getPort(), WikiImportTestEventListenerTest.this.socketDealer, context);
             response = new ChunkedResponse("html");
         }
 
@@ -168,7 +171,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockSuiteResponder extends SuiteResponder {
         private MockSuiteResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
-            super(htmlPageFactory, root, getPort(), WikiImportTestEventListenerTest.this.socketDealer);
+            super(htmlPageFactory, root, getPort(), WikiImportTestEventListenerTest.this.socketDealer, context);
             response = new ChunkedResponse("html");
         }
 

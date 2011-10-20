@@ -39,7 +39,7 @@ public class SearchResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         PageCrawler crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("SomePage"), "has something in it");
-        responder = new SearchResponder(htmlPageFactory, root);
+        responder = new SearchResponder(htmlPageFactory, root, context);
         request = new MockRequest();
         request.addInput("searchString", "blah");
         request.addInput("searchType", "blah");
@@ -92,7 +92,7 @@ public class SearchResponderTest extends FitnesseBaseTestCase {
     private String getResponseContentUsingSearchString(String searchString) throws Exception {
         request.addInput("searchString", searchString);
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         return sender.sentData();

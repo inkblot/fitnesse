@@ -19,16 +19,14 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private String childName;
     private MockRequest request;
-    private FitNesseContext context;
     private Responder responder;
     private WikiPagePath path;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory,@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.context = context;
     }
 
     @Before
@@ -49,7 +47,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void canGetRedirectResponse() throws Exception {
-        final SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        final SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         final String body = response.getContent();
         assertEquals("", body);
         assertEquals(response.getStatus(), 303);
@@ -59,7 +57,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     @Test
     public void childPageIsMade() throws Exception {
         assertTrue(crawler.getPage(root, path) == null);
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         assertTrue(crawler.getPage(root, path) != null);
     }
 
@@ -67,27 +65,27 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     public void noPageIsMadeIfNameIsNull() throws Exception {
         request.addInput("name", "");
         assertTrue(crawler.getPage(root, path) == null);
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         assertTrue(crawler.getPage(root, path) == null);
     }
 
     @Test
     public void givesAInvalidNameErrorForAInvalidName() throws Exception {
         request = makeInvalidRequest("");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals(400, response.getStatus());
         assertSubString("Invalid Child Name", response.getContent());
 
         request = makeInvalidRequest("hello goodbye");
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        response = (SimpleResponse) responder.makeResponse(request);
         assertSubString("Invalid Child Name", response.getContent());
 
         request = makeInvalidRequest("1man1mission");
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        response = (SimpleResponse) responder.makeResponse(request);
         assertSubString("Invalid Child Name", response.getContent());
 
         request = makeInvalidRequest("PageOne.PageTwo");
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        response = (SimpleResponse) responder.makeResponse(request);
         assertSubString("Invalid Child Name", response.getContent());
     }
 
@@ -103,7 +101,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     @Test
     public void withDefaultPageTypeAndPageNameForNormalThenNoAttributeShouldBeSet() throws Exception {
         request.addInput("name", "NormalPage");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         getChildPage("NormalPage");
         assertFalse(isSuite());
         assertFalse(isTest());
@@ -112,7 +110,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     @Test
     public void withDefaultPageTypeAndPageNameForTestTheTestAttributeShouldBeSet() throws Exception {
         request.addInput("name", "TestPage");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         getChildPage("TestPage");
         assertFalse(isSuite());
         assertTrue(isTest());
@@ -121,7 +119,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     @Test
     public void withDefaultPageTypeAndPageNameForSuiteTheSuiteAttributeShouldBeSet() throws Exception {
         request.addInput("name", "SuitePage");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         getChildPage("SuitePage");
         assertTrue(isSuite());
         assertFalse(isTest());
@@ -135,7 +133,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     public void correctAttributeWhenNameHasTestButAttributeIsNormal() throws Exception {
         request.addInput("name", "TestChildPage");
         request.addInput("pageType", "Normal");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         getChildPage("TestChildPage");
         assertFalse(isTest());
         assertFalse(isSuite());
@@ -144,7 +142,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     @Test
     public void pageTypeShouldBeTestWhenAttributeIsTest() throws Exception {
         request.addInput("pageType", "Test");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         getChildPage(childName);
         assertTrue(isTest());
         assertFalse(isSuite());
@@ -153,7 +151,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     @Test
     public void pageTypeShouldBeSuiteWhenAttributeIsSuite() throws Exception {
         request.addInput("pageType", "Suite");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         getChildPage(childName);
         assertFalse(isTest());
         assertTrue(isSuite());

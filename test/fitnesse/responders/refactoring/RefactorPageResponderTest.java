@@ -20,11 +20,9 @@ public class RefactorPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private MockRequest request;
     private Responder responder;
-    private FitNesseContext context;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 
@@ -41,7 +39,7 @@ public class RefactorPageResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testHtml() throws Exception {
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals(200, response.getStatus());
 
         String content = response.getContent();

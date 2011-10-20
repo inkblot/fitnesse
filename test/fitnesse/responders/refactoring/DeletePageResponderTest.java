@@ -36,7 +36,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
         request.setResource(this.qualifiedLevel2Name);
         request.addInput("deletePage", "");
 
-        SimpleResponse response = (SimpleResponse) this.responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) this.responder.makeResponse(request);
         String content = response.getContent();
         assertSubString("Are you sure you want to delete " + this.qualifiedLevel2Name, content);
     }
@@ -50,7 +50,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
         request.setResource(this.level1Name);
         request.addInput("confirmed", "yes");
 
-        SimpleResponse response = (SimpleResponse) this.responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) this.responder.makeResponse(request);
         String page = response.getContent();
         assertNotSubString("Are you sure you want to delete", page);
         assertEquals(303, response.getStatus());
@@ -66,7 +66,7 @@ public class DeletePageResponderTest extends ResponderTestCase {
         this.crawler.addPage(this.root, PathParser.parse("FrontPage"), "Content");
         this.request.setResource("FrontPage");
         this.request.addInput("confirmed", "yes");
-        Response response = this.responder.makeResponse(context, this.request);
+        Response response = this.responder.makeResponse(this.request);
         assertEquals(303, response.getStatus());
         assertEquals("FrontPage", response.getHeader("Location"));
     }

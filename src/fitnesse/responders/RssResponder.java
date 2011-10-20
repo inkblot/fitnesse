@@ -35,7 +35,7 @@ public class RssResponder implements SecureResponder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         Document rssDocument = buildRssHeader();
         XmlUtil.addTextNode(rssDocument, channelElement, "title", "FitNesse:");
 

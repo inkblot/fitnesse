@@ -3,7 +3,6 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -16,12 +15,10 @@ import static util.RegexAssertions.assertHasRegexp;
 
 public class NotFoundResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
-    private FitNesseContext context;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
     }
 
     @Test
@@ -30,7 +27,7 @@ public class NotFoundResponderTest extends FitnesseBaseTestCase {
         request.setResource("some page");
 
         Responder responder = new NotFoundResponder(htmlPageFactory);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
 
         assertEquals(404, response.getStatus());
 
@@ -48,7 +45,7 @@ public class NotFoundResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageOne.PageTwo");
 
         Responder responder = new NotFoundResponder(htmlPageFactory);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
 
         assertHasRegexp("\"PageOne[.]PageTwo[?]edit\"", response.getContent());
     }

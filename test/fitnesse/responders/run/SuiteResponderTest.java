@@ -84,6 +84,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         assertEquals(TEST_TIME, clockProvider.get().currentClockDate());
+        context.doNotChunk = true;
 
         String suitePageName = "SuitePage";
 
@@ -96,8 +97,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource(suitePageName);
-        responder = new SuiteResponder(htmlPageFactory, root, getPort(), socketDealer);
-        responder.turnOffChunking();
+        responder = new SuiteResponder(htmlPageFactory, root, getPort(), socketDealer, context);
         responder.setFastTest(true);
 
         receiver = new FitSocketReceiver(getPort(), socketDealer);
@@ -124,7 +124,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
     private String runSuite() throws Exception {
         receiver.receiveSocket();
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         return sender.sentData();

@@ -59,7 +59,7 @@ public abstract class SerializedPageResponderTestCase extends FitnesseBaseTestCa
 
     protected Object getObject() throws Exception {
         Responder responder = new SerializedPageResponder(htmlPageFactory, root);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
 
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));
         return ois.readObject();

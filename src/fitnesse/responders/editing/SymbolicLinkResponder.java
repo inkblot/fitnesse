@@ -4,7 +4,6 @@ package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPageFactory;
@@ -35,20 +34,20 @@ public class SymbolicLinkResponder implements Responder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         resource = request.getResource();
         crawler = root.getPageCrawler();
         page = crawler.getPage(root, PathParser.parse(resource));
         if (page == null)
-            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(request);
 
         response = new SimpleResponse();
         if (request.hasInput("removal"))
             removeSymbolicLink(request, page);
         else if (request.hasInput("rename"))
-            renameSymbolicLink(request, page, context);
+            renameSymbolicLink(request, page);
         else
-            addSymbolicLink(request, page, context);
+            addSymbolicLink(request, page);
 
         return response;
     }
@@ -70,12 +69,12 @@ public class SymbolicLinkResponder implements Responder {
         setRedirect(resource);
     }
 
-    private void renameSymbolicLink(Request request, WikiPage page, FitNesseContext context) throws Exception {
+    private void renameSymbolicLink(Request request, WikiPage page) throws Exception {
         String linkToRename = (String) request.getInput("rename"),
                 newName = (String) request.getInput("newname");
 
         if (page.hasChildPage(newName)) {
-            response = new ErrorResponder(resource + " already has a child named " + newName + ".", htmlPageFactory).makeResponse(context, null);
+            response = new ErrorResponder(resource + " already has a child named " + newName + ".", htmlPageFactory).makeResponse(null);
             response.setStatus(412);
         } else {
             PageData data = page.getData();
@@ -89,7 +88,7 @@ public class SymbolicLinkResponder implements Responder {
         }
     }
 
-    private void addSymbolicLink(Request request, WikiPage page, FitNesseContext context) throws Exception {
+    private void addSymbolicLink(Request request, WikiPage page) throws Exception {
         String linkName = StringUtils.trim((String) request.getInput("linkName"));
         String linkPath = StringUtils.trim((String) request.getInput("linkPath"));
 
@@ -97,13 +96,13 @@ public class SymbolicLinkResponder implements Responder {
             String message = "Cannot create link to the file system path, <b>" + linkPath + "</b>." +
                     "<br/> The canonical file system path used was <b>" + createFileFromPath(linkPath).getCanonicalPath() + ".</b>" +
                     "<br/>Either it doesn't exist or it's not a directory.";
-            response = new ErrorResponder(message, htmlPageFactory).makeResponse(context, null);
+            response = new ErrorResponder(message, htmlPageFactory).makeResponse(null);
             response.setStatus(404);
         } else if (!isFilePath(linkPath) && isInternalPageThatDoesntExist(linkPath)) {
-            response = new ErrorResponder("The page to which you are attempting to link, " + Utils.escapeHTML(linkPath) + ", doesn't exist.", htmlPageFactory).makeResponse(context, null);
+            response = new ErrorResponder("The page to which you are attempting to link, " + Utils.escapeHTML(linkPath) + ", doesn't exist.", htmlPageFactory).makeResponse(null);
             response.setStatus(404);
         } else if (page.hasChildPage(linkName)) {
-            response = new ErrorResponder(resource + " already has a child named " + linkName + ".", htmlPageFactory).makeResponse(context, null);
+            response = new ErrorResponder(resource + " already has a child named " + linkName + ".", htmlPageFactory).makeResponse(null);
             response.setStatus(412);
         } else {
             PageData data = page.getData();

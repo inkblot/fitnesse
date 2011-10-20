@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.editing;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.components.SaveRecorder;
 import fitnesse.html.HtmlPage;
@@ -36,7 +35,7 @@ public class MergeResponder implements Responder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         resource = this.request.getResource();
         WikiPagePath path = PathParser.parse(resource);

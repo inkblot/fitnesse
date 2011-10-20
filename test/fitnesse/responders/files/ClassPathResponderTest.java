@@ -1,7 +1,6 @@
 package fitnesse.responders.files;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.*;
 import org.junit.Before;
@@ -23,12 +22,10 @@ public class ClassPathResponderTest extends FitnesseBaseTestCase {
 
     private ClassPathResponder responder;
     private Clock clock;
-    private FitNesseContext context;
 
     @Inject
-    public void inject(Clock clock, FitNesseContext context) {
+    public void inject(Clock clock) {
         this.clock = clock;
-        this.context = context;
     }
 
     @Before
@@ -42,7 +39,7 @@ public class ClassPathResponderTest extends FitnesseBaseTestCase {
         MockResponseSender sender = new MockResponseSender();
         request.setResource("files/css/fitnesse_base.css");
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         sender.doSending(response);
         assertThat(response, instanceOf(InputStreamResponse.class));
         assertThat(response.getStatus(), equalTo(200));

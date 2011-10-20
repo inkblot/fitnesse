@@ -3,7 +3,6 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -21,12 +20,10 @@ public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
     private SimpleSocketSeeker seeker;
     private MockResponseSender sender;
     private SocketCatchingResponder responder;
-    private FitNesseContext context;
     private MockRequest request;
 
     @Inject
-    public void inject(FitNesseContext context, SocketDealer socketDealer) {
-        this.context = context;
+    public void inject(SocketDealer socketDealer) {
         this.socketDealer = socketDealer;
     }
 
@@ -42,7 +39,7 @@ public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
     public void testSuccess() throws Exception {
         int ticket = socketDealer.seekingSocket(seeker);
         request.addInput("ticket", ticket + "");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         response.readyToSend(sender);
 
         assertEquals("", sender.sentData());
@@ -51,7 +48,7 @@ public class SocketCatchingResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testMissingSeeker() throws Exception {
         request.addInput("ticket", "123");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         response.readyToSend(sender);
 
         assertHasRegexp("There are no clients waiting for a socket with ticketNumber 123", sender.sentData());

@@ -42,7 +42,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         testSummary = new TestSummary(1, 2, 3, 4);
         testPage = root.addChildPage("TestPage");
-        formatter = new CachingSuiteXmlFormatter(context, root, null);
+        formatter = new CachingSuiteXmlFormatter(root, null, context.getTestHistoryDirectory());
         testTime = DateTimeUtil.getTimeFromString("10/8/1988 10:52:12");
     }
 
@@ -77,7 +77,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     }
 
     private CachingSuiteXmlFormatter newNonWritingCachingSuiteXmlFormatter() throws Exception {
-        return new CachingSuiteXmlFormatter(context, root, null) {
+        return new CachingSuiteXmlFormatter(root, null, context.getTestHistoryDirectory()) {
             @Override
             protected void writeOutSuiteXML() {
             }
@@ -119,7 +119,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
         PageHistory.TestResultRecord expectedRecord = mock(PageHistory.TestResultRecord.class);
         File file = mock(File.class);
         final TestExecutionReport expectedReport = mock(TestExecutionReport.class);
-        CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(context, testPage, null) {
+        CachingSuiteXmlFormatter formatter = new CachingSuiteXmlFormatter(testPage, null, context.getTestHistoryDirectory()) {
             @Override
             TestExecutionReport makeTestExecutionReport() {
                 return expectedReport;

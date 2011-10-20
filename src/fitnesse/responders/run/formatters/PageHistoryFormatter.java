@@ -1,6 +1,5 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;
@@ -11,8 +10,8 @@ import java.io.IOException;
 public class PageHistoryFormatter extends XmlFormatter {
     private WikiPage historyPage;
 
-    public PageHistoryFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
-        super(context, page, writerFactory);
+    public PageHistoryFormatter(final WikiPage page, WriterFactory writerFactory) {
+        super(page, writerFactory);
     }
 
     @Override

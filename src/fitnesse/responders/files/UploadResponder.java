@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -30,7 +29,7 @@ public class UploadResponder implements SecureResponder {
         this.rootPagePath = rootPagePath;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         String resource = request.getResource().replace("%20", " ");
         UploadedFile uploadedFile = (UploadedFile) request.getInput("file");

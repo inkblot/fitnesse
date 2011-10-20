@@ -29,7 +29,6 @@ public class SetUp extends Fixture {
         Properties properties = new Properties();
         properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         FitnesseFixtureContext.clock = new SystemClock();
-        FitnesseFixtureContext.authenticator = new PromiscuousAuthenticator(null);
         Injector injector = Guice.createInjector(
                 new FitNesseModule(properties, null, baseDir, "RooT", 9123, true),
                 new AbstractModule() {
@@ -49,6 +48,8 @@ public class SetUp extends Fixture {
                         });
                     }
                 });
+
+        FitnesseFixtureContext.authenticator = new PromiscuousAuthenticator(null, injector);
 
         //TODO - Inject the test listeners
         WikiImportTestEventListener.register();

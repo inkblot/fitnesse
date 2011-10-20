@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -27,7 +26,7 @@ public class DeleteConfirmationResponder implements SecureResponder {
         this.rootPagePath = rootPagePath;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) {
+    public Response makeResponse(Request request) {
         SimpleResponse response = new SimpleResponse();
         resource = request.getResource();
         String filename = (String) request.getInput("filename");

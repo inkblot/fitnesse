@@ -25,14 +25,12 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     private WikiPage childTwo;
     private MockRequest request;
     private Responder responder;
-    private FitNesseContext context;
     private WikiPage root;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
     }
 
@@ -72,7 +70,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     private void executeSymbolicLinkTestWith(String linkName, String linkPath) throws Exception {
         request.addInput("linkName", linkName);
         request.addInput("linkPath", linkPath);
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         checkPageOneRedirectToProperties(response);
 
@@ -91,7 +89,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageTwo.ChildTwo");
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", "ChildThree");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         checkChildTwoRedirectToProperties(response);
 
@@ -104,7 +102,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     public void testSubmitGoodFormToAbsolutePath() throws Exception {
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", ".PageTwo");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         checkPageOneRedirectToProperties(response);
 
@@ -117,7 +115,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     public void testSubmitGoodFormToSubChild() throws Exception {
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", ">ChildOne");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         checkPageOneRedirectToProperties(response);
 
@@ -130,7 +128,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     public void testSubmitGoodFormToSibling() throws Exception {
         request.addInput("linkName", "SymTwo");
         request.addInput("linkPath", "PageTwo");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         checkPageOneRedirectToProperties(response);
 
@@ -144,7 +142,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageTwo.ChildTwo");
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", "<PageTwo.ChildThree");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         checkChildTwoRedirectToProperties(response);
 
@@ -162,7 +160,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
         assertNotNull(pageOne.getChildPage("SymLink"));
 
         request.addInput("removal", "SymLink");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         checkPageOneRedirectToProperties(response);
 
         assertNull(pageOne.getChildPage("SymLink"));
@@ -178,7 +176,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
 
         request.addInput("rename", "SymLink");
         request.addInput("newname", "NewLink");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         checkPageOneRedirectToProperties(response);
 
         assertNotNull(pageOne.getChildPage("NewLink"));
@@ -188,7 +186,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     public void testNoPageAtPath() throws Exception {
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", "NonExistingPage");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         assertEquals(404, response.getStatus());
         String content = ((SimpleResponse) response).getContent();
@@ -201,7 +199,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
         pageOne.addChildPage("SymLink");
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", "PageTwo");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         assertEquals(412, response.getStatus());
         String content = ((SimpleResponse) response).getContent();
@@ -216,7 +214,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
 
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", "file://testDir/ExternalRoot");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         checkPageOneRedirectToProperties(response);
 
@@ -233,7 +231,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     public void testSubmitFormForLinkToExternalRootThatsMissing() throws Exception {
         request.addInput("linkName", "SymLink");
         request.addInput("linkPath", "file://testDir/ExternalRoot");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         assertEquals(404, response.getStatus());
         String content = ((SimpleResponse) response).getContent();

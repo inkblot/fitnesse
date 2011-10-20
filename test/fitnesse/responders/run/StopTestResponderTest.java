@@ -49,7 +49,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
         context.runningTestingTracker.addStartedProcess(stoppableA);
         context.runningTestingTracker.addStartedProcess(stoppableB);
 
-        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory);
+        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory, context);
         String response = runResponder(stopResponder);
 
         assertTrue(stoppableA.wasStopped());
@@ -77,7 +77,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
             }
         };
 
-        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory);
+        StopTestResponder stopResponder = new StopTestResponder(htmlPageFactory, context);
         String response = runResponder(stopResponder);
 
         assertFalse(stoppableA.wasStopped());
@@ -91,7 +91,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
         FitSocketReceiver fitSocketReceiver = new FitSocketReceiver(getPort(), socketDealer);
         try {
             fitSocketReceiver.receiveSocket();
-            Response response = responder.makeResponse(context, request);
+            Response response = responder.makeResponse(request);
             MockResponseSender sender = new MockResponseSender();
             sender.doSending(response);
             return sender.sentData();

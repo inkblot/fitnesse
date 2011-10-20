@@ -15,14 +15,12 @@ import static util.RegexAssertions.assertSubString;
 
 public class DeleteConfirmationResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
-    private FitNesseContext context;
     private String rootPagePath;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.rootPagePath = rootPagePath;
     }
 
@@ -36,7 +34,7 @@ public class DeleteConfirmationResponderTest extends FitnesseBaseTestCase {
         request.setResource("files");
         request.addInput("filename", "MyFile.txt");
         Responder responder = new DeleteConfirmationResponder(htmlPageFactory, rootPagePath);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         String content = response.getContent();
 
         assertSubString("deleteFile", content);

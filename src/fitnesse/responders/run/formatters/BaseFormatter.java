@@ -1,6 +1,5 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.ResultsListener;
 import fitnesse.responders.run.TestSummary;
@@ -13,7 +12,6 @@ import java.io.IOException;
 public abstract class BaseFormatter implements ResultsListener {
 
     protected WikiPage page = null;
-    protected FitNesseContext context;
     public static int finalErrorCount = 0;
     protected int testCount = 0;
     protected int failCount = 0;
@@ -23,9 +21,8 @@ public abstract class BaseFormatter implements ResultsListener {
     protected BaseFormatter() {
     }
 
-    protected BaseFormatter(FitNesseContext context, final WikiPage page) {
+    protected BaseFormatter(final WikiPage page) {
         this.page = page;
-        this.context = context;
     }
 
     protected WikiPage getPage() {
@@ -72,7 +69,7 @@ public abstract class BaseFormatter implements ResultsListener {
 
 class NullFormatter extends BaseFormatter {
     NullFormatter() {
-        super(null, null);
+        super(null);
     }
 
     protected WikiPage getPage() {

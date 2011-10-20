@@ -130,7 +130,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
         MockRequest request = new MockRequest();
         request.setResource(name);
         Responder responder = new WikiPageResponder(getProperties(), htmlPageFactory, clock, root);
-        return (SimpleResponse) responder.makeResponse(context, request);
+        return (SimpleResponse) responder.makeResponse(request);
     }
 
     @Test

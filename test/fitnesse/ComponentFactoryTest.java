@@ -28,19 +28,17 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     private SymbolProvider testProvider;
     private WikiPageFactory wikiPageFactory;
     private ResponderFactory responderFactory;
-    private FitNesseContext context;
 
     @Inject
-    public void inject(FitNesseContext context) {
-        this.context = context;
+    public void inject(WikiPageFactory wikiPageFactory, ResponderFactory responderFactory) {
+        this.wikiPageFactory = wikiPageFactory;
+        this.responderFactory = responderFactory;
     }
 
     @Before
     public void setUp() throws Exception {
-        wikiPageFactory = context.getWikiPageFactory();
         testProperties = new Properties();
         testProvider = new SymbolProvider(new SymbolType[]{});
-        responderFactory = context.getResponderFactory();
     }
 
     @After

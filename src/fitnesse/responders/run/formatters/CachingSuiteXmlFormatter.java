@@ -1,6 +1,5 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.responders.run.SuiteExecutionReport;
 import fitnesse.responders.run.TestExecutionReport;
@@ -10,6 +9,7 @@ import fitnesse.wiki.WikiPage;
 import org.apache.velocity.VelocityContext;
 import util.TimeMeasurement;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Date;
@@ -21,11 +21,13 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
     private VelocityContext velocityContext;
     private Writer writer;
     private boolean includeHtml = false;
+    private final File testHistoryDirectory;
 
-    public CachingSuiteXmlFormatter(FitNesseContext context, WikiPage page, Writer writer) {
-        super(context, page);
+    public CachingSuiteXmlFormatter(WikiPage page, Writer writer, File testHistoryDirectory) {
+        super(page);
         velocityContext = new VelocityContext();
         this.writer = writer;
+        this.testHistoryDirectory = testHistoryDirectory;
     }
 
     void setTestHistoryForTests(TestHistory testHistory) {
@@ -44,7 +46,7 @@ public class CachingSuiteXmlFormatter extends SuiteExecutionReportFormatter {
     }
 
     protected void writeOutSuiteXML() throws IOException {
-        testHistory.readHistoryDirectory(context.getTestHistoryDirectory());
+        testHistory.readHistoryDirectory(testHistoryDirectory);
         velocityContext.put("formatter", this);
         VelocityFactory.mergeTemplate(writer, velocityContext, "fitnesse/templates/suiteXML.vm");
         closeQuietly(writer);

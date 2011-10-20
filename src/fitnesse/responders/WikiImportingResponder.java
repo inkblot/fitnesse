@@ -29,8 +29,8 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public WikiImportingResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        super(htmlPageFactory, root);
+    public WikiImportingResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+        super(htmlPageFactory, root, context);
         this.htmlPageFactory = htmlPageFactory;
     }
 

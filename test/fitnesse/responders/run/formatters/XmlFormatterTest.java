@@ -2,7 +2,6 @@ package fitnesse.responders.run.formatters;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.TestExecutionReport.TestResult;
 import fitnesse.responders.run.TestSummary;
@@ -52,12 +51,11 @@ public class XmlFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void processTestResultsShouldBuildUpCurrentResultAndFinalSummary() throws Exception {
-        FitNesseContext context = mock(FitNesseContext.class);
         WikiPageDummy page = new WikiPageDummy("name", "content", injector);
         page.getData().setAttribute(PageData.PropertySUITES, "tag1");
         WriterFactory writerFactory = mock(WriterFactory.class);
         final TestResult testResult = new TestResult();
-        XmlFormatter formatter = new XmlFormatter(context, page, writerFactory) {
+        XmlFormatter formatter = new XmlFormatter(page, writerFactory) {
             @Override
             protected TestResult newTestResult() {
                 return testResult;
@@ -91,10 +89,9 @@ public class XmlFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void allTestingCompleteShouldSetTotalRunTime() throws Exception {
-        FitNesseContext context = mock(FitNesseContext.class);
         WikiPage page = new WikiPageDummy("name", "content", injector);
         WriterFactory writerFactory = mock(WriterFactory.class);
-        XmlFormatter formatter = new XmlFormatter(context, page, writerFactory) {
+        XmlFormatter formatter = new XmlFormatter(page, writerFactory) {
             @Override
             protected void writeResults() {
             }

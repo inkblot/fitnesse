@@ -16,21 +16,23 @@ public class StopTestResponder extends BasicResponder {
 
     String testId = null;
     private final HtmlPageFactory htmlPageFactory;
+    private final RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public StopTestResponder(HtmlPageFactory htmlPageFactory) {
+    public StopTestResponder(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
         super(htmlPageFactory);
         this.htmlPageFactory = htmlPageFactory;
+        runningTestingTracker = context.runningTestingTracker;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
 
         if (request.hasInput("id")) {
             testId = request.getInput("id").toString();
         }
 
-        response.setContent(html(context.runningTestingTracker));
+        response.setContent(html(runningTestingTracker));
 
         return response;
     }

@@ -21,27 +21,30 @@ public abstract class ChunkingResponder implements Responder {
 
     protected Request request;
     protected ChunkedResponse response;
-    private boolean dontChunk = false;
+    private final boolean dontChunk;
     private final HtmlPageFactory htmlPageFactory;
     private final WikiPage root;
+    private final FitNesseContext context;
 
-    public ChunkingResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
+    public ChunkingResponder(HtmlPageFactory htmlPageFactory, WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
+        this.context = context;
+        this.dontChunk = context.doNotChunk;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         this.request = request;
         String format = (String) request.getInput("format");
         response = new ChunkedResponse(format);
-        if (dontChunk || context.doNotChunk || request.hasInput("nochunk"))
+        if (dontChunk || request.hasInput("nochunk"))
             response.turnOffChunking();
         WikiPagePath path = getWikiPagePath(request);
         WikiPage page = root.getPageCrawler().getPage(root, path);
         if (page == null && shouldRespondWith404())
-            return pageNotFoundResponse(context, request);
+            return pageNotFoundResponse(request);
 
-        Thread respondingThread = new Thread(new RespondingRunnable(context, root, path, page), getClass() + ": Responding Thread");
+        Thread respondingThread = new Thread(new RespondingRunnable(this.context, root, path, page), getClass() + ": Responding Thread");
         respondingThread.start();
 
         return response;
@@ -51,12 +54,8 @@ public abstract class ChunkingResponder implements Responder {
         return PathParser.parse(request.getResource());
     }
 
-    public void turnOffChunking() {
-        dontChunk = true;
-    }
-
-    private Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
-        return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+    private Response pageNotFoundResponse(Request request) throws Exception {
+        return new NotFoundResponder(htmlPageFactory).makeResponse(request);
     }
 
     protected boolean shouldRespondWith404() {

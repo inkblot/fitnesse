@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlUtil;
@@ -18,7 +17,7 @@ public class DefaultResponder extends BasicResponder {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         String content = prepareResponseDocument().html();
         return responseWith(content);
     }

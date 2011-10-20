@@ -51,7 +51,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
         request.setResource("ChildPage");
 
         final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock, root);
-        final SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        final SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
 
         assertEquals(200, response.getStatus());
 
@@ -121,7 +121,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
         final MockRequest request = new MockRequest();
         request.setResource(name);
         final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock, root);
-        return (SimpleResponse) responder.makeResponse(context, request);
+        return (SimpleResponse) responder.makeResponse(request);
     }
 
     @Test

@@ -27,7 +27,6 @@ import java.net.SocketException;
 public class FitNesseExpediter implements ResponseSender {
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private ResponderFactory responderFactory;
     private Provider<Authenticator> authenticatorProvider;
@@ -44,8 +43,7 @@ public class FitNesseExpediter implements ResponseSender {
     private volatile boolean hasError;
 
     @Inject
-    public void inject(FitNesseContext context, HtmlPageFactory htmlPageFactory, ResponderFactory responderFactory, Provider<Authenticator> authenticatorProvider, Clock clock) {
-        this.context = context;
+    public void inject(HtmlPageFactory htmlPageFactory, ResponderFactory responderFactory, Provider<Authenticator> authenticatorProvider, Clock clock) {
         this.htmlPageFactory = htmlPageFactory;
         this.responderFactory = responderFactory;
         this.authenticatorProvider = authenticatorProvider;
@@ -118,7 +116,7 @@ public class FitNesseExpediter implements ResponseSender {
         } catch (SocketException se) {
             throw (se);
         } catch (Exception e) {
-            response = new ErrorResponder(e, htmlPageFactory).makeResponse(context, request);
+            response = new ErrorResponder(e, htmlPageFactory).makeResponse(request);
         }
         return response;
     }
@@ -128,8 +126,8 @@ public class FitNesseExpediter implements ResponseSender {
         if (StringUtils.isEmpty(request.getResource()) && StringUtils.isEmpty(request.getQueryString()))
             request.setResource("FrontPage");
         Responder responder = responderFactory.makeResponder(request);
-        responder = authenticatorProvider.get().authenticate(context, request, responder);
-        response = responder.makeResponse(context, request);
+        responder = authenticatorProvider.get().authenticate(request, responder);
+        response = responder.makeResponse(request);
         response.addHeader("Server", "FitNesse-" + FitNesse.VERSION);
         response.addHeader("Connection", "close");
         return response;
@@ -181,7 +179,7 @@ public class FitNesseExpediter implements ResponseSender {
 
     private void reportError(int status, String message, Request request) {
         try {
-            response = new ErrorResponder(message, htmlPageFactory).makeResponse(context, request);
+            response = new ErrorResponder(message, htmlPageFactory).makeResponse(request);
             response.setStatus(status);
             hasError = true;
         } catch (Exception e) {
@@ -191,7 +189,7 @@ public class FitNesseExpediter implements ResponseSender {
 
     private void reportError(Exception e, Request request) {
         try {
-            response = new ErrorResponder(e, htmlPageFactory).makeResponse(context, request);
+            response = new ErrorResponder(e, htmlPageFactory).makeResponse(request);
             hasError = true;
         } catch (Exception e1) {
             e1.printStackTrace();

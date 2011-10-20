@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 public class FitClientResponder implements Responder, ResponsePuppeteer, TestSystemListener {
-    private FitNesseContext context;
     private PageCrawler crawler;
     private String resource;
     private WikiPage page;
@@ -31,16 +30,17 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     private final WikiPage root;
     private final Integer port;
     private final SocketDealer socketDealer;
+    private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer) {
+    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, FitNesseContext context) {
         this.root = root;
         this.port = port;
         this.socketDealer = socketDealer;
+        runningTestingTracker = context.runningTestingTracker;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) {
-        this.context = context;
+    public Response makeResponse(Request request) {
         crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         resource = request.getResource();
@@ -88,7 +88,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         List<WikiPage> testPages = suiteTestFinder.makePageList();
 
         if (shouldIncludePaths) {
-            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, page, null, root, port, socketDealer);
+            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, runningTestingTracker, page, null, root, port, socketDealer);
             String classpath = runner.buildClassPath();
             client.send(classpath);
         }

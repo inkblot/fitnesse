@@ -42,8 +42,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     protected final SocketDealer socketDealer;
 
     @Inject
-    public TestResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer) {
-        super(htmlPageFactory, root);
+    public TestResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, FitNesseContext context) {
+        super(htmlPageFactory, root, context);
         this.htmlPageFactory = htmlPageFactory;
         this.port = port;
         this.socketDealer = socketDealer;
@@ -55,9 +55,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         checkArguments();
         data = page.getData();
 
-        createFormatterAndWriteHead(context, page);
+        createFormatterAndWriteHead(context.getTestHistoryDirectory(), page);
         sendPreTestNotification();
-        performExecution(context, root, page);
+        performExecution(context.runningTestingTracker, root, page);
 
         int exitCode = formatters.getErrorCount();
         closeHtmlResponse(exitCode);
@@ -68,17 +68,17 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         remoteDebug |= request.hasInput("remote_debug");
     }
 
-    protected void createFormatterAndWriteHead(FitNesseContext context, WikiPage page) throws Exception {
+    protected void createFormatterAndWriteHead(File testHistoryDirectory, WikiPage page) throws Exception {
         if (response.isXmlFormat())
-            addXmlFormatter(context, page);
+            addXmlFormatter(testHistoryDirectory, page);
         else if (response.isTextFormat())
             addTextFormatter();
         else if (response.isJavaFormat())
             addJavaFormatter(page);
         else
-            addHtmlFormatter(context, page);
+            addHtmlFormatter(page);
         if (!request.hasInput("nohistory"))
-            addTestHistoryFormatter(context, page);
+            addTestHistoryFormatter(testHistoryDirectory, page);
         addTestInProgressFormatter(page);
         formatters.writeHead(getTitle());
     }
@@ -87,14 +87,14 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         return "Test Results";
     }
 
-    void addXmlFormatter(FitNesseContext context, WikiPage page) {
+    void addXmlFormatter(File testHistoryDirectory, WikiPage page) {
         XmlFormatter.WriterFactory writerSource = new XmlFormatter.WriterFactory() {
             @Override
-            public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
+            public Writer getWriter(WikiPage page, TestSummary counts, long time) {
                 return makeResponseWriter();
             }
         };
-        formatters.add(new XmlFormatter(context, page, writerSource));
+        formatters.add(new XmlFormatter(page, writerSource));
     }
 
     void addTextFormatter() {
@@ -128,8 +128,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
 
 
-    void addHtmlFormatter(FitNesseContext context, WikiPage page) {
-        BaseFormatter formatter = new TestHtmlFormatter(context, page, getHtmlPageFactory()) {
+    void addHtmlFormatter(WikiPage page) {
+        BaseFormatter formatter = new TestHtmlFormatter(page, getHtmlPageFactory()) {
             @Override
             protected void writeData(String output) {
                 addToResponse(output);
@@ -138,9 +138,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         formatters.add(formatter);
     }
 
-    protected void addTestHistoryFormatter(FitNesseContext context, WikiPage page) {
-        HistoryWriterFactory writerFactory = new HistoryWriterFactory();
-        formatters.add(new PageHistoryFormatter(context, page, writerFactory));
+    protected void addTestHistoryFormatter(File testHistoryDirectory, WikiPage page) {
+        HistoryWriterFactory writerFactory = new HistoryWriterFactory(testHistoryDirectory);
+        formatters.add(new PageHistoryFormatter(page, writerFactory));
     }
 
     protected void addTestInProgressFormatter(WikiPage page) {
@@ -153,10 +153,10 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
         }
     }
 
-    protected void performExecution(FitNesseContext context, WikiPage root, WikiPage page) throws Exception {
+    protected void performExecution(RunningTestingTracker runningTestingTracker, WikiPage root, WikiPage page) throws Exception {
         List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
-        MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters, root, port, socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(test2run, runningTestingTracker, page, formatters, root, port, socketDealer);
         runner.setFastTest(fastTest);
         runner.setDebug(isRemoteDebug());
 
@@ -221,11 +221,17 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
 
     public static class HistoryWriterFactory implements XmlFormatter.WriterFactory {
-        private transient final Logger logger = LoggerFactory.getLogger(getClass());
+        private static final Logger logger = LoggerFactory.getLogger(HistoryWriterFactory.class);
+
+        private final File testHistoryDirectory;
+
+        public HistoryWriterFactory(File testHistoryDirectory) {
+            this.testHistoryDirectory = testHistoryDirectory;
+        }
 
         @Override
-        public Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException {
-            File resultPath = new File(PageHistory.makePageHistoryFileName(context, page, counts, time));
+        public Writer getWriter(WikiPage page, TestSummary counts, long time) throws IOException {
+            File resultPath = new File(PageHistory.makePageHistoryFileName(testHistoryDirectory, page, counts, time));
             File resultDirectory = new File(resultPath.getParent());
             resultDirectory.mkdirs();
             File resultFile = new File(resultDirectory, resultPath.getName());

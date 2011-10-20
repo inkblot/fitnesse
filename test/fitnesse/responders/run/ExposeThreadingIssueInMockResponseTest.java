@@ -50,7 +50,7 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root, getPort(), socketDealer);
+        responder = new TestResponder(htmlPageFactory, root, getPort(), socketDealer, context);
 
         receiver = new FitSocketReceiver(getPort(), socketDealer);
         receiver.receiveSocket();
@@ -84,7 +84,7 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
         WikiPage testPage = crawler.addPage(root, PathParser.parse(simpleRunPageName), classpathWidgets() + fixtureTable);
         request.setResource(testPage.getName());
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 

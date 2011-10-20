@@ -2,10 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
 import fit.Counts;
 import fit.FitProtocol;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.InputStreamResponse;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -20,12 +21,17 @@ import java.io.UnsupportedEncodingException;
 public class TestResultFormattingResponder implements Responder {
     public ResultFormatter formatter = new MockResultFormatter();
     public Counts finalCounts;
-    private FitNesseContext context;
     private String baseUrl;
     private String rootPath;
+    private final HtmlPageFactory htmlPageFactory;
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        init(context, request);
+    @Inject
+    public TestResultFormattingResponder(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
+    }
+
+    public Response makeResponse(Request request) throws Exception {
+        init(request);
 
         String results = (String) request.getInput("results");
         byte[] bytes;
@@ -42,8 +48,7 @@ public class TestResultFormattingResponder implements Responder {
         return response;
     }
 
-    public void init(FitNesseContext context, Request request) throws Exception {
-        this.context = context;
+    public void init(Request request) throws Exception {
         baseUrl = (String) request.getHeader("Host");
         rootPath = request.getResource();
         formatter = makeFormatter(request);
@@ -71,7 +76,7 @@ public class TestResultFormattingResponder implements Responder {
         String format = (String) request.getInput("format");
         if (format != null) {
             if ("html".equals(format))
-                return new HtmlResultFormatter(context, baseUrl, rootPath);
+                return new HtmlResultFormatter(baseUrl, rootPath, htmlPageFactory);
             if ("xml".equals(format))
                 return new XmlResultFormatter(baseUrl, rootPath);
         }

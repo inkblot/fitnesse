@@ -2,7 +2,6 @@ package fitnesse.authentication;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
@@ -31,13 +30,11 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     private Properties properties;
     private final String TOKEN = "xxxxxxxx";
     private HtmlPageFactory htmlPageFactory;
-    private FitNesseContext context;
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
     }
 
@@ -49,7 +46,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
 
     @Test
     public void credentialsShouldBeNullIfNoServiceName() throws Exception {
-        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root);
+        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root, injector, htmlPageFactory);
         assertNull(authenticator.getServerCredentials());
         verify(manager, never()).createName(anyString(), (Oid) anyObject(), (Oid) anyObject());
     }
@@ -63,7 +60,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
         GSSCredential gssCredential = mock(GSSCredential.class);
         when(manager.createName(anyString(), (Oid) anyObject(), (Oid) anyObject())).thenReturn(gssName);
         when(manager.createCredential((GSSName) anyObject(), anyInt(), (Oid) anyObject(), anyInt())).thenReturn(gssCredential);
-        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root);
+        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root, injector, htmlPageFactory);
         Oid serviceNameType = authenticator.getServiceNameType();
         Oid mechanism = authenticator.getMechanism();
         verify(manager).createName("service", serviceNameType, mechanism);
@@ -77,7 +74,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     public void negotiationErrorScreenForFailureToComplete() throws Exception {
         Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token", htmlPageFactory);
         Request request = new MockRequest();
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals("Negotiate token", response.getHeader("WWW-Authenticate"));
         String content = response.getContent();
         assertSubString("Negotiated authentication required", content);
@@ -87,7 +84,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     @Test
     public void negotiationErrorScreenForNeedingAuthentication() throws Exception {
         Responder responder = new NegotiateAuthenticator.UnauthenticatedNegotiateResponder("token", htmlPageFactory);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, null);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(null);
         String content = response.getContent();
         assertSubString("This request requires authentication", content);
     }
@@ -95,7 +92,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     @Test
     public void noAuthorizationHeaderShouldProduceNullCredentials() throws Exception {
         MockRequest request = new MockRequest();
-        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root);
+        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root, injector, htmlPageFactory);
         authenticator.negotiateCredentials(request);
         assertNull(request.getAuthorizationUsername());
         assertNull(request.getAuthorizationPassword());
@@ -105,7 +102,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     public void invalidAuthorizationHeaderShouldProduceNullCredentials() throws Exception {
         MockRequest request = new MockRequest();
         request.addHeader("Authorization", "blah");
-        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root);
+        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root, injector, htmlPageFactory);
         authenticator.negotiateCredentials(request);
         assertNull(request.getAuthorizationUsername());
         assertNull(request.getAuthorizationPassword());
@@ -126,7 +123,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
 
     private void doNegotiation(MockRequest request) throws Exception {
         request.addHeader("Authorization", NegotiateAuthenticator.NEGOTIATE + " " + TOKEN);
-        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root);
+        NegotiateAuthenticator authenticator = new NegotiateAuthenticator(manager, properties, root, injector, htmlPageFactory);
         authenticator.negotiateCredentials(request);
     }
 

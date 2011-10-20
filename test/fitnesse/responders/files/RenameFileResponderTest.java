@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
@@ -19,12 +18,10 @@ import static org.junit.Assert.*;
 
 public class RenameFileResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
-    private FitNesseContext context;
     private String rootPagePath;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
     }
 
@@ -42,7 +39,7 @@ public class RenameFileResponderTest extends FitnesseBaseTestCase {
         request.addInput("filename", "testfile");
         request.addInput("newName", "newName");
         request.setResource("");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         assertFalse(file.exists());
         assertTrue(new File(rootPagePath, "newName").exists());
         assertEquals(303, response.getStatus());
@@ -57,7 +54,7 @@ public class RenameFileResponderTest extends FitnesseBaseTestCase {
         request.addInput("filename", "testfile");
         request.addInput("newName", "new Name With Space ");
         request.setResource("");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         assertFalse(file.exists());
         assertTrue(new File(rootPagePath, "new Name With Space").exists());
     }

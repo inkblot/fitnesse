@@ -3,7 +3,6 @@
 package fitnesse.responders.files;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -16,15 +15,13 @@ import static util.RegexAssertions.assertSubString;
 
 public class RenameFileConfirmationResponderTest extends FitnesseBaseTestCase {
     MockRequest request;
-    private FitNesseContext context;
     private String content;
     private HtmlPageFactory htmlPageFactory;
     private SampleFileUtility samples;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, SampleFileUtility samples) {
+    public void inject(HtmlPageFactory htmlPageFactory, SampleFileUtility samples) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.samples = samples;
     }
 
@@ -54,14 +51,14 @@ public class RenameFileConfirmationResponderTest extends FitnesseBaseTestCase {
         request.setResource("files");
         request.addInput("filename", "MyFile.txt");
         Responder responder = new RenameFileConfirmationResponder(htmlPageFactory);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         content = response.getContent();
     }
 
     @Test
     public void testFitnesseLook() throws Exception {
         Responder responder = new RenameFileConfirmationResponder(htmlPageFactory);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         String content = response.getContent();
         assertSubString("<link rel=\"stylesheet\" type=\"text/css\" href=\"/files/css/fitnesse.css\" media=\"screen\"/>", content);
     }

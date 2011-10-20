@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
@@ -20,15 +19,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class UploadResponderTest extends FitnesseBaseTestCase {
-    private FitNesseContext context;
     private UploadResponder responder;
     private MockRequest request;
     private File testFile;
     private String rootPagePath;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
     }
 
@@ -47,7 +44,7 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
         request.addInput("file", new UploadedFile("sourceFilename.txt", "plain/text", testFile));
         request.setResource("files/");
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         File file = new File(rootPagePath, "files/sourceFilename.txt");
         assertTrue(file.exists());
@@ -62,7 +59,7 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
         request.addInput("file", new UploadedFile("source filename.txt", "plain/text", testFile));
         request.setResource("files/");
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         File file = new File(rootPagePath, "files/source filename.txt");
         assertTrue(file.exists());
@@ -78,7 +75,7 @@ public class UploadResponderTest extends FitnesseBaseTestCase {
         request.addInput("file", new UploadedFile("filename.txt", "plain/text", testFile));
         request.setResource("files/Folder%20With%20Space/");
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         File file = new File(rootPagePath, "files/Folder With Space/filename.txt");
         assertTrue(file.exists());

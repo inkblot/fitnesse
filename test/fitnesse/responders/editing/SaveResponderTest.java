@@ -32,13 +32,11 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
     private ContentFilter contentFilter;
 
     private WikiPage root;
-    private FitNesseContext context;
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
-        this.context = context;
         this.root = root;
     }
 
@@ -71,7 +69,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         crawler.addPage(root, PathParser.parse("ChildPage"));
         prepareRequest("ChildPage");
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         assertEquals(303, response.getStatus());
         assertHasRegexp("Location: ChildPage", response.makeHttpHeaders());
 
@@ -94,7 +92,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         prepareRequest("ChildPage");
         request.addInput("redirect", "http://fitnesse.org:8080/SomePage");
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         assertEquals(303, response.getStatus());
         assertHasRegexp("Location: http://fitnesse.org:8080/SomePage", response.makeHttpHeaders());
     }
@@ -109,7 +107,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
     public void testCanCreatePage() throws Exception {
         prepareRequest("ChildPageTwo");
 
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
 
         assertEquals(true, root.hasChildPage("ChildPageTwo"));
         String newContent = root.getChildPage("ChildPageTwo").getData().getContent();
@@ -123,7 +121,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         request.setResource("ChildPageTwo");
         request.addInput(EditResponder.CONTENT_INPUT_NAME, "some new content");
 
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
 
         assertEquals(true, root.hasChildPage("ChildPageTwo"));
         String newContent = root.getChildPage("ChildPageTwo").getData().getContent();
@@ -142,7 +140,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         request.addInput(EditResponder.TIME_STAMP, "" + (clock.currentClockTimeInMillis() - 10000));
         request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
 
         assertHasRegexp("Merge", response.getContent());
     }
@@ -157,12 +155,12 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         request.addInput(EditResponder.TIME_STAMP, "" + clock.currentClockTimeInMillis());
         request.addInput(EditResponder.TICKET_ID, "" + SaveRecorder.newTicket());
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         assertEquals(303, response.getStatus());
 
         request.addInput(EditResponder.CONTENT_INPUT_NAME, newContent + " Ok I'm working now");
         request.addInput(EditResponder.TIME_STAMP, "" + clock.currentClockTimeInMillis());
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
         assertEquals(303, response.getStatus());
     }
 
@@ -170,7 +168,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
     public void testUsernameIsSavedInPageProperties() throws Exception {
         addRequestParameters();
         request.setCredentials("Aladdin", "open sesame");
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
 
         String user = root.getChildPage("EditPage").getData().getAttribute(PageData.LAST_MODIFYING_USER);
         assertEquals("Aladdin", user);
@@ -186,7 +184,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         crawler.addPage(root, PathParser.parse("ChildPage"));
         prepareRequest("ChildPage");
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         assertEquals(200, response.getStatus());
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
@@ -205,7 +203,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
         crawler.addPage(root, PathParser.parse("EditPage"));
         addRequestParameters();
 
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
     }
 
     private void addRequestParameters() {

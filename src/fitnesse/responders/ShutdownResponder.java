@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -27,7 +26,7 @@ public class ShutdownResponder implements SecureResponder {
         this.fitNesse = fitNesse;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
 
         HtmlPage html = htmlPageFactory.newPage();

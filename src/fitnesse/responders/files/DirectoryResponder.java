@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -33,7 +32,7 @@ public class DirectoryResponder implements SecureResponder {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
 
         if (request.getResource().endsWith("/")) {
             SimpleResponse simpleResponse = new SimpleResponse();

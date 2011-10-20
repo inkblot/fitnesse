@@ -19,14 +19,12 @@ import static util.RegexAssertions.assertSubString;
 
 public class VersionSelectionResponderTest extends FitnesseBaseTestCase {
     private WikiPage page;
-    private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
     }
 
@@ -81,7 +79,7 @@ public class VersionSelectionResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageOne");
 
         Responder responder = new VersionSelectionResponder(htmlPageFactory, root);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
 
         String content = response.getContent();
         assertSubString("<input", content);

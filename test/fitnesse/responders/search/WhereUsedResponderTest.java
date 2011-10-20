@@ -44,9 +44,9 @@ public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     public void testResponse() throws Exception {
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
-        WhereUsedResponder responder = new WhereUsedResponder(htmlPageFactory, root);
+        WhereUsedResponder responder = new WhereUsedResponder(htmlPageFactory, root, context);
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         response.readyToSend(sender);
         sender.waitForClose(5000);

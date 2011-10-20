@@ -22,7 +22,6 @@ import java.util.Date;
 import static org.junit.Assert.*;
 
 public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
-    private File resultsDirectory;
     private TestHistory history;
     private FitNesseContext context;
     private PurgeHistoryResponder responder;
@@ -39,12 +38,10 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setup() throws Exception {
-        resultsDirectory = new File("testHistoryDirectory");
         removeResultsDirectory();
-        resultsDirectory.mkdir();
+        context.getTestHistoryDirectory().mkdirs();
         history = new TestHistory();
-        responder = new PurgeHistoryResponder(htmlPageFactory, clock);
-        responder.setResultsDirectory(resultsDirectory);
+        responder = new PurgeHistoryResponder(htmlPageFactory, clock, context);
         request = new MockRequest();
         request.setResource("TestPage");
     }
@@ -55,8 +52,8 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     }
 
     private void removeResultsDirectory() {
-        if (resultsDirectory.exists())
-            FileUtil.deleteFileSystemDirectory(resultsDirectory);
+        if (context.getTestHistoryDirectory().exists())
+            FileUtil.deleteFileSystemDirectory(context.getTestHistoryDirectory());
     }
 
     private File addTestResult(File pageDirectory, String testResultFileName) throws IOException {
@@ -66,7 +63,7 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     }
 
     private File addPageDirectory(String pageName) {
-        File pageDirectory = new File(resultsDirectory, pageName);
+        File pageDirectory = new File(context.getTestHistoryDirectory(), pageName);
         pageDirectory.mkdir();
         return pageDirectory;
     }
@@ -92,11 +89,11 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
         addTestResult(pageDirectory, "20090614000000_1_0_0_0");
         addTestResult(pageDirectory, "20090615000000_1_0_0_0");
 
-        history.readHistoryDirectory(resultsDirectory);
+        history.readHistoryDirectory(context.getTestHistoryDirectory());
         PageHistory pageHistory = history.getPageHistory("SomePage");
         assertEquals(2, pageHistory.size());
         responder.deleteTestHistoryOlderThanDays(1);
-        history.readHistoryDirectory(resultsDirectory);
+        history.readHistoryDirectory(context.getTestHistoryDirectory());
         pageHistory = history.getPageHistory("SomePage");
         assertEquals(1, pageHistory.size());
         assertNotNull(pageHistory.get(makeDate("20090615000000")));
@@ -109,15 +106,15 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
         File pageDirectory = addPageDirectory("SomePage");
         addTestResult(pageDirectory, "20090614000000_1_0_0_0");
         responder.deleteTestHistoryOlderThanDays(1);
-        String[] files = resultsDirectory.list();
+        String[] files = context.getTestHistoryDirectory().list();
         assertEquals(0, files.length);
     }
 
     @Test
     public void shouldDeleteHistoryFromRequestAndRedirect() throws Exception {
-        StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder(htmlPageFactory, clock);
+        StubbedPurgeHistoryResponder responder = new StubbedPurgeHistoryResponder(htmlPageFactory, clock, context);
         request.addInput("days", "30");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals(30, responder.daysDeleted);
         assertEquals(303, response.getStatus());
         assertEquals("?testHistory", response.getHeader("Location"));
@@ -126,14 +123,14 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     @Test
     public void shouldMakeErrorResponseWhenGetsInvalidNumberOfDays() throws Exception {
         request.addInput("days", "-42");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         assertEquals(400, response.getStatus());
     }
 
     @Test
     public void shouldMakeErrorResponseWhenItGetsInvalidTypeForNumberOfDays() throws Exception {
         request.addInput("days", "bob");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         assertEquals(400, response.getStatus());
 
     }
@@ -141,8 +138,8 @@ public class PurgeHistoryResponderTest extends FitnesseBaseTestCase {
     private static class StubbedPurgeHistoryResponder extends PurgeHistoryResponder {
         public int daysDeleted = -1;
 
-        private StubbedPurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
-            super(htmlPageFactory, clock);
+        private StubbedPurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock, FitNesseContext context) {
+            super(htmlPageFactory, clock, context);
         }
 
         @Override

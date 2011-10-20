@@ -1,8 +1,8 @@
 package fitnesse.authentication;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.components.Base64;
@@ -68,17 +68,19 @@ public class NegotiateAuthenticator extends Authenticator {
 
     protected GSSManager manager;
     protected GSSCredential serverCreds;
+    private final HtmlPageFactory htmlPageFactory;
 
-    public NegotiateAuthenticator(GSSManager manager, Properties properties, WikiPage root) throws Exception {
-        super(root);
+    public NegotiateAuthenticator(GSSManager manager, Properties properties, WikiPage root, Injector injector, HtmlPageFactory htmlPageFactory) throws Exception {
+        super(root, injector);
         this.manager = manager;
+        this.htmlPageFactory = htmlPageFactory;
         configure(properties);
         initServiceCredentials();
     }
 
     @Inject
-    public NegotiateAuthenticator(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) throws Exception {
-        this(GSSManager.getInstance(), properties, root);
+    public NegotiateAuthenticator(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, Injector injector, HtmlPageFactory htmlPageFactory) throws Exception {
+        this(GSSManager.getInstance(), properties, root, injector, htmlPageFactory);
     }
 
     protected void initServiceCredentials() throws Exception {
@@ -123,7 +125,7 @@ public class NegotiateAuthenticator extends Authenticator {
             this.htmlPageFactory = htmlPageFactory;
         }
 
-        public Response makeResponse(FitNesseContext context, Request request)
+        public Response makeResponse(Request request)
                 throws Exception {
             SimpleResponse response = new SimpleResponse(401);
             response.addHeader("WWW-Authenticate", token == null ? NEGOTIATE : NEGOTIATE + " " + token);
@@ -139,8 +141,8 @@ public class NegotiateAuthenticator extends Authenticator {
     }
 
     @Override
-    protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
-        return new UnauthenticatedNegotiateResponder(request.getAuthorizationPassword(), context.getHtmlPageFactory());
+    protected Responder unauthorizedResponder(Request request) {
+        return new UnauthenticatedNegotiateResponder(request.getAuthorizationPassword(), htmlPageFactory);
     }
 
     /*
@@ -196,9 +198,9 @@ public class NegotiateAuthenticator extends Authenticator {
     }
 
     @Override
-    public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
+    public Responder authenticate(Request request, Responder privilegedResponder) throws Exception {
         negotiateCredentials(request);
-        return super.authenticate(context, request, privilegedResponder);
+        return super.authenticate(request, privilegedResponder);
     }
 
     public boolean isAuthenticated(String username, String password) {

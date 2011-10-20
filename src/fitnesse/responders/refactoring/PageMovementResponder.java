@@ -1,6 +1,5 @@
 package fitnesse.responders.refactoring;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -44,21 +43,21 @@ public abstract class PageMovementResponder implements SecureResponder {
 
     protected abstract void execute() throws Exception;
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         if (!getAndValidateRefactoredPage(request, root)) {
-            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(request);
         }
 
         if (!getAndValidateNewParentPage(request, root)) {
-            return makeErrorMessageResponder(newParentPath == null ? "null" : newParentPath.toString() + " does not exist.").makeResponse(context, request);
+            return makeErrorMessageResponder(newParentPath == null ? "null" : newParentPath.toString() + " does not exist.").makeResponse(request);
         }
 
         if (!getAndValidateRefactoringParameters(request)) {
-            return makeErrorMessageResponder("").makeResponse(context, request);
+            return makeErrorMessageResponder("").makeResponse(request);
         }
 
         if (targetPageExists()) {
-            return makeErrorMessageResponder(makeLink(getNewPageName()) + " already exists").makeResponse(context, request);
+            return makeErrorMessageResponder(makeLink(getNewPageName()) + " already exists").makeResponse(request);
         }
 
         if (request.hasInput("refactorReferences")) {

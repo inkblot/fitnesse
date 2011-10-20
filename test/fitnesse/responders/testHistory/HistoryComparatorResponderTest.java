@@ -49,7 +49,7 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         mockedComparator = mock(HistoryComparator.class);
 
-        responder = new HistoryComparatorResponder(mockedComparator, htmlPageFactory);
+        responder = new HistoryComparatorResponder(mockedComparator, htmlPageFactory, context);
         responder.testing = true;
         List<String> resultContent = new ArrayList<String>();
         resultContent.add("pass");
@@ -74,14 +74,14 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void shouldBeAbleToMakeASimpleResponse() throws Exception {
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context,
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(
                 request);
         assertEquals(200, response.getStatus());
     }
 
     @Test
     public void shouldGetTwoHistoryFilesFromRequest() throws Exception {
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         verify(mockedComparator).compare(FIRST_FILE_PATH, SECOND_FILE_PATH);
     }
 
@@ -89,7 +89,7 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
     public void shouldReturnErrorPageIfCompareFails() throws Exception {
         when(mockedComparator.compare(FIRST_FILE_PATH, SECOND_FILE_PATH)).thenReturn(
                 false);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context,
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(
                 request);
         assertEquals(400, response.getStatus());
         assertHasRegexp(
@@ -103,7 +103,7 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
         request.addInput("TestResult_firstFile", "");
         request.addInput("TestResult_secondFile", "");
         request.setResource("TestFolder");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context,
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(
                 request);
         assertEquals(400, response.getStatus());
         assertHasRegexp("Compare Failed because the files were not found.",
@@ -116,7 +116,7 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         request.addInput("TestResult_firstFile", "");
         request.setResource("TestFolder");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context,
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(
                 request);
         assertEquals(400, response.getStatus());
         assertHasRegexp(
@@ -128,7 +128,7 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
     public void shouldReturnErrorPageIfThereAreTooManyInputFiles()
             throws Exception {
         request.addInput("TestResult_thirdFakeFile", "");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context,
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(
                 request);
         assertEquals(400, response.getStatus());
         assertHasRegexp(
@@ -138,7 +138,7 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void shouldReturnAResponseWithResultContent() throws Exception {
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context,
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(
                 request);
         verify(mockedComparator).getResultContent();
         assertHasRegexp("This is the content", response.getContent());

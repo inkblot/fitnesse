@@ -2,7 +2,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -38,7 +37,7 @@ public class PacketResponder implements SecureResponder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         response = new SimpleResponse();
         jsonpFunction = (String) request.getInput("jsonp");
         String pageName = request.getResource();

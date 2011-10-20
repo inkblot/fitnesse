@@ -4,6 +4,7 @@ package fitnesse.responders.search;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.components.WhereUsedPageFinder;
 import fitnesse.html.HtmlPageFactory;
@@ -14,8 +15,8 @@ import java.io.IOException;
 public class WhereUsedResponder extends ResultResponder {
 
     @Inject
-    public WhereUsedResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        super(htmlPageFactory, root);
+    public WhereUsedResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+        super(htmlPageFactory, root, context);
     }
 
     protected void startSearching(WikiPage root, WikiPage page) throws IOException {

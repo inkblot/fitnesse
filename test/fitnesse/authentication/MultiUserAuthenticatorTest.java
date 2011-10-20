@@ -37,7 +37,7 @@ public class MultiUserAuthenticatorTest extends FitnesseBaseTestCase {
         ps.println("uncle:bob");
         ps.println("micah:boy");
         ps.close();
-        a = new MultiUserAuthenticator(passwordFilename, root);
+        a = new MultiUserAuthenticator(passwordFilename, root, injector);
     }
 
     @After

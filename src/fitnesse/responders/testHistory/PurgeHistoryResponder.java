@@ -19,26 +19,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PurgeHistoryResponder implements SecureResponder {
-    private File resultsDirectory;
     private Date todaysDate;
     private final HtmlPageFactory htmlPageFactory;
     private final Clock clock;
+    private final File testHistoryDirectory;
 
     @Inject
-    public PurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock) {
+    public PurgeHistoryResponder(HtmlPageFactory htmlPageFactory, Clock clock, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;
+        this.testHistoryDirectory = context.getTestHistoryDirectory();
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        if (resultsDirectory == null)
-            resultsDirectory = context.getTestHistoryDirectory();
+    public Response makeResponse(Request request) throws Exception {
         todaysDate = clock.currentClockDate();
         if (hasValidInputs(request)) {
             purgeHistory(request);
             return makeValidResponse();
         } else {
-            return makeErrorResponse(context, request);
+            return makeErrorResponse(request);
         }
     }
 
@@ -71,12 +70,8 @@ public class PurgeHistoryResponder implements SecureResponder {
 
     }
 
-    private Response makeErrorResponse(FitNesseContext context, Request request) throws Exception {
-        return new ErrorResponder("Invalid Amount Of Days", htmlPageFactory).makeResponse(context, request);
-    }
-
-    public void setResultsDirectory(File directory) {
-        resultsDirectory = directory;
+    private Response makeErrorResponse(Request request) throws Exception {
+        return new ErrorResponder("Invalid Amount Of Days", htmlPageFactory).makeResponse(request);
     }
 
     public void setTodaysDate(Date date) {
@@ -85,7 +80,7 @@ public class PurgeHistoryResponder implements SecureResponder {
 
     public void deleteTestHistoryOlderThanDays(int days) throws ParseException {
         Date expirationDate = getDateDaysAgo(days);
-        File[] files = FileUtil.getDirectoryListing(resultsDirectory);
+        File[] files = FileUtil.getDirectoryListing(testHistoryDirectory);
         deleteExpiredFiles(files, expirationDate);
     }
 

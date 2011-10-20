@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.VelocityFactory;
 import fitnesse.http.Request;
@@ -22,7 +21,7 @@ public class SearchFormResponder implements Responder {
             PropertyPROPERTIES, PropertyREFACTOR, PropertyWHERE_USED, PropertyRECENT_CHANGES, PropertyFILES, PropertySEARCH};
     public static final String[] SPECIAL_ATTRIBUTES = {"obsolete", "SetUp", "TearDown"};
 
-    public Response makeResponse(FitNesseContext context, Request request)
+    public Response makeResponse(Request request)
             throws Exception {
         SimpleResponse response = new SimpleResponse();
 

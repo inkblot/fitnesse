@@ -3,7 +3,6 @@
 package fitnesse.authentication;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.*;
 import fitnesse.http.Request;
@@ -19,7 +18,7 @@ public class UnauthorizedResponder implements Responder {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse(401);
         response.addHeader("WWW-Authenticate", "Basic realm=\"FitNesse\"");
 

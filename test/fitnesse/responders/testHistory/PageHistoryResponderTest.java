@@ -55,7 +55,7 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
         removeResultsDirectory();
         resultsDirectory.mkdir();
         history = new TestHistory();
-        responder = new PageHistoryResponder(htmlPageFactory);
+        responder = new PageHistoryResponder(htmlPageFactory, context);
         responder.setResultsDirectory(resultsDirectory);
     }
 
@@ -67,7 +67,7 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
     private void makeResponse() throws Exception {
         request = new MockRequest();
         request.setResource("TestPage");
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        response = (SimpleResponse) responder.makeResponse(request);
     }
 
     private void removeResultsDirectory() {
@@ -373,7 +373,7 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         request.setResource(page);
         request.addInput("resultDate", resultDate);
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        response = (SimpleResponse) responder.makeResponse(request);
     }
 
     private void addDummyTestResult(File resultFile) throws Exception {
@@ -432,7 +432,7 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         request.setResource("TestPage");
         request.addInput("format", "xml");
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        response = (SimpleResponse) responder.makeResponse(request);
         assertEquals("text/xml", response.getContentType());
     }
 
@@ -441,7 +441,7 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         request.setResource("TestPage");
         request.addInput("format", "XMl");
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        response = (SimpleResponse) responder.makeResponse(request);
         assertEquals("text/xml", response.getContentType());
     }
 
@@ -454,7 +454,7 @@ public class PageHistoryResponderTest extends FitnesseBaseTestCase {
         addDummyTestResult(resultFile);
         request.addInput("resultDate", "20090503110451");
         request.addInput("format", "xml");
-        response = (SimpleResponse) responder.makeResponse(context, request);
+        response = (SimpleResponse) responder.makeResponse(request);
         String content = response.getContent();
         assertHasRegexp("<FitNesseVersion>", content);
         assertEquals("text/xml", response.getContentType());

@@ -3,6 +3,7 @@
 package fitnesse.testutil;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.Authenticator;
@@ -12,8 +13,8 @@ public class SimpleAuthenticator extends Authenticator {
     public boolean authenticated = false;
 
     @Inject
-    public SimpleAuthenticator(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        super(root);
+    public SimpleAuthenticator(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, Injector injector) {
+        super(root, injector);
     }
 
     public boolean isAuthenticated(String username, String password) {

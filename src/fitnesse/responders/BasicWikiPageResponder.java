@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -20,13 +19,13 @@ public abstract class BasicWikiPageResponder extends BasicResponder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         this.request = request;
         WikiPage requestedPage = getRequestedPage(request, root);
 
         Response response;
         if (requestedPage == null)
-            response = pageNotFoundResponse(context, request);
+            response = pageNotFoundResponse(request);
         else
             response = responseWith(contentFrom(requestedPage));
 

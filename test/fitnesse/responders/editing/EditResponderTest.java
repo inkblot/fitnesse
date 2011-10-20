@@ -4,7 +4,6 @@ package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -32,15 +31,13 @@ public class EditResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private EditResponder responder;
     private PageCrawler crawler;
-    private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
     }
 
@@ -63,7 +60,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
         crawler.addPage(root, PathParser.parse("ChildPage"), "child content with <html>");
         request.setResource("ChildPage");
 
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals(200, response.getStatus());
 
         String body = response.getContent();
@@ -83,8 +80,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
         request.setResource("NonExistentPage");
         request.addInput("nonExistent", true);
 
-        FitNesseContext context = this.context;
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals(200, response.getStatus());
 
         String body = response.getContent();
@@ -106,7 +102,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
         request.addInput("redirectAction", "boom");
         request.addHeader("Referer", "http://fitnesse.org:8080/SomePage");
 
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals(200, response.getStatus());
 
         String body = response.getContent();
@@ -116,7 +112,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testPasteFromExcelExists() throws Exception {
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         String body = response.getContent();
         assertMatches("SpreadsheetTranslator.js", body);
         assertMatches("spreadsheetSupport.js", body);
@@ -124,7 +120,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testFormatterScriptsExist() throws Exception {
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         String body = response.getContent();
         assertMatches("WikiFormatter.js", body);
         assertMatches("wikiFormatterSupport.js", body);
@@ -132,7 +128,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testWrapScriptExists() throws Exception {
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         String body = response.getContent();
         assertMatches("textareaWrapSupport.js", body);
     }
@@ -140,7 +136,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testMissingPageDoesNotGetCreated() throws Exception {
         request.setResource("MissingPage");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         assertFalse(root.hasChildPage("MissingPage"));
     }
 }

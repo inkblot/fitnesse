@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.InsecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -18,8 +17,8 @@ public abstract class BasicResponder implements SecureResponder {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    protected Response pageNotFoundResponse(FitNesseContext context, Request request) throws Exception {
-        return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+    protected Response pageNotFoundResponse(Request request) throws Exception {
+        return new NotFoundResponder(htmlPageFactory).makeResponse(request);
     }
 
     protected Response responseWith(String content) throws Exception {

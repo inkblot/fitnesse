@@ -1,7 +1,5 @@
 package fitnesse.responders.run.formatters;
 
-import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
@@ -27,12 +25,6 @@ public class TestFormatterTest extends FitnesseBaseTestCase {
     private XmlFormatter.WriterFactory writerFactory;
     private ChunkedResponse response;
     private WikiPageDummy testPage;
-    private FitNesseContext context;
-
-    @Inject
-    public void inject(FitNesseContext context) {
-        this.context = context;
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -58,7 +50,7 @@ public class TestFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void testXmlFormatter() throws Exception {
-        assertShouldCountTestResults(new XmlFormatter(context, page, writerFactory) {
+        assertShouldCountTestResults(new XmlFormatter(page, writerFactory) {
             @Override
             protected void writeResults() {
             }
@@ -67,7 +59,7 @@ public class TestFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void testTestHtmlFormatter() throws Exception {
-        assertShouldCountTestResults(new TestHtmlFormatter(context, testPage, mock(HtmlPageFactory.class)) {
+        assertShouldCountTestResults(new TestHtmlFormatter(testPage, mock(HtmlPageFactory.class)) {
             @Override
             protected void writeData(String output) {
             }
@@ -76,7 +68,7 @@ public class TestFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void testPageHistoryFormatter() throws Exception {
-        assertShouldCountTestResults(new PageHistoryFormatter(context, testPage, writerFactory) {
+        assertShouldCountTestResults(new PageHistoryFormatter(testPage, writerFactory) {
             @Override
             protected void writeResults() {
             }

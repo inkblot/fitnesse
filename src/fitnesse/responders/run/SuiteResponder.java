@@ -10,12 +10,14 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.formatters.*;
 import fitnesse.wiki.WikiPage;
 
+import java.io.File;
+
 public class SuiteResponder extends TestResponder {
     private boolean includeHtml;
 
     @Inject
-    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer) {
-        super(htmlPageFactory, root, port, socketDealer);
+    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, FitNesseContext context) {
+        super(htmlPageFactory, root, port, socketDealer, context);
     }
 
     @Override
@@ -30,16 +32,16 @@ public class SuiteResponder extends TestResponder {
     }
 
     @Override
-    void addXmlFormatter(FitNesseContext context, WikiPage page) {
-        CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(context, page, makeResponseWriter());
+    void addXmlFormatter(File testHistoryDirectory, WikiPage page) {
+        CachingSuiteXmlFormatter xmlFormatter = new CachingSuiteXmlFormatter(page, makeResponseWriter(), testHistoryDirectory);
         if (includeHtml)
             xmlFormatter.includeHtml();
         formatters.add(xmlFormatter);
     }
 
     @Override
-    void addHtmlFormatter(FitNesseContext context, WikiPage page) {
-        BaseFormatter formatter = new SuiteHtmlFormatter(context, page, getHtmlPageFactory()) {
+    void addHtmlFormatter(WikiPage page) {
+        BaseFormatter formatter = new SuiteHtmlFormatter(page, getHtmlPageFactory()) {
             @Override
             protected void writeData(String output) {
                 addToResponse(output);
@@ -49,17 +51,17 @@ public class SuiteResponder extends TestResponder {
     }
 
     @Override
-    protected void addTestHistoryFormatter(FitNesseContext context, WikiPage page) {
-        HistoryWriterFactory source = new HistoryWriterFactory();
-        formatters.add(new PageHistoryFormatter(context, page, source));
-        formatters.add(new SuiteHistoryFormatter(context, page, source));
+    protected void addTestHistoryFormatter(File testHistoryDirectory, WikiPage page) {
+        HistoryWriterFactory source = new HistoryWriterFactory(testHistoryDirectory);
+        formatters.add(new PageHistoryFormatter(page, source));
+        formatters.add(new SuiteHistoryFormatter(page, source));
     }
 
     @Override
-    protected void performExecution(FitNesseContext context, WikiPage root, WikiPage page) throws Exception {
+    protected void performExecution(RunningTestingTracker runningTestingTracker, WikiPage root, WikiPage page) throws Exception {
         SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest(page));
         SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
-        MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), context, page, formatters, root, port, socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), runningTestingTracker, page, formatters, root, port, socketDealer);
         runner.setDebug(isRemoteDebug());
         runner.setFastTest(isFastTest());
         runner.executeTestPages();

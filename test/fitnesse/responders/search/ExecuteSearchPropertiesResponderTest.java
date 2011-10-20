@@ -45,7 +45,7 @@ public class ExecuteSearchPropertiesResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
-        responder = new ExecuteSearchPropertiesResponder(htmlPageFactory, root);
+        responder = new ExecuteSearchPropertiesResponder(htmlPageFactory, root, context);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class ExecuteSearchPropertiesResponderTest extends FitnesseBaseTestCase {
     }
 
     private String invokeResponder(MockRequest request) throws Exception {
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         return sender.sentData();

@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
@@ -20,12 +19,10 @@ import static org.junit.Assert.assertTrue;
 
 public class DeleteFileResponderTest extends FitnesseBaseTestCase {
     public MockRequest request;
-    private FitNesseContext context;
     private String rootPagePath;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
     }
 
@@ -42,7 +39,7 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
         DeleteFileResponder responder = new DeleteFileResponder(rootPagePath);
         request.addInput("filename", "testfile");
         request.setResource("");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         assertFalse(file.exists());
         assertEquals(303, response.getStatus());
         assertEquals("/", response.getHeader("Location"));
@@ -57,7 +54,7 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
         DeleteFileResponder responder = new DeleteFileResponder(rootPagePath);
         request.addInput("filename", "dir");
         request.setResource("");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         assertFalse(file.exists());
         assertFalse(dir.exists());
 

@@ -4,7 +4,6 @@ package fitnesse.responders.run.formatters;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -22,12 +21,10 @@ public class TestHtmlFormatterTest extends FitnesseBaseTestCase {
     private StringBuffer pageBuffer = new StringBuffer();
     private WikiPage page;
     private WikiPage root;
-    private FitNesseContext context;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
-        this.context = context;
     }
 
     @Before
@@ -35,7 +32,7 @@ public class TestHtmlFormatterTest extends FitnesseBaseTestCase {
         page = root.addChildPage("NewPage");
         page.getData().setContent("page content here");
 
-        formatter = new TestHtmlFormatter(context, page, new HtmlPageFactory()) {
+        formatter = new TestHtmlFormatter(page, new HtmlPageFactory()) {
             @Override
             protected void writeData(String output) {
                 pageBuffer.append(output);

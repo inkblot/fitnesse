@@ -5,7 +5,6 @@ package fitnesse.responders.editing;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -42,7 +41,7 @@ public class SaveResponder implements SecureResponder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         editTimeStamp = getEditTime(request);
         ticketId = getTicketId(request);
         String resource = request.getResource();
@@ -51,7 +50,7 @@ public class SaveResponder implements SecureResponder {
         user = request.getAuthorizationUsername();
 
         if (editsNeedMerge()) {
-            return new MergeResponder(request, htmlPageFactory, clock, root).makeResponse(context, request);
+            return new MergeResponder(request, htmlPageFactory, clock, root).makeResponse(request);
         }
         else {
             savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);

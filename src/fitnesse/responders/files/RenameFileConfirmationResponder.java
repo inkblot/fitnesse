@@ -3,7 +3,6 @@
 package fitnesse.responders.files;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -24,7 +23,7 @@ public class RenameFileConfirmationResponder implements SecureResponder {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         resource = request.getResource();
         String filename = (String) request.getInput("filename");

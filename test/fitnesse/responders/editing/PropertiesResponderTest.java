@@ -25,14 +25,12 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private Responder responder;
     private String content;
-    private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.context = context;
     }
 
     @Before
@@ -54,7 +52,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageOne");
 
         Responder responder = new PropertiesResponder(htmlPageFactory, root);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals("max-age=0", response.getHeader("Cache-Control"));
 
         String content = response.getContent();
@@ -93,7 +91,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
         request.addInput("format", "json");
 
         Responder responder = new PropertiesResponder(htmlPageFactory, root);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals("text/json", response.getContentType());
         String jsonText = response.getContent();
         JSONObject jsonObject = new JSONObject(jsonText);
@@ -135,7 +133,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
         page.commit(data);
 
         request.setResource("SomePage");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         content = response.getContent();
 
         assertSubString("Last modified by Bill", content);
@@ -151,7 +149,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         request.setResource(page.getName());
         responder = new PropertiesResponder(htmlPageFactory, root);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         content = response.getContent();
         return page;
     }

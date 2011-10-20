@@ -37,7 +37,7 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        responder = new ChunkingResponder(htmlPageFactory, root) {
+        responder = new ChunkingResponder(htmlPageFactory, root, context) {
             protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
                 throw exception;
             }
@@ -47,7 +47,7 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testException() throws Exception {
         exception = new Exception("test exception");
-        response = (ChunkedResponse) responder.makeResponse(context, new MockRequest());
+        response = (ChunkedResponse) responder.makeResponse(new MockRequest());
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         String responseSender = sender.sentData();
@@ -58,7 +58,7 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     public void chunkingShouldBeTurnedOffIfnochunkParameterIsPresent() throws Exception {
         MockRequest request = new MockRequest();
         request.addInput("nochunk", null);
-        response = (ChunkedResponse) responder.makeResponse(context, request);
+        response = (ChunkedResponse) responder.makeResponse(request);
         assertTrue(response.isChunkingTurnedOff());
     }
 }

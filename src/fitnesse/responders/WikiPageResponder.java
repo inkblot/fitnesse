@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
@@ -40,21 +39,21 @@ public class WikiPageResponder implements SecureResponder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         WikiPagePath path = PathParser.parse(request.getResource());
         PageCrawler crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         WikiPage page = crawler.getPage(root, path);
 
-        if (page == null) return notFoundResponse(context, request, root);
+        if (page == null) return notFoundResponse(request, root);
 
         PageData pageData = page.getData();
         return makePageResponse(pageData);
     }
 
-    private Response notFoundResponse(FitNesseContext context, Request request, WikiPage root) throws Exception {
+    private Response notFoundResponse(Request request, WikiPage root) throws Exception {
         if (doNotCreateNonExistentPage(request))
-            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(request);
         return EditResponder.makeResponseForNonExistentPage(request, htmlPageFactory, root, getDefaultPageContent(), clock);
     }
 

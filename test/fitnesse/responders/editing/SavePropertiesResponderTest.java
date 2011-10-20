@@ -27,13 +27,11 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private VirtualCouplingExtension extension;
     private WikiPage linker;
-    private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
     }
 
@@ -66,7 +64,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "");
         request.setResource("LinkerPage");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
         assertEquals(0, linker.getChildren().size());
     }
 
@@ -96,7 +94,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
         request = new MockRequest();
         request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "LinkeePageTwo");
         request.setResource("LinkerPage");
-        responder.makeResponse(context, request);
+        responder.makeResponse(request);
 
         assertTrue(extension.getVirtualCoupling() instanceof NullVirtualCouplingPage);
     }
@@ -106,7 +104,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
         createRequest();
 
         Responder responder = new SavePropertiesResponder(htmlPageFactory, root);
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         PageData data = page.getData();
         assertEquals("http://www.fitnesse.org", data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE));

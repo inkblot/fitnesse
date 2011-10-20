@@ -3,6 +3,7 @@
 package fitnesse.authentication;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.wiki.WikiPage;
@@ -15,8 +16,8 @@ public class OneUserAuthenticator extends Authenticator {
     public OneUserAuthenticator(
             @Named("fitnesse.auth.singleUser.username") String theUsername,
             @Named("fitnesse.auth.singleUser.password") String thePassword,
-            @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        super(root);
+            @Named(FitNesseModule.ROOT_PAGE) WikiPage root, Injector injector) {
+        super(root, injector);
         this.theUsername = theUsername;
         this.thePassword = thePassword;
     }

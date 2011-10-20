@@ -33,17 +33,19 @@ public class PageHistoryResponder implements SecureResponder {
     private VelocityContext velocityContext;
     private PageTitle pageTitle;
     private final HtmlPageFactory htmlPageFactory;
+    private final File testHistoryDirectory;
 
     @Inject
-    public PageHistoryResponder(HtmlPageFactory htmlPageFactory) {
+    public PageHistoryResponder(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
+        this.testHistoryDirectory = context.getTestHistoryDirectory();
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        prepareResponse(request, context.getTestHistoryDirectory());
+    public Response makeResponse(Request request) throws Exception {
+        prepareResponse(request, testHistoryDirectory);
 
         if (request.hasInput("resultDate")) {
-            return tryToMakeTestExecutionReport(request, context);
+            return tryToMakeTestExecutionReport(request);
         } else {
             return makePageHistoryResponse(request);
         }
@@ -64,7 +66,7 @@ public class PageHistoryResponder implements SecureResponder {
         return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
     }
 
-    private Response tryToMakeTestExecutionReport(Request request, FitNesseContext context) throws Exception {
+    private Response tryToMakeTestExecutionReport(Request request) throws Exception {
         Date resultDate;
         String date = (String) request.getInput("resultDate");
         if ("latest".equals(date)) {
@@ -74,17 +76,17 @@ public class PageHistoryResponder implements SecureResponder {
         }
         PageHistory.TestResultRecord testResultRecord = pageHistory.get(resultDate);
         try {
-            return makeTestExecutionReportResponse(request, resultDate, testResultRecord, context);
+            return makeTestExecutionReportResponse(request, resultDate, testResultRecord);
         } catch (Exception e) {
-            return makeCorruptFileResponse(request, context);
+            return makeCorruptFileResponse(request);
         }
     }
 
-    private Response makeCorruptFileResponse(Request request, FitNesseContext context) throws Exception {
-        return new ErrorResponder("Corrupt Test Result File", htmlPageFactory).makeResponse(context, request);
+    private Response makeCorruptFileResponse(Request request) throws Exception {
+        return new ErrorResponder("Corrupt Test Result File", htmlPageFactory).makeResponse(request);
     }
 
-    private Response makeTestExecutionReportResponse(Request request, Date resultDate, PageHistory.TestResultRecord testResultRecord, FitNesseContext context) throws Exception {
+    private Response makeTestExecutionReportResponse(Request request, Date resultDate, PageHistory.TestResultRecord testResultRecord) throws Exception {
         if (formatIsXML(request))
             return generateXMLResponse(testResultRecord.getFile());
         ExecutionReport report;
@@ -98,7 +100,7 @@ public class PageHistoryResponder implements SecureResponder {
             pageTitle.setPageType("Suite History");
             return generateHtmlSuiteExecutionResponse((SuiteExecutionReport) report);
         } else
-            return makeCorruptFileResponse(request, context);
+            return makeCorruptFileResponse(request);
     }
 
     private Response generateHtmlSuiteExecutionResponse(SuiteExecutionReport report) throws Exception {

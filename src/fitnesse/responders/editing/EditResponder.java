@@ -4,7 +4,6 @@ package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -43,7 +42,7 @@ public class EditResponder implements SecureResponder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws IOException {
+    public Response makeResponse(Request request) throws IOException {
         boolean nonExistent = request.hasInput("nonExistent");
         return doMakeResponse(request, nonExistent, root, htmlPageFactory, getDefaultPageContent(), clock);
     }

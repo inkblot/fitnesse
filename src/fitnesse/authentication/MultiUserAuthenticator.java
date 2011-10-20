@@ -3,6 +3,7 @@
 package fitnesse.authentication;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.wiki.WikiPage;
@@ -14,8 +15,8 @@ public class MultiUserAuthenticator extends Authenticator {
     private final PasswordCipher cipher;
 
     @Inject
-    public MultiUserAuthenticator(@Named("fitnesse.auth.multiUser.passwordFile") String passwdFile, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        super(root);
+    public MultiUserAuthenticator(@Named("fitnesse.auth.multiUser.passwordFile") String passwdFile, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, Injector injector) {
+        super(root, injector);
         PasswordFile passwords = new PasswordFile(passwdFile);
         users = passwords.getPasswordMap();
         cipher = passwords.getCipher();

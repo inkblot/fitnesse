@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import fit.FitProtocol;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
@@ -27,7 +26,7 @@ public class SocketCatchingResponder implements Responder, SocketDonor, Response
         this.socketDealer = socketDealer;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         ticketNumber = Integer.parseInt(request.getInput("ticket").toString());
         response = new PuppetResponse(this);
         return response;

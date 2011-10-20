@@ -34,10 +34,11 @@ public class HistoryComparatorResponder implements Responder {
     private String secondFilePath;
     public boolean testing = false;
 
-    private FitNesseContext context;
     private final HtmlPageFactory htmlPageFactory;
+    private File testHistoryDirectory;
 
-    public HistoryComparatorResponder(HistoryComparator historyComparator, HtmlPageFactory htmlPageFactory) {
+    public HistoryComparatorResponder(HistoryComparator historyComparator, HtmlPageFactory htmlPageFactory, FitNesseContext context) {
+        testHistoryDirectory = context.getTestHistoryDirectory();
         comparator = historyComparator;
         this.htmlPageFactory = htmlPageFactory;
     }
@@ -48,32 +49,30 @@ public class HistoryComparatorResponder implements Responder {
         comparator = new HistoryComparator();
     }
 
-    public Response makeResponse(FitNesseContext context, Request request)
+    public Response makeResponse(Request request)
             throws Exception {
-        this.context = context;
         initializeResponseComponents(request);
         if (!getFileNameFromRequest(request))
-            return makeErrorResponse(context, request,
+            return makeErrorResponse(request,
                     "Compare Failed because the wrong number of Input Files were given. "
                             + "Select two please.");
         firstFilePath = composeFileName(request, firstFileName);
         secondFilePath = composeFileName(request, secondFileName);
 
         if (!filesExist())
-            return makeErrorResponse(context, request,
+            return makeErrorResponse(request,
                     "Compare Failed because the files were not found.");
 
-        return makeResponseFromComparison(context, request);
+        return makeResponseFromComparison(request);
     }
 
-    private Response makeResponseFromComparison(FitNesseContext context,
-                                                Request request) throws Exception {
+    private Response makeResponseFromComparison(Request request) throws Exception {
         if (comparator.compare(firstFilePath, secondFilePath))
             return makeValidResponse();
         else {
             String message = String.format("These files could not be compared."
                     + "  They might be suites, or something else might be wrong.");
-            return makeErrorResponse(context, request, message);
+            return makeErrorResponse(request, message);
         }
     }
 
@@ -90,7 +89,7 @@ public class HistoryComparatorResponder implements Responder {
     }
 
     private String composeFileName(Request request, String fileName) {
-        return context.getTestHistoryDirectory().getPath() + File.separator
+        return testHistoryDirectory.getPath() + File.separator
                 + request.getResource() + File.separator + fileName;
     }
 
@@ -153,8 +152,7 @@ public class HistoryComparatorResponder implements Responder {
 
     }
 
-    private Response makeErrorResponse(FitNesseContext context, Request request,
-                                       String message) throws Exception {
-        return new ErrorResponder(message, htmlPageFactory).makeResponse(context, request);
+    private Response makeErrorResponse(Request request, String message) throws Exception {
+        return new ErrorResponder(message, htmlPageFactory).makeResponse(request);
     }
 }

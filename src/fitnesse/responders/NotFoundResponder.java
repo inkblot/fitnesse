@@ -3,7 +3,6 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
@@ -27,7 +26,7 @@ public class NotFoundResponder implements Responder {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse(404);
         resource = request.getResource();
 

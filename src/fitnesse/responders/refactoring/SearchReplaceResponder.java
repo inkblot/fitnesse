@@ -2,6 +2,7 @@ package fitnesse.responders.refactoring;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.components.ContentReplacingSearchObserver;
 import fitnesse.components.PageFinder;
@@ -18,8 +19,8 @@ public class SearchReplaceResponder extends ResultResponder {
     private SearchObserver observer;
 
     @Inject
-    public SearchReplaceResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        super(htmlPageFactory, root);
+    public SearchReplaceResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+        super(htmlPageFactory, root, context);
     }
 
     protected String getTitle() {

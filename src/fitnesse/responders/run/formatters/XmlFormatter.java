@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.VelocityFactory;
 import fitnesse.responders.run.CompositeExecutionLog;
@@ -27,7 +26,7 @@ import static org.apache.commons.io.IOUtils.closeQuietly;
 
 public class XmlFormatter extends BaseFormatter {
     public interface WriterFactory {
-        Writer getWriter(FitNesseContext context, WikiPage page, TestSummary counts, long time) throws IOException;
+        Writer getWriter(WikiPage page, TestSummary counts, long time) throws IOException;
     }
 
     private WriterFactory writerFactory;
@@ -37,8 +36,8 @@ public class XmlFormatter extends BaseFormatter {
     protected TestExecutionReport testResponse = new TestExecutionReport();
     protected TestSummary finalSummary = new TestSummary();
 
-    public XmlFormatter(FitNesseContext context, final WikiPage page, WriterFactory writerFactory) {
-        super(context, page);
+    public XmlFormatter(final WikiPage page, WriterFactory writerFactory) {
+        super(page);
         this.writerFactory = writerFactory;
     }
 
@@ -113,7 +112,7 @@ public class XmlFormatter extends BaseFormatter {
     }
 
     protected void writeResults() throws IOException {
-        writeResults(writerFactory.getWriter(context, getPageForHistory(), finalSummary, currentTestStartTime));
+        writeResults(writerFactory.getWriter(getPageForHistory(), finalSummary, currentTestStartTime));
     }
 
     protected WikiPage getPageForHistory() {

@@ -57,7 +57,7 @@ public class FileSystemResponderTest extends FitnesseBaseTestCase {
     public void testFileContent() throws Exception {
         request.setResource("files/testFile1");
         responder = (FileResponder) ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
         assertEquals(InputStreamResponse.class, response.getClass());
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
@@ -75,7 +75,7 @@ public class FileSystemResponderTest extends FitnesseBaseTestCase {
         Locale.setDefault(Locale.US);
         request.setResource("files/testFile1");
         responder = (FileResponder) ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
         String lastModifiedHeader = response.getHeader("Last-Modified");
         assertMatches(HTTP_DATE_REGEXP, lastModifiedHeader);
     }
@@ -92,13 +92,13 @@ public class FileSystemResponderTest extends FitnesseBaseTestCase {
         request.setResource("files/testFile1");
         request.addHeader("If-Modified-Since", yesterday);
         responder = (FileResponder) ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
         assertEquals(200, response.getStatus());
 
         request.setResource("files/testFile1");
         request.addHeader("If-Modified-Since", tomorrow);
         responder = (FileResponder) ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
-        SimpleResponse notModifiedResponse = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse notModifiedResponse = (SimpleResponse) responder.makeResponse(request);
         assertEquals(304, notModifiedResponse.getStatus());
         assertEquals("", notModifiedResponse.getContent());
         assertMatches(HTTP_DATE_REGEXP, notModifiedResponse.getHeader("Date"));
@@ -110,7 +110,7 @@ public class FileSystemResponderTest extends FitnesseBaseTestCase {
         request.setResource("files/testFile1");
         request.addHeader("If-Modified-Since", "Unparseable Date");
         responder = (FileResponder) ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
         assertEquals(200, response.getStatus());
     }
 
@@ -118,7 +118,7 @@ public class FileSystemResponderTest extends FitnesseBaseTestCase {
     public void testNotFoundFile() throws Exception {
         request.setResource("files/something/that/aint/there");
         Responder notFoundResponder = ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
-        SimpleResponse response = (SimpleResponse) notFoundResponder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) notFoundResponder.makeResponse(request);
         assertEquals(404, response.getStatus());
         assertHasRegexp("files/something/that/aint/there", response.getContent());
     }
@@ -128,7 +128,7 @@ public class FileSystemResponderTest extends FitnesseBaseTestCase {
         samples.addFile("/files/fitnesse.css", "body{color: red;}");
         request.setResource("files/fitnesse.css");
         responder = (FileResponder) ResponderFactory.makeFileResponder(context.getInjector(), request.getResource(), rootPagePath);
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
         assertEquals("text/css", response.getContentType());
     }
 }

@@ -1,5 +1,6 @@
 package fitnesse.responders.testHistory;
 
+import com.google.inject.Inject;
 import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.AlwaysSecureOperation;
@@ -16,17 +17,20 @@ import java.io.File;
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class TestHistoryResponder implements SecureResponder {
-    private File resultsDirectory;
     private boolean generateNullResponseForTest;
+    private final File testHistoryDirectory;
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        if (resultsDirectory == null)
-            resultsDirectory = context.getTestHistoryDirectory();
+    @Inject
+    public TestHistoryResponder(FitNesseContext context) {
+        this.testHistoryDirectory = context.getTestHistoryDirectory();
+    }
+
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         if (!generateNullResponseForTest) {
             TestHistory history = new TestHistory();
             String pageName = request.getResource();
-            history.readPageHistoryDirectory(resultsDirectory, pageName);
+            history.readPageHistoryDirectory(testHistoryDirectory, pageName);
             VelocityContext velocityContext = new VelocityContext();
             velocityContext.put("pageTitle", new PageTitle(makePageTitle(pageName)));
             velocityContext.put("testHistory", history);
@@ -48,14 +52,6 @@ public class TestHistoryResponder implements SecureResponder {
 
     private boolean formatIsXML(Request request) {
         return (request.getInput("format") != null && request.getInput("format").toString().toLowerCase().equals("xml"));
-    }
-
-    public void setResultsDirectory(File resultsDirectory) {
-        this.resultsDirectory = resultsDirectory;
-    }
-
-    public File getResultsDirectory() {
-        return resultsDirectory;
     }
 
     public void generateNullResponseForTest() {

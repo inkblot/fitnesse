@@ -37,7 +37,7 @@ public class FitClientResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        responder = new FitClientResponder(root, getPort(), socketDealer);
+        responder = new FitClientResponder(root, getPort(), socketDealer, context);
         request = new MockRequest();
 
         crawler = root.getPageCrawler();
@@ -108,7 +108,7 @@ public class FitClientResponderTest extends FitnesseBaseTestCase {
         request.setResource(name);
         if (addPaths)
             request.addInput("includePaths", "blah");
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         return sender.sentData();

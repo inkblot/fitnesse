@@ -39,7 +39,7 @@ public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         pagePath = PathParser.parse("SomePage");
         somePage = crawler.addPage(root, pagePath, "has something in it");
-        responder = new SearchReplaceResponder(htmlPageFactory, root);
+        responder = new SearchReplaceResponder(htmlPageFactory, root, context);
         request = new MockRequest();
         request.setResource("SomePage");
     }
@@ -94,7 +94,7 @@ public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
     private String getResponseContentUsingSearchReplaceString(String searchString, String replacementString) throws Exception {
         request.addInput("searchString", searchString);
         request.addInput("replacementString", replacementString);
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         return sender.sentData();

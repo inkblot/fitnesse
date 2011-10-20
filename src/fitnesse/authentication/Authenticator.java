@@ -3,7 +3,7 @@
 package fitnesse.authentication;
 
 import com.google.inject.ImplementedBy;
-import fitnesse.FitNesseContext;
+import com.google.inject.Injector;
 import fitnesse.Responder;
 import fitnesse.http.Request;
 import fitnesse.wiki.WikiPage;
@@ -11,13 +11,16 @@ import fitnesse.wiki.WikiPage;
 @ImplementedBy(PromiscuousAuthenticator.class)
 public abstract class Authenticator {
 
+    private final Injector injector;
     private final WikiPage root;
 
-    public Authenticator(WikiPage root) {
+
+    public Authenticator(WikiPage root, Injector injector) {
         this.root = root;
+        this.injector = injector;
     }
 
-    public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
+    public Responder authenticate(Request request, Responder privilegedResponder) throws Exception {
         request.getCredentials();
         String username = request.getAuthorizationUsername();
         String password = request.getAuthorizationPassword();
@@ -27,24 +30,24 @@ public abstract class Authenticator {
         else if (!isSecureResponder(privilegedResponder))
             return privilegedResponder;
         else
-            return verifyOperationIsSecure(privilegedResponder, context, request);
+            return verifyOperationIsSecure(privilegedResponder, request);
     }
 
-    private Responder verifyOperationIsSecure(Responder privilegedResponder, FitNesseContext context, Request request) {
+    private Responder verifyOperationIsSecure(Responder privilegedResponder, Request request) {
         SecureOperation so = ((SecureResponder) privilegedResponder).getSecureOperation();
         try {
             if (so.shouldAuthenticate(root, request))
-                return unauthorizedResponder(context, request);
+                return unauthorizedResponder(request);
             else
                 return privilegedResponder;
         } catch (Exception e) {
             e.printStackTrace();
-            return unauthorizedResponder(context, request);
+            return unauthorizedResponder(request);
         }
     }
 
-    protected Responder unauthorizedResponder(FitNesseContext context, Request request) {
-        return context.getInjector().getInstance(UnauthorizedResponder.class);
+    protected Responder unauthorizedResponder(Request request) {
+        return injector.getInstance(UnauthorizedResponder.class);
     }
 
     private boolean isSecureResponder(Responder privilegedResponder) {

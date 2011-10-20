@@ -17,13 +17,11 @@ import static org.junit.Assert.assertEquals;
 public class RollbackResponderTest extends FitnesseBaseTestCase {
     private WikiPage page;
     private HtmlPageFactory htmlPageFactory;
-    private FitNesseContext context;
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
     }
 
@@ -44,7 +42,7 @@ public class RollbackResponderTest extends FitnesseBaseTestCase {
         request.addInput("version", commitRecord.getName());
 
         Responder responder = new RollbackResponder(htmlPageFactory, root);
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         assertEquals(303, response.getStatus());
         assertEquals("PageOne", response.getHeader("Location"));

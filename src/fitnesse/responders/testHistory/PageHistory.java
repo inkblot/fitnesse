@@ -1,6 +1,5 @@
 package fitnesse.responders.testHistory;
 
-import fitnesse.FitNesseContext;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.wiki.WikiPage;
 import util.FileUtil;
@@ -191,9 +190,9 @@ public class PageHistory {
         return pageHistoryFileName.matches(TEST_FILE_FORMAT);
     }
 
-    public static String makePageHistoryFileName(FitNesseContext context, WikiPage page, TestSummary counts, long time) {
+    public static String makePageHistoryFileName(File testHistoryDirectory, WikiPage page, TestSummary counts, long time) {
         return String.format("%s/%s/%s",
-                context.getTestHistoryDirectory(),
+                testHistoryDirectory,
                 page.getPageCrawler().getFullPath(page).toString(),
                 TestHistory.makeResultFileName(counts, time));
     }

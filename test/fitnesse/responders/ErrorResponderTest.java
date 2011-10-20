@@ -3,7 +3,6 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -18,18 +17,16 @@ import static util.RegexAssertions.assertSubString;
 public class ErrorResponderTest extends FitnesseBaseTestCase {
 
     private HtmlPageFactory htmlPageFactory;
-    private FitNesseContext context;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
     }
 
     @Test
     public void testResponse() throws Exception {
         Responder responder = new ErrorResponder(new Exception("some error message"), htmlPageFactory);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new MockRequest());
 
         assertEquals(400, response.getStatus());
 
@@ -43,7 +40,7 @@ public class ErrorResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testWithMessage() throws Exception {
         Responder responder = new ErrorResponder("error Message", htmlPageFactory);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new MockRequest());
         String body = response.getContent();
 
         assertSubString("error Message", body);

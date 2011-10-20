@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.html.HtmlPageFactory;
@@ -21,15 +20,13 @@ import static org.junit.Assert.assertTrue;
 
 public class ShutdownResponderTest extends FitnesseBaseTestCase {
     private FitNesse fitnesse;
-    private FitNesseContext context;
     private boolean doneShuttingDown;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesse fitnesse, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesse fitnesse) {
         this.htmlPageFactory = htmlPageFactory;
         this.fitnesse = fitnesse;
-        this.context = context;
     }
 
     @Before
@@ -45,7 +42,7 @@ public class ShutdownResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testFitNesseGetsShutdown() throws Exception {
         ShutdownResponder responder = new ShutdownResponder(htmlPageFactory, fitnesse);
-        responder.makeResponse(context, new MockRequest());
+        responder.makeResponse(new MockRequest());
         Thread.sleep(200);
         assertFalse(fitnesse.isRunning());
     }

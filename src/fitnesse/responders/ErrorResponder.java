@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
@@ -27,7 +26,7 @@ public class ErrorResponder implements Responder {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse(400);
         HtmlPage html = htmlPageFactory.newPage();
         HtmlUtil.addTitles(html, "Error Occurred");

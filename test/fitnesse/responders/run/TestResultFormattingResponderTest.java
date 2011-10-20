@@ -5,8 +5,8 @@ package fitnesse.responders.run;
 import com.google.inject.Inject;
 import fit.Counts;
 import fit.FitProtocol;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
@@ -31,11 +31,11 @@ public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
     private MockResultFormatter formatter;
     private PageResult result1;
     private PageResult result2;
-    private FitNesseContext context;
+    private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(FitNesseContext context) {
-        this.context = context;
+    public void inject(HtmlPageFactory htmlPageFactory) {
+        this.htmlPageFactory = htmlPageFactory;
     }
 
     @Before
@@ -43,7 +43,7 @@ public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
         output = new PipedOutputStream();
         input = new PipedInputStream(output);
 
-        responder = new TestResultFormattingResponder();
+        responder = new TestResultFormattingResponder(htmlPageFactory);
         formatter = new MockResultFormatter();
         responder.formatter = formatter;
 
@@ -96,7 +96,7 @@ public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
         FitProtocol.writeCounts(new Counts(5, 5, 5, 5), output);
         request.addInput("results", output.toString());
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         String content = sender.sentData();
@@ -125,7 +125,7 @@ public class TestResultFormattingResponderTest extends FitnesseBaseTestCase {
         request.setResource("/");
         if (format != null)
             request.addInput("format", format);
-        responder.init(context, request);
+        responder.init(request);
         assertEquals(formatterClass, responder.formatter.getClass());
     }
 }

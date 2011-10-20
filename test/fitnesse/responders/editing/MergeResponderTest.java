@@ -18,17 +18,15 @@ import static util.RegexAssertions.assertHasRegexp;
 
 public class MergeResponderTest extends FitnesseBaseTestCase {
     private MockRequest request;
-    private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.context = context;
     }
 
     @Before
@@ -43,7 +41,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
     @Test
     public void testHtml() throws Exception {
         Responder responder = new MergeResponder(request, htmlPageFactory, clock, root);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new MockRequest());
         assertHasRegexp("name=\\\"" + EditResponder.CONTENT_INPUT_NAME + "\\\"", response.getContent());
         assertHasRegexp("this is SimplePage", response.getContent());
         assertHasRegexp("name=\\\"oldContent\\\"", response.getContent());
@@ -56,7 +54,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
         request.addInput("PageType", "Test");
         request.addInput("Search", "On");
         Responder responder = new MergeResponder(request, htmlPageFactory, clock, root);
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(new MockRequest());
 
         assertHasRegexp("type=\"hidden\"", response.getContent());
         assertHasRegexp("name=\"Edit\"", response.getContent());

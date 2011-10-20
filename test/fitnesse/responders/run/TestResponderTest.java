@@ -81,10 +81,11 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
+        context.doNotChunk = true;
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root, getPort(), socketDealer);
+        responder = new TestResponder(htmlPageFactory, root, getPort(), socketDealer, context);
         responder.setFastTest(true);
         receiver = new FitSocketReceiver(getPort(), socketDealer);
         receiver.receiveSocket();
@@ -124,8 +125,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         }
         request.setResource(testPage.getName());
 
-        responder.turnOffChunking();
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
         sender = new MockResponseSender();
         sender.doSending(response);
 
@@ -140,7 +140,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         testPage = crawler.addPage(root, PathParser.parse("EmptyTestPage"));
         request.setResource(testPage.getName());
 
-        response = responder.makeResponse(context, request);
+        response = responder.makeResponse(request);
         sender = new MockResponseSender();
         sender.doSending(response);
         sender.sentData();
@@ -191,7 +191,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), content);
         request.setResource(testPage.getName());
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         String results = sender.sentData();
@@ -207,7 +207,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + passFixtureTable());
         request.setResource(testPage.getName());
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         String results = sender.sentData();
@@ -234,7 +234,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
         request.setResource(testPage.getName());
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
 
@@ -511,7 +511,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         String resource = PathParser.render(testPagePath);
         request.setResource(resource);
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         results = sender.sentData();
@@ -538,7 +538,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         String resource = PathParser.render(testPagePath);
         request.setResource(resource);
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         results = sender.sentData();
@@ -561,7 +561,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         String resource = PathParser.render(testPagePath);
         request.setResource(resource);
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         results = sender.sentData();
@@ -586,7 +586,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         String resource = PathParser.render(testPagePath);
         request.setResource(resource);
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();
         sender.doSending(response);
         results = sender.sentData();

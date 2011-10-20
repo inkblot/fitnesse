@@ -1,6 +1,5 @@
 package fitnesse.responders.run;
 
-import fitnesse.FitNesseContext;
 import fitnesse.responders.run.formatters.XmlFormatter;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.WikiPage;
@@ -14,8 +13,8 @@ public class SuiteXmlFormatter extends XmlFormatter {
 
     private TestSummary xmlPageCounts = new TestSummary();
 
-    public SuiteXmlFormatter(FitNesseContext context, WikiPage page, WriterFactory writerSource) {
-        super(context, page, writerSource);
+    public SuiteXmlFormatter(WikiPage page, WriterFactory writerSource) {
+        super(page, writerSource);
     }
 
     private void addFinalCounts() {

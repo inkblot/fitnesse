@@ -4,7 +4,6 @@ package fitnesse.authentication;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
@@ -24,7 +23,6 @@ public class AuthenticatorTest extends FitnesseBaseTestCase {
     private MockRequest request;
     private Class<? extends Responder> responderType;
     private DummySecureResponder privilegedResponder;
-    private FitNesseContext context;
     private WikiPage root;
 
     class DummySecureResponder implements SecureResponder {
@@ -33,15 +31,14 @@ public class AuthenticatorTest extends FitnesseBaseTestCase {
             return new AlwaysSecureOperation();
         }
 
-        public Response makeResponse(FitNesseContext context, Request request) {
+        public Response makeResponse(Request request) {
             return null;
         }
 
     }
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 
@@ -49,7 +46,7 @@ public class AuthenticatorTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         WikiPage frontpage = root.addChildPage("FrontPage");
         makeReadSecure(frontpage);
-        authenticator = new SimpleAuthenticator(root);
+        authenticator = new SimpleAuthenticator(root, injector);
         privilegedResponder = new DummySecureResponder();
 
         request = new MockRequest();
@@ -76,7 +73,7 @@ public class AuthenticatorTest extends FitnesseBaseTestCase {
     }
 
     private void makeResponder() throws Exception {
-        Responder responder = authenticator.authenticate(context, request, privilegedResponder);
+        Responder responder = authenticator.authenticate(request, privilegedResponder);
         responderType = responder.getClass();
     }
 }

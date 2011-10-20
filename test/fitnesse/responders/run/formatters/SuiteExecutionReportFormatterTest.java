@@ -1,6 +1,5 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.run.TestSummary;
@@ -19,9 +18,8 @@ public class SuiteExecutionReportFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void testCompleteShouldSetRunTimeForCurrentReference() throws Exception {
-        FitNesseContext context = mock(FitNesseContext.class);
         WikiPage page = new WikiPageDummy("name", "content", injector);
-        SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
+        SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(page);
 
         TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
         when(timeMeasurement.startedAt()).thenReturn(65L);
@@ -40,9 +38,8 @@ public class SuiteExecutionReportFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void allTestingCompleteShouldSetTotalRunTimeOnReport() throws Exception {
-        FitNesseContext context = mock(FitNesseContext.class);
         WikiPage page = new WikiPageDummy("name", "content", injector);
-        SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
+        SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(page);
 
         TimeMeasurement totalTimeMeasurement = new TimeMeasurement().start();
         formatter.announceNumberTestsToRun(0);
@@ -57,9 +54,8 @@ public class SuiteExecutionReportFormatterTest extends FitnesseBaseTestCase {
 
     @Test
     public void testCompleteShouldSetFailedCount() throws Exception {
-        FitNesseContext context = mock(FitNesseContext.class);
         WikiPage page = new WikiPageDummy("name", "content", injector);
-        SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(context, page);
+        SuiteExecutionReportFormatter formatter = new SuiteExecutionReportFormatter(page);
 
         TimeMeasurement timeMeasurement = mock(TimeMeasurement.class);
         when(timeMeasurement.startedAt()).thenReturn(65L);

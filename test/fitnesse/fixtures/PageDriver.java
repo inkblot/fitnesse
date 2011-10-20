@@ -244,7 +244,7 @@ public class PageDriver {
     }
 
     public void givenUserWithPassword(String user, String password) {
-        FitnesseFixtureContext.authenticator = new OneUserAuthenticator(user, password, FitnesseFixtureContext.root);
+        FitnesseFixtureContext.authenticator = new OneUserAuthenticator(user, password, FitnesseFixtureContext.root, FitnesseFixtureContext.context.getInjector());
     }
 
     public void sendAsHash(Map<String, String> hash) {

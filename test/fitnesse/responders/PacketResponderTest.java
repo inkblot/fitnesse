@@ -38,7 +38,7 @@ public class PacketResponderTest extends FitnesseBaseTestCase {
     }
 
     private SimpleResponse makeResponse() throws Exception {
-        return (SimpleResponse) responder.makeResponse(context, request);
+        return (SimpleResponse) responder.makeResponse(request);
     }
 
     private void assertPageWithTableResponseWith(String table, String expected) throws Exception {

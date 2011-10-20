@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -28,12 +27,12 @@ public class RawContentResponder implements SecureResponder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         String resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
         WikiPage page = root.getPageCrawler().getPage(root, path);
         if (page == null)
-            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(request);
         PageData pageData = page.getData();
 
         SimpleResponse response = new SimpleResponse();

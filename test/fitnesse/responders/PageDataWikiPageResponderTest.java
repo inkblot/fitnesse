@@ -17,15 +17,13 @@ import static org.junit.Assert.assertEquals;
 
 public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage pageOne;
-    private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.context = context;
     }
 
     @Before
@@ -39,7 +37,7 @@ public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
         request.addInput("pageData", "");
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         assertEquals(pageOne.getData().getContent(), response.getContent());
     }
 }

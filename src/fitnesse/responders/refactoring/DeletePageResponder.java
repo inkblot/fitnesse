@@ -4,7 +4,6 @@ package fitnesse.responders.refactoring;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -29,7 +28,7 @@ public class DeletePageResponder implements SecureResponder {
         this.root = root;
     }
 
-    public Response makeResponse(final FitNesseContext context, final Request request) throws Exception {
+    public Response makeResponse(final Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         String qualifiedPageName = request.getResource();
         WikiPagePath path = PathParser.parse(qualifiedPageName);

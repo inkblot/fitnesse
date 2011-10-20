@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
@@ -20,17 +18,11 @@ public class SuiteHtmlFormatterTest extends FitnesseBaseTestCase {
     private HtmlPage htmlPage;
     private SuiteHtmlFormatter formatter;
     private StringBuffer pageBuffer = new StringBuffer();
-    private FitNesseContext context;
-
-    @Inject
-    public void inject(FitNesseContext context) {
-        this.context = context;
-    }
 
     @Before
     public void setUp() throws Exception {
         htmlPage = new HtmlPageFactory().newPage();
-        formatter = new SuiteHtmlFormatter(context) {
+        formatter = new SuiteHtmlFormatter() {
             @Override
             protected HtmlPage buildHtml(String pageType) {
                 return htmlPage;

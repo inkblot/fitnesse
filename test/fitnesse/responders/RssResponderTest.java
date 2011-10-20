@@ -139,7 +139,7 @@ public class RssResponderTest extends ResponderTestCase {
     }
 
     private void buildRssChannel() throws Exception {
-        SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
+        SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         rssDoc = XmlUtil.newDocument(response.getContent());
         rssElement = rssDoc.getDocumentElement();
         channelElement = XmlUtil.getElementByTagName(rssElement, "channel");

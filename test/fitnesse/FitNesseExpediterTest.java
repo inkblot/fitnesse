@@ -56,7 +56,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        authenticator = new PromiscuousAuthenticator(root);
+        authenticator = new PromiscuousAuthenticator(root, injector);
         root.addChildPage("FrontPage");
         socket = new MockSocket();
         expediter = new FitNesseExpediter(context.getInjector(), socket);
@@ -174,11 +174,11 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
 
     class StoneWallAuthenticator extends Authenticator {
         StoneWallAuthenticator() {
-            super(root);
+            super(root, injector);
         }
 
-        public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
-            return context.getInjector().getInstance(UnauthorizedResponder.class);
+        public Responder authenticate(Request request, Responder privilegedResponder) {
+            return injector.getInstance(UnauthorizedResponder.class);
         }
 
         public boolean isAuthenticated(String username, String password) {

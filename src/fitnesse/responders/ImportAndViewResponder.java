@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -28,7 +27,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         String resource = request.getResource();
 
         if (isEmpty(resource))
@@ -36,7 +35,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
 
         loadPage(resource, root);
         if (page == null)
-            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(request);
         loadPageData();
 
         SimpleResponse response = new SimpleResponse();

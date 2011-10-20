@@ -26,8 +26,8 @@ public abstract class ResultResponder extends ChunkingResponder implements
         SearchObserver, SecureResponder {
     private int hits;
 
-    public ResultResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
-        super(htmlPageFactory, root);
+    public ResultResponder(HtmlPageFactory htmlPageFactory, WikiPage root, FitNesseContext context) {
+        super(htmlPageFactory, root, context);
     }
 
     @Override

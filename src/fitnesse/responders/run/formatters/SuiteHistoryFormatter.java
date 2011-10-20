@@ -1,6 +1,5 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.VelocityContext;
@@ -16,8 +15,8 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
     private XmlFormatter.WriterFactory writerFactory;
     private long suiteTime = 0;
 
-    public SuiteHistoryFormatter(FitNesseContext context, final WikiPage page, Writer writer) {
-        super(context, page);
+    public SuiteHistoryFormatter(final WikiPage page, Writer writer) {
+        super(page);
         this.writer = writer;
     }
 
@@ -28,8 +27,8 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
         super.newTestStarted(test, timeMeasurement);
     }
 
-    public SuiteHistoryFormatter(FitNesseContext context, WikiPage page, XmlFormatter.WriterFactory source) {
-        super(context, page);
+    public SuiteHistoryFormatter(WikiPage page, XmlFormatter.WriterFactory source) {
+        super(page);
         writerFactory = source;
     }
 
@@ -37,7 +36,7 @@ public class SuiteHistoryFormatter extends SuiteExecutionReportFormatter {
     public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
         super.allTestingComplete(totalTimeMeasurement);
         if (writerFactory != null)
-            writer = writerFactory.getWriter(context, page, getPageCounts(), suiteTime);
+            writer = writerFactory.getWriter(page, getPageCounts(), suiteTime);
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("suiteExecutionReport", suiteExecutionReport);
         VelocityFactory.mergeTemplate(writer, velocityContext, "fitnesse/templates/suiteHistoryXML.vm");

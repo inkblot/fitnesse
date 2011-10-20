@@ -4,7 +4,6 @@ package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -40,7 +39,7 @@ public class PropertiesResponder implements SecureResponder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request)
+    public Response makeResponse(Request request)
             throws Exception {
         response = new SimpleResponse();
         resource = request.getResource();
@@ -50,7 +49,7 @@ public class PropertiesResponder implements SecureResponder {
             crawler.setDeadEndStrategy(new MockingPageCrawler());
         page = crawler.getPage(root, path);
         if (page == null)
-            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(request);
 
         pageData = page.getData();
         makeContent(request);

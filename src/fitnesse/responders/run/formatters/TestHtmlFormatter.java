@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
 import fitnesse.html.*;
 import fitnesse.responders.WikiImportProperty;
 import fitnesse.responders.run.CompositeExecutionLog;
@@ -25,16 +24,16 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
 
     private static final String TESTING_INTERRUPTED = "<strong>Testing was interupted and results are incomplete.</strong><br/>";
 
-    public TestHtmlFormatter(FitNesseContext context, final WikiPage page,
+    public TestHtmlFormatter(final WikiPage page,
                              final HtmlPageFactory pageFactory) {
-        super(context, page);
+        super(page);
         this.pageFactory = pageFactory;
     }
 
     //special constructor for TestRunner.  Used only for formatting.
     //todo this is nasty coupling.
-    public TestHtmlFormatter(FitNesseContext context) {
-        super(context, null);
+    public TestHtmlFormatter() {
+        super(null);
     }
 
     protected abstract void writeData(String output) throws IOException;

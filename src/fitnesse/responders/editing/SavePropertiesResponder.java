@@ -5,7 +5,6 @@ package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
@@ -34,13 +33,13 @@ public class SavePropertiesResponder implements SecureResponder {
         this.root = root;
     }
 
-    public Response makeResponse(FitNesseContext context, Request request) throws Exception {
+    public Response makeResponse(Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         String resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
         WikiPage page = root.getPageCrawler().getPage(root, path);
         if (page == null)
-            return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
+            return new NotFoundResponder(htmlPageFactory).makeResponse(request);
         PageData data = page.getData();
         saveAttributes(request, data);
         VersionInfo commitRecord = page.commit(data);

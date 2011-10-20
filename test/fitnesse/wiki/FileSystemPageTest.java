@@ -5,7 +5,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
@@ -28,7 +27,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
 
     private Clock clock;
     private WikiPage root;
-    private FitNesseContext context;
+    private WikiPageFactory wikiPageFactory;
 
     @Override
     protected Properties getProperties() {
@@ -38,10 +37,10 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, WikiPageFactory wikiPageFactory) {
         this.clock = clock;
         this.root = root;
-        this.context = context;
+        this.wikiPageFactory = wikiPageFactory;
     }
 
     @Before
@@ -165,7 +164,7 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     @Test
     public void testCanFindExistingPages() throws Exception {
         crawler.addPage(root, PathParser.parse("FrontPage"), "front page");
-        WikiPage newRoot = context.getWikiPageFactory().makeRootPage();
+        WikiPage newRoot = wikiPageFactory.makeRootPage();
         assertThat(newRoot, instanceOf(FileSystemPage.class));
         assertNotNull(newRoot.getChildPage("FrontPage"));
     }

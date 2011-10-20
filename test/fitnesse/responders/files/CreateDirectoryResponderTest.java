@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
@@ -18,12 +17,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CreateDirectoryResponderTest extends FitnesseBaseTestCase {
-    private FitNesseContext context;
     private String rootPagePath;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
     }
 
@@ -40,7 +37,7 @@ public class CreateDirectoryResponderTest extends FitnesseBaseTestCase {
         request.addInput("dirname", "subdir");
         request.setResource("");
 
-        Response response = responder.makeResponse(context, request);
+        Response response = responder.makeResponse(request);
 
         File file = new File(new File(getRootPath(), "RooT"), "subdir");
         assertTrue(file.exists());

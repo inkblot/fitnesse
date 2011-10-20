@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
@@ -30,12 +29,12 @@ public abstract class SuiteHtmlFormatter extends TestHtmlFormatter {
     private int totalTests = 1;
 
 
-    public SuiteHtmlFormatter(FitNesseContext context, WikiPage page, HtmlPageFactory pageFactory) {
-        super(context, page, pageFactory);
+    public SuiteHtmlFormatter(WikiPage page, HtmlPageFactory pageFactory) {
+        super(page, pageFactory);
     }
 
-    public SuiteHtmlFormatter(FitNesseContext context) {
-        super(context);
+    public SuiteHtmlFormatter() {
+        super();
     }
 
     public String getTestSystemHeader(String testSystemName) {

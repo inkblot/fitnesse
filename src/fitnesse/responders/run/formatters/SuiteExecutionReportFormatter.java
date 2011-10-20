@@ -1,6 +1,5 @@
 package fitnesse.responders.run.formatters;
 
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseVersion;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.SuiteExecutionReport;
@@ -17,8 +16,8 @@ public class SuiteExecutionReportFormatter extends BaseFormatter {
     private SuiteExecutionReport.PageHistoryReference referenceToCurrentTest;
     protected SuiteExecutionReport suiteExecutionReport;
 
-    public SuiteExecutionReportFormatter(FitNesseContext context, final WikiPage page) {
-        super(context, page);
+    public SuiteExecutionReportFormatter(final WikiPage page) {
+        super(page);
         suiteExecutionReport = new SuiteExecutionReport();
         suiteExecutionReport.version = new FitNesseVersion().toString();
         suiteExecutionReport.rootPath = this.page.getName();

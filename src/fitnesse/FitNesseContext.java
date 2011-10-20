@@ -9,10 +9,8 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import fitnesse.authentication.Authenticator;
 import fitnesse.html.HtmlPageFactory;
-import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageFactory;
 
 import java.io.File;
 
@@ -30,12 +28,10 @@ public class FitNesseContext {
     private final WikiPage root;
     private final String rootPagePath;
     private final int port;
-    private final ResponderFactory responderFactory;
-    private final WikiPageFactory wikiPageFactory;
     private final HtmlPageFactory htmlPageFactory;
     private final Provider<Authenticator> authenticatorProvider;
 
-    public RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
+    public final RunningTestingTracker runningTestingTracker = new RunningTestingTracker();
     public String testResultsDirectoryName = "testResults";
     public boolean doNotChunk;
 
@@ -43,16 +39,12 @@ public class FitNesseContext {
     public FitNesseContext(
             @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath,
             @Named(FitNesseModule.PORT) Integer port,
-            WikiPageFactory wikiPageFactory,
-            ResponderFactory responderFactory,
             HtmlPageFactory htmlPageFactory,
             Provider<Authenticator> authenticatorProvider,
             Injector injector,
             @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.rootPagePath = rootPagePath;
         this.port = port;
-        this.wikiPageFactory = wikiPageFactory;
-        this.responderFactory = responderFactory;
         this.htmlPageFactory = htmlPageFactory;
         this.authenticatorProvider = authenticatorProvider;
         this.injector = injector;
@@ -73,18 +65,6 @@ public class FitNesseContext {
 
     public File getTestHistoryDirectory() {
         return new File(String.format("%s/files/%s", rootPagePath, testResultsDirectoryName));
-    }
-
-    public ResponderFactory getResponderFactory() {
-        return responderFactory;
-    }
-
-    public WikiPageFactory getWikiPageFactory() {
-        return wikiPageFactory;
-    }
-
-    public HtmlPageFactory getHtmlPageFactory() {
-        return htmlPageFactory;
     }
 
     public Injector getInjector() {

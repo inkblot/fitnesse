@@ -30,7 +30,7 @@ public class FitNesseContext {
     private final Injector injector;
     private final WikiPage root;
     private final String rootPagePath;
-    public final int port;
+    private final int port;
     private final ResponderFactory responderFactory;
     private final WikiPageFactory wikiPageFactory;
     private final HtmlPageFactory htmlPageFactory;

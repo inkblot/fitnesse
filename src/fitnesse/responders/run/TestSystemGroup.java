@@ -11,17 +11,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TestSystemGroup {
-    private Map<TestSystem.Descriptor, TestSystem> testSystems = new HashMap<TestSystem.Descriptor, TestSystem>();
-    private FitNesseContext context;
-    private WikiPage page;
-    private TestSystemListener testSystemListener;
-    private CompositeExecutionLog log;
+    private final Map<TestSystem.Descriptor, TestSystem> testSystems = new HashMap<TestSystem.Descriptor, TestSystem>();
+    private final FitNesseContext context;
+    private final WikiPage page;
+    private final TestSystemListener testSystemListener;
+    private final CompositeExecutionLog log;
+    private final int port;
+
     private boolean fastTest = false;
 
-    public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener) {
+    public TestSystemGroup(FitNesseContext context, WikiPage page, TestSystemListener listener, int port) {
         this.context = context;
         this.page = page;
         this.testSystemListener = listener;
+        this.port = port;
         log = new CompositeExecutionLog(page);
     }
 
@@ -67,7 +70,7 @@ public class TestSystemGroup {
         if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.testSystemName)))
             return new HtmlSlimTestSystem(page, testSystemListener);
         else
-            return new FitTestSystem(context, page, testSystemListener, fastTest);
+            return new FitTestSystem(context, page, testSystemListener, fastTest, port);
     }
 
 }

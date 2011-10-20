@@ -48,9 +48,9 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root);
+        responder = new TestResponder(htmlPageFactory, root, getPort());
 
-        receiver = new FitSocketReceiver(context.port, context.socketDealer);
+        receiver = new FitSocketReceiver(getPort(), context.socketDealer);
         receiver.receiveSocket();
     }
 

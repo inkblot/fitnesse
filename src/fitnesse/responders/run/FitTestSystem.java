@@ -11,20 +11,23 @@ import java.io.IOException;
 import java.util.Map;
 
 public class FitTestSystem extends TestSystem {
-    private CommandRunningFitClient client;
-    private FitNesseContext context;
-    private boolean fastTest;
+    private final FitNesseContext context;
+    private final boolean fastTest;
+    private final int port;
 
-    public FitTestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener, boolean fastTest) {
+    private CommandRunningFitClient client;
+
+    public FitTestSystem(FitNesseContext context, WikiPage page, TestSystemListener listener, boolean fastTest, int port) {
         super(page, listener);
         this.context = context;
         this.fastTest = fastTest;
+        this.port = port;
     }
 
     protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws IOException {
         String command = buildCommand(descriptor, classPath);
         Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
-        client = new CommandRunningFitClient(this, command, context.port, environmentVariables, context.socketDealer, fastTest);
+        client = new CommandRunningFitClient(this, command, port, environmentVariables, context.socketDealer, fastTest);
         return new ExecutionLog(page, client.commandRunner);
     }
 

@@ -94,11 +94,11 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource(suitePageName);
-        responder = new SuiteResponder(htmlPageFactory, root);
+        responder = new SuiteResponder(htmlPageFactory, root, getPort());
         responder.turnOffChunking();
         responder.setFastTest(true);
 
-        receiver = new FitSocketReceiver(context.port, context.socketDealer);
+        receiver = new FitSocketReceiver(getPort(), context.socketDealer);
     }
 
     private WikiPage addTestToSuite(String name, String content) throws IOException {

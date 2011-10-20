@@ -29,10 +29,12 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     private boolean shouldIncludePaths;
     private String suiteFilter;
     private final WikiPage root;
+    private final Integer port;
 
     @Inject
-    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port) {
         this.root = root;
+        this.port = port;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) {
@@ -84,7 +86,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         List<WikiPage> testPages = suiteTestFinder.makePageList();
 
         if (shouldIncludePaths) {
-            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, page, null, root);
+            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, page, null, root, port);
             String classpath = runner.buildClassPath();
             client.send(classpath);
         }

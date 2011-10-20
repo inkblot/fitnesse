@@ -150,7 +150,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockTestResponder extends TestResponder {
         private MockTestResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
-            super(htmlPageFactory, root);
+            super(htmlPageFactory, root, getPort());
             response = new ChunkedResponse("html");
         }
 
@@ -165,7 +165,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockSuiteResponder extends SuiteResponder {
         private MockSuiteResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
-            super(htmlPageFactory, root);
+            super(htmlPageFactory, root, getPort());
             response = new ChunkedResponse("html");
         }
 

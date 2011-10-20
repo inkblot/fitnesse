@@ -16,9 +16,11 @@ import java.util.*;
 public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
     private final ResultsListener resultsListener;
-    private final FitNesseContext fitNesseContext;
+    private final FitNesseContext context;
     private final WikiPage page;
     private final List<WikiPage> testPagesToRun;
+    private final int port;
+
     private boolean isFastTest = false;
     private boolean isRemoteDebug = false;
 
@@ -32,14 +34,15 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     TimeMeasurement currentTestTime, totalTestTime;
 
     public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
-                               final FitNesseContext fitNesseContext,
+                               final FitNesseContext context,
                                final WikiPage page,
                                final ResultsListener resultsListener,
-                               WikiPage root) {
+                               WikiPage root, int port) {
         this.testPagesToRun = testPagesToRun;
         this.resultsListener = resultsListener;
         this.page = page;
-        this.fitNesseContext = fitNesseContext;
+        this.context = context;
+        this.port = port;
         surrounder = new PageListSetUpTearDownSurrounder(root);
     }
 
@@ -70,8 +73,8 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
     private void internalExecuteTestPages() throws IOException {
         synchronized (this) {
-            testSystemGroup = new TestSystemGroup(fitNesseContext, page, this);
-            stopId = fitNesseContext.runningTestingTracker.addStartedProcess(this);
+            testSystemGroup = new TestSystemGroup(context, page, this, port);
+            stopId = context.runningTestingTracker.addStartedProcess(this);
         }
         testSystemGroup.setFastTest(isFastTest);
 
@@ -81,7 +84,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         for (TestSystem.Descriptor descriptor : pagesByTestSystem.keySet()) {
             executePagesInTestSystem(descriptor, pagesByTestSystem);
         }
-        fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
+        context.runningTestingTracker.removeEndedProcess(stopId);
     }
 
     private void executePagesInTestSystem(TestSystem.Descriptor descriptor,
@@ -245,7 +248,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         synchronized (this) {
             isStopped = true;
             if (stopId != null) {
-                fitNesseContext.runningTestingTracker.removeEndedProcess(stopId);
+                context.runningTestingTracker.removeEndedProcess(stopId);
             }
         }
 

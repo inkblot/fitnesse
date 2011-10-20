@@ -38,11 +38,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     private boolean remoteDebug = false;
     protected TestSystem testSystem;
     private final HtmlPageFactory htmlPageFactory;
+    protected final int port;
 
     @Inject
-    public TestResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public TestResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port) {
         super(htmlPageFactory, root);
         this.htmlPageFactory = htmlPageFactory;
+        this.port = port;
         formatters = new CompositeFormatter();
     }
 
@@ -152,7 +154,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     protected void performExecution(FitNesseContext context, WikiPage root, WikiPage page) throws Exception {
         List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
-        MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters, root);
+        MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters, root, port);
         runner.setFastTest(fastTest);
         runner.setDebug(isRemoteDebug());
 

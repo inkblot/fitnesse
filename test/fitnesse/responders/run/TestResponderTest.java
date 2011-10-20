@@ -82,9 +82,9 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root);
+        responder = new TestResponder(htmlPageFactory, root, getPort());
         responder.setFastTest(true);
-        receiver = new FitSocketReceiver(context.port, context.socketDealer);
+        receiver = new FitSocketReceiver(getPort(), context.socketDealer);
         receiver.receiveSocket();
 
         // holy side-effects, batman!  you wouldn't think from reading this line

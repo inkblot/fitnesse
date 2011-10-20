@@ -86,7 +86,7 @@ public class StopTestResponderTest extends FitnesseBaseTestCase {
 
 
     private String runResponder(StopTestResponder responder) throws Exception {
-        FitSocketReceiver fitSocketReceiver = new FitSocketReceiver(context.port, context.socketDealer);
+        FitSocketReceiver fitSocketReceiver = new FitSocketReceiver(getPort(), context.socketDealer);
         try {
             fitSocketReceiver.receiveSocket();
             Response response = responder.makeResponse(context, request);

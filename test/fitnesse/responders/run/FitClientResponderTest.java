@@ -35,7 +35,7 @@ public class FitClientResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        responder = new FitClientResponder(root);
+        responder = new FitClientResponder(root, getPort());
         request = new MockRequest();
 
         buildSuite(root);

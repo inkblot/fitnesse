@@ -2,9 +2,9 @@ package fitnesse.updates;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -24,9 +24,9 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
 
     private UpdaterImplementation updater;
     private boolean updateDone = false;
-    private FitNesseContext context;
     private String rootPath;
     private String rootPagePath;
+    private WikiPage root;
 
     @Override
     protected Properties getProperties() {
@@ -36,10 +36,10 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNeseModule.ROOT_PATH) String rootPath, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PATH) String rootPath, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.rootPath = rootPath;
         this.rootPagePath = rootPagePath;
+        this.root = root;
     }
 
     @Before
@@ -55,7 +55,7 @@ public class UpdaterImplementationTest extends FitnesseBaseTestCase {
         FileUtil.createFile(updateList, "files/TestFile\nfiles/BestFile\n");
         FileUtil.createFile(updateDoNotCopyOver, "SpecialFile");
 
-        updater = new UpdaterImplementation(context, rootPagePath, rootPath);
+        updater = new UpdaterImplementation(rootPagePath, rootPath, root);
     }
 
     @Test

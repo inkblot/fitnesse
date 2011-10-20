@@ -5,7 +5,7 @@ package fitnesse.responders.files;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -28,7 +28,7 @@ public class DirectoryResponder implements SecureResponder {
     private final HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public DirectoryResponder(@Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath, HtmlPageFactory htmlPageFactory) {
+    public DirectoryResponder(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, HtmlPageFactory htmlPageFactory) {
         this.rootPath = rootPagePath;
         this.htmlPageFactory = htmlPageFactory;
     }

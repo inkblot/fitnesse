@@ -4,7 +4,7 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.http.Request;
 import util.Clock;
 import util.StringUtil;
@@ -18,7 +18,7 @@ public class FileSystemResponder extends FileResponder {
     private final String rootPath;
 
     @Inject
-    public FileSystemResponder(@Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath, Clock clock) {
+    public FileSystemResponder(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, Clock clock) {
         super(clock);
         this.rootPath = rootPagePath;
     }

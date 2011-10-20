@@ -4,6 +4,8 @@ package fitnesse.responders.refactoring;
 
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.components.MovedPageReferenceRenamer;
 import fitnesse.components.ReferenceRenamer;
@@ -21,8 +23,8 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
     private String newParentName;
 
     @Inject
-    public MovePageResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public MovePageResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        super(htmlPageFactory, root);
     }
 
     @Override

@@ -3,7 +3,9 @@
 package fitnesse.authentication;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
@@ -23,6 +25,7 @@ public class AuthenticatorTest extends FitnesseBaseTestCase {
     private Class<? extends Responder> responderType;
     private DummySecureResponder privilegedResponder;
     private FitNesseContext context;
+    private WikiPage root;
 
     class DummySecureResponder implements SecureResponder {
 
@@ -37,16 +40,16 @@ public class AuthenticatorTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(FitNesseContext context) {
+    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        WikiPage root = context.root;
         WikiPage frontpage = root.addChildPage("FrontPage");
         makeReadSecure(frontpage);
-        authenticator = new SimpleAuthenticator();
+        authenticator = new SimpleAuthenticator(root);
         privilegedResponder = new DummySecureResponder();
 
         request = new MockRequest();

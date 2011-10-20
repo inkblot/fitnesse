@@ -34,12 +34,13 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                                final FitNesseContext fitNesseContext,
                                final WikiPage page,
-                               final ResultsListener resultsListener) {
+                               final ResultsListener resultsListener,
+                               WikiPage root) {
         this.testPagesToRun = testPagesToRun;
         this.resultsListener = resultsListener;
         this.page = page;
         this.fitNesseContext = fitNesseContext;
-        surrounder = new PageListSetUpTearDownSurrounder(fitNesseContext.root);
+        surrounder = new PageListSetUpTearDownSurrounder(root);
     }
 
     public void setDebug(boolean isDebug) {

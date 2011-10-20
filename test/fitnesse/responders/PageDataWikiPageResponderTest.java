@@ -22,7 +22,7 @@ public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
@@ -35,7 +35,7 @@ public class PageDataWikiPageResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testGetPageData() throws Exception {
-        Responder responder = new PageDataWikiPageResponder(htmlPageFactory);
+        Responder responder = new PageDataWikiPageResponder(htmlPageFactory, root);
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
         request.addInput("pageData", "");

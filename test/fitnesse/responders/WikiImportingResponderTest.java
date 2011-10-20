@@ -3,7 +3,9 @@
 package fitnesse.responders;
 
 import com.google.inject.*;
+import com.google.inject.name.Names;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -26,17 +28,18 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     private WikiImportingResponder responder;
     private String remoteUrl;
     private HtmlPageFactory htmlPageFactory;
-    private Authenticator authenticator;
+    private Authenticator remoteAuthenticator;
+    private WikiPage root;
 
     @Override
-    protected Module getOverrideModule() {
+    protected Module getRemoteOverrides() {
         return new AbstractModule() {
             @Override
             protected void configure() {
                 bind(Authenticator.class).toProvider(new Provider<Authenticator>() {
                     @Override
                     public Authenticator get() {
-                        return authenticator;
+                        return remoteAuthenticator;
                     }
                 });
             }
@@ -46,15 +49,16 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     @Before
     public void setUp() throws Exception {
         htmlPageFactory = localInjector.getInstance(HtmlPageFactory.class);
-        authenticator = new PromiscuousAuthenticator();
+        root = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
+        remoteAuthenticator = new PromiscuousAuthenticator(remoteRoot);
         fitNesseUtil.startFitnesse(remoteContext);
         remoteUrl = FitNesseUtil.URL;
 
-        responder = createResponder(htmlPageFactory);
+        responder = createResponder(htmlPageFactory, root);
     }
 
-    private static WikiImportingResponder createResponder(HtmlPageFactory htmlPageFactory) throws Exception {
-        WikiImportingResponder responder = new WikiImportingResponder(htmlPageFactory);
+    private static WikiImportingResponder createResponder(HtmlPageFactory htmlPageFactory, WikiPage root) throws Exception {
+        WikiImportingResponder responder = new WikiImportingResponder(htmlPageFactory, root);
         ChunkedResponse response = new ChunkedResponse("html");
         response.readyToSend(new MockResponseSender());
         responder.setResponse(response);
@@ -166,7 +170,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         sender.doSending(response);
 
         // import a second time... nothing was modified
-        WikiImportingResponder secondResponder = createResponder(htmlPageFactory);
+        WikiImportingResponder secondResponder = createResponder(htmlPageFactory, root);
         response = makeSampleResponse(remoteUrl, secondResponder, localContext);
         sender = new MockResponseSender();
         sender.doSending(response);
@@ -253,7 +257,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         PageData data = page.getData();
         data.setAttribute(PageData.PropertySECURE_READ);
         page.commit(data);
-        authenticator = new OneUserAuthenticator("joe", "blow");
+        remoteAuthenticator = new OneUserAuthenticator("joe", "blow", remoteRoot);
     }
 
     private void checkRemoteLoginForm(String content) {

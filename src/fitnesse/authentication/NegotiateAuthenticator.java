@@ -3,7 +3,7 @@ package fitnesse.authentication;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.components.Base64;
 import fitnesse.html.HtmlPage;
@@ -12,6 +12,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.WikiPage;
 import org.ietf.jgss.*;
 import util.ImpossibleException;
 
@@ -68,16 +69,16 @@ public class NegotiateAuthenticator extends Authenticator {
     protected GSSManager manager;
     protected GSSCredential serverCreds;
 
-    public NegotiateAuthenticator(GSSManager manager, Properties properties) throws Exception {
-        super();
+    public NegotiateAuthenticator(GSSManager manager, Properties properties, WikiPage root) throws Exception {
+        super(root);
         this.manager = manager;
         configure(properties);
         initServiceCredentials();
     }
 
     @Inject
-    public NegotiateAuthenticator(@Named(FitNeseModule.PROPERTIES_FILE) Properties properties) throws Exception {
-        this(GSSManager.getInstance(), properties);
+    public NegotiateAuthenticator(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) throws Exception {
+        this(GSSManager.getInstance(), properties, root);
     }
 
     protected void initServiceCredentials() throws Exception {

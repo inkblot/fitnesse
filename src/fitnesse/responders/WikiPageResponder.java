@@ -5,7 +5,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -30,21 +30,23 @@ public class WikiPageResponder implements SecureResponder {
     private final Properties properties;
     private final HtmlPageFactory htmlPageFactory;
     private final Clock clock;
+    private final WikiPage root;
 
     @Inject
-    public WikiPageResponder(@Named(FitNeseModule.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
+    public WikiPageResponder(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.properties = properties;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         WikiPagePath path = PathParser.parse(request.getResource());
-        PageCrawler crawler = context.root.getPageCrawler();
+        PageCrawler crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-        WikiPage page = crawler.getPage(context.root, path);
+        WikiPage page = crawler.getPage(root, path);
 
-        if (page == null) return notFoundResponse(context, request, context.root);
+        if (page == null) return notFoundResponse(context, request, root);
 
         PageData pageData = page.getData();
         return makePageResponse(pageData);

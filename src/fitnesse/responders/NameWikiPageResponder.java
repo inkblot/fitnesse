@@ -3,6 +3,8 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.html.HtmlPageFactory;
@@ -15,8 +17,8 @@ import java.util.List;
 
 public class NameWikiPageResponder extends BasicWikiPageResponder {
     @Inject
-    public NameWikiPageResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public NameWikiPageResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        super(htmlPageFactory, root);
     }
 
     protected String contentFrom(WikiPage requestedPage)

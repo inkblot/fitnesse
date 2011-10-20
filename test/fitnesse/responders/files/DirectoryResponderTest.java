@@ -24,7 +24,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     private SampleFileUtility samples;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath, SampleFileUtility samples) {
+    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, SampleFileUtility samples) {
         this.context = context;
         this.rootPagePath = rootPagePath;
         this.samples = samples;

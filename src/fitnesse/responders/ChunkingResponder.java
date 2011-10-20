@@ -11,17 +11,23 @@ import fitnesse.http.Response;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.SocketException;
 
 public abstract class ChunkingResponder implements Responder {
+    private static final Logger logger = LoggerFactory.getLogger(ChunkingResponder.class);
+
     protected Request request;
     protected ChunkedResponse response;
     private boolean dontChunk = false;
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
-    public ChunkingResponder(HtmlPageFactory htmlPageFactory) {
+    public ChunkingResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -31,11 +37,11 @@ public abstract class ChunkingResponder implements Responder {
         if (dontChunk || context.doNotChunk || request.hasInput("nochunk"))
             response.turnOffChunking();
         WikiPagePath path = getWikiPagePath(request);
-        WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+        WikiPage page = root.getPageCrawler().getPage(root, path);
         if (page == null && shouldRespondWith404())
             return pageNotFoundResponse(context, request);
 
-        Thread respondingThread = new Thread(new RespondingRunnable(context, context.root, path, page), getClass() + ": Responding Thread");
+        Thread respondingThread = new Thread(new RespondingRunnable(context, root, path, page), getClass() + ": Responding Thread");
         respondingThread.start();
 
         return response;
@@ -71,7 +77,8 @@ public abstract class ChunkingResponder implements Responder {
         try {
             response.add(ErrorResponder.makeExceptionString(e));
             response.closeAll();
-        } catch (Exception e1) {
+        } catch (RuntimeException e1) {
+            logger.error("An exception occurred while processing an earlier exception", e1);
         }
     }
 

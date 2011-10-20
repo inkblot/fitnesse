@@ -3,7 +3,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
@@ -25,7 +25,7 @@ public class PacketResponderTest extends FitnesseBaseTestCase {
     protected FitNesseContext context;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.context = context;
         this.root = root;
     }
@@ -34,7 +34,7 @@ public class PacketResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new PacketResponder();
+        responder = new PacketResponder(root);
     }
 
     private SimpleResponse makeResponse() throws Exception {

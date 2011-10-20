@@ -31,7 +31,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private Properties properties;
 
     @Inject
-    public void inject(@Named(FitNeseModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.properties = properties;
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
@@ -50,7 +50,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
         final MockRequest request = new MockRequest();
         request.setResource("ChildPage");
 
-        final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock);
+        final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock, root);
         final SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         assertEquals(200, response.getStatus());
@@ -120,7 +120,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private SimpleResponse requestPage(String name) throws Exception {
         final MockRequest request = new MockRequest();
         request.setResource(name);
-        final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock);
+        final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock, root);
         return (SimpleResponse) responder.makeResponse(context, request);
     }
 
@@ -183,7 +183,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testResponderIsSecureReadOperation() throws Exception {
-        final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock);
+        final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock, root);
         final SecureOperation operation = ((SecureResponder) responder).getSecureOperation();
         assertEquals(SecureReadOperation.class, operation.getClass());
     }

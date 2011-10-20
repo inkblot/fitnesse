@@ -1,9 +1,7 @@
 package fitnesse.responders;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
+import com.google.inject.*;
+import com.google.inject.name.Names;
 import fitnesse.*;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
@@ -45,20 +43,19 @@ public class ImporterTestCase {
     @Before
     public void beforeImportTest() throws Exception {
         remoteInjector = Guice.createInjector(override(
-                new FitNeseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/remote", "RooT", 1999, true))
-                .with(getOverrideModule()));
+                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/remote", "RooT", 1999, true))
+                .with(getRemoteOverrides()));
         remoteContext = remoteInjector.getInstance(FitNesseContext.class);
-        remoteRoot = remoteContext.root;
+        remoteRoot = remoteInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         PageCrawler crawler = remoteRoot.getPageCrawler();
         crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
         crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
         crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
 
-        localInjector = Guice.createInjector(override(
-                new FitNeseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseContext.DEFAULT_PORT, true))
-                .with(getOverrideModule()));
+        localInjector = Guice.createInjector(
+                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseContext.DEFAULT_PORT, true));
         localContext = localInjector.getInstance(FitNesseContext.class);
-        localRoot = localContext.root;
+        localRoot = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         pageOne = localRoot.addChildPage("PageOne");
         childPageOne = pageOne.addChildPage("ChildOne");
         pageTwo = localRoot.addChildPage("PageTwo");
@@ -69,7 +66,7 @@ public class ImporterTestCase {
         deleteFileSystemDirectory(TEST_ROOT_PATH);
     }
 
-    protected Module getOverrideModule() {
+    protected Module getRemoteOverrides() {
         return new AbstractModule() {
             @Override
             protected void configure() {

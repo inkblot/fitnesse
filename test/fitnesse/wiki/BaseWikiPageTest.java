@@ -4,7 +4,7 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.After;
 import org.junit.Before;
@@ -23,7 +23,7 @@ public class BaseWikiPageTest extends FitnesseBaseTestCase {
     private BaseWikiPage root;
 
     @Inject
-    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = (BaseWikiPage) root;
     }
 

@@ -9,7 +9,7 @@ public class AuthenticatorSetup {
     private String password;
 
     public String status() {
-        FitnesseFixtureContext.authenticator = new OneUserAuthenticator(username, password);
+        FitnesseFixtureContext.authenticator = new OneUserAuthenticator(username, password, FitnesseFixtureContext.root);
         return "ok";
     }
 

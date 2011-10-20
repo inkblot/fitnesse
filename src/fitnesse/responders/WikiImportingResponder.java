@@ -3,7 +3,9 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
@@ -27,8 +29,8 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public WikiImportingResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public WikiImportingResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        super(htmlPageFactory, root);
         this.htmlPageFactory = htmlPageFactory;
     }
 

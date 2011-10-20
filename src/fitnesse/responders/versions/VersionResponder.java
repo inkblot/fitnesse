@@ -3,7 +3,9 @@
 package fitnesse.responders.versions;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -22,10 +24,12 @@ public class VersionResponder implements SecureResponder {
     private String version;
     private String resource;
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
     @Inject
-    public VersionResponder(HtmlPageFactory htmlPageFactory) {
+    public VersionResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -34,9 +38,9 @@ public class VersionResponder implements SecureResponder {
         if (version == null)
             return new ErrorResponder("No version specified.", htmlPageFactory).makeResponse(context, request);
 
-        PageCrawler pageCrawler = context.root.getPageCrawler();
+        PageCrawler pageCrawler = root.getPageCrawler();
         WikiPagePath path = PathParser.parse(resource);
-        WikiPage page = pageCrawler.getPage(context.root, path);
+        WikiPage page = pageCrawler.getPage(root, path);
         if (page == null)
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         PageData pageData = page.getDataVersion(version);

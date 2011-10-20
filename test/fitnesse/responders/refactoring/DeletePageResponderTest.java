@@ -2,9 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.refactoring;
 
-import com.google.inject.Inject;
 import fitnesse.Responder;
-import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
@@ -75,6 +73,6 @@ public class DeletePageResponderTest extends ResponderTestCase {
 
     @Override
     protected Responder responderInstance() {
-        return new DeletePageResponder(htmlPageFactory);
+        return new DeletePageResponder(htmlPageFactory, root);
     }
 }

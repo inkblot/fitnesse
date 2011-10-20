@@ -5,7 +5,7 @@ package fitnesse.wiki;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.SimpleCachingPage;
@@ -26,7 +26,7 @@ public class VirtualCouplingExtensionTest extends FitnesseBaseTestCase {
     private FitNesseContext context;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.context = context;
         this.root = root;
     }

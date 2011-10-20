@@ -4,7 +4,7 @@ package fitnesse.responders;
 
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.After;
@@ -140,7 +140,7 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
 
     @Test
     public void testImportingWiki() throws Exception {
-        localRoot = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNeseModule.ROOT_PAGE)));
+        localRoot = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         importer.importWiki(localRoot);
 
         assertEquals(2, localRoot.getChildren().size());

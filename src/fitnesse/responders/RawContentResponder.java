@@ -3,7 +3,9 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -18,16 +20,18 @@ import fitnesse.wiki.WikiPagePath;
 
 public class RawContentResponder implements SecureResponder {
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
     @Inject
-    public RawContentResponder(HtmlPageFactory htmlPageFactory) {
+    public RawContentResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         String resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
-        WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+        WikiPage page = root.getPageCrawler().getPage(root, path);
         if (page == null)
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         PageData pageData = page.getData();

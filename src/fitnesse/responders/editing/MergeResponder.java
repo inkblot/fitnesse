@@ -27,18 +27,20 @@ public class MergeResponder implements Responder {
     private static final String OLD_CONTENT_INPUT_NAME = "oldContent";
     private final HtmlPageFactory htmlPageFactory;
     private final Clock clock;
+    private final WikiPage root;
 
-    public MergeResponder(Request request, HtmlPageFactory htmlPageFactory, Clock clock) {
+    public MergeResponder(Request request, HtmlPageFactory htmlPageFactory, Clock clock, WikiPage root) {
         this.request = request;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         resource = this.request.getResource();
         WikiPagePath path = PathParser.parse(resource);
-        WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+        WikiPage page = root.getPageCrawler().getPage(root, path);
         existingContent = page.getData().getContent();
         newContent = (String) this.request.getInput(EditResponder.CONTENT_INPUT_NAME);
 

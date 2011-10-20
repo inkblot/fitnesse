@@ -5,8 +5,8 @@ package fitnesse.updates;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
+import fitnesse.wiki.WikiPage;
 import util.FileUtil;
 
 import java.io.File;
@@ -20,14 +20,17 @@ public class UpdaterImplementation extends UpdaterBase {
     private ArrayList<String> updateDoNotCopyOver = new ArrayList<String>();
     private ArrayList<String> updateList = new ArrayList<String>();
     private String fitNesseVersion = FitNesse.VERSION.toString();
-    private final FitNesseContext context;
     private final String rootPath;
+    private final WikiPage root;
 
     @Inject
-    public UpdaterImplementation(FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNeseModule.ROOT_PATH) String rootPath) throws IOException {
+    public UpdaterImplementation(
+            @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath,
+            @Named(FitNesseModule.ROOT_PATH) String rootPath,
+            @Named(FitNesseModule.ROOT_PAGE) WikiPage root) throws IOException {
         super(rootPagePath);
-        this.context = context;
         this.rootPath = rootPath;
+        this.root = root;
         createUpdateAndDoNotCopyOverLists();
         updates = makeAllUpdates();
     }
@@ -63,7 +66,7 @@ public class UpdaterImplementation extends UpdaterBase {
 
     public String getCorrectPathForTheDestination(String updatableFile) {
         if (updatableFile.startsWith("FitNesseRoot"))
-            updatableFile = updatableFile.replace("FitNesseRoot", context.root.getName());
+            updatableFile = updatableFile.replace("FitNesseRoot", root.getName());
         return FileUtil.getPathOfFile(updatableFile);
     }
 

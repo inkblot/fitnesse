@@ -3,7 +3,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -31,7 +31,7 @@ public abstract class SerializedPageResponderTestCase extends FitnesseBaseTestCa
     protected HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
@@ -58,7 +58,7 @@ public abstract class SerializedPageResponderTestCase extends FitnesseBaseTestCa
     }
 
     protected Object getObject() throws Exception {
-        Responder responder = new SerializedPageResponder(htmlPageFactory);
+        Responder responder = new SerializedPageResponder(htmlPageFactory, root);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
 
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(response.getContentBytes()));

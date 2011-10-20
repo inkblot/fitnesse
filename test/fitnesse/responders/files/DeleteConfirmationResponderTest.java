@@ -20,7 +20,7 @@ public class DeleteConfirmationResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.rootPagePath = rootPagePath;

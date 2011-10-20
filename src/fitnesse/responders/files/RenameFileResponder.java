@@ -5,7 +5,7 @@ package fitnesse.responders.files;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -20,7 +20,7 @@ public class RenameFileResponder implements SecureResponder {
     private final String rootPagePath;
 
     @Inject
-    public RenameFileResponder(@Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public RenameFileResponder(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
     }
 

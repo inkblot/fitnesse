@@ -3,7 +3,9 @@
 package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
@@ -25,16 +27,18 @@ public class SymbolicLinkResponder implements Responder {
     private PageCrawler crawler;
     private WikiPage page;
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
     @Inject
-    public SymbolicLinkResponder(HtmlPageFactory htmlPageFactory) {
+    public SymbolicLinkResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         resource = request.getResource();
-        crawler = context.root.getPageCrawler();
-        page = crawler.getPage(context.root, PathParser.parse(resource));
+        crawler = root.getPageCrawler();
+        page = crawler.getPage(root, PathParser.parse(resource));
         if (page == null)
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
 

@@ -1,7 +1,9 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
@@ -24,10 +26,12 @@ public class AddChildPageResponder implements SecureResponder {
     private String childContent;
     private String pageType;
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
     @Inject
-    public AddChildPageResponder(HtmlPageFactory htmlPageFactory) {
+    public AddChildPageResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public SecureOperation getSecureOperation() {
@@ -35,7 +39,7 @@ public class AddChildPageResponder implements SecureResponder {
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        parseRequest(request, context.root);
+        parseRequest(request, root);
         if (currentPage == null)
             return notFoundResponse(context, request);
         else if (nameIsInvalid(childName))

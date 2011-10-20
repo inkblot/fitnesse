@@ -3,13 +3,14 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import org.junit.After;
@@ -31,25 +32,26 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     private WikiPage childTwo;
     private StandardOutAndErrorRecorder standardOutAndErrorRecorder;
     private HtmlPageFactory htmlPageFactory;
+    private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
         standardOutAndErrorRecorder = new StandardOutAndErrorRecorder();
 
-        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         pageOne = root.addChildPage("PageOne");
         childOne = pageOne.addChildPage("ChildOne");
         childTwo = pageOne.addChildPage("ChildTwo");
 
         importerFactory = new MockWikiImporterFactory();
         eventListener = new WikiImportTestEventListener(importerFactory);
-        testResponder = new MockTestResponder(htmlPageFactory);
-        suiteResponder = new MockSuiteResponder(htmlPageFactory);
+        testResponder = new MockTestResponder(htmlPageFactory, root);
+        suiteResponder = new MockSuiteResponder(htmlPageFactory, root);
     }
 
     @After
@@ -147,8 +149,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     }
 
     private class MockTestResponder extends TestResponder {
-        private MockTestResponder(HtmlPageFactory htmlPageFactory) {
-            super(htmlPageFactory);
+        private MockTestResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
+            super(htmlPageFactory, root);
             response = new ChunkedResponse("html");
         }
 
@@ -162,8 +164,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     }
 
     private class MockSuiteResponder extends SuiteResponder {
-        private MockSuiteResponder(HtmlPageFactory htmlPageFactory) {
-            super(htmlPageFactory);
+        private MockSuiteResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
+            super(htmlPageFactory, root);
             response = new ChunkedResponse("html");
         }
 

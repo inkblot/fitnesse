@@ -5,7 +5,7 @@ package fitnesse.responders.search;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -26,7 +26,7 @@ public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
@@ -44,7 +44,7 @@ public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     public void testResponse() throws Exception {
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
-        WhereUsedResponder responder = new WhereUsedResponder(htmlPageFactory);
+        WhereUsedResponder responder = new WhereUsedResponder(htmlPageFactory, root);
 
         Response response = responder.makeResponse(context, request);
         MockResponseSender sender = new MockResponseSender();

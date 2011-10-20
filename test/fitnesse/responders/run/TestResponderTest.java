@@ -71,7 +71,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
@@ -82,7 +82,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory);
+        responder = new TestResponder(htmlPageFactory, root);
         responder.setFastTest(true);
         receiver = new FitSocketReceiver(context.port, context.socketDealer);
         receiver.receiveSocket();

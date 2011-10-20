@@ -3,7 +3,9 @@
 package fitnesse.responders.versions;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -22,17 +24,19 @@ public class VersionSelectionResponder implements SecureResponder {
     private List<String> ageStrings;
     private String resource;
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
     @Inject
-    public VersionSelectionResponder(HtmlPageFactory htmlPageFactory) {
+    public VersionSelectionResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         SimpleResponse response = new SimpleResponse();
         resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
-        page = context.root.getPageCrawler().getPage(context.root, path);
+        page = root.getPageCrawler().getPage(root, path);
         if (page == null)
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
 

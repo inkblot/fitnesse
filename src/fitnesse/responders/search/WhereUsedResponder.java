@@ -3,6 +3,8 @@
 package fitnesse.responders.search;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.components.WhereUsedPageFinder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.wiki.WikiPage;
@@ -12,8 +14,8 @@ import java.io.IOException;
 public class WhereUsedResponder extends ResultResponder {
 
     @Inject
-    public WhereUsedResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public WhereUsedResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        super(htmlPageFactory, root);
     }
 
     protected void startSearching(WikiPage root, WikiPage page) throws IOException {

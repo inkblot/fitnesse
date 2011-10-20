@@ -23,20 +23,13 @@ public class GuiceHelper {
     static void bindAuthenticator(Binder binder, Properties properties, final String userpass) {
         if (userpass != null) {
             if (new File(userpass).exists()) {
-                binder.bind(Authenticator.class).toProvider(new Provider<Authenticator>() {
-                    @Override
-                    public Authenticator get() {
-                        return new MultiUserAuthenticator(userpass);
-                    }
-                });
+                binder.bind(String.class).annotatedWith(Names.named("fitnesse.auth.multiUser.passwordFile")).toInstance(userpass);
+                binder.bind(Authenticator.class).to(MultiUserAuthenticator.class);
             } else {
                 final String[] values = userpass.split(":");
-                binder.bind(Authenticator.class).toProvider(new Provider<Authenticator>() {
-                    @Override
-                    public Authenticator get() {
-                        return new OneUserAuthenticator(values[0], values[1]);
-                    }
-                });
+                binder.bind(String.class).annotatedWith(Names.named("fitnesse.auth.singleUser.username")).toInstance(values[0]);
+                binder.bind(String.class).annotatedWith(Names.named("fitnesse.auth.singleUser.password")).toInstance(values[1]);
+                binder.bind(Authenticator.class).to(OneUserAuthenticator.class);
             }
         } else {
             bindFromProperty(binder, Authenticator.class, properties);
@@ -75,7 +68,7 @@ public class GuiceHelper {
 
     public static Injector makeContext(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) throws Exception {
         return Guice.createInjector(
-                new FitNeseModule(properties, userpass, rootPath, rootPageName, port, omitUpdates));
+                new FitNesseModule(properties, userpass, rootPath, rootPageName, port, omitUpdates));
     }
 
     public static Injector makeContext(FitNesseMain.Arguments arguments, Properties pluginProperties) throws Exception {

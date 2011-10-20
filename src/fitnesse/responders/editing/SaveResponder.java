@@ -4,7 +4,9 @@ package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
@@ -24,6 +26,7 @@ public class SaveResponder implements SecureResponder {
     private final Provider<ContentFilter> contentFilterProvider;
     private final HtmlPageFactory htmlPageFactory;
     private final Clock clock;
+    private final WikiPage root;
 
     private String user;
     private long ticketId;
@@ -32,22 +35,23 @@ public class SaveResponder implements SecureResponder {
     private long editTimeStamp;
 
     @Inject
-    public SaveResponder(Provider<ContentFilter> contentFilterProvider, HtmlPageFactory htmlPageFactory, Clock clock) {
+    public SaveResponder(Provider<ContentFilter> contentFilterProvider, HtmlPageFactory htmlPageFactory, Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.contentFilterProvider = contentFilterProvider;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         editTimeStamp = getEditTime(request);
         ticketId = getTicketId(request);
         String resource = request.getResource();
-        WikiPage page = getPage(resource, context.root);
+        WikiPage page = getPage(resource, root);
         data = page.getData();
         user = request.getAuthorizationUsername();
 
         if (editsNeedMerge()) {
-            return new MergeResponder(request, htmlPageFactory, clock).makeResponse(context, request);
+            return new MergeResponder(request, htmlPageFactory, clock, root).makeResponse(context, request);
         }
         else {
             savedContent = (String) request.getInput(EditResponder.CONTENT_INPUT_NAME);

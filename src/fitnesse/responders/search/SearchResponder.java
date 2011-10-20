@@ -3,6 +3,8 @@
 package fitnesse.responders.search;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.components.RegularExpressionWikiPageFinder;
 import fitnesse.components.TitleWikiPageFinder;
 import fitnesse.html.HtmlPageFactory;
@@ -18,8 +20,8 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 public class SearchResponder extends ResultResponder {
 
     @Inject
-    public SearchResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public SearchResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        super(htmlPageFactory, root);
     }
 
     private String getSearchString() {

@@ -2,14 +2,20 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.authentication;
 
-import java.util.HashMap;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
+import fitnesse.wiki.WikiPage;
+
 import java.util.Map;
 
 public class MultiUserAuthenticator extends Authenticator {
     private final Map<String, String> users;
     private final PasswordCipher cipher;
 
-    public MultiUserAuthenticator(String passwdFile) {
+    @Inject
+    public MultiUserAuthenticator(@Named("fitnesse.auth.multiUser.passwordFile") String passwdFile, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        super(root);
         PasswordFile passwords = new PasswordFile(passwdFile);
         users = passwords.getPasswordMap();
         cipher = passwords.getCipher();

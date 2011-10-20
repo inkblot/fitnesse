@@ -24,7 +24,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
@@ -33,7 +33,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        root.getPageCrawler().addPage(context.root, PathParser.parse("SimplePage"), "this is SimplePage");
+        root.getPageCrawler().addPage(root, PathParser.parse("SimplePage"), "this is SimplePage");
         request = new MockRequest();
         request.setResource("SimplePage");
         request.addInput(EditResponder.TIME_STAMP, "");
@@ -42,7 +42,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testHtml() throws Exception {
-        Responder responder = new MergeResponder(request, htmlPageFactory, clock);
+        Responder responder = new MergeResponder(request, htmlPageFactory, clock, root);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
         assertHasRegexp("name=\\\"" + EditResponder.CONTENT_INPUT_NAME + "\\\"", response.getContent());
         assertHasRegexp("this is SimplePage", response.getContent());
@@ -55,7 +55,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
         request.addInput("Edit", "On");
         request.addInput("PageType", "Test");
         request.addInput("Search", "On");
-        Responder responder = new MergeResponder(request, htmlPageFactory, clock);
+        Responder responder = new MergeResponder(request, htmlPageFactory, clock, root);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, new MockRequest());
 
         assertHasRegexp("type=\"hidden\"", response.getContent());

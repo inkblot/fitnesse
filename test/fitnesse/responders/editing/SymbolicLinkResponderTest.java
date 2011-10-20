@@ -30,7 +30,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
@@ -46,7 +46,7 @@ public class SymbolicLinkResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource("PageOne");
-        responder = new SymbolicLinkResponder(htmlPageFactory);
+        responder = new SymbolicLinkResponder(htmlPageFactory, root);
     }
 
     @After

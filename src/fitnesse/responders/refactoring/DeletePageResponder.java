@@ -3,7 +3,9 @@
 package fitnesse.responders.refactoring;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -19,10 +21,12 @@ import java.util.List;
 
 public class DeletePageResponder implements SecureResponder {
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
     @Inject
-    public DeletePageResponder(HtmlPageFactory htmlPageFactory) {
+    public DeletePageResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public Response makeResponse(final FitNesseContext context, final Request request) throws Exception {
@@ -37,13 +41,13 @@ public class DeletePageResponder implements SecureResponder {
 
         String confirmedString = (String) request.getInput("confirmed");
         if (!"yes".equals(confirmedString)) {
-            response.setContent(buildConfirmationHtml(context.root, qualifiedPageName));
+            response.setContent(buildConfirmationHtml(root, qualifiedPageName));
             return response;
         }
 
         String nameOfPageToBeDeleted = path.last();
         path.removeNameFromEnd();
-        WikiPage parentOfPageToBeDeleted = context.root.getPageCrawler().getPage(context.root, path);
+        WikiPage parentOfPageToBeDeleted = root.getPageCrawler().getPage(root, path);
         if (parentOfPageToBeDeleted != null) {
             parentOfPageToBeDeleted.removeChildPage(nameOfPageToBeDeleted);
         }

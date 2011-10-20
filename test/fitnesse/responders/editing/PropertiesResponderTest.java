@@ -29,7 +29,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
@@ -53,7 +53,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
 
-        Responder responder = new PropertiesResponder(htmlPageFactory);
+        Responder responder = new PropertiesResponder(htmlPageFactory, root);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals("max-age=0", response.getHeader("Cache-Control"));
 
@@ -92,7 +92,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageOne");
         request.addInput("format", "json");
 
-        Responder responder = new PropertiesResponder(htmlPageFactory);
+        Responder responder = new PropertiesResponder(htmlPageFactory, root);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         assertEquals("text/json", response.getContentType());
         String jsonText = response.getContent();
@@ -150,7 +150,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
     private WikiPage getPropertiesContentFromPage(WikiPage page) throws Exception {
         request = new MockRequest();
         request.setResource(page.getName());
-        responder = new PropertiesResponder(htmlPageFactory);
+        responder = new PropertiesResponder(htmlPageFactory, root);
         SimpleResponse response = (SimpleResponse) responder.makeResponse(context, request);
         content = response.getContent();
         return page;
@@ -277,7 +277,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
     public void testPageTypePropertiesHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
-        String html = new PropertiesResponder(htmlPageFactory).makePageTypeRadiosHtml(data).html();
+        String html = new PropertiesResponder(htmlPageFactory, root).makePageTypeRadiosHtml(data).html();
         assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
         assertSubString("Page type:", html);
         assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Normal\" checked=\"checked\"/> - Normal", html);
@@ -290,7 +290,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
         data.setAttribute("Suite");
-        String html = new PropertiesResponder(htmlPageFactory).makePageTypeRadiosHtml(data).html();
+        String html = new PropertiesResponder(htmlPageFactory, root).makePageTypeRadiosHtml(data).html();
         assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
         assertSubString("Page type:", html);
         assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Normal\"/> - Normal", html);
@@ -303,7 +303,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
         data.setAttribute("Test");
-        String html = new PropertiesResponder(htmlPageFactory).makePageTypeRadiosHtml(data).html();
+        String html = new PropertiesResponder(htmlPageFactory, root).makePageTypeRadiosHtml(data).html();
         assertSubString("<div style=\"float: left; width: 150px;\">Page type:", html);
         assertSubString("Page type:", html);
         assertSubString("<input type=\"radio\" name=\"PageType\" value=\"Normal\"/> - Normal", html);
@@ -315,7 +315,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
     public void testActionPropertiesHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
-        String html = new PropertiesResponder(htmlPageFactory).makeTestActionCheckboxesHtml(data).html();
+        String html = new PropertiesResponder(htmlPageFactory, root).makeTestActionCheckboxesHtml(data).html();
         assertSubString("<div style=\"float: left; width: 180px;\">Actions:", html);
         assertSubString("Actions:", html);
         assertSubString("<input type=\"checkbox\" name=\"Edit\" checked=\"true\"/> - Edit", html);
@@ -329,7 +329,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
     public void testMakeNavigationPropertiesHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
-        String html = new PropertiesResponder(htmlPageFactory).makeNavigationCheckboxesHtml(data).html();
+        String html = new PropertiesResponder(htmlPageFactory, root).makeNavigationCheckboxesHtml(data).html();
         assertSubString("<div style=\"float: left; width: 180px;\">Navigation:", html);
         assertSubString("<input type=\"checkbox\" name=\"Files\" checked=\"true\"/> - Files", html);
         assertSubString("<input type=\"checkbox\" name=\"RecentChanges\" checked=\"true\"/> - RecentChanges", html);
@@ -341,7 +341,7 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
     public void testMakeSecurityPropertiesHtml() throws Exception {
         WikiPage page = root.addChildPage("SomePage");
         PageData data = page.getData();
-        String html = new PropertiesResponder(htmlPageFactory).makeSecurityCheckboxesHtml(data).html();
+        String html = new PropertiesResponder(htmlPageFactory, root).makeSecurityCheckboxesHtml(data).html();
         assertSubString("<div style=\"float: left; width: 180px;\">Security:", html);
         assertSubString("<input type=\"checkbox\" name=\"secure-read\"/> - secure-read", html);
         assertSubString("<input type=\"checkbox\" name=\"secure-write\"/> - secure-write", html);

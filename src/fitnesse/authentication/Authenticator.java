@@ -6,9 +6,16 @@ import com.google.inject.ImplementedBy;
 import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.http.Request;
+import fitnesse.wiki.WikiPage;
 
 @ImplementedBy(PromiscuousAuthenticator.class)
 public abstract class Authenticator {
+
+    private final WikiPage root;
+
+    public Authenticator(WikiPage root) {
+        this.root = root;
+    }
 
     public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) throws Exception {
         request.getCredentials();
@@ -26,7 +33,7 @@ public abstract class Authenticator {
     private Responder verifyOperationIsSecure(Responder privilegedResponder, FitNesseContext context, Request request) {
         SecureOperation so = ((SecureResponder) privilegedResponder).getSecureOperation();
         try {
-            if (so.shouldAuthenticate(context.root, request))
+            if (so.shouldAuthenticate(root, request))
                 return unauthorizedResponder(context, request);
             else
                 return privilegedResponder;

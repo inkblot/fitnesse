@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -18,7 +18,7 @@ public class SuiteFilterTestCase extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

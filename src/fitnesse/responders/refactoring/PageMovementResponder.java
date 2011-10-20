@@ -25,9 +25,11 @@ public abstract class PageMovementResponder implements SecureResponder {
     protected WikiPage newParentPage;
     protected WikiPagePath newParentPath;
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
-    public PageMovementResponder(HtmlPageFactory htmlPageFactory) {
+    public PageMovementResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     protected abstract boolean getAndValidateNewParentPage(Request request, WikiPage root) throws IOException;
@@ -43,11 +45,11 @@ public abstract class PageMovementResponder implements SecureResponder {
     protected abstract void execute() throws Exception;
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
-        if (!getAndValidateRefactoredPage(request, context.root)) {
+        if (!getAndValidateRefactoredPage(request, root)) {
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         }
 
-        if (!getAndValidateNewParentPage(request, context.root)) {
+        if (!getAndValidateNewParentPage(request, root)) {
             return makeErrorMessageResponder(newParentPath == null ? "null" : newParentPath.toString() + " does not exist.").makeResponse(context, request);
         }
 
@@ -60,7 +62,7 @@ public abstract class PageMovementResponder implements SecureResponder {
         }
 
         if (request.hasInput("refactorReferences")) {
-            getReferenceRenamer(context.root).renameReferences();
+            getReferenceRenamer(root).renameReferences();
         }
         execute();
 

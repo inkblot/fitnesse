@@ -5,7 +5,7 @@ package fitnesse.wikitext.widgets;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
@@ -24,7 +24,7 @@ public class EvaluatorWidgetTest extends WidgetTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

@@ -3,7 +3,9 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureTestOperation;
@@ -38,8 +40,8 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     private final HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public TestResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public TestResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        super(htmlPageFactory, root);
         this.htmlPageFactory = htmlPageFactory;
         formatters = new CompositeFormatter();
     }
@@ -150,7 +152,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     protected void performExecution(FitNesseContext context, WikiPage root, WikiPage page) throws Exception {
         List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
-        MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters);
+        MultipleTestsRunner runner = new MultipleTestsRunner(test2run, context, page, formatters, root);
         runner.setFastTest(fastTest);
         runner.setDebug(isRemoteDebug());
 

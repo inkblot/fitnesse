@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
@@ -43,7 +43,7 @@ public class ResponderFactory {
     private final HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public ResponderFactory(Injector injector, @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath, HtmlPageFactory htmlPageFactory) {
+    public ResponderFactory(Injector injector, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, HtmlPageFactory htmlPageFactory) {
         this.rootPagePath = rootPagePath;
         this.injector = injector;
         this.htmlPageFactory = htmlPageFactory;

@@ -3,7 +3,9 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
@@ -22,18 +24,20 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     private Exception exception;
     private ChunkedResponse response;
     private FitNesseContext context;
+    private WikiPage root;
     private ChunkingResponder responder;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        responder = new ChunkingResponder(htmlPageFactory) {
+        responder = new ChunkingResponder(htmlPageFactory, root) {
             protected void doSending(FitNesseContext context, WikiPage root, WikiPagePath path, WikiPage page) throws Exception {
                 throw exception;
             }

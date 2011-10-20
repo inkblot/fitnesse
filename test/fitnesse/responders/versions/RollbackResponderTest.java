@@ -21,7 +21,7 @@ public class RollbackResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
@@ -43,7 +43,7 @@ public class RollbackResponderTest extends FitnesseBaseTestCase {
         request.setResource("PageOne");
         request.addInput("version", commitRecord.getName());
 
-        Responder responder = new RollbackResponder(htmlPageFactory);
+        Responder responder = new RollbackResponder(htmlPageFactory, root);
         Response response = responder.makeResponse(context, request);
 
         assertEquals(303, response.getStatus());

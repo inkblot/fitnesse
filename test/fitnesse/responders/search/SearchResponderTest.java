@@ -5,7 +5,7 @@ package fitnesse.responders.search;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -29,7 +29,7 @@ public class SearchResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
@@ -39,7 +39,7 @@ public class SearchResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         PageCrawler crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("SomePage"), "has something in it");
-        responder = new SearchResponder(htmlPageFactory);
+        responder = new SearchResponder(htmlPageFactory, root);
         request = new MockRequest();
         request.addInput("searchString", "blah");
         request.addInput("searchType", "blah");

@@ -1,6 +1,8 @@
 package fitnesse.responders.search;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.components.AttributeWikiPageFinder;
@@ -28,8 +30,8 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     public static final String SPECIAL = "Special";
 
     @Inject
-    public ExecuteSearchPropertiesResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public ExecuteSearchPropertiesResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        super(htmlPageFactory, root);
     }
 
     public SecureOperation getSecureOperation() {

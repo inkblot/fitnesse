@@ -3,7 +3,7 @@ package fitnesse.responders.search;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -36,7 +36,7 @@ public class ExecuteSearchPropertiesResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory,@Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory,@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
@@ -45,7 +45,7 @@ public class ExecuteSearchPropertiesResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
-        responder = new ExecuteSearchPropertiesResponder(htmlPageFactory);
+        responder = new ExecuteSearchPropertiesResponder(htmlPageFactory, root);
     }
 
     @Test

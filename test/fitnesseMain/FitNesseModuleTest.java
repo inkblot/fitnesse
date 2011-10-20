@@ -59,7 +59,7 @@ public class FitNesseModuleTest {
     @Test
     public void testMakeDefaultAuthenticator() throws Exception {
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         Authenticator auth = injector.getInstance(Authenticator.class);
         assertTrue(auth instanceof PromiscuousAuthenticator);
     }
@@ -67,7 +67,7 @@ public class FitNesseModuleTest {
     @Test
     public void testMakeOneUserAuthenticator() throws Exception {
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, "bob:uncle", ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, "bob:uncle", ROOT_PATH, "RooT", 2156, true));
         Authenticator auth = injector.getInstance(Authenticator.class);
         assertTrue(auth instanceof OneUserAuthenticator);
         OneUserAuthenticator oua = (OneUserAuthenticator) auth;
@@ -78,7 +78,7 @@ public class FitNesseModuleTest {
     @Test
     public void testMakeMultiUserAuthenticator() throws Exception {
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, passwordFilename, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, passwordFilename, ROOT_PATH, "RooT", 2156, true));
         Authenticator auth = injector.getInstance(Authenticator.class);
         assertTrue(auth instanceof MultiUserAuthenticator);
     }
@@ -89,7 +89,7 @@ public class FitNesseModuleTest {
         testProperties.setProperty(Authenticator.class.getSimpleName(), SimpleAuthenticator.class.getName());
 
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         Authenticator authenticator = injector.getInstance(Authenticator.class);
 
         assertNotNull(authenticator);
@@ -99,7 +99,7 @@ public class FitNesseModuleTest {
     @Test
     public void testWikiPageClassDefault() {
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         Class wikiPageClass = injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS)));
         assertEquals(wikiPageClass, FileSystemPage.class);
     }
@@ -108,7 +108,7 @@ public class FitNesseModuleTest {
     public void testInMemoryWikiPageClass() {
         testProperties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         Class wikiPageClass = injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS)));
         assertEquals(wikiPageClass, InMemoryPage.class);
     }
@@ -116,7 +116,7 @@ public class FitNesseModuleTest {
     @Test
     public void testShouldUseZipFileRevisionControllerAsDefault() {
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         VersionsController defaultRevisionController = injector.getInstance(VersionsController.class);
         assertEquals(ZipFileVersionsController.class, defaultRevisionController.getClass());
     }
@@ -125,7 +125,7 @@ public class FitNesseModuleTest {
     public void testShouldUseSpecifiedRevisionController() {
         testProperties.setProperty(VersionsController.class.getSimpleName(), NullVersionsController.class.getName());
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         VersionsController defaultRevisionController = injector.getInstance(VersionsController.class);
         assertEquals(NullVersionsController.class, defaultRevisionController.getClass());
     }
@@ -133,7 +133,7 @@ public class FitNesseModuleTest {
     @Test
     public void testDefaultContentFilterCreation() throws Exception {
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         ContentFilter contentFilter = injector.getInstance(ContentFilter.class);
         assertThat(contentFilter, instanceOf(DefaultContentFilter.class));
     }
@@ -142,7 +142,7 @@ public class FitNesseModuleTest {
     public void testOtherContentFilterCreation() throws Exception {
         testProperties.setProperty(ContentFilter.class.getSimpleName(), TestContentFilter.class.getName());
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         ContentFilter contentFilter = injector.getInstance(ContentFilter.class);
         assertThat(contentFilter, instanceOf(TestContentFilter.class));
     }
@@ -156,7 +156,7 @@ public class FitNesseModuleTest {
     @Test
     public void testDefaultHtmlPageFactory() throws Exception {
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         HtmlPageFactory htmlPageFactory = injector.getInstance(HtmlPageFactory.class);
         assertEquals(HtmlPageFactory.class, htmlPageFactory.getClass());
     }
@@ -165,14 +165,14 @@ public class FitNesseModuleTest {
     public void testHtmlPageFactoryCreation() throws Exception {
         testProperties.setProperty(HtmlPageFactory.class.getSimpleName(), TestPageFactory.class.getName());
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         HtmlPageFactory htmlPageFactory = injector.getInstance(HtmlPageFactory.class);
         assertEquals(TestPageFactory.class, htmlPageFactory.getClass());
     }
 
     public static class TestPageFactory extends HtmlPageFactory {
         @Inject
-        public TestPageFactory(@Named(FitNeseModule.PROPERTIES_FILE) Properties p) {
+        public TestPageFactory(@Named(FitNesseModule.PROPERTIES_FILE) Properties p) {
             p.propertyNames();
         }
     }
@@ -180,17 +180,17 @@ public class FitNesseModuleTest {
     @Test
     public void allThingsInjectable() {
         Injector injector = Guice.createInjector(
-                new FitNeseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
+                new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         assertNotNull(injector.getInstance(Authenticator.class));
         assertNotNull(injector.getInstance(VersionsController.class));
         assertNotNull(injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS))));
         assertNotNull(injector.getInstance(FileSystem.class));
-        assertNotNull(injector.getInstance(Key.get(Properties.class, Names.named(FitNeseModule.PROPERTIES_FILE))));
+        assertNotNull(injector.getInstance(Key.get(Properties.class, Names.named(FitNesseModule.PROPERTIES_FILE))));
         assertNotNull(injector.getInstance(FitNesseContext.class));
-        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNeseModule.ROOT_PATH))));
-        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNeseModule.ROOT_PAGE_NAME))));
-        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNeseModule.ROOT_PAGE_PATH))));
-        assertNotNull(injector.getInstance(Key.get(Integer.class, Names.named(FitNeseModule.PORT))));
+        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PATH))));
+        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PAGE_NAME))));
+        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PAGE_PATH))));
+        assertNotNull(injector.getInstance(Key.get(Integer.class, Names.named(FitNesseModule.PORT))));
         assertNotNull(injector.getInstance(WikiPageFactory.class));
         assertNotNull(injector.getInstance(ResponderFactory.class));
         assertNotNull(injector.getInstance(Updater.class));

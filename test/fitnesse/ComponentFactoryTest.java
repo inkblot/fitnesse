@@ -45,7 +45,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
 
     @After
     public void tearDown() throws Exception {
-        final File file = new File(FitNeseModule.PROPERTIES_FILE);
+        final File file = new File(FitNesseModule.PROPERTIES_FILE);
         FileOutputStream out = new FileOutputStream(file);
         out.write("".getBytes());
         out.close();

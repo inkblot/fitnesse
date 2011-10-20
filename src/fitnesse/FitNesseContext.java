@@ -14,15 +14,11 @@ import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
 @Singleton
 public class FitNesseContext {
-    private static final Logger logger = LoggerFactory.getLogger(FitNesseContext.class);
-
     public static final String DEFAULT_PATH = ".";
     public static final String DEFAULT_ROOT = "FitNesseRoot";
     public static final int DEFAULT_PORT = 80;
@@ -32,8 +28,7 @@ public class FitNesseContext {
     public static final String RFC_COMPLIANT_DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
 
     private final Injector injector;
-    public final String rootPath;
-    public final WikiPage root;
+    private final WikiPage root;
     private final String rootPagePath;
     public final int port;
     private final ResponderFactory responderFactory;
@@ -48,16 +43,14 @@ public class FitNesseContext {
 
     @Inject
     public FitNesseContext(
-            @Named(FitNeseModule.ROOT_PATH) String rootPath,
-            @Named(FitNeseModule.ROOT_PAGE_PATH) String rootPagePath,
-            @Named(FitNeseModule.PORT) Integer port,
+            @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath,
+            @Named(FitNesseModule.PORT) Integer port,
             WikiPageFactory wikiPageFactory,
             ResponderFactory responderFactory,
             HtmlPageFactory htmlPageFactory,
             Provider<Authenticator> authenticatorProvider,
             Injector injector,
-            @Named(FitNeseModule.ROOT_PAGE) WikiPage root) throws Exception {
-        this.rootPath = rootPath;
+            @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.rootPagePath = rootPagePath;
         this.port = port;
         this.wikiPageFactory = wikiPageFactory;
@@ -66,11 +59,6 @@ public class FitNesseContext {
         this.authenticatorProvider = authenticatorProvider;
         this.injector = injector;
         this.root = root;
-
-        String absolutePath = new File(this.rootPath).getAbsolutePath();
-        if (!absolutePath.equals(this.rootPath)) {
-            logger.warn("rootPath is not absolute: rootPath=" + this.rootPath + " absolutePath=" + absolutePath, new RuntimeException());
-        }
     }
 
 

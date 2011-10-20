@@ -5,7 +5,7 @@ package fitnesse.responders.run;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -38,7 +38,7 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     }
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
@@ -48,7 +48,7 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory);
+        responder = new TestResponder(htmlPageFactory, root);
 
         receiver = new FitSocketReceiver(context.port, context.socketDealer);
         receiver.receiveSocket();

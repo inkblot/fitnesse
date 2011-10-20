@@ -8,7 +8,7 @@ import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -72,7 +72,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.clockProvider = clockProvider;
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
@@ -94,7 +94,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource(suitePageName);
-        responder = new SuiteResponder(htmlPageFactory);
+        responder = new SuiteResponder(htmlPageFactory, root);
         responder.turnOffChunking();
         responder.setFastTest(true);
 

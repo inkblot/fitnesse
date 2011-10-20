@@ -5,7 +5,7 @@ package fitnesse.wiki;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
@@ -29,7 +29,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(Clock clock, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Clock clock, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
         this.context = context;
         this.root = root;

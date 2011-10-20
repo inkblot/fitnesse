@@ -2,8 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fit.FitProtocol;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.FitClient;
@@ -25,10 +28,16 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     private WikiPage page;
     private boolean shouldIncludePaths;
     private String suiteFilter;
+    private final WikiPage root;
+
+    @Inject
+    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) {
         this.context = context;
-        crawler = context.root.getPageCrawler();
+        crawler = root.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         resource = request.getResource();
         shouldIncludePaths = request.hasInput("includePaths");
@@ -39,15 +48,15 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     public void readyToSend(ResponseSender sender) throws IOException {
         WikiPagePath pagePath = PathParser.parse(resource);
         OutputStream output = sender.getOutputStream();
-        if (!crawler.pageExists(context.root, pagePath))
+        if (!crawler.pageExists(root, pagePath))
             FitProtocol.writeData(notFoundMessage(), output);
         else {
-            page = crawler.getPage(context.root, pagePath);
+            page = crawler.getPage(root, pagePath);
             PageData data = page.getData();
 
             InputStream input = sender.getInputStream();
             if (data.hasAttribute("Suite"))
-                handleSuitePage(input, output, page, context.root);
+                handleSuitePage(input, output, page, root);
             else if (data.hasAttribute("Test"))
                 handleTestPage(input, output, data);
             else
@@ -75,7 +84,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         List<WikiPage> testPages = suiteTestFinder.makePageList();
 
         if (shouldIncludePaths) {
-            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, page, null);
+            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, context, page, null, root);
             String classpath = runner.buildClassPath();
             client.send(classpath);
         }

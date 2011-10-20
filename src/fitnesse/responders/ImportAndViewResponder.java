@@ -3,7 +3,9 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -18,10 +20,12 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 public class ImportAndViewResponder implements SecureResponder, WikiImporterClient {
     private WikiPage page;
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
     @Inject
-    public ImportAndViewResponder(HtmlPageFactory htmlPageFactory) {
+    public ImportAndViewResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -30,7 +34,7 @@ public class ImportAndViewResponder implements SecureResponder, WikiImporterClie
         if (isEmpty(resource))
             resource = "FrontPage";
 
-        loadPage(resource, context.root);
+        loadPage(resource, root);
         if (page == null)
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         loadPageData();

@@ -2,7 +2,10 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -25,13 +28,19 @@ import java.util.regex.Pattern;
 public class RssResponder implements SecureResponder {
     protected Element channelElement;
     private WikiPage contextPage;
+    private final WikiPage root;
+
+    @Inject
+    public RssResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         Document rssDocument = buildRssHeader();
         XmlUtil.addTextNode(rssDocument, channelElement, "title", "FitNesse:");
 
-        contextPage = getContextPage(request, context.root);
-        WikiPage recentChangesPage = context.root.getChildPage("RecentChanges");
+        contextPage = getContextPage(request, root);
+        WikiPage recentChangesPage = root.getChildPage("RecentChanges");
         buildItemReportIfRecentChangesExists(recentChangesPage, rssDocument, request.getResource());
         return responseFrom(rssDocument);
     }

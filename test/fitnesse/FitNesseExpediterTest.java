@@ -6,11 +6,13 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.http.*;
 import fitnesse.http.MockSocket;
+import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,6 +27,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     private FitNesseExpediter expediter;
     private MockSocket socket;
     private FitNesseContext context;
+    private WikiPage root;
     private PipedInputStream clientInput;
     private PipedOutputStream clientOutput;
     private ResponseParser response;
@@ -46,14 +49,15 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(FitNesseContext context) {
+    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.context = context;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
-        authenticator = new PromiscuousAuthenticator();
-        context.root.addChildPage("FrontPage");
+        authenticator = new PromiscuousAuthenticator(root);
+        root.addChildPage("FrontPage");
         socket = new MockSocket();
         expediter = new FitNesseExpediter(context.getInjector(), socket);
     }
@@ -169,6 +173,10 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     }
 
     class StoneWallAuthenticator extends Authenticator {
+        StoneWallAuthenticator() {
+            super(root);
+        }
+
         public Responder authenticate(FitNesseContext context, Request request, Responder privilegedResponder) {
             return context.getInjector().getInstance(UnauthorizedResponder.class);
         }

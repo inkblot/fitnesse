@@ -27,7 +27,7 @@ public class FitNesseMain {
     public static void main(String[] argv) throws Exception {
         try {
             Arguments args = new Arguments(argv);
-            Properties properties = FileUtil.loadProperties(new File(args.getRootPath(), FitNeseModule.PROPERTIES_FILE));
+            Properties properties = FileUtil.loadProperties(new File(args.getRootPath(), FitNesseModule.PROPERTIES_FILE));
             launchFitNesse(args, properties);
             if (args.getCommand() != null) {
                 System.exit(BaseFormatter.finalErrorCount);

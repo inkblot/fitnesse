@@ -3,7 +3,9 @@
 package fitnesse.responders.editing;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -30,10 +32,12 @@ public class PropertiesResponder implements SecureResponder {
     private String resource;
     private SimpleResponse response;
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
     @Inject
-    public PropertiesResponder(HtmlPageFactory htmlPageFactory) {
+    public PropertiesResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request)
@@ -41,10 +45,10 @@ public class PropertiesResponder implements SecureResponder {
         response = new SimpleResponse();
         resource = request.getResource();
         WikiPagePath path = PathParser.parse(resource);
-        PageCrawler crawler = context.root.getPageCrawler();
-        if (!crawler.pageExists(context.root, path))
+        PageCrawler crawler = root.getPageCrawler();
+        if (!crawler.pageExists(root, path))
             crawler.setDeadEndStrategy(new MockingPageCrawler());
-        page = crawler.getPage(context.root, path);
+        page = crawler.getPage(root, path);
         if (page == null)
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
 

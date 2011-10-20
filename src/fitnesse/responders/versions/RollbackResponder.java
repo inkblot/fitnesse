@@ -3,7 +3,9 @@
 package fitnesse.responders.versions;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
@@ -21,10 +23,12 @@ import fitnesse.wiki.WikiPagePath;
 
 public class RollbackResponder implements SecureResponder {
     private final HtmlPageFactory htmlPageFactory;
+    private final WikiPage root;
 
     @Inject
-    public RollbackResponder(HtmlPageFactory htmlPageFactory) {
+    public RollbackResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
@@ -36,7 +40,7 @@ public class RollbackResponder implements SecureResponder {
             return new ErrorResponder("missing version", htmlPageFactory).makeResponse(context, request);
 
         WikiPagePath path = PathParser.parse(resource);
-        WikiPage page = context.root.getPageCrawler().getPage(context.root, path);
+        WikiPage page = root.getPageCrawler().getPage(root, path);
         if (page == null)
             return new NotFoundResponder(htmlPageFactory).makeResponse(context, request);
         PageData data = page.getDataVersion(version);

@@ -5,7 +5,7 @@ package fitnesse.responders.editing;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlTag;
@@ -37,7 +37,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
@@ -55,7 +55,7 @@ public class EditResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
         request = new MockRequest();
-        responder = new EditResponder(getProperties(), htmlPageFactory, clock);
+        responder = new EditResponder(getProperties(), htmlPageFactory, clock, root);
     }
 
     @Test

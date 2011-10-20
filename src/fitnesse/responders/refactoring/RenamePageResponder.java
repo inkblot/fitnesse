@@ -3,6 +3,8 @@
 package fitnesse.responders.refactoring;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import fitnesse.FitNesseModule;
 import fitnesse.components.PageReferenceRenamer;
 import fitnesse.components.ReferenceRenamer;
 import fitnesse.html.HtmlPageFactory;
@@ -15,8 +17,8 @@ public class RenamePageResponder extends PageMovementResponder {
     private String newName;
 
     @Inject
-    public RenamePageResponder(HtmlPageFactory htmlPageFactory) {
-        super(htmlPageFactory);
+    public RenamePageResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        super(htmlPageFactory, root);
     }
 
     @Override

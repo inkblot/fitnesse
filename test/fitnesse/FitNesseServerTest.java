@@ -3,6 +3,7 @@
 package fitnesse;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.http.MockSocket;
 import fitnesse.responders.files.SampleFileUtility;
 import fitnesse.wiki.*;
@@ -21,24 +22,26 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
     private WikiPagePath pageOneTwoPath;
     private FitNesseContext context;
     private SampleFileUtility samples;
+    private WikiPage root;
 
     @Inject
-    public void inject(FitNesseContext context, SampleFileUtility samples) {
+    public void inject(FitNesseContext context, SampleFileUtility samples, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.context = context;
         this.samples = samples;
+        this.root = root;
     }
 
     @Before
     public void setUp() throws Exception {
         pageOnePath = PathParser.parse("PageOne");
         pageOneTwoPath = PathParser.parse("PageOne.PageTwo");
-        crawler = context.root.getPageCrawler();
+        crawler = root.getPageCrawler();
         samples.makeSampleFiles();
     }
 
     @Test
     public void testSimple() throws Exception {
-        crawler.addPage(context.root, PathParser.parse("SomePage"), "some string");
+        crawler.addPage(root, PathParser.parse("SomePage"), "some string");
         String output = getSocketOutput("GET /SomePage HTTP/1.1\r\n\r\n");
         String statusLine = "HTTP/1.1 200 OK\r\n";
         assertTrue("Should have statusLine", Pattern.compile(statusLine, Pattern.MULTILINE).matcher(output).find());
@@ -62,7 +65,7 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
 
     @Test
     public void testSomeOtherPage() throws Exception {
-        crawler.addPage(context.root, pageOnePath, "Page One Content");
+        crawler.addPage(root, pageOnePath, "Page One Content");
         String output = getSocketOutput("GET /PageOne HTTP/1.1\r\n\r\n");
         String expected = "Page One Content";
         assertTrue("Should have page one", hasSubString(expected, output));
@@ -70,8 +73,8 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
 
     @Test
     public void testSecondLevelPage() throws Exception {
-        crawler.addPage(context.root, pageOnePath, "Page One Content");
-        crawler.addPage(context.root, pageOneTwoPath, "Page Two Content");
+        crawler.addPage(root, pageOnePath, "Page One Content");
+        crawler.addPage(root, pageOneTwoPath, "Page Two Content");
         String output = getSocketOutput("GET /PageOne.PageTwo HTTP/1.1\r\n\r\n");
 
         String expected = "Page Two Content";
@@ -80,14 +83,14 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
 
     @Test
     public void testRelativeAndAbsoluteLinks() throws Exception {
-        crawler.addPage(context.root, pageOnePath, "PageOne");
-        crawler.addPage(context.root, pageOneTwoPath, "PageTwo");
+        crawler.addPage(root, pageOnePath, "PageOne");
+        crawler.addPage(root, pageOneTwoPath, "PageTwo");
         String output = getSocketOutput("GET /PageOne.PageTwo HTTP/1.1\r\n\r\n");
         String expected = "href=\"PageOne.PageTwo\".*PageTwo";
         assertTrue("Should have relative link", hasSubString(expected, output));
 
-        crawler.addPage(context.root, PathParser.parse("PageTwo"), "PageTwo at root");
-        crawler.addPage(context.root, PathParser.parse("PageOne.PageThree"), "PageThree has link to .PageTwo at the root");
+        crawler.addPage(root, PathParser.parse("PageTwo"), "PageTwo at root");
+        crawler.addPage(root, PathParser.parse("PageOne.PageThree"), "PageThree has link to .PageTwo at the root");
         output = getSocketOutput("GET /PageOne.PageThree HTTP/1.1\r\n\r\n");
         expected = "href=\"PageTwo\".*[.]PageTwo";
         assertTrue("Should have absolute link", hasSubString(expected, output));

@@ -5,7 +5,7 @@ package fitnesse.responders.editing;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -33,17 +33,19 @@ public class EditResponder implements SecureResponder {
     private final Properties properties;
     private final HtmlPageFactory htmlPageFactory;
     private final Clock clock;
+    private final WikiPage root;
 
     @Inject
-    public EditResponder(@Named(FitNeseModule.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock) {
+    public EditResponder(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.properties = properties;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws IOException {
         boolean nonExistent = request.hasInput("nonExistent");
-        return doMakeResponse(request, nonExistent, context.root, htmlPageFactory, getDefaultPageContent(), clock);
+        return doMakeResponse(request, nonExistent, root, htmlPageFactory, getDefaultPageContent(), clock);
     }
 
     private String getDefaultPageContent() {

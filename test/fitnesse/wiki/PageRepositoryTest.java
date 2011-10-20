@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.name.Named;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class PageRepositoryTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage rootPage) {
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage rootPage) {
         this.rootPage = (FileSystemPage) rootPage;
     }
 

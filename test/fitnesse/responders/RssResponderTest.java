@@ -40,7 +40,7 @@ public class RssResponderTest extends ResponderTestCase {
 
     // Return an instance of the Responder being tested.
     protected Responder responderInstance() {
-        return new RssResponder();
+        return new RssResponder(root);
     }
 
     @Before
@@ -124,7 +124,7 @@ public class RssResponderTest extends ResponderTestCase {
         SimpleDateFormat newFormat = new SimpleDateFormat(FitNesseContext.RFC_COMPLIANT_DATE_FORMAT);
         String inDate = oldFormat.format(clock.currentClockDate());
         String outDate = newFormat.format(clock.currentClockDate());
-        RssResponder responder = new RssResponder();
+        RssResponder responder = new RssResponder(root);
         String convertedDate = responder.convertDateFormat(inDate);
         assertEquals(convertedDate, outDate);
     }
@@ -133,7 +133,7 @@ public class RssResponderTest extends ResponderTestCase {
     public void testBadDateFormat() throws Exception {
         SimpleDateFormat oldFormat = new SimpleDateFormat("h:mm:ss a EEE MMM dd, yyyy");
         String inDate = oldFormat.format(clock.currentClockDate());
-        RssResponder responder = new RssResponder();
+        RssResponder responder = new RssResponder(root);
         String convertedDate = responder.convertDateFormat(inDate);
         assertEquals(convertedDate, inDate);
     }

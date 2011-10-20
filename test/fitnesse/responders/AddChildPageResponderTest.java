@@ -25,7 +25,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory,@Named(FitNeseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory,@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.context = context;
@@ -43,7 +43,7 @@ public class AddChildPageResponderTest extends FitnesseBaseTestCase {
         request.addInput("name", childName);
         request.addInput("content", childContent);
         request.addInput("pageType", pagetype);
-        responder = new AddChildPageResponder(htmlPageFactory);
+        responder = new AddChildPageResponder(htmlPageFactory, root);
         path = PathParser.parse("TestPage.ChildPage");
     }
 

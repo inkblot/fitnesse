@@ -13,14 +13,16 @@ import fitnesse.wiki.WikiPagePath;
 // TODO This class could just be "WikiPageResponder" (already exists)
 public abstract class BasicWikiPageResponder extends BasicResponder {
     protected Request request;
+    private final WikiPage root;
 
-    public BasicWikiPageResponder(HtmlPageFactory htmlPageFactory) {
+    public BasicWikiPageResponder(HtmlPageFactory htmlPageFactory, WikiPage root) {
         super(htmlPageFactory);
+        this.root = root;
     }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         this.request = request;
-        WikiPage requestedPage = getRequestedPage(request, context.root);
+        WikiPage requestedPage = getRequestedPage(request, root);
 
         Response response;
         if (requestedPage == null)

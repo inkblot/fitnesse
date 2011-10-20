@@ -5,7 +5,7 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -38,7 +38,7 @@ public class NameWikiPageResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
@@ -47,7 +47,7 @@ public class NameWikiPageResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
-        responder = new NameWikiPageResponder(htmlPageFactory);
+        responder = new NameWikiPageResponder(htmlPageFactory, root);
         request = new MockRequest();
 
         pageOneName = "PageOne";

@@ -36,7 +36,7 @@ public class SaveResponderTest extends FitnesseBaseTestCase {
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Clock clock, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
         this.context = context;
         this.root = root;

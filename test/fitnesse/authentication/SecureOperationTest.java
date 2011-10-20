@@ -4,7 +4,7 @@ package fitnesse.authentication;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNeseModule;
+import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.wiki.*;
@@ -23,7 +23,7 @@ public class SecureOperationTest extends FitnesseBaseTestCase {
     private WikiPagePath childPagePath;
 
     @Inject
-    public void inject(@Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

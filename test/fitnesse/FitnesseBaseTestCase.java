@@ -24,13 +24,13 @@ public abstract class FitnesseBaseTestCase extends BaseInjectedTestCase {
     @Override
     protected Module[] getBaseModules() {
         return new Module[]{
-                new FitNeseModule(getProperties(), getUserPass(), getRootPath(), getRootPageName(), getPort(), true)
+                new FitNesseModule(getProperties(), getUserPass(), getRootPath(), getRootPageName(), getPort(), true)
         };
     }
 
     @After
     public void afterContextualText() {
-        FileUtil.deleteFileSystemDirectory(injector.getInstance(Key.get(String.class, Names.named(FitNeseModule.ROOT_PATH))));
+        FileUtil.deleteFileSystemDirectory(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PATH))));
     }
 
     protected String getUserPass() {

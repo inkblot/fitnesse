@@ -21,7 +21,7 @@ public class VersionResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
@@ -38,7 +38,7 @@ public class VersionResponderTest extends FitnesseBaseTestCase {
         request.setResource(pageName);
         request.addInput("version", oldVersion);
 
-        Responder responder = new VersionResponder(htmlPageFactory);
+        Responder responder = new VersionResponder(htmlPageFactory, root);
         response = (SimpleResponse) responder.makeResponse(context, request);
     }
 

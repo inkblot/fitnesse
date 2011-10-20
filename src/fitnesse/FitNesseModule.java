@@ -10,6 +10,8 @@ import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProviderModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.UtilModule;
 
 import java.io.File;
@@ -21,7 +23,9 @@ import java.util.Properties;
 * Date: 9/28/11
 * Time: 11:53 PM
 */
-public class FitNeseModule extends AbstractModule {
+public class FitNesseModule extends AbstractModule {
+    private static final Logger logger = LoggerFactory.getLogger(FitNesseModule.class);
+
     public static final String ROOT_PAGE = "fitnesse.rootPage";
     public static final String ROOT_PATH = "fitnesse.rootPath";
     public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
@@ -36,7 +40,12 @@ public class FitNeseModule extends AbstractModule {
     private final int port;
     private final boolean omitUpdates;
 
-    public FitNeseModule(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) {
+    public FitNesseModule(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) {
+        String absolutePath = new File(rootPath).getAbsolutePath();
+        if (!absolutePath.equals(rootPath)) {
+            logger.warn("rootPath is not absolute: rootPath=" + rootPath + " absolutePath=" + absolutePath, new RuntimeException());
+        }
+
         this.properties = properties;
         this.userpass = userpass;
         this.rootPath = rootPath;
@@ -47,7 +56,7 @@ public class FitNeseModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Properties.class).annotatedWith(Names.named(FitNeseModule.PROPERTIES_FILE)).toInstance(properties);
+        bind(Properties.class).annotatedWith(Names.named(FitNesseModule.PROPERTIES_FILE)).toInstance(properties);
         GuiceHelper.bindAuthenticator(binder(), properties, userpass);
         GuiceHelper.bindWikiPageClass(binder(), properties);
         GuiceHelper.bindFromProperty(binder(), VersionsController.class, properties);

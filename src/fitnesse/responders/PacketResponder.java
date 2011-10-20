@@ -1,6 +1,9 @@
 package fitnesse.responders;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import fitnesse.FitNesseContext;
+import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -28,14 +31,20 @@ public class PacketResponder implements SecureResponder {
     private JSONObject packet;
     List<JSONObject> tables = new ArrayList<JSONObject>();
     private String jsonpFunction;
+    private final WikiPage root;
+
+    @Inject
+    public PacketResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+        this.root = root;
+    }
 
     public Response makeResponse(FitNesseContext context, Request request) throws Exception {
         response = new SimpleResponse();
         jsonpFunction = (String) request.getInput("jsonp");
         String pageName = request.getResource();
-        PageCrawler pageCrawler = context.root.getPageCrawler();
+        PageCrawler pageCrawler = root.getPageCrawler();
         WikiPagePath resourcePath = PathParser.parse(pageName);
-        page = pageCrawler.getPage(context.root, resourcePath);
+        page = pageCrawler.getPage(root, resourcePath);
 
         if (page == null)
             response.setStatus(404);

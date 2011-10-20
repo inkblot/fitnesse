@@ -31,7 +31,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNeseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.context = context;
         this.root = root;
@@ -62,7 +62,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
         createSimpleVirtualLink();
 
         // new request to get rid of the virtual wiki link
-        SavePropertiesResponder responder = new SavePropertiesResponder(htmlPageFactory);
+        SavePropertiesResponder responder = new SavePropertiesResponder(htmlPageFactory, root);
         request = new MockRequest();
         request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, "");
         request.setResource("LinkerPage");
@@ -92,7 +92,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
         assertTrue(!(extension.getVirtualCoupling() instanceof NullVirtualCouplingPage));
 
         // new request to get rid of the virtual wiki link
-        SavePropertiesResponder responder = new SavePropertiesResponder(htmlPageFactory);
+        SavePropertiesResponder responder = new SavePropertiesResponder(htmlPageFactory, root);
         request = new MockRequest();
         request.addInput(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "LinkeePageTwo");
         request.setResource("LinkerPage");
@@ -105,7 +105,7 @@ public class SavePropertiesResponderTest extends FitnesseBaseTestCase {
     public void testResponse() throws Exception {
         createRequest();
 
-        Responder responder = new SavePropertiesResponder(htmlPageFactory);
+        Responder responder = new SavePropertiesResponder(htmlPageFactory, root);
         Response response = responder.makeResponse(context, request);
 
         PageData data = page.getData();

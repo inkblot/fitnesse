@@ -4,7 +4,6 @@ package fitnesse.responders.search;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.components.WhereUsedPageFinder;
 import fitnesse.html.HtmlPageFactory;
@@ -16,8 +15,8 @@ import java.io.IOException;
 public class WhereUsedResponder extends ResultResponder {
 
     @Inject
-    public WhereUsedResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
-        super(htmlPageFactory, root, context, runningTestingTracker);
+    public WhereUsedResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
+        super(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
     }
 
     protected void startSearching(WikiPage root, WikiPage page) throws IOException {

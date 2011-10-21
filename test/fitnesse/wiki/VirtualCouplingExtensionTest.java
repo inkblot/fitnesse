@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
@@ -23,19 +22,17 @@ public class VirtualCouplingExtensionTest extends FitnesseBaseTestCase {
     public BaseWikiPage page1;
     public WikiPage page2;
     private PageCrawler crawler;
-    private FitNesseContext context;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
         this.root = root;
+        this.fitNesseUtil = fitNesseUtil;
     }
 
     @Before
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
-        fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse();
 
         page2 = crawler.addPage(root, PathParser.parse("PageTwo"), "page two");
         crawler.addPage(page2, PathParser.parse("PageTwoChild"), "page two child");

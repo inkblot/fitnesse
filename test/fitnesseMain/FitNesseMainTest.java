@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesseMain;
 
-import com.google.inject.Inject;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import fitnesse.*;
@@ -18,19 +17,12 @@ import static org.mockito.Mockito.*;
 
 public class FitNesseMainTest extends FitnesseBaseTestCase {
 
-    private FitNesseContext context;
-
-    @Inject
-    public void inject(FitNesseContext context) {
-        this.context = context;
-    }
-
     @Test
     public void testInstallOnly() throws Exception {
         FitNesseMain.Arguments args = new FitNesseMain.Arguments();
         args.setInstallOnly(true);
         FitNesse fitnesse = mock(FitNesse.class);
-        FitNesseMain.updateAndLaunch(args, context, fitnesse, null);
+        FitNesseMain.updateAndLaunch(args, injector, fitnesse, null);
         verify(fitnesse, never()).start();
         verify(fitnesse, times(1)).applyUpdates();
     }
@@ -41,7 +33,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
         args.setCommand("command");
         FitNesse fitnesse = mock(FitNesse.class);
         when(fitnesse.start()).thenReturn(true);
-        FitNesseMain.updateAndLaunch(args, context, fitnesse, null);
+        FitNesseMain.updateAndLaunch(args, injector, fitnesse, null);
         verify(fitnesse, times(1)).applyUpdates();
         verify(fitnesse, times(1)).start();
         verify(fitnesse, times(1)).executeSingleCommand("command", System.out);

@@ -4,7 +4,6 @@ package fitnesse.responders.search;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -25,15 +24,13 @@ import static util.RegexAssertions.assertSubString;
 public class SearchResponderTest extends FitnesseBaseTestCase {
     private SearchResponder responder;
     private MockRequest request;
-    private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
     private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
         this.runningTestingTracker = runningTestingTracker;
     }
@@ -42,7 +39,7 @@ public class SearchResponderTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         PageCrawler crawler = root.getPageCrawler();
         crawler.addPage(root, PathParser.parse("SomePage"), "has something in it");
-        responder = new SearchResponder(htmlPageFactory, root, context, runningTestingTracker);
+        responder = new SearchResponder(htmlPageFactory, root, runningTestingTracker, isChunkingEnabled());
         request = new MockRequest();
         request.addInput("searchString", "blah");
         request.addInput("searchType", "blah");

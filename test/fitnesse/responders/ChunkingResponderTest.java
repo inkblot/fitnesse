@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -24,23 +23,21 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
 
     private Exception exception;
     private ChunkedResponse response;
-    private FitNesseContext context;
     private WikiPage root;
     private ChunkingResponder responder;
     private HtmlPageFactory htmlPageFactory;
     private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
         this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
     public void setUp() throws Exception {
-        responder = new ChunkingResponder(htmlPageFactory, root, context, runningTestingTracker) {
+        responder = new ChunkingResponder(htmlPageFactory, root, runningTestingTracker, isChunkingEnabled()) {
             protected void doSending(WikiPage root, WikiPagePath path, WikiPage page, RunningTestingTracker runningTestingTracker) throws Exception {
                 throw exception;
             }

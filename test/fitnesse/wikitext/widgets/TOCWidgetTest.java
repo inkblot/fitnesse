@@ -4,7 +4,6 @@ package fitnesse.wikitext.widgets;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
@@ -19,12 +18,12 @@ public class TOCWidgetTest extends WidgetTestCase {
     private WikiPage root;
     private WikiPage parent, parent2, child1P2, child2P2;
     private PageCrawler crawler;
-    private FitNesseContext context;
+    private FitNesseUtil fitNesseUtil;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
         this.root = root;
-        this.context = context;
+        this.fitNesseUtil = fitNesseUtil;
     }
 
     //===================================================[ SetUp / TearDown
@@ -224,8 +223,7 @@ public class TOCWidgetTest extends WidgetTestCase {
         PageData data = page.getData();
         data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "ParenT");
         page.commit(data);
-        FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse();
         try {
             TOCWidget widget = new TOCWidget(new WidgetRoot(page), "!contents\n");
             String html = widget.render();

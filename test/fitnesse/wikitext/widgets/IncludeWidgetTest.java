@@ -4,7 +4,6 @@ package fitnesse.wikitext.widgets;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
@@ -18,18 +17,18 @@ import static util.RegexAssertions.*;
 public class IncludeWidgetTest extends WidgetTestCase {
 
     protected WikiPage root;
+    private FitNesseUtil fitNesseUtil;
     protected WikiPage page1;
     protected WikiPage page2;
     protected WikiPage child1;
     protected WikiPage child2;
     protected WikiPage grandChild1;
     protected PageCrawler crawler;
-    private FitNesseContext context;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
         this.root = root;
+        this.fitNesseUtil = fitNesseUtil;
     }
 
     @Before
@@ -283,8 +282,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
     public void testVirtualInclude() throws Exception {
         String virtualWikiURL = FitNesseUtil.URL + "PageTwo";
         VirtualCouplingExtensionTest.setVirtualWiki(page1, virtualWikiURL);
-        FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse();
         try {
             IncludeWidget widget = createIncludeWidget(page1, ".PageOne.ChildOne");
             String result = widget.render();
@@ -311,8 +309,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
         WikiPage virtualHost = crawler.addPage(alternateRoot, virtualPagePath, "virtual host\n!contents\n");
         VirtualCouplingExtensionTest.setVirtualWiki(virtualHost, virtualWikiURL);
 
-        FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse();
         try {
             WikiPage virtualChild = crawler.getPage(alternateRoot, PathParser.parse("VirtualPage.IncludingPage"));
             PageData data = virtualChild.getData();

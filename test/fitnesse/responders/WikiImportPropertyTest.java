@@ -25,17 +25,16 @@ import static util.RegexAssertions.assertSubString;
 public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private WikiImportProperty property;
     private WikiPage page;
-    private FitNesseContext context;
 
     private Clock clock;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
+        this.fitNesseUtil = fitNesseUtil;
     }
 
     @Before
@@ -120,6 +119,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
 
     // Tests for the rendering of import specific page details
     private WikiPage root;
+    private FitNesseUtil fitNesseUtil;
     private PageCrawler crawler;
 
     public void pageRenderingSetUp() throws Exception {
@@ -142,8 +142,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
         WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
         VirtualCouplingExtensionTest.setVirtualWiki(linkPage, FitNesseUtil.URL + "TargetPage");
 
-        FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse();
         SimpleResponse response = null;
         try {
             response = requestPage("LinkPage.ChildPage");

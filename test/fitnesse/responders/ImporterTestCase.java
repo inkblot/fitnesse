@@ -23,12 +23,10 @@ public class ImporterTestCase {
 
     private final String TEST_ROOT_PATH = TestCaseHelper.getRootPath(getClass().getSimpleName());
 
-    protected FitNesseUtil fitNesseUtil = new FitNesseUtil();
+    protected FitNesseUtil fitNesseUtil;
     protected WikiPage pageOne;
     protected Injector remoteInjector;
-    protected FitNesseContext remoteContext;
     protected WikiPage remoteRoot;
-    protected FitNesseContext localContext;
     protected WikiPage localRoot;
     protected WikiPage childPageOne;
     protected WikiPage pageTwo;
@@ -43,9 +41,8 @@ public class ImporterTestCase {
     @Before
     public void beforeImportTest() throws Exception {
         remoteInjector = Guice.createInjector(override(
-                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/remote", "RooT", 1999, true))
+                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/remote", "RooT", 1999, true, true))
                 .with(getRemoteOverrides()));
-        remoteContext = remoteInjector.getInstance(FitNesseContext.class);
         remoteRoot = remoteInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         PageCrawler crawler = remoteRoot.getPageCrawler();
         crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
@@ -53,8 +50,7 @@ public class ImporterTestCase {
         crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
 
         localInjector = Guice.createInjector(
-                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseConstants.DEFAULT_PORT, true));
-        localContext = localInjector.getInstance(FitNesseContext.class);
+                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseConstants.DEFAULT_PORT, true, true));
         localRoot = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         pageOne = localRoot.addChildPage("PageOne");
         childPageOne = pageOne.addChildPage("ChildOne");

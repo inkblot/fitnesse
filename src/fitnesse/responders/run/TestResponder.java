@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -48,8 +47,9 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
                          @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath,
                          @Named(FitNesseModule.PORT) Integer port,
                          SocketDealer socketDealer,
-                         FitNesseContext context, RunningTestingTracker runningTestingTracker) {
-        super(htmlPageFactory, root, context, runningTestingTracker);
+                         RunningTestingTracker runningTestingTracker,
+                         @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
+        super(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
         this.htmlPageFactory = htmlPageFactory;
         this.testResultsPath = testResultsPath;
         this.port = port;

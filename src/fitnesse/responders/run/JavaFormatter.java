@@ -163,6 +163,7 @@ public class JavaFormatter extends BaseFormatter {
 
     @Override
     public void allTestingComplete(TimeMeasurement totalTimeMeasurement) throws IOException {
+        super.allTestingComplete(totalTimeMeasurement);
         if (isSuite)
             writeSummary(mainPageName);
         if (listener != null)

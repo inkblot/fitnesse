@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -39,7 +38,6 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     private String testResultsPath;
     private Integer port;
     private SocketDealer socketDealer;
-    private FitNesseContext context;
     private RunningTestingTracker runningTestingTracker;
 
     @Inject
@@ -49,14 +47,12 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
             @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath,
             @Named(FitNesseModule.PORT) Integer port,
             SocketDealer socketDealer,
-            FitNesseContext context,
             RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.testResultsPath = testResultsPath;
         this.port = port;
         this.socketDealer = socketDealer;
-        this.context = context;
         this.runningTestingTracker = runningTestingTracker;
     }
 
@@ -70,8 +66,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
         importerFactory = new MockWikiImporterFactory();
         eventListener = new WikiImportTestEventListener(importerFactory);
-        testResponder = new MockTestResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
-        suiteResponder = new MockSuiteResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
+        testResponder = new MockTestResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, isChunkingEnabled());
+        suiteResponder = new MockSuiteResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, isChunkingEnabled());
     }
 
     @After
@@ -170,8 +166,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockTestResponder extends TestResponder {
         private MockTestResponder(HtmlPageFactory htmlPageFactory, WikiPage root, String testResultsPath, Integer port,
-                                  SocketDealer socketDealer, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
-            super(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
+                                  SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, boolean chunkingEnabled) {
+            super(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, chunkingEnabled);
             response = new ChunkedResponse("html");
         }
 
@@ -186,8 +182,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockSuiteResponder extends SuiteResponder {
         public MockSuiteResponder(HtmlPageFactory htmlPageFactory, WikiPage root, String testResultsPath, Integer port,
-                                  SocketDealer socketDealer, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
-            super(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
+                                  SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, boolean chunkingEnabled) {
+            super(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, chunkingEnabled);
             response = new ChunkedResponse("html");
         }
 

@@ -24,12 +24,16 @@ public abstract class FitnesseBaseTestCase extends BaseInjectedTestCase {
     @Override
     protected Module[] getBaseModules() {
         return new Module[]{
-                new FitNesseModule(getProperties(), getUserPass(), getRootPath(), getRootPageName(), getPort(), true)
+                new FitNesseModule(getProperties(), getUserPass(), getRootPath(), getRootPageName(), getPort(), true, isChunkingEnabled())
         };
     }
 
+    protected boolean isChunkingEnabled() {
+        return true;
+    }
+
     @After
-    public void afterContextualText() {
+    public final void afterContextualText() {
         FileUtil.deleteFileSystemDirectory(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PATH))));
     }
 

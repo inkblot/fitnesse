@@ -12,12 +12,10 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class TestSystemTest extends FitnesseBaseTestCase {
-    private FitNesseContext context;
     private WikiPage root;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 
@@ -116,7 +114,7 @@ public class TestSystemTest extends FitnesseBaseTestCase {
 
     @Test
     public void testTestRunnerWithRootPathVariable() throws Exception {
-        context.injector.getInstance(FitNesse.class);
+        injector.getInstance(FitNesse.class);
 
         String specifiedPageText = "!define TEST_RUNNER (${FITNESSE_ROOTPATH}/rubyslim.rb)\n";
         WikiPage specifiedPage = makeTestPage(specifiedPageText);

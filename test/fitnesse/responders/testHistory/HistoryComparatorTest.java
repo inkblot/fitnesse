@@ -20,14 +20,12 @@ import static util.RegexAssertions.assertSubString;
 
 public class HistoryComparatorTest extends FitnesseBaseTestCase {
     private HistoryComparator comparator;
-    public FitNesseContext context;
-    public WikiPage root;
-    public String firstContent;
-    public String secondContent;
+    private WikiPage root;
+    private String firstContent;
+    private String secondContent;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

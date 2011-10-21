@@ -33,6 +33,7 @@ public class FitNesseModule extends AbstractModule {
     public static final String PORT = "fitnesse.port";
     public static final String PROPERTIES_FILE = "plugins.properties";
     public static final String TEST_RESULTS_PATH = "fitnesse.testResultsPath";
+    public static final String ENABLE_CHUNKING = "fitnesse.enableChunking";
 
     private final Properties properties;
     private final String userpass;
@@ -40,8 +41,9 @@ public class FitNesseModule extends AbstractModule {
     private final String rootPageName;
     private final int port;
     private final boolean omitUpdates;
+    private final boolean enableChunking;
 
-    public FitNesseModule(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates) {
+    public FitNesseModule(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates, boolean enableChunking) {
         String absolutePath = new File(rootPath).getAbsolutePath();
         if (!absolutePath.equals(rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + rootPath + " absolutePath=" + absolutePath, new RuntimeException());
@@ -53,6 +55,7 @@ public class FitNesseModule extends AbstractModule {
         this.rootPageName = rootPageName;
         this.port = port;
         this.omitUpdates = omitUpdates;
+        this.enableChunking = enableChunking;
     }
 
     @Override
@@ -74,6 +77,7 @@ public class FitNesseModule extends AbstractModule {
         bind(Integer.class).annotatedWith(Names.named(PORT)).toInstance(port);
         bindUpdater(omitUpdates);
         bind(WikiPage.class).annotatedWith(Names.named(ROOT_PAGE)).toProvider(RootPageProvider.class);
+        bind(Boolean.class).annotatedWith(Names.named(ENABLE_CHUNKING)).toInstance(enableChunking);
     }
 
     private void bindUpdater(boolean omitUpdates) {

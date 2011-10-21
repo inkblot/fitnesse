@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
@@ -19,13 +18,11 @@ public abstract class ResponderTestCase extends FitnesseBaseTestCase {
     protected MockRequest request;
     protected Responder responder;
     protected PageCrawler crawler;
-    protected FitNesseContext context;
     protected HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public final void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, HtmlPageFactory htmlPageFactory) {
+    public final void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, HtmlPageFactory htmlPageFactory) {
         this.root = root;
-        this.context = context;
         this.htmlPageFactory = htmlPageFactory;
     }
 

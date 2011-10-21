@@ -1,14 +1,17 @@
 package fitnesseMain;
 
-import com.google.inject.Injector;
-import com.google.inject.Key;
+import com.google.inject.*;
+import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import fitnesse.*;
+import fitnesse.authentication.Authenticator;
 import fitnesse.components.PluginsClassLoader;
+import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.wiki.PageVersionPruner;
+import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
 import org.slf4j.Logger;
@@ -56,7 +59,6 @@ public class FitNesseMain {
 
         Injector injector = GuiceHelper.makeContext(arguments, properties);
 
-        FitNesseContext context = injector.getInstance(FitNesseContext.class);
         SymbolProvider wikiSymbols = injector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
         ResponderFactory responderFactory = injector.getInstance(ResponderFactory.class);
         FitNesse fitnesse = injector.getInstance(FitNesse.class);
@@ -73,22 +75,21 @@ public class FitNesseMain {
         WikiImportTestEventListener.register();
 
         PageVersionPruner.daysTillVersionsExpire = arguments.getDaysTillVersionsExpire();
-        updateAndLaunch(arguments, context, fitnesse, extraOutput);
+        updateAndLaunch(arguments, injector, fitnesse, extraOutput);
     }
 
-    static void updateAndLaunch(Arguments arguments, FitNesseContext context,
+    static void updateAndLaunch(Arguments arguments, Injector injector,
                                 FitNesse fitnesse, String extraOutput) throws Exception {
         fitnesse.applyUpdates();
         if (!arguments.isInstallOnly()) {
             if (fitnesse.start()) {
                 System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
-                System.out.print(context.toString());
+                System.out.print(injector.getInstance(StartupDescription.class).toString());
                 System.out.println("\tpage version expiration set to "
                         + arguments.getDaysTillVersionsExpire() + " days.");
                 if (extraOutput != null)
                     System.out.print(extraOutput);
                 if (arguments.getCommand() != null) {
-                    context.doNotChunk = true;
                     BaseFormatter.finalErrorCount = 0;
                     System.out.println("Executing command: " + arguments.getCommand());
                     System.out.println("-----Command Output-----");
@@ -212,5 +213,30 @@ public class FitNesseMain {
         public void setCommand(String command) {
             this.command = command;
         }
+    }
+
+    public static class StartupDescription {
+
+        private final String description;
+
+        @Inject
+        public StartupDescription(
+                @Named(FitNesseModule.PORT) Integer port,
+                HtmlPageFactory htmlPageFactory,
+                Provider<Authenticator> authenticatorProvider,
+                @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+            String endl = System.getProperty("line.separator");
+            StringBuilder buffer = new StringBuilder();
+            buffer.append("\t").append("port:              ").append(port).append(endl);
+            buffer.append("\t").append("root page:         ").append(root).append(endl);
+            buffer.append("\t").append("authenticator:     ").append(authenticatorProvider.get()).append(endl);
+            buffer.append("\t").append("html page factory: ").append(htmlPageFactory).append(endl);
+            this.description = buffer.toString();
+        }
+
+        public String toString() {
+            return description;
+        }
+
     }
 }

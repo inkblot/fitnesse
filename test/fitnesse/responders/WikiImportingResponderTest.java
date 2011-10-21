@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.*;
 import com.google.inject.name.Names;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.authentication.Authenticator;
@@ -54,14 +53,15 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         root = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         runningTestingTracker = localInjector.getInstance(RunningTestingTracker.class);
         remoteAuthenticator = new PromiscuousAuthenticator(remoteRoot, remoteInjector);
-        fitNesseUtil.startFitnesse(remoteContext);
+        fitNesseUtil = remoteInjector.getInstance(FitNesseUtil.class);
+        fitNesseUtil.startFitnesse();
         remoteUrl = FitNesseUtil.URL;
 
-        responder = createResponder(htmlPageFactory, root, localContext, runningTestingTracker);
+        responder = createResponder(htmlPageFactory, root, runningTestingTracker, true);
     }
 
-    private static WikiImportingResponder createResponder(HtmlPageFactory htmlPageFactory, WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) throws Exception {
-        WikiImportingResponder responder = new WikiImportingResponder(htmlPageFactory, root, context, runningTestingTracker);
+    private static WikiImportingResponder createResponder(HtmlPageFactory htmlPageFactory, WikiPage root, RunningTestingTracker runningTestingTracker, boolean chunkingEnabled) throws Exception {
+        WikiImportingResponder responder = new WikiImportingResponder(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
         ChunkedResponse response = new ChunkedResponse("html");
         response.readyToSend(new MockResponseSender());
         responder.setResponse(response);
@@ -173,7 +173,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
         sender.doSending(response);
 
         // import a second time... nothing was modified
-        WikiImportingResponder secondResponder = createResponder(htmlPageFactory, root, localContext, runningTestingTracker);
+        WikiImportingResponder secondResponder = createResponder(htmlPageFactory, root, runningTestingTracker, true);
         response = makeSampleResponse(remoteUrl, secondResponder);
         sender = new MockResponseSender();
         sender.doSending(response);

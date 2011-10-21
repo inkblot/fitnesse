@@ -2,7 +2,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
@@ -18,15 +17,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class PacketResponderTest extends FitnesseBaseTestCase {
-    protected WikiPage root;
-    protected MockRequest request;
-    protected Responder responder;
-    protected PageCrawler crawler;
-    protected FitNesseContext context;
+    private WikiPage root;
+    private MockRequest request;
+    private Responder responder;
+    private PageCrawler crawler;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

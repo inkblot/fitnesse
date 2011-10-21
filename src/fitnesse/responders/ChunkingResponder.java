@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders;
 
-import fitnesse.FitNesseContext;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
@@ -22,23 +21,23 @@ public abstract class ChunkingResponder implements Responder {
 
     protected Request request;
     protected ChunkedResponse response;
-    private final boolean dontChunk;
     private final HtmlPageFactory htmlPageFactory;
     private final WikiPage root;
     private RunningTestingTracker runningTestingTracker;
+    private final boolean chunkingEnabled;
 
-    public ChunkingResponder(HtmlPageFactory htmlPageFactory, WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+    public ChunkingResponder(HtmlPageFactory htmlPageFactory, WikiPage root, RunningTestingTracker runningTestingTracker, boolean chunkingEnabled) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.dontChunk = context.doNotChunk;
         this.runningTestingTracker = runningTestingTracker;
+        this.chunkingEnabled = chunkingEnabled;
     }
 
     public Response makeResponse(Request request) throws Exception {
         this.request = request;
         String format = (String) request.getInput("format");
         response = new ChunkedResponse(format);
-        if (dontChunk || request.hasInput("nochunk"))
+        if (!chunkingEnabled || request.hasInput("nochunk"))
             response.turnOffChunking();
         WikiPagePath path = getWikiPagePath(request);
         WikiPage page = root.getPageCrawler().getPage(root, path);

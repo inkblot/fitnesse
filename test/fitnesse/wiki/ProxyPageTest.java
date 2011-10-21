@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
@@ -25,14 +24,13 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private FitNesseUtil fitNesseUtil;
     private Clock clock;
-    private FitNesseContext context;
     private WikiPage root;
 
     @Inject
-    public void inject(Clock clock, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
         this.clock = clock;
-        this.context = context;
         this.root = root;
+        this.fitNesseUtil = fitNesseUtil;
     }
 
     @Before
@@ -47,8 +45,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
         data.setAttribute("Attr1");
         original.commit(data);
 
-        fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse();
 
         proxy = new ProxyPage(original, injector);
         proxy.setTransientValues("localhost", clock.currentClockTimeInMillis());

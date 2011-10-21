@@ -3,7 +3,6 @@
 package fitnesse.runner;
 
 import com.google.inject.Inject;
-import fitnesse.FitNesseContext;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.Request;
 import fitnesse.responders.run.TestSummary;
@@ -30,11 +29,11 @@ public class FormattingOptionTest extends FitnesseBaseTestCase {
     private PageResult result1;
     private PageResult result2;
     private int port = FitNesseUtil.DEFAULT_PORT;
-    private FitNesseContext context;
+    private FitNesseUtil fitNesseUtil;
 
     @Inject
-    public void inject(FitNesseContext context) {
-        this.context = context;
+    public void inject(FitNesseUtil fitNesseUtil) {
+        this.fitNesseUtil = fitNesseUtil;
     }
 
     @Before
@@ -95,8 +94,7 @@ public class FormattingOptionTest extends FitnesseBaseTestCase {
     public void testTheWholeDeal() throws Exception {
         sampleFormatter();
 
-        FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse();
         try {
             option = new FormattingOption("mock", "stdout", output, "localhost", port, "");
             option.process(formatter.getResultStream(), formatter.getByteCount());

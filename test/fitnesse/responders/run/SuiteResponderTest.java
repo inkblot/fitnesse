@@ -7,14 +7,12 @@ import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
 import org.junit.After;
@@ -45,7 +43,6 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     private SocketDealer socketDealer;
     private RunningTestingTracker runningTestingTracker;
     private WikiPage suite;
-    private FitNesseContext context;
     private FitSocketReceiver receiver;
     private PageCrawler crawler;
     private final String fitPassFixture = "|!-fitnesse.testutil.PassFixture-!|\n";
@@ -74,11 +71,15 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
         return 8084;
     }
 
+    @Override
+    protected boolean isChunkingEnabled() {
+        return false;
+    }
+
     @Inject
-    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, RunningTestingTracker runningTestingTracker) {
+    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, RunningTestingTracker runningTestingTracker) {
         this.clockProvider = clockProvider;
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
         this.socketDealer = socketDealer;
         this.runningTestingTracker = runningTestingTracker;
@@ -88,7 +89,6 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         assertEquals(TEST_TIME, clockProvider.get().currentClockDate());
-        context.doNotChunk = true;
 
         String suitePageName = "SuitePage";
 
@@ -101,7 +101,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource(suitePageName);
-        responder = new SuiteResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, context, runningTestingTracker);
+        responder = new SuiteResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, runningTestingTracker, isChunkingEnabled());
         responder.setFastTest(true);
 
         receiver = new FitSocketReceiver(getPort(), socketDealer);
@@ -122,7 +122,6 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     @After
     public void tearDown() throws Exception {
         receiver.close();
-        FitNesseUtil.destroyTestContext();
         assertEquals(TEST_TIME, clockProvider.get().currentClockDate());
     }
 

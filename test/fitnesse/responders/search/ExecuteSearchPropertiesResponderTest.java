@@ -2,7 +2,6 @@ package fitnesse.responders.search;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -33,22 +32,20 @@ public class ExecuteSearchPropertiesResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private PageCrawler crawler;
     private ExecuteSearchPropertiesResponder responder;
-    private FitNesseContext context;
     private RunningTestingTracker runningTestingTracker;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory,@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.context = context;
         this.runningTestingTracker = runningTestingTracker;
     }
 
     @Before
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
-        responder = new ExecuteSearchPropertiesResponder(htmlPageFactory, root, context, runningTestingTracker);
+        responder = new ExecuteSearchPropertiesResponder(htmlPageFactory, root, runningTestingTracker, isChunkingEnabled());
     }
 
     @Test

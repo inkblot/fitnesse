@@ -18,7 +18,8 @@ public class ImportAndViewResponderTest extends ImporterTestCase {
 
     @Before
     public void setUp() throws Exception {
-        fitNesseUtil.startFitnesse(remoteContext);
+        fitNesseUtil = remoteInjector.getInstance(FitNesseUtil.class);
+        fitNesseUtil.startFitnesse();
         responder = localInjector.getInstance(ImportAndViewResponder.class);
     }
 

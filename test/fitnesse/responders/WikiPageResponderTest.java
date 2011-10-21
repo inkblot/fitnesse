@@ -24,19 +24,19 @@ import static util.RegexAssertions.*;
 
 public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
+    private FitNesseUtil fitNesseUtil;
     private PageCrawler crawler;
-    private FitNesseContext context;
     private HtmlPageFactory htmlPageFactory;
     private Clock clock;
     private Properties properties;
 
     @Inject
-    public void inject(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory, FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
         this.properties = properties;
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
-        this.context = context;
         this.root = root;
+        this.fitNesseUtil = fitNesseUtil;
     }
 
     @Before
@@ -142,8 +142,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
         final WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
         VirtualCouplingExtensionTest.setVirtualWiki(linkPage, FitNesseUtil.URL + "TargetPage");
 
-        FitNesseUtil fitNesseUtil = new FitNesseUtil();
-        fitNesseUtil.startFitnesse(context);
+        fitNesseUtil.startFitnesse();
         SimpleResponse response = null;
         try {
             response = requestPage("LinkPage.ChildPage");

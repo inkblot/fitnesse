@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.search;
 
-import fitnesse.FitNesseContext;
 import fitnesse.VelocityFactory;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
@@ -27,8 +26,8 @@ public abstract class ResultResponder extends ChunkingResponder implements
         SearchObserver, SecureResponder {
     private int hits;
 
-    public ResultResponder(HtmlPageFactory htmlPageFactory, WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
-        super(htmlPageFactory, root, context, runningTestingTracker);
+    public ResultResponder(HtmlPageFactory htmlPageFactory, WikiPage root, RunningTestingTracker runningTestingTracker, boolean chunkingEnabled) {
+        super(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
     }
 
     @Override

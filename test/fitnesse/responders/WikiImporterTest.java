@@ -32,7 +32,8 @@ public class WikiImporterTest extends ImporterTestCase implements WikiImporterCl
     @Before
     public void setUp() throws Exception {
         clock = localInjector.getInstance(Clock.class);
-        fitNesseUtil.startFitnesse(remoteContext);
+        fitNesseUtil = remoteInjector.getInstance(FitNesseUtil.class);
+        fitNesseUtil.startFitnesse();
 
         importer = new WikiImporter();
         importer.setWikiImporterClient(this);

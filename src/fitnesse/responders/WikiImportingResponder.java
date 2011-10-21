@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -30,8 +29,8 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public WikiImportingResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
-        super(htmlPageFactory, root, context, runningTestingTracker);
+    public WikiImportingResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
+        super(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
         this.htmlPageFactory = htmlPageFactory;
     }
 

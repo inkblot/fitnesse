@@ -5,7 +5,6 @@ package fitnesse.wikitext.widgets;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesse;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
@@ -21,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 public class WidgetRootTest extends FitnesseBaseTestCase {
     public static final int PORT = 9876;
-    private FitNesseContext context;
     private WikiPage root;
     private PageCrawler crawler;
 
@@ -31,9 +29,8 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
-        this.context = context;
     }
 
     @Before
@@ -154,14 +151,14 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
 
     @Test
     public void testShouldHavePortVariableAvailable() throws Exception {
-        context.injector.getInstance(FitNesse.class);
+        injector.getInstance(FitNesse.class);
         WidgetRoot root = new WidgetRoot("", this.root);
         assertEquals(Integer.toString(PORT), root.getVariable("FITNESSE_PORT"));
     }
 
     @Test
     public void testShouldHaveRootPathVariableAvailable() throws Exception {
-        context.injector.getInstance(FitNesse.class);
+        injector.getInstance(FitNesse.class);
         WidgetRoot root = new WidgetRoot("", this.root);
         assertEquals(getRootPath(), root.getVariable("FITNESSE_ROOTPATH"));
     }

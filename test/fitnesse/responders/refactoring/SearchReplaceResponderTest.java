@@ -2,7 +2,6 @@ package fitnesse.responders.refactoring;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -23,17 +22,15 @@ public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
     private SearchReplaceResponder responder;
     private MockRequest request;
-    private FitNesseContext context;
     private RunningTestingTracker runningTestingTracker;
     private WikiPagePath pagePath;
     private WikiPage somePage;
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.context = context;
         this.runningTestingTracker = runningTestingTracker;
     }
 
@@ -42,7 +39,7 @@ public class SearchReplaceResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         pagePath = PathParser.parse("SomePage");
         somePage = crawler.addPage(root, pagePath, "has something in it");
-        responder = new SearchReplaceResponder(htmlPageFactory, root, context, runningTestingTracker);
+        responder = new SearchReplaceResponder(htmlPageFactory, root, runningTestingTracker, isChunkingEnabled());
         request = new MockRequest();
         request.setResource("SomePage");
     }

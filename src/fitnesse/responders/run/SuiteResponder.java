@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.formatters.*;
@@ -16,8 +15,8 @@ public class SuiteResponder extends TestResponder {
     private boolean includeHtml;
 
     @Inject
-    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
-        super(htmlPageFactory, root, testResultsPath, port, socketDealer, context, runningTestingTracker);
+    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnalbed) {
+        super(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, chunkingEnalbed);
     }
 
     @Override

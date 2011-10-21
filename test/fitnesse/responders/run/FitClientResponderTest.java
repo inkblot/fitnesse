@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
@@ -22,7 +21,6 @@ import static util.RegexAssertions.assertSubString;
 public class FitClientResponderTest extends FitnesseBaseTestCase {
     private FitClientResponder responder;
     private MockRequest request;
-    private FitNesseContext context;
     private PageCrawler crawler;
     private WikiPage suite;
     private WikiPage root;
@@ -30,8 +28,7 @@ public class FitClientResponderTest extends FitnesseBaseTestCase {
     private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker) {
         this.root = root;
         this.socketDealer = socketDealer;
         this.runningTestingTracker = runningTestingTracker;

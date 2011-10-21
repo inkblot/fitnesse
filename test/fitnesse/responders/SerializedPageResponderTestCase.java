@@ -2,7 +2,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
@@ -27,14 +26,12 @@ public abstract class SerializedPageResponderTestCase extends FitnesseBaseTestCa
     protected PageCrawler crawler;
     protected WikiPage root;
     protected MockRequest request;
-    protected FitNesseContext context;
     protected HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.context = context;
     }
 
     protected void doTestWith(Object obj) throws Exception {

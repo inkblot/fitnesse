@@ -6,7 +6,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Updater;
@@ -24,7 +23,6 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
     protected UpdaterBase updater;
     protected WikiPage pageOne;
     protected WikiPage pageTwo;
-    protected FitNesseContext context;
     protected PageCrawler crawler;
 
     @Override
@@ -45,8 +43,7 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(FitNesseContext context, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, Updater updater) {
-        this.context = context;
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, Updater updater) {
         this.root = root;
         this.rootPagePath = rootPagePath;
         this.updater = (UpdaterBase) updater;

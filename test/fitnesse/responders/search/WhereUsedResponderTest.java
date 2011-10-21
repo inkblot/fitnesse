@@ -4,7 +4,6 @@ package fitnesse.responders.search;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseContext;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
@@ -22,16 +21,14 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class WhereUsedResponderTest extends FitnesseBaseTestCase {
-    private FitNesseContext context;
     private RunningTestingTracker runningTestingTracker;
     private HtmlPageFactory htmlPageFactory;
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, RunningTestingTracker runningTestingTracker) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.context = context;
         this.runningTestingTracker = runningTestingTracker;
     }
 
@@ -47,7 +44,7 @@ public class WhereUsedResponderTest extends FitnesseBaseTestCase {
     public void testResponse() throws Exception {
         MockRequest request = new MockRequest();
         request.setResource("PageOne");
-        WhereUsedResponder responder = new WhereUsedResponder(htmlPageFactory, root, context, runningTestingTracker);
+        WhereUsedResponder responder = new WhereUsedResponder(htmlPageFactory, root, runningTestingTracker, isChunkingEnabled());
 
         Response response = responder.makeResponse(request);
         MockResponseSender sender = new MockResponseSender();

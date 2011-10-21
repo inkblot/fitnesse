@@ -13,7 +13,6 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.http.Response;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
@@ -43,7 +42,6 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
     private MockRequest request;
     private TestResponder responder;
-    private FitNesseContext context;
     private SocketDealer socketDealer;
     private Response response;
     private MockResponseSender sender;
@@ -73,11 +71,15 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         return 5067;
     }
 
+    @Override
+    protected boolean isChunkingEnabled() {
+        return false;
+    }
+
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseContext context, SocketDealer socketDealer, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, RunningTestingTracker runningTestingTracker) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.context = context;
         this.socketDealer = socketDealer;
         this.runningTestingTracker = runningTestingTracker;
         this.testResultsPath = new File(testResultsPath);
@@ -85,11 +87,10 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        context.doNotChunk = true;
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, context, runningTestingTracker);
+        responder = new TestResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, runningTestingTracker, isChunkingEnabled());
         responder.setFastTest(true);
         receiver = new FitSocketReceiver(getPort(), socketDealer);
         receiver.receiveSocket();
@@ -102,7 +103,6 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     @After
     public void tearDown() throws Exception {
         receiver.close();
-        FitNesseUtil.destroyTestContext();
     }
 
     @Test

@@ -78,9 +78,7 @@ public class FitNesseMain {
 
     static void updateAndLaunch(Arguments arguments, FitNesseContext context,
                                 FitNesse fitnesse, String extraOutput) throws Exception {
-        if (!arguments.isOmittingUpdates()) {
-            fitnesse.applyUpdates();
-        }
+        fitnesse.applyUpdates();
         if (!arguments.isInstallOnly()) {
             if (fitnesse.start()) {
                 System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");

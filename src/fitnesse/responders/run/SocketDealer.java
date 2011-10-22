@@ -4,6 +4,7 @@ package fitnesse.responders.run;
 
 import com.google.inject.Singleton;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class SocketDealer {
         return waitingList.values();
     }
 
-    public void dealSocketTo(int ticket, SocketDonor donor) throws Exception {
+    public void dealSocketTo(int ticket, SocketDonor donor) throws IOException {
         SocketSeeker seeker = waitingList.get(ticket);
         seeker.acceptSocketFrom(donor);
         waitingList.remove(ticket);

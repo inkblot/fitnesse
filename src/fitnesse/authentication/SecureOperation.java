@@ -8,5 +8,5 @@ import fitnesse.wiki.WikiPage;
 import java.io.IOException;
 
 public interface SecureOperation {
-    public abstract boolean shouldAuthenticate(WikiPage root, Request request) throws IOException;
+    public abstract boolean shouldAuthenticate(WikiPage root, Request request);
 }

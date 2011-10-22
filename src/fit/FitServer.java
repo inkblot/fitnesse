@@ -15,7 +15,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class FitServer {
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(FitServer.class);
 
     private final Counts counts = new Counts();
     private OutputStream output;
@@ -199,8 +199,8 @@ public class FitServer {
                 byte[] bytes = readTable(table);
                 if (bytes.length > 0)
                     FitProtocol.writeData(bytes, output);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+                logger.error("Could not handle tableFinished event", e);
             }
         }
 
@@ -208,7 +208,7 @@ public class FitServer {
             try {
                 FitProtocol.writeCounts(count, output);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Could not handle tablesFinished event", e);
             }
         }
     }

@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import java.io.IOException;
+
 public interface SocketSeeker {
-    public void acceptSocketFrom(SocketDonor donor) throws Exception;
+    public void acceptSocketFrom(SocketDonor donor) throws IOException;
 }

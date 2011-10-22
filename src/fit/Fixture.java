@@ -7,6 +7,8 @@ package fit;
 import fit.exception.CouldNotParseFitFailureException;
 import fit.exception.FitFailureException;
 import fit.exception.FitMatcherException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -20,6 +22,8 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 
 // TODO-RcM Figure out how to make me smaller.
 public class Fixture {
+    private static final Logger logger = LoggerFactory.getLogger(Fixture.class);
+
     public Map<String, Object> summary = new HashMap<String, Object>();
 
     public Counts counts = new Counts();
@@ -389,8 +393,10 @@ public class Fixture {
             } catch (ParseException e) {
                 // Ignore parse exceptions, print non-parse exceptions,
                 // return null so that compareCellToResult tries relational matching.
+            } catch (RuntimeException e) {
+                throw e;
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Could not parse cell: cell=" + cell + " text=" + cell.text(), e);
             }
             return new Unparseable();
         }

@@ -54,6 +54,8 @@ public class VelocityFactory {
             throw new TodoException(e);
         } catch (IOException e) {
             throw e;
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             throw new TodoException(e);
         }

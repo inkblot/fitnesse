@@ -69,8 +69,6 @@ public class FitNesseExpediter implements ResponseSender {
             sendResponse();
         } catch (SocketException se) {
             // can be thrown by makeResponse or sendResponse.
-        } catch (Throwable e) {
-            e.printStackTrace();
         }
     }
 
@@ -101,11 +99,11 @@ public class FitNesseExpediter implements ResponseSender {
         return socket.getOutputStream();
     }
 
-    public void sendResponse() throws Exception {
+    public void sendResponse() throws IOException {
         response.readyToSend(this);
     }
 
-    private Response makeResponse(Request request) throws Exception {
+    private Response makeResponse(Request request) throws SocketException {
         try {
             Thread parseThread = createParsingThread(request);
             parseThread.start();
@@ -178,22 +176,14 @@ public class FitNesseExpediter implements ResponseSender {
     }
 
     private void reportError(int status, String message, Request request) {
-        try {
-            response = new ErrorResponder(message, htmlPageFactory).makeResponse(request);
-            response.setStatus(status);
-            hasError = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        response = new ErrorResponder(message, htmlPageFactory).makeResponse(request);
+        response.setStatus(status);
+        hasError = true;
     }
 
     private void reportError(Exception e, Request request) {
-        try {
-            response = new ErrorResponder(e, htmlPageFactory).makeResponse(request);
-            hasError = true;
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
+        response = new ErrorResponder(e, htmlPageFactory).makeResponse(request);
+        hasError = true;
     }
 
 }

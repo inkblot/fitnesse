@@ -26,7 +26,7 @@ public class ErrorResponder implements Responder {
         this.htmlPageFactory = htmlPageFactory;
     }
 
-    public Response makeResponse(Request request) throws Exception {
+    public Response makeResponse(Request request) {
         SimpleResponse response = new SimpleResponse(400);
         HtmlPage html = htmlPageFactory.newPage();
         HtmlUtil.addTitles(html, "Error Occurred");

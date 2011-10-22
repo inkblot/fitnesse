@@ -4,10 +4,13 @@ package fitnesse;
 
 import com.google.inject.Injector;
 import fitnesse.socketservice.SocketServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.Socket;
 
 public class FitNesseServer implements SocketServer {
+    private static final Logger logger = LoggerFactory.getLogger(FitNesseServer.class);
     private final Injector injector;
 
     public FitNesseServer(Injector injector) {
@@ -23,8 +26,10 @@ public class FitNesseServer implements SocketServer {
         try {
             FitNesseExpediter sender = new FitNesseExpediter(injector, s, requestTimeout);
             sender.start();
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Could not ");
         }
     }
 }

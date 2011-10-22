@@ -12,7 +12,7 @@ public class PointDataType extends DataType {
         return "(" + originalPoint.x + "," + originalPoint.y + ")";
     }
 
-    protected Object valueOf(String value) throws Exception {
+    protected Object valueOf(String value) {
         return ClassDelegatePointParser.parse(value);
     }
 }

@@ -45,20 +45,24 @@ public class MockResponseSender implements ResponseSender {
         return socket.getOutput();
     }
 
-    public void doSending(Response response) throws Exception {
+    public void doSending(Response response) throws IOException {
         response.readyToSend(this);
         waitForClose(10000);
     }
 
     // Utility method that returns when this.closed is true. Throws an exception
     // if the timeout is reached.
-    public synchronized void waitForClose(long timeoutMillis) throws Exception {
-        while (!closed && timeoutMillis > 0) {
-            wait(100);
-            timeoutMillis -= 100;
+    public synchronized void waitForClose(long timeoutMillis) throws IOException {
+        try {
+            while (!closed && timeoutMillis > 0) {
+                wait(100);
+                timeoutMillis -= 100;
+            }
+        } catch (InterruptedException e) {
+            throw new IOException("Interrupted while waiting for close", e);
         }
         if (!closed)
-            throw new Exception("MockResponseSender could not be closed");
+            throw new IOException("MockResponseSender could not be closed");
     }
 
     public boolean isClosed() {
@@ -70,10 +74,14 @@ public class MockResponseSender implements ResponseSender {
             socket = new MockSocket(new PipedInputStream(), out);
         }
 
-        public void doSending(Response response) throws Exception {
+        public void doSending(Response response) throws IOException {
             response.readyToSend(this);
-            while (!closed)
-                Thread.sleep(1000);
+            try {
+                while (!closed)
+                    Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new IOException("Interrupted while sending", e);
+            }
         }
     }
 }

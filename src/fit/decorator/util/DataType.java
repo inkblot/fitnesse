@@ -1,12 +1,16 @@
 package fit.decorator.util;
 
 import fit.decorator.exceptions.InvalidInputException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public abstract class DataType {
+    private static final Logger logger = LoggerFactory.getLogger(DataType.class);
+
     private static final String STRING_TYPE = "string";
     private static final String DOUBLE_TYPE = "double";
     private static final String INTEGER_TYPE = "integer";
@@ -14,12 +18,12 @@ public abstract class DataType {
     private static final String DATE_TYPE = "date";
 
     protected static final DataType INTEGER = new DataType() {
-        protected Object valueOf(String value) throws Exception {
+        protected Object valueOf(String value) throws NumberFormatException {
             return Integer.valueOf(value);
         }
 
         protected String addTo(String originalValue, Object value, int numberofTime) {
-            int intValue = ((Integer) value).intValue() * numberofTime;
+            int intValue = (Integer) value * numberofTime;
             return String.valueOf(Integer.parseInt(originalValue) + intValue);
         }
 
@@ -29,12 +33,12 @@ public abstract class DataType {
     };
 
     protected static final DataType DOUBLE = new DataType() {
-        protected Object valueOf(String value) throws Exception {
+        protected Object valueOf(String value) throws NumberFormatException {
             return Double.valueOf(value);
         }
 
         protected String addTo(String originalValue, Object value, int numberofTime) {
-            double doubleValue = ((Double) value).doubleValue() * numberofTime;
+            double doubleValue = (Double) value * numberofTime;
             double results = Double.parseDouble(originalValue) + doubleValue;
             return String.valueOf(new Double(results).floatValue());
         }
@@ -45,7 +49,7 @@ public abstract class DataType {
     };
 
     protected static final DataType STRING = new DataType() {
-        protected Object valueOf(String value) throws Exception {
+        protected Object valueOf(String value) {
             return value;
         }
 
@@ -54,7 +58,7 @@ public abstract class DataType {
         }
 
         private String multiply(String value, int numberofTime) {
-            StringBuffer result = new StringBuffer();
+            StringBuilder result = new StringBuilder();
             for (int i = 0; i < numberofTime; ++i) {
                 result.append(value);
             }
@@ -77,14 +81,14 @@ public abstract class DataType {
                 gc.setTime(originalDate);
             } catch (ParseException e) {
                 // print stack trace and continue
-                e.printStackTrace();
+                logger.error("Could not parse date: value=" + originalValue +" format=MM/dd/yyyy", e);
             }
-            int totalNnumberOfDaysToAdd = ((Integer) value).intValue() * numberofTime;
+            int totalNnumberOfDaysToAdd = (Integer) value * numberofTime;
             gc.add(Calendar.DAY_OF_YEAR, totalNnumberOfDaysToAdd);
             return dateFormat.format(gc.getTime());
         }
 
-        protected Object valueOf(String value) throws Exception {
+        protected Object valueOf(String value) throws NumberFormatException {
             return Integer.valueOf(value);
         }
 
@@ -107,14 +111,14 @@ public abstract class DataType {
     public Object parse(String value) throws InvalidInputException {
         try {
             return valueOf(value);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             throw new InvalidInputException("value '" + value + "' is not a valid " + toString());
         }
     }
 
     protected abstract String addTo(String originalValue, Object value, int numberofTime);
 
-    protected abstract Object valueOf(String value) throws Exception;
+    protected abstract Object valueOf(String value) throws NumberFormatException;
 
     static DataType instance(String dataType) throws InvalidInputException {
         Object type = getDataType(dataType, predefinedTypes);

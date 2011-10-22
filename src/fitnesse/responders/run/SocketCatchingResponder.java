@@ -32,7 +32,7 @@ public class SocketCatchingResponder implements Responder, SocketDonor, Response
         return response;
     }
 
-    public void readyToSend(ResponseSender sender) throws Exception {
+    public void readyToSend(ResponseSender sender) throws IOException {
         input = sender.getInputStream();
         output = sender.getOutputStream();
         this.sender = sender;

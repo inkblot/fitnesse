@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
 public class SemaphoreFixture extends Fixture {
@@ -75,7 +76,7 @@ public class SemaphoreFixture extends Fixture {
         File semFile = new File(makeSemaphoreName(name));
         try {
             isLocked = semFile.createNewFile();
-        } catch (Exception e) {
+        } catch (IOException e) {
             isLocked = false;
         }
 

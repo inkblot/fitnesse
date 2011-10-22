@@ -4,6 +4,7 @@ package fitnesse.http;
 
 import util.ImpossibleException;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ public abstract class Response {
         return format == Format.JAVA;
     }
 
-    public abstract void readyToSend(ResponseSender sender) throws Exception;
+    public abstract void readyToSend(ResponseSender sender) throws IOException;
 
     protected abstract void addSpecificHeaders();
 

@@ -5,6 +5,8 @@ package fitnesse.responders.run;
 import fitnesse.http.Response;
 import fitnesse.http.ResponseSender;
 
+import java.io.IOException;
+
 public class PuppetResponse extends Response {
     private ResponsePuppeteer puppeteer;
 
@@ -13,7 +15,7 @@ public class PuppetResponse extends Response {
         this.puppeteer = puppeteer;
     }
 
-    public void readyToSend(ResponseSender sender) throws Exception {
+    public void readyToSend(ResponseSender sender) throws IOException {
         puppeteer.readyToSend(sender);
     }
 

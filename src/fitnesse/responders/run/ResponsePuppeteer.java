@@ -4,6 +4,8 @@ package fitnesse.responders.run;
 
 import fitnesse.http.ResponseSender;
 
+import java.io.IOException;
+
 public interface ResponsePuppeteer {
-    void readyToSend(ResponseSender sender) throws Exception;
+    void readyToSend(ResponseSender sender) throws IOException;
 }

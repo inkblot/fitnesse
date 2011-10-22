@@ -9,6 +9,8 @@ import com.google.inject.name.Named;
 import fitnesse.http.*;
 import fitnesse.socketservice.SocketService;
 import fitnesse.http.MockSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +21,7 @@ import java.net.BindException;
 @Singleton
 public class FitNesse {
 
+    private static final Logger logger = LoggerFactory.getLogger(FitNesse.class);
     public static final FitNesseVersion VERSION = new FitNesseVersion();
 
     private final Injector injector;
@@ -65,8 +68,8 @@ public class FitNesse {
             return true;
         } catch (BindException e) {
             printBadPortMessage(port);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            logger.error("Could not start FitNesse server", e);
         }
         return false;
     }

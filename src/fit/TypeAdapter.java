@@ -141,6 +141,8 @@ public class TypeAdapter {
     public static void registerParseDelegate(Class<?> type, Class<?> parseDelegate) {
         try {
             PARSE_DELEGATES.put(type, new DelegateClassAdapter(parseDelegate));
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception ex) {
             throw new RuntimeException("Parse delegate class " + parseDelegate.getName()
                     + " does not have a suitable static parse() method.");
@@ -153,6 +155,8 @@ public class TypeAdapter {
     public static void registerParseDelegate(Class<?> type, Object parseDelegate) {
         try {
             PARSE_DELEGATES.put(type, new DelegateObjectAdapter(parseDelegate));
+        } catch (RuntimeException e) {
+            throw e;
         } catch (Exception ex) {
             throw new RuntimeException("Parse delegate object of class " + parseDelegate.getClass().getName()
                     + " does not have a suitable parse() method.");

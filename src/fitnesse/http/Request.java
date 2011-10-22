@@ -53,7 +53,7 @@ public class Request {
     protected Request() {
     }
 
-    public Request(InputStream input) throws Exception {
+    public Request(InputStream input) {
         this.input = new StreamReader(new BufferedInputStream(input));
     }
 

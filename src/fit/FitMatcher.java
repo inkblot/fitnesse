@@ -17,7 +17,7 @@ class FitMatcher {
         this.parameter = parameter;
     }
 
-    public boolean matches() throws Exception {
+    public boolean matches() throws FitMatcherException {
         Pattern p = Pattern.compile("\\s*_?\\s*(<|>|<=|>=)\\s*([-+]?[\\d]*\\.?[\\d]+)");
         Matcher m = p.matcher(expression);
         if (m.matches()) {
@@ -59,12 +59,10 @@ class FitMatcher {
     }
 
     public String message() {
-        String message = null;
         String parmString = "<b>" + parameter.toString() + "</b>";
-        if (expression.indexOf("_") == -1)
-            message = parmString + expression;
+        if (!expression.contains("_"))
+            return parmString + expression;
         else
-            message = expression.replaceFirst("_", parmString);
-        return message;
+            return expression.replaceFirst("_", parmString);
     }
 }

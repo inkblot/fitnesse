@@ -35,15 +35,10 @@ public abstract class Authenticator {
 
     private Responder verifyOperationIsSecure(Responder privilegedResponder, Request request) {
         SecureOperation so = ((SecureResponder) privilegedResponder).getSecureOperation();
-        try {
-            if (so.shouldAuthenticate(root, request))
-                return unauthorizedResponder(request);
-            else
-                return privilegedResponder;
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (so.shouldAuthenticate(root, request))
             return unauthorizedResponder(request);
-        }
+        else
+            return privilegedResponder;
     }
 
     protected Responder unauthorizedResponder(Request request) {

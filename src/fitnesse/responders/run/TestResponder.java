@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
@@ -33,13 +34,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     protected CompositeFormatter formatters;
     private boolean isClosed = false;
 
-    private boolean fastTest = false;
     private boolean remoteDebug = false;
     protected TestSystem testSystem;
     private final HtmlPageFactory htmlPageFactory;
     private final String testResultsPath;
     protected final int port;
     protected final SocketDealer socketDealer;
+    protected final Injector injector;
 
     @Inject
     public TestResponder(HtmlPageFactory htmlPageFactory,
@@ -48,12 +49,13 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
                          @Named(FitNesseModule.PORT) Integer port,
                          SocketDealer socketDealer,
                          RunningTestingTracker runningTestingTracker,
-                         @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
+                         @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled, Injector injector) {
         super(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
         this.htmlPageFactory = htmlPageFactory;
         this.testResultsPath = testResultsPath;
         this.port = port;
         this.socketDealer = socketDealer;
+        this.injector = injector;
         formatters = new CompositeFormatter();
     }
 
@@ -71,7 +73,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     }
 
     protected void checkArguments() {
-        fastTest |= request.hasInput("debug");
         remoteDebug |= request.hasInput("remote_debug");
     }
 
@@ -163,8 +164,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
     protected void performExecution(RunningTestingTracker runningTestingTracker, WikiPage root, WikiPage page) throws Exception {
         List<WikiPage> test2run = new SuiteContentsFinder(page, null, root).makePageListForSingleTest();
 
-        MultipleTestsRunner runner = new MultipleTestsRunner(test2run, runningTestingTracker, page, formatters, root, port, socketDealer);
-        runner.setFastTest(fastTest);
+        MultipleTestsRunner runner = new MultipleTestsRunner(test2run, runningTestingTracker, page, formatters, root, port, socketDealer, injector);
         runner.setDebug(isRemoteDebug());
 
         if (isEmpty(page))
@@ -185,14 +185,6 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     public static void registerListener(TestEventListener listener) {
         eventListeners.add(listener);
-    }
-
-    public void setFastTest(boolean fastTest) {
-        this.fastTest = fastTest;
-    }
-
-    public boolean isFastTest() {
-        return fastTest;
     }
 
     public void addToResponse(String output) {

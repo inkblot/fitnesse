@@ -10,15 +10,15 @@ import java.io.IOException;
 import java.util.Map;
 
 public class FitTestSystem extends TestSystem {
-    private final boolean fastTest;
+    private final CommandRunningFitClient.FitTestMode testMode;
     private final int port;
     private final SocketDealer socketDealer;
 
     private CommandRunningFitClient client;
 
-    public FitTestSystem(WikiPage page, TestSystemListener listener, boolean fastTest, int port, SocketDealer socketDealer) {
+    public FitTestSystem(WikiPage page, TestSystemListener listener, CommandRunningFitClient.FitTestMode testMode, int port, SocketDealer socketDealer) {
         super(page, listener);
-        this.fastTest = fastTest;
+        this.testMode = testMode;
         this.port = port;
         this.socketDealer = socketDealer;
     }
@@ -26,7 +26,7 @@ public class FitTestSystem extends TestSystem {
     protected ExecutionLog createExecutionLog(String classPath, Descriptor descriptor) throws IOException {
         String command = buildCommand(descriptor, classPath);
         Map<String, String> environmentVariables = createClasspathEnvironment(classPath);
-        client = new CommandRunningFitClient(this, command, port, environmentVariables, socketDealer, fastTest);
+        client = new CommandRunningFitClient(this, command, port, environmentVariables, socketDealer, testMode);
         return new ExecutionLog(page, client.commandRunner);
     }
 

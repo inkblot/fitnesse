@@ -3,6 +3,7 @@
 package fitnesse.responders;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
@@ -66,8 +67,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
         importerFactory = new MockWikiImporterFactory();
         eventListener = new WikiImportTestEventListener(importerFactory);
-        testResponder = new MockTestResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, isChunkingEnabled());
-        suiteResponder = new MockSuiteResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, isChunkingEnabled());
+        testResponder = new MockTestResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, isChunkingEnabled(), injector);
+        suiteResponder = new MockSuiteResponder(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, isChunkingEnabled(), injector);
     }
 
     @After
@@ -166,8 +167,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockTestResponder extends TestResponder {
         private MockTestResponder(HtmlPageFactory htmlPageFactory, WikiPage root, String testResultsPath, Integer port,
-                                  SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, boolean chunkingEnabled) {
-            super(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, chunkingEnabled);
+                                  SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, boolean chunkingEnabled, Injector injector) {
+            super(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, chunkingEnabled, injector);
             response = new ChunkedResponse("html");
         }
 
@@ -182,8 +183,8 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
 
     private class MockSuiteResponder extends SuiteResponder {
         public MockSuiteResponder(HtmlPageFactory htmlPageFactory, WikiPage root, String testResultsPath, Integer port,
-                                  SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, boolean chunkingEnabled) {
-            super(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, chunkingEnabled);
+                                  SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, boolean chunkingEnabled, Injector injector) {
+            super(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, chunkingEnabled, injector);
             response = new ChunkedResponse("html");
         }
 

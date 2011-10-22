@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.html.HtmlPageFactory;
@@ -15,8 +16,8 @@ public class SuiteResponder extends TestResponder {
     private boolean includeHtml;
 
     @Inject
-    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnalbed) {
-        super(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, chunkingEnalbed);
+    public SuiteResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled, Injector injector) {
+        super(htmlPageFactory, root, testResultsPath, port, socketDealer, runningTestingTracker, chunkingEnabled, injector);
     }
 
     @Override
@@ -60,9 +61,8 @@ public class SuiteResponder extends TestResponder {
     protected void performExecution(RunningTestingTracker runningTestingTracker, WikiPage root, WikiPage page) throws Exception {
         SuiteFilter filter = new SuiteFilter(getSuiteTagFilter(), getNotSuiteFilter(), getSuiteFirstTest(page));
         SuiteContentsFinder suiteTestFinder = new SuiteContentsFinder(page, filter, root);
-        MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), runningTestingTracker, page, formatters, root, port, socketDealer);
+        MultipleTestsRunner runner = new MultipleTestsRunner(suiteTestFinder.getAllPagesToRunForThisSuite(), runningTestingTracker, page, formatters, root, port, socketDealer, injector);
         runner.setDebug(isRemoteDebug());
-        runner.setFastTest(isFastTest());
         runner.executeTestPages();
     }
 

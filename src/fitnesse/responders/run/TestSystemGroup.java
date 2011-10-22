@@ -2,6 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Injector;
+import fitnesse.components.CommandRunningFitClient;
 import fitnesse.responders.run.slimResponder.HtmlSlimTestSystem;
 import fitnesse.wiki.WikiPage;
 
@@ -16,14 +18,14 @@ public class TestSystemGroup {
     private final CompositeExecutionLog log;
     private final int port;
     private final SocketDealer socketDealer;
+    private final Injector injector;
 
-    private boolean fastTest = false;
-
-    public TestSystemGroup(WikiPage page, TestSystemListener listener, int port, SocketDealer socketDealer) {
+    public TestSystemGroup(WikiPage page, TestSystemListener listener, int port, SocketDealer socketDealer, Injector injector) {
         this.page = page;
         this.testSystemListener = listener;
         this.port = port;
         this.socketDealer = socketDealer;
+        this.injector = injector;
         log = new CompositeExecutionLog(page);
     }
 
@@ -41,10 +43,6 @@ public class TestSystemGroup {
         for (TestSystem testSystem : testSystems.values()) {
             testSystem.kill();
         }
-    }
-
-    public void setFastTest(boolean fastTest) {
-        this.fastTest = fastTest;
     }
 
     public boolean isSuccessfullyStarted() {
@@ -69,7 +67,7 @@ public class TestSystemGroup {
         if ("slim".equalsIgnoreCase(TestSystem.getTestSystemType(descriptor.testSystemName)))
             return new HtmlSlimTestSystem(page, testSystemListener);
         else
-            return new FitTestSystem(page, testSystemListener, fastTest, port, socketDealer);
+            return new FitTestSystem(page, testSystemListener, injector.getInstance(CommandRunningFitClient.FitTestMode.class), port, socketDealer);
     }
 
 }

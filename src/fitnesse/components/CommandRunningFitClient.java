@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.components;
 
+import com.google.inject.ImplementedBy;
 import fit.FitServer;
 import fitnesse.http.MockCommandRunner;
 import fitnesse.responders.run.SocketDealer;
@@ -25,10 +26,6 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
 
     public CommandRunningFitClient(TestSystemListener listener, String command, int port, SocketDealer dealer) throws IOException {
         this(listener, command, port, null, dealer, new DefaultTestMode());
-    }
-
-    public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, boolean fastTest) throws IOException {
-        this(listener, command, port, environmentVariables, dealer, fastTest ? new FastTestMode() : new DefaultTestMode());
     }
 
     public CommandRunningFitClient(TestSystemListener listener, String command, int port, Map<String, String> environmentVariables, SocketDealer dealer, FitTestMode fitTestMode) throws IOException {
@@ -128,6 +125,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         }
     }
 
+    @ImplementedBy(DefaultTestMode.class)
     public static interface FitTestMode {
 
         public CommandRunner initialize(String fitArguments, String command, Map<String, String> environmentVariables);
@@ -172,53 +170,4 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         }
     }
 
-    public static class FastTestMode implements FitTestMode {
-
-        private Thread fastFitServer;
-
-        void createFitServer(String args) {
-            final String fitArgs = args;
-
-            Runnable fastFitServerRunnable = new Runnable() {
-                public void run() {
-                    try {
-                        while (!tryCreateFitServer(fitArgs))
-                            Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        // ok
-                    }
-                }
-            };
-            fastFitServer = new Thread(fastFitServerRunnable);
-            fastFitServer.start();
-        }
-
-        private boolean tryCreateFitServer(String args) {
-            try {
-                FitServer.runFitServer(args.trim().split(" "));
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
-        }
-
-        @Override
-        public CommandRunner initialize(String fitArguments, String command, Map<String, String> environmentVariables) {
-            createFitServer(fitArguments);
-            return new MockCommandRunner();
-        }
-
-        @Override
-        public void join(CommandRunningFitClient commandRunningFitClient) throws InterruptedException {
-            fastFitServer.join();
-        }
-
-        @Override
-        public void start(CommandRunningFitClient commandRunningFitClient) {
-        }
-
-        @Override
-        public void killVigilantThreads() {
-        }
-    }
 }

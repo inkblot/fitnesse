@@ -9,6 +9,8 @@ import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.components.CommandRunningFitClient;
+import fitnesse.components.FastTestMode;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -62,6 +64,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
             @Override
             protected void configure() {
                 bind(Clock.class).toInstance(new DateAlteringClock(TEST_TIME).freeze());
+                bind(CommandRunningFitClient.FitTestMode.class).to(FastTestMode.class);
             }
         };
     }
@@ -101,8 +104,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
 
         request = new MockRequest();
         request.setResource(suitePageName);
-        responder = new SuiteResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, runningTestingTracker, isChunkingEnabled());
-        responder.setFastTest(true);
+        responder = new SuiteResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, runningTestingTracker, isChunkingEnabled(), injector);
 
         receiver = new FitSocketReceiver(getPort(), socketDealer);
     }

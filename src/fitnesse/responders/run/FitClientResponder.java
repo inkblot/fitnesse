@@ -3,6 +3,7 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.name.Named;
 import fit.FitProtocol;
 import fitnesse.FitNesseModule;
@@ -21,22 +22,26 @@ import java.io.OutputStream;
 import java.util.List;
 
 public class FitClientResponder implements Responder, ResponsePuppeteer, TestSystemListener {
+
+    private final WikiPage root;
+    private final Integer port;
+    private final SocketDealer socketDealer;
+    private final RunningTestingTracker runningTestingTracker;
+    private final Injector injector;
+
     private PageCrawler crawler;
     private String resource;
     private WikiPage page;
     private boolean shouldIncludePaths;
     private String suiteFilter;
-    private final WikiPage root;
-    private final Integer port;
-    private final SocketDealer socketDealer;
-    private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker) {
+    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, Injector injector) {
         this.root = root;
         this.port = port;
         this.socketDealer = socketDealer;
         this.runningTestingTracker = runningTestingTracker;
+        this.injector = injector;
     }
 
     public Response makeResponse(Request request) {
@@ -87,7 +92,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
         List<WikiPage> testPages = suiteTestFinder.makePageList();
 
         if (shouldIncludePaths) {
-            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, runningTestingTracker, page, null, root, port, socketDealer);
+            MultipleTestsRunner runner = new MultipleTestsRunner(testPages, runningTestingTracker, page, null, root, port, socketDealer, injector);
             String classpath = runner.buildClassPath();
             client.send(classpath);
         }

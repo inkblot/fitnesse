@@ -2,6 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run;
 
+import com.google.inject.Injector;
 import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.responders.run.TestSystem.Descriptor;
@@ -21,7 +22,6 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     private final int port;
     private final SocketDealer socketDealer;
 
-    private boolean isFastTest = false;
     private boolean isRemoteDebug = false;
 
     private LinkedList<WikiPage> processingQueue = new LinkedList<WikiPage>();
@@ -32,26 +32,24 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
     private String stopId = null;
     private PageListSetUpTearDownSurrounder surrounder;
     TimeMeasurement currentTestTime, totalTestTime;
+    private final Injector injector;
 
     public MultipleTestsRunner(final List<WikiPage> testPagesToRun,
                                RunningTestingTracker runningTestingTracker, final WikiPage page,
                                final ResultsListener resultsListener,
-                               WikiPage root, int port, SocketDealer socketDealer) {
+                               WikiPage root, int port, SocketDealer socketDealer, Injector injector) {
         this.testPagesToRun = testPagesToRun;
         this.resultsListener = resultsListener;
         this.page = page;
         this.runningTestingTracker = runningTestingTracker;
         this.port = port;
         this.socketDealer = socketDealer;
+        this.injector = injector;
         surrounder = new PageListSetUpTearDownSurrounder(root);
     }
 
     public void setDebug(boolean isDebug) {
         isRemoteDebug = isDebug;
-    }
-
-    public void setFastTest(boolean isFastTest) {
-        this.isFastTest = isFastTest;
     }
 
     public void executeTestPages() {
@@ -73,10 +71,9 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
     private void internalExecuteTestPages() throws IOException {
         synchronized (this) {
-            testSystemGroup = new TestSystemGroup(page, this, port, socketDealer);
+            testSystemGroup = new TestSystemGroup(page, this, port, socketDealer, injector);
             stopId = runningTestingTracker.addStartedProcess(this);
         }
-        testSystemGroup.setFastTest(isFastTest);
 
         resultsListener.setExecutionLogAndTrackingId(stopId, testSystemGroup.getExecutionLog());
         PagesByTestSystem pagesByTestSystem = makeMapOfPagesByTestSystem();

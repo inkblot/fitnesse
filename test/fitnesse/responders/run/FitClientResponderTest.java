@@ -36,7 +36,7 @@ public class FitClientResponderTest extends FitnesseBaseTestCase {
 
     @Before
     public void setUp() throws Exception {
-        responder = new FitClientResponder(root, getPort(), socketDealer, runningTestingTracker);
+        responder = new FitClientResponder(root, getPort(), socketDealer, runningTestingTracker, injector);
         request = new MockRequest();
 
         crawler = root.getPageCrawler();

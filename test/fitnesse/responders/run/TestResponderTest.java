@@ -5,10 +5,13 @@ package fitnesse.responders.run;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
+import com.google.inject.Provider;
 import com.google.inject.name.Named;
 import fitnesse.*;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureTestOperation;
+import fitnesse.components.CommandRunningFitClient;
+import fitnesse.components.FastTestMode;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -55,6 +58,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
     private File testResultsPath;
     private RunningTestingTracker runningTestingTracker;
+    private CommandRunningFitClient.FitTestMode fitTestMode;
 
     @Override
     protected Module getOverrideModule() {
@@ -62,6 +66,15 @@ public class TestResponderTest extends FitnesseBaseTestCase {
             @Override
             protected void configure() {
                 bind(Clock.class).toInstance(new DateAlteringClock(DateTimeUtil.getDateFromString(TEST_TIME)).advanceMillisOnEachQuery());
+                bind(CommandRunningFitClient.FitTestMode.class).toProvider(new Provider<CommandRunningFitClient.FitTestMode>() {
+                    @Override
+                    public CommandRunningFitClient.FitTestMode get() {
+                        if (fitTestMode == null) {
+                            fitTestMode = new FastTestMode();
+                        }
+                        return fitTestMode;
+                    }
+                });
             }
         };
     }
@@ -90,8 +103,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
         crawler = root.getPageCrawler();
         errorLogsParentPage = crawler.addPage(root, PathParser.parse("ErrorLogs"));
         request = new MockRequest();
-        responder = new TestResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, runningTestingTracker, isChunkingEnabled());
-        responder.setFastTest(true);
+        responder = new TestResponder(htmlPageFactory, root, testResultsPath.getAbsolutePath(), getPort(), socketDealer, runningTestingTracker, isChunkingEnabled(), injector);
         receiver = new FitSocketReceiver(getPort(), socketDealer);
         receiver.receiveSocket();
 
@@ -102,6 +114,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @After
     public void tearDown() throws Exception {
+        fitTestMode = null;
         receiver.close();
     }
 
@@ -163,7 +176,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testStandardOutput() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         String content = classpathWidgets()
                 + outputWritingTable("output1")
                 + outputWritingTable("output2")
@@ -178,7 +191,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testErrorOutput() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         String content = classpathWidgets()
                 + errorWritingTable("error1")
                 + errorWritingTable("error2")
@@ -234,7 +247,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testFixtureThatCrashes() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         WikiPage testPage = crawler.addPage(root, PathParser.parse("TestPage"), classpathWidgets() + crashFixtureTable());
         request.setResource(testPage.getName());
 
@@ -380,18 +393,8 @@ public class TestResponderTest extends FitnesseBaseTestCase {
     }
 
     @Test
-    public void debugTest() throws Exception {
-        responder.setFastTest(false);
-        request.addInput("debug", "");
-        doSimpleRun(passFixtureTable());
-        assertEquals("Tests Executed OK", getExecutionStatusMessage());
-        assertEquals("ok.gif", getExecutionStatusIconFilename());
-        assertTrue("should be fast test", responder.isFastTest());
-    }
-
-    @Test
     public void testExecutionStatusOutputCaptured() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         doSimpleRun(outputWritingTable("blah"));
         assertEquals("Output Captured", getExecutionStatusMessage());
         assertEquals("output.gif", getExecutionStatusIconFilename());
@@ -399,7 +402,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testExecutionStatusError() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         doSimpleRun(crashFixtureTable());
         assertEquals("Errors Occurred", getExecutionStatusMessage());
         assertEquals("error.gif", getExecutionStatusIconFilename());
@@ -407,7 +410,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testExecutionStatusErrorHasPriority() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         doSimpleRun(errorWritingTable("blah") + crashFixtureTable());
         assertEquals("Errors Occurred", getExecutionStatusMessage());
     }
@@ -505,7 +508,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testSuiteSetUpAndTearDownIsCalledIfSingleTestIsRun() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
         WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
         crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
@@ -532,7 +535,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testSuiteSetUpDoesNotIncludeSetUp() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
         WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
         crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));
@@ -555,7 +558,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testSuiteTearDownDoesNotIncludeTearDown() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
         WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
         crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_TEARDOWN_NAME), outputWritingTable("Output of SuiteTearDown"));
@@ -578,7 +581,7 @@ public class TestResponderTest extends FitnesseBaseTestCase {
 
     @Test
     public void testSuiteSetUpAndSuiteTearDownWithSetUpAndTearDown() throws Exception {
-        responder.setFastTest(false);
+        fitTestMode = new CommandRunningFitClient.DefaultTestMode();
         WikiPage suitePage = crawler.addPage(root, PathParser.parse("TestSuite"), classpathWidgets());
         WikiPage testPage = crawler.addPage(suitePage, PathParser.parse("TestPage"), outputWritingTable("Output of TestPage"));
         crawler.addPage(suitePage, PathParser.parse(PageData.SUITE_SETUP_NAME), outputWritingTable("Output of SuiteSetUp"));

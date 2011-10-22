@@ -6,7 +6,6 @@ import fitnesse.FitNesseExpediter;
 import fitnesse.authentication.OneUserAuthenticator;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
-import fitnesse.http.MockSocket;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.responders.testHistory.TestHistory;
 import fitnesse.wiki.*;
@@ -22,6 +21,8 @@ import org.htmlparser.lexer.Page;
 import org.htmlparser.util.NodeList;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class PageDriver {
         request.parseRequestUri("/" + pageName);
         WikiPagePath path = PathParser.parse(request.getResource()); // uri;
         FitnesseFixtureContext.page = FitnesseFixtureContext.root.getPageCrawler().getPage(FitnesseFixtureContext.root, path);
-        FitNesseExpediter expediter = new FitNesseExpediter(FitnesseFixtureContext.injector, new MockSocket(""));
+        FitNesseExpediter expediter = new FitNesseExpediter(FitnesseFixtureContext.injector, new ByteArrayInputStream(new byte[0]), new ByteArrayOutputStream());
         FitnesseFixtureContext.response = expediter.createGoodResponse(request);
         FitnesseFixtureContext.sender = new MockResponseSender();
         FitnesseFixtureContext.sender.doSending(FitnesseFixtureContext.response);

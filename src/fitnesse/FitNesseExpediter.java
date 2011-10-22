@@ -14,25 +14,22 @@ import fitnesse.http.ResponseSender;
 import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.ResponderFactory;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import util.Clock;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Socket;
 import java.net.SocketException;
 
+import static org.apache.commons.io.IOUtils.closeQuietly;
+
 public class FitNesseExpediter implements ResponseSender {
-    private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
     private HtmlPageFactory htmlPageFactory;
     private ResponderFactory responderFactory;
     private Provider<Authenticator> authenticatorProvider;
     private Clock clock;
 
-    private final Socket socket;
     private final InputStream input;
     private final OutputStream output;
     private final long requestParsingTimeLimit;
@@ -50,15 +47,14 @@ public class FitNesseExpediter implements ResponseSender {
         this.clock = clock;
     }
 
-    public FitNesseExpediter(Injector injector, Socket s) throws IOException {
-        this(injector, s, 10000L);
+    public FitNesseExpediter(Injector injector, InputStream inputStream, OutputStream outputStream) {
+        this(injector, inputStream, outputStream, 10000L);
     }
 
-    public FitNesseExpediter(Injector injector, Socket s, long requestParsingTimeLimit) throws IOException {
+    public FitNesseExpediter(Injector injector, InputStream inputStream, OutputStream outputStream, long requestParsingTimeLimit) {
         injector.injectMembers(this);
-        socket = s;
-        input = s.getInputStream();
-        output = s.getOutputStream();
+        input = inputStream;
+        output = outputStream;
         this.requestParsingTimeLimit = requestParsingTimeLimit;
     }
 
@@ -82,21 +78,18 @@ public class FitNesseExpediter implements ResponseSender {
     }
 
     public void close() {
-        try {
-            socket.close();
-        } catch (IOException e) {
-            logger.error("Could not close socket", e);
-        }
+        closeQuietly(input);
+        closeQuietly(output);
     }
 
     @Override
-    public InputStream getInputStream() throws IOException {
-        return socket.getInputStream();
+    public InputStream getInputStream() {
+        return input;
     }
 
     @Override
-    public OutputStream getOutputStream() throws IOException {
-        return socket.getOutputStream();
+    public OutputStream getOutputStream() {
+        return output;
     }
 
     public void sendResponse() throws IOException {

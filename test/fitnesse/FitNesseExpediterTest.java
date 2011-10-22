@@ -8,7 +8,6 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.http.*;
-import fitnesse.http.MockSocket;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,12 +16,12 @@ import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
+import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     private FitNesseExpediter expediter;
-    private MockSocket socket;
     private WikiPage root;
     private PipedInputStream clientInput;
     private PipedOutputStream clientOutput;
@@ -53,8 +52,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     public void setUp() throws Exception {
         authenticator = new PromiscuousAuthenticator(root, injector);
         root.addChildPage("FrontPage");
-        socket = new MockSocket();
-        expediter = new FitNesseExpediter(injector, socket);
+        expediter = new FitNesseExpediter(injector, new PipedInputStream(), new PipedOutputStream(new PipedInputStream()));
     }
 
     @Test
@@ -70,7 +68,8 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         try {
             MockRequest request = new MockRequest();
             Response response = expediter.createGoodResponse(request);
-            socket.close();
+            closeQuietly(expediter.getInputStream());
+            closeQuietly(expediter.getOutputStream());
             response.readyToSend(expediter);
         } catch (IOException e) {
             e.printStackTrace(System.err);
@@ -98,8 +97,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
         clientOutput = new PipedOutputStream(socketInput);
         clientInput = new PipedInputStream();
         PipedOutputStream socketOutput = new PipedOutputStream(clientInput);
-        MockSocket socket = new MockSocket(socketInput, socketOutput);
-        return new FitNesseExpediter(injector, socket, 200);
+        return new FitNesseExpediter(injector, socketInput, socketOutput, 200);
     }
 
     @Test

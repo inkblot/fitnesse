@@ -24,7 +24,7 @@ public class FitNesseServer implements SocketServer {
 
     public void serve(Socket s, long requestTimeout) {
         try {
-            FitNesseExpediter sender = new FitNesseExpediter(injector, s, requestTimeout);
+            FitNesseExpediter sender = new FitNesseExpediter(injector, s.getInputStream(), s.getOutputStream(), requestTimeout);
             sender.start();
         } catch (RuntimeException e) {
             throw e;

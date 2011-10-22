@@ -8,13 +8,10 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import fitnesse.http.*;
 import fitnesse.socketservice.SocketService;
-import fitnesse.http.MockSocket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.net.BindException;
 
@@ -97,7 +94,7 @@ public class FitNesse {
 
     public void executeSingleCommand(String command, OutputStream out) throws Exception {
         Request request = new MockRequestBuilder(command).build();
-        FitNesseExpediter expediter = new FitNesseExpediter(injector, new MockSocket());
+        FitNesseExpediter expediter = new FitNesseExpediter(injector, new PipedInputStream(), new PipedOutputStream(new PipedInputStream()));
         Response response = expediter.createGoodResponse(request);
         MockResponseSender sender = new MockResponseSender.OutputStreamSender(out);
         sender.doSending(response);

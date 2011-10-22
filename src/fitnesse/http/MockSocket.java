@@ -15,19 +15,8 @@ public class MockSocket extends Socket {
     private String host;
     private boolean closed;
 
-    public MockSocket() throws Exception {
-        PipedInputStream serverInput = new PipedInputStream();
-        @SuppressWarnings("unused")
-        PipedOutputStream clientOutput = new PipedOutputStream(serverInput);
-        PipedInputStream clientInput = new PipedInputStream();
-        PipedOutputStream serverOutput = new PipedOutputStream(clientInput);
-        input = serverInput;
-        output = serverOutput;
-    }
-
     public MockSocket(String input) {
-        this.input = new ByteArrayInputStream(input.getBytes());
-        output = new ByteArrayOutputStream();
+        this(new ByteArrayInputStream(input.getBytes()), new ByteArrayOutputStream());
     }
 
     public MockSocket(InputStream input, OutputStream output) {

@@ -8,11 +8,15 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 
 public class MockResponseSender implements ResponseSender {
-    public MockSocket socket;
+    protected final MockSocket socket;
     protected boolean closed = false;
 
     public MockResponseSender() {
-        socket = new MockSocket("Mock");
+        this(new MockSocket("Mock"));
+    }
+
+    protected MockResponseSender(MockSocket socket) {
+        this.socket = socket;
         closed = false;
     }
 
@@ -71,7 +75,7 @@ public class MockResponseSender implements ResponseSender {
 
     public static class OutputStreamSender extends MockResponseSender {
         public OutputStreamSender(OutputStream out) {
-            socket = new MockSocket(new PipedInputStream(), out);
+            super(new MockSocket(new PipedInputStream(), out));
         }
 
         public void doSending(Response response) throws IOException {

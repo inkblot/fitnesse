@@ -24,7 +24,7 @@ public abstract class FitnesseBaseTestCase extends BaseInjectedTestCase {
     @Override
     protected Module[] getBaseModules() {
         return new Module[]{
-                new FitNesseModule(getProperties(), getUserPass(), getRootPath(), getRootPageName(), getPort(), true, isChunkingEnabled())
+                new FitNesseModule(getProperties(), getUserPass(), getRootPath(), getRootPageName(), getPort(), isChunkingEnabled())
         };
     }
 

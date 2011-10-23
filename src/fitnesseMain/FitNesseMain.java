@@ -51,6 +51,7 @@ public class FitNesseMain {
                     .println("\t-a {user:pwd | user-file-name} enable authentication.");
             System.err.println("\t-i Install only, then quit.");
             System.err.println("\t-c <command> execute single command.");
+            System.exit(1);
         }
     }
 
@@ -80,23 +81,20 @@ public class FitNesseMain {
 
     static void updateAndLaunch(Arguments arguments, Injector injector,
                                 FitNesse fitnesse, String extraOutput) throws Exception {
-        fitnesse.applyUpdates();
-        if (!arguments.isInstallOnly()) {
-            if (fitnesse.start()) {
-                System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
-                System.out.print(injector.getInstance(StartupDescription.class).toString());
-                System.out.println("\tpage version expiration set to "
-                        + arguments.getDaysTillVersionsExpire() + " days.");
-                if (extraOutput != null)
-                    System.out.print(extraOutput);
-                if (arguments.getCommand() != null) {
-                    BaseFormatter.finalErrorCount = 0;
-                    System.out.println("Executing command: " + arguments.getCommand());
-                    System.out.println("-----Command Output-----");
-                    fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
-                    System.out.println("-----Command Complete-----");
-                    fitnesse.stop();
-                }
+        if (fitnesse.start()) {
+            System.out.println("FitNesse (" + FitNesse.VERSION + ") Started...");
+            System.out.print(injector.getInstance(StartupDescription.class).toString());
+            System.out.println("\tpage version expiration set to "
+                    + arguments.getDaysTillVersionsExpire() + " days.");
+            if (extraOutput != null)
+                System.out.print(extraOutput);
+            if (arguments.getCommand() != null) {
+                BaseFormatter.finalErrorCount = 0;
+                System.out.println("Executing command: " + arguments.getCommand());
+                System.out.println("-----Command Output-----");
+                fitnesse.executeSingleCommand(arguments.getCommand(), System.out);
+                System.out.println("-----Command Complete-----");
+                fitnesse.stop();
             }
         }
     }
@@ -105,31 +103,24 @@ public class FitNesseMain {
         private String rootPath = FitNesseConstants.DEFAULT_PATH;
         private int port = -1;
         private String rootDirectory = FitNesseConstants.DEFAULT_ROOT;
-        private String logDirectory;
-        private boolean omitUpdate = false;
         private int daysTillVersionsExpire = FitNesseConstants.DEFAULT_VERSION_DAYS;
         private String userpass;
-        private boolean installOnly;
         private String command = null;
 
         public Arguments(String... argv) throws CommandLineParseException {
-            CommandLine commandLine = new CommandLine("[-p port][-d dir][-r root][-l logDir][-e days][-o][-i][-a userpass][-c command]", argv);
+            CommandLine commandLine = new CommandLine("[-p port][-d dir][-r root][-e days][-a userpass][-c command]", argv);
             if (commandLine.hasOption("p"))
                 this.setPort(commandLine.getOptionArgument("p", "port"));
             if (commandLine.hasOption("d"))
                 this.setRootPath(commandLine.getOptionArgument("d", "dir"));
             if (commandLine.hasOption("r"))
                 this.setRootDirectory(commandLine.getOptionArgument("r", "root"));
-            if (commandLine.hasOption("l"))
-                this.setLogDirectory(commandLine.getOptionArgument("l", "logDir"));
             if (commandLine.hasOption("e"))
                 this.setDaysTillVersionsExpire(commandLine.getOptionArgument("e", "days"));
             if (commandLine.hasOption("a"))
                 this.setUserpass(commandLine.getOptionArgument("a", "userpass"));
             if (commandLine.hasOption("c"))
                 this.setCommand(commandLine.getOptionArgument("c", "command"));
-            this.setOmitUpdates(commandLine.hasOption("o"));
-            this.setInstallOnly(commandLine.hasOption("i"));
         }
 
         public String getRootPath() {
@@ -160,22 +151,6 @@ public class FitNesseMain {
             this.rootDirectory = rootDirectory;
         }
 
-        public String getLogDirectory() {
-            return logDirectory;
-        }
-
-        public void setLogDirectory(String logDirectory) {
-            this.logDirectory = logDirectory;
-        }
-
-        public void setOmitUpdates(boolean omitUpdates) {
-            this.omitUpdate = omitUpdates;
-        }
-
-        public boolean isOmittingUpdates() {
-            return omitUpdate;
-        }
-
         public void setUserpass(String userpass) {
             this.userpass = userpass;
         }
@@ -193,14 +168,6 @@ public class FitNesseMain {
 
         public void setDaysTillVersionsExpire(String daysTillVersionsExpire) {
             this.daysTillVersionsExpire = Integer.parseInt(daysTillVersionsExpire);
-        }
-
-        public boolean isInstallOnly() {
-            return installOnly;
-        }
-
-        public void setInstallOnly(boolean installOnly) {
-            this.installOnly = installOnly;
         }
 
         public String getCommand() {

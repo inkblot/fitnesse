@@ -18,23 +18,12 @@ import static org.mockito.Mockito.*;
 public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
-    public void testInstallOnly() throws Exception {
-        FitNesseMain.Arguments args = new FitNesseMain.Arguments();
-        args.setInstallOnly(true);
-        FitNesse fitnesse = mock(FitNesse.class);
-        FitNesseMain.updateAndLaunch(args, injector, fitnesse, null);
-        verify(fitnesse, never()).start();
-        verify(fitnesse, times(1)).applyUpdates();
-    }
-
-    @Test
     public void commandArgCallsExecuteSingleCommand() throws Exception {
         FitNesseMain.Arguments args = new FitNesseMain.Arguments();
         args.setCommand("command");
         FitNesse fitnesse = mock(FitNesse.class);
         when(fitnesse.start()).thenReturn(true);
         FitNesseMain.updateAndLaunch(args, injector, fitnesse, null);
-        verify(fitnesse, times(1)).applyUpdates();
         verify(fitnesse, times(1)).start();
         verify(fitnesse, times(1)).executeSingleCommand("command", System.out);
         verify(fitnesse, times(1)).stop();
@@ -65,13 +54,13 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
 
     @Test
     public void canRunSingleCommand() throws Exception {
-        String response = runFitnesseMainWith("-o", "-c", "/root");
+        String response = runFitnesseMainWith("-c", "/root");
         assertThat(response, containsString("Command Output"));
     }
 
     @Test
     public void canRunSingleCommandWithAuthentication() throws Exception {
-        String response = runFitnesseMainWith("-o", "-a", "user:pwd", "-c", "user:pwd:/FitNesse.ReadProtectedPage");
+        String response = runFitnesseMainWith("-a", "user:pwd", "-c", "user:pwd:/FitNesse.ReadProtectedPage");
         assertThat(response, containsString("HTTP/1.1 200 OK"));
     }
 

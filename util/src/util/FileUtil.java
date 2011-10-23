@@ -125,10 +125,6 @@ public class FileUtil {
         }
     }
 
-    public static LinkedList<String> getFileLines(String filename) throws IOException {
-        return getFileLines(new File(filename));
-    }
-
     public static LinkedList<String> getFileLines(File file) throws IOException {
         LinkedList<String> lines = new LinkedList<String>();
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -184,12 +180,6 @@ public class FileUtil {
 
     public static List<String> breakFilenameIntoParts(String fileName) {
         return new ArrayList<String>(Arrays.asList(fileName.split("/")));
-    }
-
-    public static String getPathOfFile(String fileName) {
-        List<String> parts = breakFilenameIntoParts(fileName);
-        parts.remove(parts.size() - 1);
-        return buildPath(parts.toArray(new String[parts.size()]));
     }
 
     public static void addItemsToClasspath(String classpathItems) throws Exception {

@@ -30,7 +30,7 @@ public class SetUp extends Fixture {
         properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         FitnesseFixtureContext.clock = new SystemClock();
         Injector injector = Guice.createInjector(
-                new FitNesseModule(properties, null, rootPath, "RooT", 9123, true, true),
+                new FitNesseModule(properties, null, rootPath, "RooT", 9123, true),
                 new AbstractModule() {
                     @Override
                     protected void configure() {

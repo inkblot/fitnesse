@@ -41,7 +41,7 @@ public class ImporterTestCase {
     @Before
     public void beforeImportTest() throws Exception {
         remoteInjector = Guice.createInjector(override(
-                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/remote", "RooT", 1999, true, true))
+                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/remote", "RooT", 1999, true))
                 .with(getRemoteOverrides()));
         remoteRoot = remoteInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         PageCrawler crawler = remoteRoot.getPageCrawler();
@@ -50,7 +50,7 @@ public class ImporterTestCase {
         crawler.addPage(remoteRoot, PathParser.parse("PageTwo"), "page two");
 
         localInjector = Guice.createInjector(
-                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseConstants.DEFAULT_PORT, true, true));
+                new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseConstants.DEFAULT_PORT, true));
         localRoot = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
         pageOne = localRoot.addChildPage("PageOne");
         childPageOne = pageOne.addChildPage("ChildOne");

@@ -15,8 +15,6 @@ lib/*
 FitNesseRoot/ErrorLogs/*
 FitNesseRoot/files/testResults/*
 FitNesseRoot/files/javascript/jsunit/*
-FitNesseRoot/updateList
-FitNesseRoot/updateDoNotCopyOverList
 
 # No idea what these are
 #FitNesseRoot/JunkParent/*

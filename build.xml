@@ -116,30 +116,6 @@
 
     <target name="compile" depends="compile-util,compile-all"/>
 
-    <target name="create-update-lists" depends="compile">
-        <java classname="fitnesse.updates.UpdateFileList" failonerror="true">
-            <classpath>
-                <pathelement path="${build.util.classes}"/>
-                <pathelement path="${build.classes}"/>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-            </classpath>
-            <arg value="-baseDirectory:${resources}/Resources"/>
-            <arg value="-updateList:${build.classes}/Resources/updateList"/>
-            <arg value="-doNotCopyList:${build.classes}/Resources/updateDoNotCopyOverList"/>
-            <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse.css"/>
-            <arg value="-doNotReplace:FitNesseRoot/files/css/fitnesse_print.css"/>
-            <arg value="-doNotReplace:FitNesseRoot/FrontPage/content.txt"/>
-            <arg value="-doNotReplace:FitNesseRoot/FrontPage/properties.xml"/>
-            <arg value="FitNesseRoot/files/images"/>
-            <arg value="FitNesseRoot/files/css"/>
-            <arg value="FitNesseRoot/files/javascript"/>
-            <arg value="FitNesseRoot/files/html"/>
-            <arg value="FitNesseRoot/FrontPage"/>
-            <arg value="FitNesseRoot/PageFooter"/>
-            <arg value="FitNesseRoot/PageHeader"/>
-        </java>
-    </target>
-
     <target name="build-properties" depends="init">
         <tstamp>
             <format property="version.stamp" pattern="yyyyMMdd"/>
@@ -154,7 +130,7 @@
         </propertyfile>
     </target>
 
-    <target name="jar" depends="compile, build-properties, create-update-lists">
+    <target name="jar" depends="compile, build-properties">
         <jar jarfile="${fitnesse.jar}">
             <manifest>
                 <attribute name="Built-By" value="${built.by}"/>
@@ -227,7 +203,6 @@
             <arg value="FitNesse.SuiteAcceptanceTests?suite&amp;format=text"/>
             <arg value="-p"/>
             <arg value="9234"/>
-            <arg value="-o"/>
         </java>
     </target>
 
@@ -241,7 +216,6 @@
             </classpath>
             <arg value="-p"/>
             <arg value="9234"/>
-            <arg value="-o"/>
         </java>
     </target>
 
@@ -260,7 +234,6 @@
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-p"/>
             <arg value="9234"/>
-            <arg value="-o"/>
         </java>
     </target>
 

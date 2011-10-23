@@ -66,12 +66,11 @@ public class GuiceHelper {
         return defaultImplClass;
     }
 
-    public static Injector makeContext(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates, boolean enableChunking) throws Exception {
-        return Guice.createInjector(
-                new FitNesseModule(properties, userpass, rootPath, rootPageName, port, omitUpdates, enableChunking));
+    public static Injector makeContext(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean enableChunking) throws Exception {
+        return Guice.createInjector(new FitNesseModule(properties, userpass, rootPath, rootPageName, port, enableChunking));
     }
 
     public static Injector makeContext(FitNesseMain.Arguments arguments, Properties pluginProperties) throws Exception {
-        return makeContext(pluginProperties, arguments.getUserpass(), arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.isOmittingUpdates(), arguments.getCommand() == null);
+        return makeContext(pluginProperties, arguments.getUserpass(), arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.getCommand() == null);
     }
 }

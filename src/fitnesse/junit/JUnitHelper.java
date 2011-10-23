@@ -39,8 +39,6 @@ public class JUnitHelper {
         testFormatter.setListener(resultsListener);
         FitNesseMain.Arguments arguments = new FitNesseMain.Arguments();
         arguments.setDaysTillVersionsExpire("0");
-        arguments.setInstallOnly(false);
-        arguments.setOmitUpdates(true);
         arguments.setPort(String.valueOf(port));
         arguments.setRootPath(rootPath);
         arguments.setCommand(getCommand(pageName, pageType, suiteFilter));

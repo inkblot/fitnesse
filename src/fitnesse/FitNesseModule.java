@@ -4,8 +4,6 @@ import com.google.inject.*;
 import com.google.inject.name.Names;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.editing.ContentFilter;
-import fitnesse.updates.NoOpUpdater;
-import fitnesse.updates.UpdaterImplementation;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
@@ -40,10 +38,9 @@ public class FitNesseModule extends AbstractModule {
     private final String rootPath;
     private final String rootPageName;
     private final int port;
-    private final boolean omitUpdates;
     private final boolean enableChunking;
 
-    public FitNesseModule(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean omitUpdates, boolean enableChunking) {
+    public FitNesseModule(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean enableChunking) {
         String absolutePath = new File(rootPath).getAbsolutePath();
         if (!absolutePath.equals(rootPath)) {
             logger.warn("rootPath is not absolute: rootPath=" + rootPath + " absolutePath=" + absolutePath, new RuntimeException());
@@ -54,7 +51,6 @@ public class FitNesseModule extends AbstractModule {
         this.rootPath = rootPath;
         this.rootPageName = rootPageName;
         this.port = port;
-        this.omitUpdates = omitUpdates;
         this.enableChunking = enableChunking;
     }
 
@@ -75,17 +71,8 @@ public class FitNesseModule extends AbstractModule {
         String testResultPath = rootPagePath + File.separator + "files" + File.separator + "testResults";
         bind(String.class).annotatedWith(Names.named(TEST_RESULTS_PATH)).toInstance(testResultPath);
         bind(Integer.class).annotatedWith(Names.named(PORT)).toInstance(port);
-        bindUpdater(omitUpdates);
         bind(WikiPage.class).annotatedWith(Names.named(ROOT_PAGE)).toProvider(RootPageProvider.class);
         bind(Boolean.class).annotatedWith(Names.named(ENABLE_CHUNKING)).toInstance(enableChunking);
-    }
-
-    private void bindUpdater(boolean omitUpdates) {
-        if (omitUpdates) {
-            bind(Updater.class).to(NoOpUpdater.class);
-        } else {
-            bind(Updater.class).to(UpdaterImplementation.class);
-        }
     }
 
     @Singleton

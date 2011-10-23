@@ -22,7 +22,6 @@ public class FitNesse {
     public static final FitNesseVersion VERSION = new FitNesseVersion();
 
     private final Injector injector;
-    private final Updater updater;
     private final String rootPagePath;
     private final Integer port;
 
@@ -48,9 +47,8 @@ public class FitNesse {
     }
 
     @Inject
-    public FitNesse(Updater updater, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseModule.PORT) Integer port, Injector injector) {
+    public FitNesse(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseModule.PORT) Integer port, Injector injector) {
         this.injector = injector;
-        this.updater = updater;
         this.rootPagePath = rootPagePath;
         this.port = port;
         establishRequiredDirectories();
@@ -82,11 +80,6 @@ public class FitNesse {
         establishDirectory(rootPagePath);
         establishDirectory(rootPagePath + "/files");
     }
-
-    public void applyUpdates() throws IOException {
-        updater.update();
-    }
-
 
     public boolean isRunning() {
         return theService != null;

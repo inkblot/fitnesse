@@ -24,49 +24,39 @@ public class ArgumentsTest {
         assertEquals(80, args.getPort());
         assertEquals(".", args.getRootPath());
         assertEquals("FitNesseRoot", args.getRootDirectory());
-        assertEquals(null, args.getLogDirectory());
-        assertEquals(false, args.isOmittingUpdates());
         assertEquals(14, args.getDaysTillVersionsExpire());
         assertEquals(null, args.getUserpass());
-        assertEquals(false, args.isInstallOnly());
         assertNull(args.getCommand());
     }
 
     @Test
     public void testArgumentsAlternates() throws Exception {
-        String argString = "-p 123 -d MyWd -r MyRoot -l LogDir -e 321 -o -a userpass.txt -i";
+        String argString = "-p 123 -d MyWd -r MyRoot -e 321 -a userpass.txt";
         FitNesseMain.Arguments args = new FitNesseMain.Arguments(argString.split(" "));
         assertEquals(123, args.getPort());
         assertEquals("MyWd", args.getRootPath());
         assertEquals("MyRoot", args.getRootDirectory());
-        assertEquals("LogDir", args.getLogDirectory());
-        assertEquals(true, args.isOmittingUpdates());
         assertEquals(321, args.getDaysTillVersionsExpire());
         assertEquals("userpass.txt", args.getUserpass());
-        assertEquals(true, args.isInstallOnly());
     }
 
     @Test
     public void testAllArguments() throws Exception {
-        FitNesseMain.Arguments args = new FitNesseMain.Arguments("-p", "81", "-d", "directory", "-r", "root", "-l", "myLogDirectory", "-o", "-e", "22");
+        FitNesseMain.Arguments args = new FitNesseMain.Arguments("-p", "81", "-d", "directory", "-r", "root", "-e", "22");
         assertNotNull(args);
         assertEquals(81, args.getPort());
         assertEquals("directory", args.getRootPath());
         assertEquals("root", args.getRootDirectory());
-        assertEquals("myLogDirectory", args.getLogDirectory());
-        assertTrue(args.isOmittingUpdates());
         assertEquals(22, args.getDaysTillVersionsExpire());
     }
 
     @Test
     public void testNotOmitUpdates() throws Exception {
-        FitNesseMain.Arguments args = new FitNesseMain.Arguments("-p", "81", "-d", "directory", "-r", "root", "-l", "myLogDirectory");
+        FitNesseMain.Arguments args = new FitNesseMain.Arguments("-p", "81", "-d", "directory", "-r", "root");
         assertNotNull(args);
         assertEquals(81, args.getPort());
         assertEquals("directory", args.getRootPath());
         assertEquals("root", args.getRootDirectory());
-        assertEquals("myLogDirectory", args.getLogDirectory());
-        assertFalse(args.isOmittingUpdates());
     }
 
     @Test

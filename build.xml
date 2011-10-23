@@ -81,12 +81,12 @@
         <mkdir dir="${temp}"/>
     </target>
 
-    <path id="util.path">
+    <path id="util.compile.path">
         <fileset dir="${lib.runtime}" includes="*.jar"/>
         <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
     </path>
 
-    <path id="all.path">
+    <path id="all.compile.path">
         <pathelement path="${build.util.classes}"/>
         <fileset dir="${lib.runtime}" includes="*.jar"/>
         <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
@@ -102,7 +102,7 @@
         <antcall target="-compile">
             <param name="compile.src" value="${src.util}"/>
             <param name="compile.classes" value="${build.util.classes}"/>
-            <param name="compile.path" value="util.path"/>
+            <param name="compile.path" value="util.compile.path"/>
         </antcall>
     </target>
 
@@ -110,7 +110,7 @@
         <antcall target="-compile">
             <param name="compile.src" value="${src}"/>
             <param name="compile.classes" value="${build.classes}"/>
-            <param name="compile.path" value="all.path"/>
+            <param name="compile.path" value="all.compile.path"/>
         </antcall>
     </target>
 
@@ -143,17 +143,21 @@
         </jar>
     </target>
 
+    <path id="test.compile.path">
+        <pathelement path="${test.classes}"/>
+        <pathelement path="${build.util.classes}"/>
+        <pathelement path="${build.classes}"/>
+        <fileset dir="${lib.test}" includes="*.jar"/>
+        <fileset dir="${lib.runtime}" includes="*.jar"/>
+        <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
+    </path>
+
     <target name="compile-tests" depends="compile" description="compile the unit tests">
-        <javac srcdir="test" destdir="${test.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
-            <classpath>
-                <pathelement path="${test.classes}"/>
-                <pathelement path="${build.util.classes}"/>
-                <pathelement path="${build.classes}"/>
-                <fileset dir="${lib.test}" includes="*.jar"/>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
-            </classpath>
-        </javac>
+        <antcall target="-compile">
+            <param name="compile.src" value="test"/>
+            <param name="compile.classes" value="${test.classes}"/>
+            <param name="compile.path" value="test.compile.path"/>
+        </antcall>
     </target>
 
     <target name="run-tests" depends="compile, build-properties, compile-tests">
@@ -162,11 +166,7 @@
                 <pathelement path="${test.resources}"/>
                 <pathelement path="${test.classes}"/>
                 <pathelement path="${resources}"/>
-                <pathelement path="${build.util.classes}"/>
-                <pathelement path="${build.classes}"/>
-                <fileset dir="${lib.test}" includes="*.jar"/>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
+                <path refid="test.compile.path"/>
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <formatter type="xml" usefile="true"/>
@@ -190,13 +190,17 @@
         <fail if="test.failed" message="Tests failed"/>
     </target>
 
+    <path id="fitnesse.path">
+        <pathelement path="${test.resources}"/>
+        <fileset file="${fitnesse.jar}"/>
+        <fileset dir="${lib.runtime}" includes="*.jar"/>
+        <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
+    </path>
+
     <target name="integration-test" depends="jar, compile-tests">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
-                <pathelement path="${test.resources}"/>
-                <fileset file="${fitnesse.jar}"/>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
+                <path refid="fitnesse.path"/>
             </classpath>
             <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-c"/>
@@ -209,11 +213,9 @@
     <target name="fitnesse" depends="jar, compile-tests" description="Run the fitnesse wiki">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
-                <pathelement path="${test.resources}"/>
-                <fileset file="${fitnesse.jar}"/>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
+                <path refid="fitnesse.path"/>
             </classpath>
+            <sysproperty key="java.io.tmpdir" value="${temp}"/>
             <arg value="-p"/>
             <arg value="9234"/>
         </java>
@@ -223,10 +225,7 @@
             description="Run the fitnesse wiki an connect to a listening debugger">
         <java classname="fitnesseMain.FitNesseMain" failonerror="true" fork="true">
             <classpath>
-                <pathelement path="${test.resources}"/>
-                <fileset file="${fitnesse.jar}"/>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
+                <path refid="fitnesse.path"/>
             </classpath>
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xnoagent"/>

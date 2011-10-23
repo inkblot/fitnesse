@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.updates;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -13,20 +11,8 @@ import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class FileUpdateTest extends UpdateTestCase {
-    public final File testFile = new File("classes/testFile");
-
-    protected Update makeUpdate() throws Exception {
+    protected Update makeUpdate() {
         return new FileUpdate(rootPagePath, "testFile", "files" + File.separator + "images");
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        testFile.createNewFile();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        testFile.delete();
     }
 
     @Test

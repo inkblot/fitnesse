@@ -6,17 +6,18 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URL;
-import java.util.regex.Pattern;
 
 public class FileUpdate implements Update {
 
-    protected String destination;
-    protected String source;
-    protected File destinationDir;
-    protected String rootDir;
-    protected String filename;
+    protected final String destination;
+    protected final String source;
+    protected final File destinationDir;
+    protected final String rootDir;
+    protected final String filename;
 
     public FileUpdate(String rootDirectory, String source, String destination) {
+        URL url = getResource(source);
+        if (url == null) throw new NullPointerException("source");
         this.destination = destination;
         this.source = source;
         rootDir = rootDirectory;
@@ -26,34 +27,14 @@ public class FileUpdate implements Update {
     }
 
     public void doUpdate() throws IOException {
-        makeSureDirectoriesExist();
-        copyResource();
-    }
-
-    private void makeSureDirectoriesExist() {
-        String[] subDirectories = destination.split(Pattern.quote(File.separator));
-        String currentDirPath = rootDir;
-
-        for (String subDirectory : subDirectories) {
-            currentDirPath = currentDirPath + File.separator + subDirectory;
-            File directory = new File(currentDirPath);
-            directory.mkdir();
-        }
-    }
-
-    private void copyResource() throws IOException {
-        URL url = getResource(source);
-        if (url == null) throw new NullPointerException("source");
+        destinationDir.mkdirs();
 
         InputStream input = null;
         OutputStream output = null;
         try {
-            input = url.openStream();
-            output = new FileOutputStream(destinationFile());
-
-            int b;
-            while ((b = input.read()) != -1)
-                output.write(b);
+            input = getResource(source).openStream();
+            output = new FileOutputStream(destinationFile(), false);
+            IOUtils.copy(input, output);
         } finally {
             IOUtils.closeQuietly(input);
             IOUtils.closeQuietly(output);

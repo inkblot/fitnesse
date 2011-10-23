@@ -10,12 +10,15 @@ import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.Updater;
 import fitnesse.wiki.*;
+import org.junit.After;
 import org.junit.Before;
 import util.FileUtil;
 
+import java.io.File;
 import java.util.Properties;
 
 public abstract class UpdateTestCase extends FitnesseBaseTestCase {
+    public final File testFile = new File("classes/testFile");
 
     protected WikiPage root;
     protected String rootPagePath;
@@ -57,11 +60,16 @@ public abstract class UpdateTestCase extends FitnesseBaseTestCase {
         pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "some content");
         pageTwo = crawler.addPage(pageOne, PathParser.parse("PageTwo"), "page two content");
 
+        testFile.createNewFile();
         update = makeUpdate();
-
     }
 
-    protected Update makeUpdate() throws Exception {
+    @After
+    public final void afterUpdateTest() {
+        testFile.delete();
+    }
+
+    protected Update makeUpdate() {
         return null;
-    }
+    };
 }

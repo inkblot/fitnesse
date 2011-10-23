@@ -9,6 +9,8 @@
     <property name="resources" location="${basedir}/resources"/>
     <property name="test.resources" location="${basedir}/test-resources"/>
     <property name="build" location="${basedir}/build"/>
+    <property name="build.util" location="${build}/util"/>
+    <property name="build.util.classes" location="${build.util}/classes"/>
     <property name="build.classes" location="${build}/classes"/>
     <property name="test.classes" location="${build}/test/classes"/>
     <property name="test.results" location="${build}/test/results"/>
@@ -23,7 +25,6 @@
     <property name="fitnesse.jar" location="${dist}/fitnesse.jar"/>
     <property name="temp" location="${build}/tmp"/>
     <property name="built.by" value="Nate Riffe &lt;inkblot@movealong.org&gt;"/>
-
 
     <property name="ivy.version" value="2.0.0"/>
     <property name="ivy.lib" location="${env.HOME}/.ant/lib"/>
@@ -80,25 +81,37 @@
         <mkdir dir="${temp}"/>
     </target>
 
+    <path id="util.path">
+        <fileset dir="${lib.runtime}" includes="*.jar"/>
+        <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
+    </path>
+
+    <path id="all.path">
+        <pathelement path="${build.util.classes}"/>
+        <fileset dir="${lib.runtime}" includes="*.jar"/>
+        <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
+    </path>
+
+    <target name="-compile">
+        <mkdir dir="${compile.classes}"/>
+        <javac srcdir="${compile.src}" destdir="${compile.classes}" debug="true" source="1.6" target="1.6"
+               includeantruntime="false" classpathref="${compile.path}"/>
+    </target>
+
     <target name="compile-util" depends="init">
-        <javac srcdir="${src.util}" destdir="${build.classes}" debug="true" source="1.6" target="1.6"
-               includeantruntime="false">
-            <classpath>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
-            </classpath>
-        </javac>
+        <antcall target="-compile">
+            <param name="compile.src" value="${src.util}"/>
+            <param name="compile.classes" value="${build.util.classes}"/>
+            <param name="compile.path" value="util.path"/>
+        </antcall>
     </target>
 
     <target name="compile-all" depends="init,compile-util">
-        <javac srcdir="${src}" destdir="${build.classes}" debug="true" source="1.6" target="1.6"
-               includeantruntime="false">
-            <classpath>
-                <pathelement path="${build.classes}"/>
-                <fileset dir="${lib.runtime}" includes="*.jar"/>
-                <!--<fileset dir="${lib.compile}" includes="*.jar"/>-->
-            </classpath>
-        </javac>
+        <antcall target="-compile">
+            <param name="compile.src" value="${src}"/>
+            <param name="compile.classes" value="${build.classes}"/>
+            <param name="compile.path" value="all.path"/>
+        </antcall>
     </target>
 
     <target name="compile" depends="compile-util,compile-all"/>
@@ -106,6 +119,7 @@
     <target name="create-update-lists" depends="compile">
         <java classname="fitnesse.updates.UpdateFileList" failonerror="true">
             <classpath>
+                <pathelement path="${build.util.classes}"/>
                 <pathelement path="${build.classes}"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
             </classpath>
@@ -147,6 +161,7 @@
                 <attribute name="Main-Class" value="fitnesseMain.FitNesseMain"/>
             </manifest>
 
+            <fileset dir="${build.util.classes}" includes="**/*"/>
             <fileset dir="${build.classes}" includes="**/*"/>
             <fileset dir="${resources}" includes="**/*"/>
         </jar>
@@ -156,6 +171,7 @@
         <javac srcdir="test" destdir="${test.classes}" debug="true" source="1.6" target="1.6" includeantruntime="false">
             <classpath>
                 <pathelement path="${test.classes}"/>
+                <pathelement path="${build.util.classes}"/>
                 <pathelement path="${build.classes}"/>
                 <fileset dir="${lib.test}" includes="*.jar"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>
@@ -170,6 +186,7 @@
                 <pathelement path="${test.resources}"/>
                 <pathelement path="${test.classes}"/>
                 <pathelement path="${resources}"/>
+                <pathelement path="${build.util.classes}"/>
                 <pathelement path="${build.classes}"/>
                 <fileset dir="${lib.test}" includes="*.jar"/>
                 <fileset dir="${lib.runtime}" includes="*.jar"/>

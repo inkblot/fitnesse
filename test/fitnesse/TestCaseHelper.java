@@ -21,6 +21,8 @@ public class TestCaseHelper {
         cp.append(File.pathSeparator);
         cp.append(classPathDir("../test-resources"));
         cp.append(File.pathSeparator);
+        cp.append(classPathDir("util/classes"));
+        cp.append(File.pathSeparator);
         cp.append(classPathDir("classes"));
         cp.append(File.pathSeparator);
         cp.append(classPathDir("../resources"));

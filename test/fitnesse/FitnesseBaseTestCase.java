@@ -6,6 +6,7 @@ import com.google.inject.name.Names;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPageFactory;
 import org.junit.After;
+import org.movealong.junit.BaseInjectedTestCase;
 import util.FileUtil;
 
 import java.io.File;

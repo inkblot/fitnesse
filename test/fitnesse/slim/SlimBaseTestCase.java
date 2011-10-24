@@ -1,7 +1,7 @@
 package fitnesse.slim;
 
 import com.google.inject.Module;
-import fitnesse.BaseInjectedTestCase;
+import org.movealong.junit.BaseInjectedTestCase;
 import util.UtilModule;
 
 /**

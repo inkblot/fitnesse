@@ -3,19 +3,18 @@
 package fitnesse.components;
 
 import fitnesse.FitnesseBaseTestCase;
-import fitnesse.TestCaseHelper;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static util.ClassPathHelper.classPath;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class CommandRunnerTest extends FitnesseBaseTestCase {
 
     @Test
     public void testBasics() throws Exception {
-        String classPath = TestCaseHelper.classPath();
-        CommandRunner runner = new CommandRunner("java -cp " + classPath + " fitnesse.testutil.Echo", "echo this!");
+        CommandRunner runner = new CommandRunner("java -cp " + classPath() + " fitnesse.testutil.Echo", "echo this!");
         runner.run();
         assertHasRegexp("echo this!", runner.getOutput());
         assertEquals("", runner.getError());

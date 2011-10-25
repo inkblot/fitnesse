@@ -3,7 +3,6 @@
 package fitnesse.components;
 
 import fitnesse.FitnesseBaseTestCase;
-import fitnesse.TestCaseHelper;
 import fitnesse.http.MockSocket;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.TestSummary;
@@ -21,6 +20,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static util.ClassPathHelper.classPath;
 import static util.RegexAssertions.assertSubString;
 
 public class FitClientTest extends FitnesseBaseTestCase implements TestSystemListener {
@@ -35,7 +35,7 @@ public class FitClientTest extends FitnesseBaseTestCase implements TestSystemLis
     @Before
     public void setUp() throws Exception {
         CommandRunningFitClient.TIMEOUT = 5000;
-        client = new CommandRunningFitClient(this, "java -cp " + TestCaseHelper.classPath() + " fit.FitServer ", port, new SocketDealer());
+        client = new CommandRunningFitClient(this, "java -cp " + classPath() + " fit.FitServer ", port, new SocketDealer());
         receiver = new CustomFitSocketReceiver(port);
     }
 

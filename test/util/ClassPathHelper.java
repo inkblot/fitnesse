@@ -44,9 +44,9 @@ public class ClassPathHelper {
                     return dir.equals(jarDirFile) && name.endsWith(".jar");
                 }
             });
-            for (int index = 0; index < jarList.length; index++) {
-                assertTrue(jarList[index].exists());
-                dirClassPath.append(jarList[index].getAbsolutePath()).append(File.pathSeparator);
+            for (File aJarList : jarList) {
+                assertTrue(aJarList.exists());
+                dirClassPath.append(aJarList.getAbsolutePath()).append(File.pathSeparator);
             }
         }
         return dirClassPath;

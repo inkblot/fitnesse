@@ -1,9 +1,8 @@
 package util;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertTrue;
 
@@ -18,42 +17,38 @@ public class ClassPathHelper {
         StringBuilder cp = new StringBuilder();
 
         cp.append(classPathDir("test/classes"));
-        cp.append(File.pathSeparator);
         cp.append(classPathDir("../test-resources"));
-        cp.append(File.pathSeparator);
         cp.append(classPathDir("classes"));
-        cp.append(File.pathSeparator);
         cp.append(classPathDir("../resources"));
-        cp.append(File.pathSeparator);
         cp.append(classPathJarDir("../lib/runtime"));
-//        cp.append(File.pathSeparator);
-//        cp.append(classPathJarDir("../lib/compile"));
-        cp.append(File.pathSeparator);
+        cp.append(classPathJarDir("../lib/compile"));
         cp.append(classPathJarDir("../lib/test"));
 
-        return cp.toString();
+        return cp.toString().replaceAll(Pattern.quote(File.pathSeparator) + "$", "");
     }
 
     public static String classPathDir(String dir) {
         File dirFile = new File(dir);
-        assertTrue(dirFile.exists());
-        return dirFile.getAbsolutePath();
+        if (dirFile.exists())
+            return dirFile.getAbsolutePath() + File.pathSeparator;
+        return "";
     }
 
-    public static String classPathJarDir(String jarDir) {
+    public static StringBuilder classPathJarDir(String jarDir) {
         final File jarDirFile = new File(jarDir);
-        assertTrue(jarDirFile.exists());
-        File[] jarList = jarDirFile.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return dir.equals(jarDirFile) && name.endsWith(".jar");
+        StringBuilder dirClassPath = new StringBuilder();
+        if (jarDirFile.exists()) {
+            File[] jarList = jarDirFile.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return dir.equals(jarDirFile) && name.endsWith(".jar");
+                }
+            });
+            for (int index = 0; index < jarList.length; index++) {
+                assertTrue(jarList[index].exists());
+                dirClassPath.append(jarList[index].getAbsolutePath()).append(File.pathSeparator);
             }
-        });
-        String[] jarPaths = new String[jarList.length];
-        for (int index = 0; index < jarPaths.length; index++) {
-            assertTrue(jarList[index].exists());
-            jarPaths[index] = jarList[index].getAbsolutePath();
         }
-        return StringUtils.join(jarPaths, File.pathSeparator);
+        return dirClassPath;
     }
 }

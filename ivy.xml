@@ -20,8 +20,8 @@
     </publications>
 
     <dependencies>
-        <dependency org="org.movealong" name="fitnesse-util" rev="0.0.32" conf="runtime->default"/>
-        <dependency org="org.movealong" name="fit" rev="0.0.34" conf="runtime->default"/>
+        <dependency org="org.movealong" name="fitnesse-util" rev="0.0.33" conf="runtime->default"/>
+        <dependency org="org.movealong" name="fit" rev="0.0.35" conf="runtime->default"/>
         <dependency org="com.google.inject" name="guice" rev="3.0" conf="runtime->default"/>
         <dependency org="ant" name="ant" rev="1.7.0" conf="runtime->default"/>
         <dependency org="org.htmlparser" name="htmlparser" rev="1.6" conf="runtime->default"/>
@@ -36,8 +36,8 @@
         <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.2" conf="runtime->default"/>
 
         <dependency org="org.easymock" name="easymock" rev="2.3" conf="test->default"/>
-        <dependency org="org.movealong" name="junit-guice" rev="1.0.0" conf="test->default"/>
-        <dependency org="org.movealong" name="fitnesse-test-util" rev="0.0.33" conf="test->default"/>
+        <dependency org="org.movealong" name="junit-guice" rev="1.0.2" conf="test->default"/>
+        <dependency org="org.movealong" name="fitnesse-test-util" rev="0.0.35" conf="test->default"/>
     </dependencies>
 
 </ivy-module>

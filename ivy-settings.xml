@@ -6,41 +6,27 @@
             <filesystem name="local" m2compatible="true">
                 <ivy pattern="${user.home}/.ivy/repo/[organization]/[module]/[revision]/ivy-[revision].[ext]"/>
                 <artifact
-                        pattern="${user.home}/.ivy/repo/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+                        pattern="${user.home}/.ivy/repo/[organization]/[module]/[revision]/[artifact]-[type]-[revision].[ext]"/>
             </filesystem>
 
             <url name="movealong-public" m2compatible="true">
                 <ivy pattern="http://ivy.movealong.org/public/[organization]/[module]/[revision]/ivy-[revision].[ext]"/>
                 <artifact
-                        pattern="http://ivy.movealong.org/public/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+                        pattern="http://ivy.movealong.org/public/[organization]/[module]/[revision]/[artifact]-[type]-[revision].[ext]"/>
             </url>
 
-            <ibiblio name="m2" m2compatible="true"/>
-            <ibiblio name="ibiblio" m2compatible="true" root="http://mirrors.ibiblio.org/pub/mirrors/maven2/"/>
-            <ibiblio name="javanet" m2compatible="true" root="http://download.java.net/maven/2/"/>
-            <ibiblio name="jclouds" m2compatible="true" root="http://jclouds.googlecode.com/svn/repo/"/>
-            <ibiblio name="oauth" m2compatible="true" root="http://oauth.googlecode.com/svn/code/maven/"/>
+            <url name="movealong-mirror" m2compatible="true">
+                <ivy pattern="http://ivy.movealong.org/mirror/[organization]/[module]/[revision]/ivy-[revision].[ext]"/>
+                <artifact
+                        pattern="http://ivy.movealong.org/mirror/[organization]/[module]/[revision]/[artifact]-[type]-[revision].[ext]"/>
+            </url>
         </chain>
 
         <ssh name="dorothy-public" user="jenkins" host="dorothy.movealong.org" port="24"
              keyFile="${user.home}/.ssh/id_ivy" m2compatible="true" publishPermissions="0644">
             <ivy pattern="/var/www/ivy.movealong.org/public/[organization]/[module]/[revision]/ivy-[revision].[ext]"/>
             <artifact
-                    pattern="/var/www/ivy.movealong.org/public/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"/>
-        </ssh>
-
-        <ssh name="dorothy-mirror" user="jenkins" host="dorothy.movealong.org" port="24"
-             keyFile="${user.home}/.ssh/id_ivy" m2compatible="true" publishPermissions="0644">
-            <ivy pattern="/var/www/ivy.movealong.org/mirror/[organization]/[module]/[revision]/ivy-[revision].[ext]"/>
-            <artifact
-                    pattern="/var/www/ivy.movealong.org/mirror/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"/>
-        </ssh>
-
-        <ssh name="dorothy-private" user="jenkins" host="dorothy.movealong.org" port="24"
-             keyFile="${user.home}/.ssh/id_ivy" m2compatible="true" publishPermissions="0644">
-            <ivy pattern="/var/www/ivy.movealong.org/private/[organization]/[module]/[revision]/ivy-[revision].[ext]"/>
-            <artifact
-                    pattern="/var/www/ivy.movealong.org/private/[organization]/[module]/[revision]/[artifact]-[revision].[ext]"/>
+                    pattern="/var/www/ivy.movealong.org/public/[organization]/[module]/[revision]/[artifact]-[type]-[revision].[ext]"/>
         </ssh>
     </resolvers>
 </ivysettings>

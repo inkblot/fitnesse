@@ -37,19 +37,15 @@ public class FitNesseMain {
             }
         } catch (CommandLineParseException e) {
             logger.error("Invalid command line: ", Arrays.asList(argv));
-            System.err.println("Usage: java -jar fitnesse.jar [-pdrleoa]");
+            System.err.println("Usage: java -jar fitnesse.jar [-pdreac]");
             System.err.println("\t-p <port number> {" + FitNesseConstants.DEFAULT_PORT + "}");
             System.err.println("\t-d <working directory> {" + FitNesseConstants.DEFAULT_PATH
                     + "}");
             System.err.println("\t-r <page root directory> {" + FitNesseConstants.DEFAULT_ROOT
                     + "}");
-            System.err.println("\t-l <log directory> {no logging}");
             System.err.println("\t-e <days> {" + FitNesseConstants.DEFAULT_VERSION_DAYS
                     + "} Number of days before page versions expire");
-            System.err.println("\t-o omit updates");
-            System.err
-                    .println("\t-a {user:pwd | user-file-name} enable authentication.");
-            System.err.println("\t-i Install only, then quit.");
+            System.err.println("\t-a {user:pwd | user-file-name} enable authentication.");
             System.err.println("\t-c <command> execute single command.");
             System.exit(1);
         }

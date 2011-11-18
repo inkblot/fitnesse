@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.runner;
 
-import fitnesse.components.ContentBuffer;
+import util.io.ContentBuffer;
 import fitnesse.responders.run.TestSummary;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

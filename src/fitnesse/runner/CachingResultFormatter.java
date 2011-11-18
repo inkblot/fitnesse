@@ -4,7 +4,7 @@ package fitnesse.runner;
 
 import fit.Counts;
 import fit.FitProtocol;
-import fitnesse.components.ContentBuffer;
+import util.io.ContentBuffer;
 import fitnesse.responders.run.TestSummary;
 
 import java.io.ByteArrayOutputStream;

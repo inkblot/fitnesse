@@ -3,7 +3,7 @@
 package fitnesse.slim;
 
 import com.google.inject.Guice;
-import fitnesse.socketservice.SocketService;
+import util.socketservice.SocketService;
 import util.CommandLine;
 import util.CommandLineParseException;
 import util.UtilModule;

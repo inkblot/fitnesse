@@ -7,7 +7,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import fitnesse.http.*;
-import fitnesse.socketservice.SocketService;
+import util.socketservice.SocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

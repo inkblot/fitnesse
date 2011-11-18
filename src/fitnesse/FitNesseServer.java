@@ -3,7 +3,7 @@
 package fitnesse;
 
 import com.google.inject.Injector;
-import fitnesse.socketservice.SocketServer;
+import util.socketservice.SocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

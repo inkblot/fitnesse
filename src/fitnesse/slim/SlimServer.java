@@ -2,8 +2,8 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.slim;
 
-import fitnesse.socketservice.SocketServer;
-import fitnesse.socketservice.SocketService;
+import util.socketservice.SocketServer;
+import util.socketservice.SocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ImpossibleException;

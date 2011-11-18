@@ -26,6 +26,6 @@
 	fitnesse.FitNesseExpediter.start(FitNesseExpediter.java:47)
 	fitnesse.FitNesseServer.serve(FitNesseServer.java:24)
 	fitnesse.FitNesseServer.serve(FitNesseServer.java:17)
-	fitnesse.socketservice.SocketService$ServerRunner.run(SocketService.java:88)
+	util.socketservice.SocketService$ServerRunner.run(SocketService.java:88)
 	java.lang.Thread.run(Thread.java:613)
 }}}

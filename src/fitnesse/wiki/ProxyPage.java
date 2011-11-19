@@ -3,7 +3,6 @@
 package fitnesse.wiki;
 
 import com.google.inject.Injector;
-import fitnesse.http.ResponseParser;
 import util.ClockUtil;
 
 import java.io.IOException;
@@ -21,7 +20,6 @@ public class ProxyPage extends CachingPage implements Serializable {
     private String host;
     private int hostPort;
     private WikiPagePath realPath;
-    public ResponseParser parser;
     private long lastLoadChildrenTime = 0;
 
     public ProxyPage(WikiPage original, Injector injector) throws IOException {

@@ -13,6 +13,7 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.StringUtil;
 
 import java.net.SocketException;
 
@@ -74,7 +75,7 @@ public abstract class ChunkingResponder implements Responder {
 
     private void addExceptionAndCloseResponse(Exception e) {
         try {
-            response.add(ErrorResponder.makeExceptionString(e));
+            response.add(StringUtil.makeExceptionString(e));
             response.closeAll();
         } catch (RuntimeException e1) {
             logger.error("An exception occurred while processing an earlier exception", e1);

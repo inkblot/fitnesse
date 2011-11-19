@@ -8,6 +8,7 @@ import fitnesse.FitNesseModule;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PagePointer;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 
@@ -168,7 +169,7 @@ public class WidgetRoot extends ParentWidget {
         else if (key.equals("FITNESSE_PORT"))
             value = page.getInjector().getInstance(Key.get(Integer.class, Names.named(FitNesseModule.PORT))).toString();
         else if (key.equals("FITNESSE_ROOTPATH"))
-            value = page.getInjector().getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PATH)));
+            value = page.getInjector().getInstance(Key.get(String.class, Names.named(WikiPageFactory.ROOT_PATH)));
         return value;
     }
 

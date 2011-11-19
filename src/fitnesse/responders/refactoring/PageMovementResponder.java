@@ -4,7 +4,6 @@ import fitnesse.Responder;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.ReferenceRenamer;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;

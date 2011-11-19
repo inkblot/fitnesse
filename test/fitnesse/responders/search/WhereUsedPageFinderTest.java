@@ -1,9 +1,10 @@
-package fitnesse.components;
+package fitnesse.responders.search;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.components.SearchObserver;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageCrawler;

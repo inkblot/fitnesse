@@ -1,5 +1,7 @@
-package fitnesse.components;
+package fitnesse.responders.search;
 
+import fitnesse.components.PageFinder;
+import fitnesse.components.SearchObserver;
 import fitnesse.wiki.TraversalListener;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiWordReference;

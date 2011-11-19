@@ -5,8 +5,6 @@ package fitnesse.responders.refactoring;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
-import fitnesse.components.PageReferenceRenamer;
-import fitnesse.components.ReferenceRenamer;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.wiki.PathParser;

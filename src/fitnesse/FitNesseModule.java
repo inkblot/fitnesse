@@ -25,8 +25,6 @@ public class FitNesseModule extends AbstractModule {
     private static final Logger logger = LoggerFactory.getLogger(FitNesseModule.class);
 
     public static final String ROOT_PAGE = "fitnesse.rootPage";
-    public static final String ROOT_PATH = "fitnesse.rootPath";
-    public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
     public static final String ROOT_PAGE_PATH = "fitnesse.rootPagePath";
     public static final String PORT = "fitnesse.port";
     public static final String PROPERTIES_FILE = "plugins.properties";
@@ -64,8 +62,8 @@ public class FitNesseModule extends AbstractModule {
         GuiceHelper.bindFromProperty(binder(), HtmlPageFactory.class, properties);
         install(new SymbolProviderModule());
         install(new UtilModule());
-        bind(String.class).annotatedWith(Names.named(ROOT_PATH)).toInstance(rootPath);
-        bind(String.class).annotatedWith(Names.named(ROOT_PAGE_NAME)).toInstance(rootPageName);
+        bind(String.class).annotatedWith(Names.named(WikiPageFactory.ROOT_PATH)).toInstance(rootPath);
+        bind(String.class).annotatedWith(Names.named(WikiPageFactory.ROOT_PAGE_NAME)).toInstance(rootPageName);
         String rootPagePath = rootPath + File.separator + rootPageName;
         bind(String.class).annotatedWith(Names.named(ROOT_PAGE_PATH)).toInstance(rootPagePath);
         String testResultPath = rootPagePath + File.separator + "files" + File.separator + "testResults";

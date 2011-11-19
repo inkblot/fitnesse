@@ -5,9 +5,9 @@ package fitnesse.responders.run;
 import util.CommandRunner;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.responders.ErrorResponder;
 import fitnesse.wiki.*;
 import util.ClockUtil;
+import util.StringUtil;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -109,7 +109,7 @@ public class ExecutionLog {
             buffer.append("s");
         buffer.append(":'''").append("\n");
         for (Throwable exception : exceptions) {
-            buffer.append("{{{ ").append(ErrorResponder.makeExceptionString(exception)).append("}}}");
+            buffer.append("{{{ ").append(StringUtil.makeExceptionString(exception)).append("}}}");
         }
     }
 

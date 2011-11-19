@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.responders.ErrorResponder;
+import util.StringUtil;
 
 import java.io.IOException;
 
@@ -51,7 +51,7 @@ public class VirtualCouplingExtension implements Extension {
             if (page == null)
                 page = hostPage.addChildPage("VirtualWikiNetworkError");
             PageData data = page.getData();
-            data.setContent("{{{" + ErrorResponder.makeExceptionString(e) + "}}}");
+            data.setContent("{{{" + StringUtil.makeExceptionString(e) + "}}}");
             page.commit(data);
         }
     }

@@ -5,7 +5,6 @@ package fitnesse.responders.search;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
-import fitnesse.components.WhereUsedPageFinder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.WikiPage;

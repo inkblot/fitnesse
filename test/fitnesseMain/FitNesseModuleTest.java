@@ -188,8 +188,8 @@ public class FitNesseModuleTest {
         assertNotNull(injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS))));
         assertNotNull(injector.getInstance(FileSystem.class));
         assertNotNull(injector.getInstance(Key.get(Properties.class, Names.named(FitNesseModule.PROPERTIES_FILE))));
-        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PATH))));
-        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PAGE_NAME))));
+        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(WikiPageFactory.ROOT_PATH))));
+        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(WikiPageFactory.ROOT_PAGE_NAME))));
         assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PAGE_PATH))));
         assertNotNull(injector.getInstance(Key.get(Integer.class, Names.named(FitNesseModule.PORT))));
         assertNotNull(injector.getInstance(WikiPageFactory.class));

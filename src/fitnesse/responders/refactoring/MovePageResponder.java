@@ -7,8 +7,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureResponder;
-import fitnesse.components.MovedPageReferenceRenamer;
-import fitnesse.components.ReferenceRenamer;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.wiki.PageCrawler;

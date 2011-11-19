@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.responders.run.ExecutionLog;
 import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.*;
@@ -146,7 +145,7 @@ public class PageData implements Serializable {
         PageCrawler crawler = wikiPage.getPageCrawler();
         String relativePagePath = crawler.getRelativeName(
                 crawler.getRoot(wikiPage), wikiPage);
-        return relativePagePath.startsWith(ExecutionLog.ErrorLogName);
+        return relativePagePath.startsWith("ErrorLogs");
     }
 
     // TODO: Should be written to a real logger, but it doesn't like FitNesse's

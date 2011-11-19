@@ -4,13 +4,14 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 
 import java.lang.reflect.Method;
 
 @Singleton
 public class WikiPageFactory {
     public static final String WIKI_PAGE_CLASS = "WikiPage";
+    public static final String ROOT_PATH = "fitnesse.rootPath";
+    public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
 
     private final Injector injector;
     private final String rootPath;
@@ -21,8 +22,8 @@ public class WikiPageFactory {
     @Inject
     public WikiPageFactory(Injector injector,
                            @Named(WikiPageFactory.WIKI_PAGE_CLASS) Class<? extends WikiPage> wikiPageClass,
-                           @Named(FitNesseModule.ROOT_PATH) String rootPath,
-                           @Named(FitNesseModule.ROOT_PAGE_NAME) String rootPageName) {
+                           @Named(ROOT_PATH) String rootPath,
+                           @Named(ROOT_PAGE_NAME) String rootPageName) {
         this.injector = injector;
         this.wikiPageClass = wikiPageClass;
         this.rootPath = rootPath;

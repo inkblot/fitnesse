@@ -309,7 +309,7 @@ public class FitServerTest extends FitnesseBaseTestCase {
     }
 
     protected String command() {
-        return "java -cp " + classPath() + " fit.FitServer";
+        return "java -cp " + classPath("..") + " fit.FitServer";
     }
 
     protected String simpleTable(String fixtureName) {

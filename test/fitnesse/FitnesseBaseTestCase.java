@@ -35,7 +35,7 @@ public abstract class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     @After
     public final void afterContextualText() {
-        FileUtil.deleteFileSystemDirectory(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PATH))));
+        FileUtil.deleteFileSystemDirectory(injector.getInstance(Key.get(String.class, Names.named(WikiPageFactory.ROOT_PATH))));
     }
 
     protected String getUserPass() {

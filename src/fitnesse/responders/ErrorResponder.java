@@ -10,6 +10,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import util.StringUtil;
 
 public class ErrorResponder implements Responder {
     Exception exception;
@@ -31,22 +32,12 @@ public class ErrorResponder implements Responder {
         HtmlPage html = htmlPageFactory.newPage();
         HtmlUtil.addTitles(html, "Error Occurred");
         if (exception != null)
-            html.main.add("<pre>" + makeExceptionString(exception) + "</pre>");
+            html.main.add("<pre>" + StringUtil.makeExceptionString(exception) + "</pre>");
         if (message != null)
             html.main.add(makeErrorMessage());
         response.setContent(html.html());
 
         return response;
-    }
-
-    public static String makeExceptionString(Throwable e) {
-        StringBuilder buffer = new StringBuilder();
-        buffer.append(e.toString()).append("\n");
-        for (StackTraceElement element : e.getStackTrace()) {
-            buffer.append("\t").append(element).append("\n");
-        }
-
-        return buffer.toString();
     }
 
     public HtmlTag makeErrorMessage() {

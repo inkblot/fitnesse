@@ -2,8 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.components.TraversalListener;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

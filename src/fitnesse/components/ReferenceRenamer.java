@@ -3,6 +3,7 @@
 package fitnesse.components;
 
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.TraversalListener;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.parser.*;
 

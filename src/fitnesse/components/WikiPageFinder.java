@@ -1,5 +1,6 @@
 package fitnesse.components;
 
+import fitnesse.wiki.TraversalListener;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;

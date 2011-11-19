@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
-import fitnesse.components.TraversalListener;
 import org.junit.Before;
 import org.junit.Test;
 

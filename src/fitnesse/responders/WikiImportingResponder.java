@@ -12,6 +12,7 @@ import fitnesse.html.*;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiImportProperty;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;

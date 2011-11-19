@@ -6,7 +6,7 @@ import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
-import fitnesse.responders.WikiImportProperty;
+import fitnesse.wikitext.WikiImportProperty;
 import fitnesse.wiki.PageData;
 
 import java.io.IOException;

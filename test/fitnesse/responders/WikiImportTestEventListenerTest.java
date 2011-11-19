@@ -16,6 +16,7 @@ import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.WikiImportProperty;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

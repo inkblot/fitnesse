@@ -13,7 +13,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.responders.WikiImportProperty;
+import fitnesse.wikitext.WikiImportProperty;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import org.json.JSONObject;

@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.components.PageReferencer;
 import fitnesse.wiki.*;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class IncludeWidget extends ParentWidget implements PageReferencer {
+public class IncludeWidget extends ParentWidget {
     public static final String REGEXP =
             "^!include(?: +-setup| +-teardown| +-seamless| +-c)? " + WikiWordWidget.REGEXP + "\n" + "?";
     static final Pattern pattern = Pattern.compile("^!include *(-setup|-teardown|-seamless|-c)? (.*)");
@@ -204,10 +203,6 @@ public class IncludeWidget extends ParentWidget implements PageReferencer {
 
     public String render() throws IOException {
         return childHtml();
-    }
-
-    public WikiPage getReferencedPage() throws IOException {
-        return getParentPage().getPageCrawler().getPage(getParentPage(), PathParser.parse(pageName));
     }
 
     public String asWikiText() {

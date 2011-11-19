@@ -8,7 +8,7 @@ import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.responders.WikiImportProperty;
+import fitnesse.wikitext.WikiImportProperty;
 import fitnesse.wiki.*;
 import org.json.JSONObject;
 import org.junit.Before;

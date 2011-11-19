@@ -2,7 +2,6 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.components.PageReferencer;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
 import fitnesse.wiki.PageCrawler;
@@ -20,7 +19,7 @@ import java.util.regex.Pattern;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 
-public class WikiWordWidget extends TextWidget implements PageReferencer {
+public class WikiWordWidget extends TextWidget {
     public static final String SINGLE_WIKIWORD_REGEXP = "\\b[A-Z](?:[a-z0-9]+[A-Z][a-z0-9]*)+";
     public static final String REGEXP = "(?:[<>^.])?(?:" + SINGLE_WIKIWORD_REGEXP + "[.]?)+\\b";
     public static final String REGRACE_LINK = "REGRACE_LINK";
@@ -208,11 +207,6 @@ public class WikiWordWidget extends TextWidget implements PageReferencer {
             return "." + undecoratedPath;
         }
         return theWord;
-    }
-
-    public WikiPage getReferencedPage() throws IOException {
-        String theWord = getWikiWord();
-        return parentPage.getPageCrawler().getPage(parentPage, PathParser.parse(theWord));
     }
 
     public void acceptVisitor(WidgetVisitor visitor) {

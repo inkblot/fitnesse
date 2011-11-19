@@ -18,6 +18,7 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiImportProperty;
 import org.apache.velocity.VelocityContext;
 import util.Clock;
 
@@ -85,7 +86,7 @@ public class WikiPageResponder implements SecureResponder {
         html.header.add("<a style=\"font-size:small;\" onclick=\"popup('addChildPopup')\"> [add child]</a>");
         html.actions.use(HtmlUtil.makeActions(page.getActions()));
         SetupTeardownAndLibraryIncluder.includeInto(pageData);
-        html.main.use(generateHtml(pageData, page));
+        html.main.use(generateHtml(pageData));
         VelocityContext velocityContext = new VelocityContext();
 
         velocityContext.put("page_name", page.getName());
@@ -96,7 +97,7 @@ public class WikiPageResponder implements SecureResponder {
     }
 
     /* hook for subclasses */
-    protected String generateHtml(PageData pageData, WikiPage page) throws IOException {
+    protected String generateHtml(PageData pageData) throws IOException {
         return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
     }
 

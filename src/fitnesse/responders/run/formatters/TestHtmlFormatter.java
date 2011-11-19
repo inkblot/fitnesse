@@ -3,7 +3,7 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.html.*;
-import fitnesse.responders.WikiImportProperty;
+import fitnesse.wikitext.WikiImportProperty;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;

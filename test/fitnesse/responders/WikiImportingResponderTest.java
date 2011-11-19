@@ -17,6 +17,7 @@ import fitnesse.http.Response;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiImportProperty;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

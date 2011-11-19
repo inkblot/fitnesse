@@ -2,7 +2,7 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.responders.WikiImportProperty;
+import fitnesse.wikitext.WikiImportProperty;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import fitnesse.wikitext.widgets.TOCWidget;
@@ -11,6 +11,7 @@ import util.GracefulNamer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class ContentsItemBuilder {
     private Symbol contents;
@@ -53,7 +54,7 @@ public class ContentsItemBuilder {
     }
 
     private Collection<SourcePage> getSortedChildren(SourcePage parent) {
-        ArrayList<SourcePage> result = new ArrayList<SourcePage>(parent.getChildren());
+        List<SourcePage> result = new ArrayList<SourcePage>(parent.getChildren());
         Collections.sort(result);
         return result;
     }

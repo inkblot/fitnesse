@@ -13,6 +13,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiImportProperty;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;

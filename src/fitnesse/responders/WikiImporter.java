@@ -6,6 +6,7 @@ import fitnesse.wiki.TraversalListener;
 import fitnesse.http.RequestBuilder;
 import fitnesse.http.ResponseParser;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiImportProperty;
 import org.w3c.dom.Document;
 import util.XmlUtil;
 

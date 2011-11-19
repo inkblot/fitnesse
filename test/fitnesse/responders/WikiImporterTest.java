@@ -7,6 +7,7 @@ import com.google.inject.name.Names;
 import fitnesse.FitNesseModule;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiImportProperty;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

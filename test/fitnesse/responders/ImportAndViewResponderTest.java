@@ -7,6 +7,7 @@ import fitnesse.http.Response;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wikitext.WikiImportProperty;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

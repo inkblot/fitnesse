@@ -13,6 +13,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiImportProperty;
 
 import static org.apache.commons.lang.StringUtils.isEmpty;
 

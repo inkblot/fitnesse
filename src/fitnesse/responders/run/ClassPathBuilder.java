@@ -1,8 +1,7 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.responders.run;
 
-import fitnesse.responders.run.TestSystem;
 import fitnesse.wiki.InheritedItemBuilder;
 import fitnesse.wiki.WikiPage;
 import util.Wildcard;
@@ -62,7 +61,7 @@ public class ClassPathBuilder extends InheritedItemBuilder {
         return path;
     }
 
-    private List<String> expandWildcards(List<String> paths) {
+    private List<String> expandWildcards(Iterable<String> paths) {
         allPaths = new ArrayList<String>();
         for (String path : paths)
             expandWildcards(path);
@@ -83,7 +82,7 @@ public class ClassPathBuilder extends InheritedItemBuilder {
 
     private void recursivelyAddMatchingFiles(String path, File dir) {
         String singleWildcardPath = convertDoubleToSingleWildcard(path);
-        addMatchingSubfiles(singleWildcardPath, dir);
+        addMatchingSubFiles(singleWildcardPath, dir);
     }
 
     private boolean isExpandableSingleWildcard(String path, File dir) {
@@ -115,11 +114,11 @@ public class ClassPathBuilder extends InheritedItemBuilder {
         }
     }
 
-    private void addMatchingSubfiles(String path, File dir) {
+    private void addMatchingSubFiles(String path, File dir) {
         addMatchingFiles(path, dir);
         for (File file : dir.listFiles()) {
             if (file.isDirectory())
-                addMatchingSubfiles(path, file);
+                addMatchingSubFiles(path, file);
         }
     }
 

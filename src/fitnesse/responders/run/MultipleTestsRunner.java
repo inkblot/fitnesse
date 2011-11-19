@@ -3,7 +3,6 @@
 package fitnesse.responders.run;
 
 import com.google.inject.Injector;
-import fitnesse.components.ClassPathBuilder;
 import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageData;
@@ -180,7 +179,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
 
     void announceTotalTestsToRun(PagesByTestSystem pagesByTestSystem) {
         int tests = 0;
-        for (LinkedList<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
+        for (Collection<WikiPage> listOfPagesToRun : pagesByTestSystem.values()) {
             tests += listOfPagesToRun.size();
         }
         resultsListener.announceNumberTestsToRun(tests);
@@ -200,7 +199,7 @@ public class MultipleTestsRunner implements TestSystemListener, Stoppable {
         return classPathBuilder.createClassPathString(classPathElements, pathSeparator);
     }
 
-    private void addClassPathElements(WikiPage page, List<String> classPathElements, Set<WikiPage> visitedPages) throws IOException {
+    private void addClassPathElements(WikiPage page, Collection<String> classPathElements, Set<WikiPage> visitedPages) throws IOException {
         List<String> pathElements = new ClassPathBuilder().getInheritedPathElements(page, visitedPages);
         classPathElements.addAll(pathElements);
     }

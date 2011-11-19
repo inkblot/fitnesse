@@ -3,12 +3,11 @@
 package fitnesse.components;
 
 import com.google.inject.ImplementedBy;
-import fit.FitServer;
-import fitnesse.http.MockCommandRunner;
 import fitnesse.responders.run.SocketDealer;
 import fitnesse.responders.run.SocketDonor;
 import fitnesse.responders.run.SocketSeeker;
 import fitnesse.responders.run.TestSystemListener;
+import util.CommandRunner;
 
 import java.io.IOException;
 import java.util.Map;
@@ -111,7 +110,7 @@ public class CommandRunningFitClient extends FitClient implements SocketSeeker {
         public void run() {
             try {
                 Thread.sleep(1000);  // next waitFor() can finish too quickly on Linux!
-                commandRunner.process.waitFor();
+                commandRunner.waitFor();
                 synchronized (CommandRunningFitClient.this) {
                     if (!connectionEstablished) {
                         CommandRunningFitClient.this.notify();

@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.responders.run.slimResponder;
 
-import fitnesse.components.CommandRunner;
+import util.CommandRunner;
 import fitnesse.responders.run.ExecutionLog;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
@@ -296,7 +296,7 @@ public abstract class SlimTestSystem extends TestSystem implements SlimTestConte
         return html;
     }
 
-    private List<Object> createInstructions(List<SlimTable> tables) {
+    private List<Object> createInstructions(Iterable<SlimTable> tables) {
         List<Object> instructions = new ArrayList<Object>();
         for (SlimTable table : tables) {
             table.appendInstructions(instructions);

@@ -8,7 +8,6 @@ import com.google.inject.name.Named;
 import fit.FitProtocol;
 import fitnesse.FitNesseModule;
 import fitnesse.Responder;
-import fitnesse.components.ClassPathBuilder;
 import fitnesse.components.FitClient;
 import fitnesse.html.SetupTeardownAndLibraryIncluder;
 import fitnesse.http.Request;

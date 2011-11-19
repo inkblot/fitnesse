@@ -1,6 +1,6 @@
 // Copyright (C) 2003-2009 by Object Mentor, Inc. All rights reserved.
 // Released under the terms of the CPL Common Public License version 1.0.
-package fitnesse.components;
+package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -61,7 +61,7 @@ public class ClassPathBuilderTest extends FitnesseBaseTestCase {
     public void testGetPaths_OneLevel() throws Exception {
         String pageContent = "This is some content\n" +
                 "!path aPath\n" +
-                "end of conent\n";
+                "end of content\n";
         WikiPage root = InMemoryPage.makeRoot("RooT", injector);
         WikiPage page = crawler.addPage(root, PathParser.parse("ClassPath"), pageContent);
         String path = builder.getClasspath(page);

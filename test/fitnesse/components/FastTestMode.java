@@ -2,6 +2,7 @@ package fitnesse.components;
 
 import fit.FitServer;
 import fitnesse.http.MockCommandRunner;
+import util.CommandRunner;
 
 import java.util.Map;
 

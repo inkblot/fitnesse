@@ -8,7 +8,7 @@ import util.Maybe;
 
 import java.util.HashMap;
 
-public class ParsingPage {
+public class ParsingPage implements VariableSource {
     private final SourcePage page;
     private final SourcePage namedPage;
     private final HashMap<String, HashMap<String, Maybe<String>>> cache;
@@ -69,6 +69,7 @@ public class ParsingPage {
         return cache.get(key).get(name);
     }
 
+    @Override
     public Maybe<String> findVariable(String name) {
         return findVariable(page, name);
     }

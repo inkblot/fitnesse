@@ -10,7 +10,8 @@ import fitnesse.wiki.PagePointer;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.WidgetBuilder;
-import fitnesse.wikitext.WikiWidget;
+import fitnesse.wikitext.parser.VariableSource;
+import util.Maybe;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-public class WidgetRoot extends ParentWidget {
+public class WidgetRoot extends ParentWidget implements VariableSource {
     private Map<String, String> variables = new HashMap<String, String>();
     private WidgetBuilder builder;
     private final WikiPage page;
@@ -242,10 +243,6 @@ public class WidgetRoot extends ParentWidget {
         return page;
     }
 
-    public void setEscaping(boolean value) {
-        doEscaping = value;
-    }
-
     public boolean doEscaping() {
         return doEscaping;
     }
@@ -262,9 +259,14 @@ public class WidgetRoot extends ParentWidget {
         return childWikiText();
     }
 
-    public void addChildToFront(WikiWidget widget) {
-        children.addFirst(widget);
-        widget.setParent(this);
+    @Override
+    public Maybe<String> findVariable(String name) {
+        try {
+            return new Maybe<String>(getVariable(name));
+        } catch (IOException e) {
+            return Maybe.noString;
+        }
+
     }
 }
 

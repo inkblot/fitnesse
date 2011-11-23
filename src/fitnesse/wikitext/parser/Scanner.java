@@ -17,11 +17,13 @@ public class Scanner {
     public Scanner(SourcePage sourcePage, String input) {
         this.input = new ScanString(input, 0);
         next = 0;
-        textMaker = new TextMaker(new VariableSource() {
-            public Maybe<String> findVariable(String name) {
-                return Maybe.noString;
-            }
-        },
+        textMaker = new TextMaker(
+                new VariableSource() {
+                    @Override
+                    public Maybe<String> findVariable(String name) {
+                        return Maybe.noString;
+                    }
+                },
                 sourcePage);
     }
 

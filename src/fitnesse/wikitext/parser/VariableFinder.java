@@ -9,6 +9,7 @@ public class VariableFinder implements VariableSource {
         this.page = page;
     }
 
+    @Override
     public Maybe<String> findVariable(String name) {
         Maybe<String> result = page.getSpecialVariableValue(name);
         if (!result.isNothing()) return result;

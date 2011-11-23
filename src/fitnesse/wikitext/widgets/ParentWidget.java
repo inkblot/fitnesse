@@ -21,8 +21,7 @@ public abstract class ParentWidget extends WikiWidget {
 
     //!include: New constructor for alias
     public ParentWidget(ParentWidget alias, boolean isAlias) {
-        super(null);
-        parent = alias.parent;
+        super(alias.getParent());
         if (isAlias) {
             children = alias.children;
             currentChild = alias.currentChild;
@@ -32,7 +31,7 @@ public abstract class ParentWidget extends WikiWidget {
 
     //!include: Expose the root widget via the parent
     public WidgetRoot getRoot() {
-        return parent.getRoot();
+        return getParent().getRoot();
     }
 
     public void reset() {
@@ -86,19 +85,19 @@ public abstract class ParentWidget extends WikiWidget {
     }
 
     public int defineLiteral(String literal) {
-        return parent.defineLiteral(literal);
+        return getParent().defineLiteral(literal);
     }
 
     public String getLiteral(int literalNumber) {
-        return parent.getLiteral(literalNumber);
+        return getParent().getLiteral(literalNumber);
     }
 
     public void addVariable(String key, String value) {
-        parent.addVariable(key, value);
+        getParent().addVariable(key, value);
     }
 
     public String getVariable(String key) throws IOException {
-        return parent.getVariable(key);
+        return getParent().getVariable(key);
     }
 
     public void addChildWidgets(String value) {
@@ -106,11 +105,11 @@ public abstract class ParentWidget extends WikiWidget {
     }
 
     public WidgetBuilder getBuilder() {
-        return parent.getBuilder();
+        return getParent().getBuilder();
     }
 
     public boolean doEscaping() {
-        return parent.doEscaping();
+        return getParent().doEscaping();
     }
 
     public boolean preProcessingComplete() {

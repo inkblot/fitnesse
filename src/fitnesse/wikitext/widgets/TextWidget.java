@@ -29,7 +29,7 @@ public class TextWidget extends WikiWidget implements WidgetWithTextArgument {
 
     public String render() throws IOException {
         String html = getText();
-        if (parent.doEscaping())
+        if (getParent().doEscaping())
             html = Utils.escapeHTML(html);
         html = html.replaceAll("\r\n", "\n");
         html = html.replaceAll("\r", "\n");

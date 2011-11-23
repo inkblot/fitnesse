@@ -28,7 +28,7 @@ public class VariableDefinitionWidget extends ParentWidget {
     }
 
     public String render() {
-        parent.addVariable(name, value);
+        getParent().addVariable(name, value);
         return HtmlUtil.metaText("variable defined: " + name + "=" + value);
     }
 

@@ -9,7 +9,7 @@ import util.GracefulNamer;
 import java.io.IOException;
 
 public abstract class WikiWidget {
-    protected ParentWidget parent = null;
+    private final ParentWidget parent;
 
     protected WikiWidget(ParentWidget parent) {
         this.parent = parent;
@@ -20,13 +20,9 @@ public abstract class WikiWidget {
         return parent;
     }
 
-    public void setParent(ParentWidget parent) {
-        this.parent = parent;
-    }
-
     protected void addToParent() {
-        if (this.parent != null)
-            this.parent.addChild(this);
+        if (getParent() != null)
+            getParent().addChild(this);
     }
 
     public abstract String render() throws IOException;
@@ -36,7 +32,7 @@ public abstract class WikiWidget {
     }
 
     public WikiPage getWikiPage() {
-        return parent.getWikiPage();
+        return getParent().getWikiPage();
     }
 
     public String asWikiText() {

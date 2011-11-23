@@ -60,7 +60,7 @@ public class TableCellWidget extends ParentWidget {
         if (isLiteral)
             return WidgetBuilder.literalVariableEvaluatorWidgetBuilder;
         else
-            return parent.getBuilder();
+            return getParent().getBuilder();
     }
 }
 

@@ -1,7 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import util.Maybe;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +15,7 @@ public class Scanner {
     public Scanner(SourcePage sourcePage, String input) {
         this.input = new ScanString(input, 0);
         next = 0;
-        textMaker = new TextMaker(
-                new VariableSource() {
-                    @Override
-                    public Maybe<String> findVariable(String name) {
-                        return Maybe.noString;
-                    }
-                },
-                sourcePage);
+        textMaker = new TextMaker(new NullVariableSource(), sourcePage);
     }
 
     public Scanner(TextMaker textMaker, String input) {

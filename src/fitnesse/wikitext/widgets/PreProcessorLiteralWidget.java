@@ -25,7 +25,7 @@ public class PreProcessorLiteralWidget extends WikiWidget {
                 escapedLiteral = true;
             literalText = match.group(1);
             literalToRender = htmlify(literalText);
-            literalNumber = this.parent.defineLiteral(literalToRender);
+            literalNumber = getParent().defineLiteral(literalToRender);
         }
     }
 

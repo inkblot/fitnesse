@@ -33,7 +33,7 @@ public class VariableWidget extends ParentWidget {
     }
 
     private void doRender() throws IOException {
-        String value = parent.getVariable(name);
+        String value = getParent().getVariable(name);
         if (value != null) {
             addChildWidgets(value);
             renderedText = childHtml();

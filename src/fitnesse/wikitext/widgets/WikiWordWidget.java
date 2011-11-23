@@ -62,7 +62,7 @@ public class WikiWordWidget extends TextWidget {
     }
 
     public boolean isRegracing() throws IOException {
-        return "true".equals(parent.getVariable(REGRACE_LINK));
+        return "true".equals(getParent().getVariable(REGRACE_LINK));
     }
 
     private String makeLinkToExistingWikiPage(String qualifiedName, WikiPage wikiPage) throws IOException {

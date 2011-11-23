@@ -105,21 +105,21 @@ public class TOCWidget extends WikiWidget {
     }
 
     private void initVarFlags() throws IOException {
-        isVarGraceful = "true".equals(parent.getVariable(REGRACE_TOC));
-        isVarPropertied = "true".equals(parent.getVariable(PROPERTY_TOC));
-        isVarFiltered = "true".equals(parent.getVariable(FILTER_TOC));
-        isVarHelpShown = "true".equals(parent.getVariable(HELP_TOC));
+        isVarGraceful = "true".equals(getParent().getVariable(REGRACE_TOC));
+        isVarPropertied = "true".equals(getParent().getVariable(PROPERTY_TOC));
+        isVarFiltered = "true".equals(getParent().getVariable(FILTER_TOC));
+        isVarHelpShown = "true".equals(getParent().getVariable(HELP_TOC));
     }
 
     private void initMoreSuffix() throws IOException {
-        String moreSuffixEnv = parent.getVariable(MORE_SUFFIX_TOC);
+        String moreSuffixEnv = getParent().getVariable(MORE_SUFFIX_TOC);
         moreSuffix = (moreSuffixEnv != null) ? moreSuffixEnv : MORE_SUFFIX_DEFAULT;
     }
 
     private void initPropertyCharacters() {
         StringBuilder propChars = new StringBuilder();
         try {
-            String propsFromEnv = parent.getVariable(PROPERTY_CHARACTERS);
+            String propsFromEnv = getParent().getVariable(PROPERTY_CHARACTERS);
             if (propsFromEnv != null) propChars.append(propsFromEnv);
         } catch (Exception e) {
         }
@@ -133,7 +133,7 @@ public class TOCWidget extends WikiWidget {
     }
 
     private void initHelpTextPrefix() throws IOException {
-        String helpPrefixEnv = parent.getVariable(HELP_PREFIX_TOC);
+        String helpPrefixEnv = getParent().getVariable(HELP_PREFIX_TOC);
         helpTextPrefix = (helpPrefixEnv != null) ? helpPrefixEnv : HELP_PREFIX_DEFAULT;
     }
 

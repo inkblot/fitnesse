@@ -94,7 +94,7 @@ public class IncludeWidget extends ParentWidget {
     }
 
     protected WikiPage getParentPage() {
-        return parent.getWikiPage().getParent();
+        return getParent().getWikiPage().getParent();
     }
 
     private String getOption(Matcher match) {
@@ -184,7 +184,7 @@ public class IncludeWidget extends ParentWidget {
     }
 
     private boolean isTeardownCollapsed() throws IOException {
-        final String teardownCollapseVariable = parent.getVariable(COLLAPSE_TEARDOWN);
+        final String teardownCollapseVariable = getParent().getVariable(COLLAPSE_TEARDOWN);
         return teardownCollapseVariable == null || "true".equals(teardownCollapseVariable);
     }
 
@@ -193,7 +193,7 @@ public class IncludeWidget extends ParentWidget {
     }
 
     private boolean isSetupCollapsed() throws IOException {
-        final String setupCollapseVariable = parent.getVariable(COLLAPSE_SETUP);
+        final String setupCollapseVariable = getParent().getVariable(COLLAPSE_SETUP);
         return setupCollapseVariable == null || "true".equals(setupCollapseVariable);
     }
 

@@ -21,11 +21,11 @@ public class LiteralWidget extends WikiWidget {
     }
 
     public String render() {
-        return parent.getLiteral(literalNumber);
+        return getParent().getLiteral(literalNumber);
     }
 
     public String asWikiText() {
-        return "!-" + parent.getLiteral(literalNumber) + "-!";
+        return "!-" + getParent().getLiteral(literalNumber) + "-!";
     }
 }
 

@@ -21,29 +21,71 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 public class WidgetRoot extends ParentWidget {
-    private final Map<String, String> variables;
-    private WidgetBuilder builder;
-    private final WikiPage page;
-    private boolean doEscaping = true;
-    private List<String> literals = new LinkedList<String>();
-    private boolean isGatheringInfo = false;
-    private WidgetRoot includingPage;
-    private static final Map<String, String> includingPagePropertyMap = new HashMap<String, String>();
 
     private static final String RUNNING_PAGE_NAME = "RUNNING_PAGE_NAME";
     private static final String RUNNING_PAGE_PATH = "RUNNING_PAGE_PATH";
+
+    private static final Map<String, String> includingPagePropertyMap = new HashMap<String, String>();
 
     static {
         includingPagePropertyMap.put(RUNNING_PAGE_NAME, "PAGE_NAME");
         includingPagePropertyMap.put(RUNNING_PAGE_PATH, "PAGE_PATH");
     }
 
-    //Constructor for IncludeWidget support (alias locale & scope)
-    public WidgetRoot(WikiPage aliasPage, ParentWidget imposterWidget) {
-        super(imposterWidget, /*is alias=*/ true);
-        WidgetRoot aliasRoot = imposterWidget.getRoot();
+    private final Map<String, String> variables;
+    private final WidgetBuilder builder;
+    private final WikiPage page;
 
-        this.builder = imposterWidget.getBuilder();
+    private boolean doEscaping = true;
+    private List<String> literals = new LinkedList<String>();
+    private boolean isGatheringInfo = false;
+    private WidgetRoot includingPage;
+
+    public WidgetRoot(PagePointer pagePointer) throws IOException {
+        this("", pagePointer);
+    }
+
+    public WidgetRoot(String value, PagePointer pagePointer) throws IOException {
+        this(value, pagePointer, WidgetBuilder.htmlWidgetBuilder);
+    }
+
+    public WidgetRoot(String value, PagePointer pagePointer, WidgetBuilder builder) throws IOException {
+        super(null);
+        this.variables = new HashMap<String, String>();
+        this.page = pagePointer.getPage();
+        this.builder = builder;
+        if (value != null)
+            buildWidgets(value);
+    }
+
+    public WidgetRoot(WikiPage page) throws IOException {
+        this("", page);
+    }
+
+    public WidgetRoot(String value, WikiPage page) throws IOException {
+        this(value, page, WidgetBuilder.htmlWidgetBuilder);
+    }
+
+    public WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
+        this(value, page, builder, false);
+    }
+
+    protected WidgetRoot(String value, WikiPage page, WidgetBuilder builder, boolean isGathering) throws IOException {
+        super(null);
+        this.variables = new HashMap<String, String>();
+        this.page = page;
+        this.builder = builder;
+        this.isGatheringInfo = isGathering;
+        if (value != null)
+            buildWidgets(value);
+    }
+
+    //Constructor for IncludeWidget support (alias locale & scope)
+    public WidgetRoot(WikiPage aliasPage, ParentWidget impostorWidget) {
+        super(impostorWidget, /*is alias=*/ true);
+        WidgetRoot aliasRoot = impostorWidget.getRoot();
+
+        this.builder = impostorWidget.getBuilder();
         this.variables = aliasRoot.variables;
         this.doEscaping = aliasRoot.doEscaping;
         this.literals = aliasRoot.literals;
@@ -58,45 +100,6 @@ public class WidgetRoot extends ParentWidget {
 
     public boolean isGatheringInfo() {
         return isGatheringInfo;
-    }
-
-    public WidgetRoot(WikiPage page) throws IOException {
-        this("", page, WidgetBuilder.htmlWidgetBuilder);
-    }
-
-    public WidgetRoot(String value, WikiPage page) throws IOException {
-        this(value, page, WidgetBuilder.htmlWidgetBuilder);
-    }
-
-    public WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
-        this(value, page, builder, false);
-    }
-
-    public WidgetRoot(String value, WikiPage page, WidgetBuilder builder, boolean isGathering) throws IOException {
-        super(null);
-        this.variables = new HashMap<String, String>();
-        this.page = page;
-        this.builder = builder;
-        this.isGatheringInfo = isGathering;
-        if (value != null)
-            buildWidgets(value);
-    }
-
-    public WidgetRoot(PagePointer pagePointer) throws IOException {
-        this("", pagePointer, WidgetBuilder.htmlWidgetBuilder);
-    }
-
-    public WidgetRoot(String value, PagePointer pagePointer) throws IOException {
-        this(value, pagePointer, WidgetBuilder.htmlWidgetBuilder);
-    }
-
-    public WidgetRoot(String value, PagePointer pagePointer, WidgetBuilder builder) throws IOException {
-        super(null);
-        this.variables = new HashMap<String, String>();
-        this.page = pagePointer.getPage();
-        this.builder = builder;
-        if (value != null)
-            buildWidgets(value);
     }
 
     public WidgetBuilder getBuilder() {

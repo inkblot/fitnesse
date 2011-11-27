@@ -111,10 +111,10 @@ public class IncludeWidget extends ParentWidget {
         String includedText = getIncludedPageContent(includeOption);
         String widgetText = processLiterals(includedText);
 
-        //Create imposter root with alias = this if included page found.
+        //Create impostor root with alias = this if included page found.
         ParentWidget incRoot = (includedPage == null) ? this : new WidgetRoot(includedPage, this);
 
-        if (isSeamLess(includeOption) || getRoot().isGatheringInfo()) {  //Use the imposter if found.
+        if (isSeamLess(includeOption) || getRoot().isGatheringInfo()) {  //Use the impostor if found.
             incRoot.addChildWidgets(widgetText + "\n");
         } else {  //Use new constructor with dual scope.
             new CollapsableWidget(

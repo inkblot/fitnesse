@@ -161,7 +161,6 @@ public class WidgetRoot extends ParentWidget {
             page = parent;
             // Gain access to page data to set parent's literal list
             PageData pageData = page.getData();
-            pageData.setLiterals(this.getLiterals());
             value = pageData.getVariable(key);
         }
         return value;

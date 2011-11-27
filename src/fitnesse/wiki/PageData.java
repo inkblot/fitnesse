@@ -243,10 +243,6 @@ public class PageData implements Serializable {
         getParsingPage().putVariable(name, value);
     }
 
-    public void setLiterals(List<String> literals) {
-    }
-
-
     public String translateToHtml(Symbol syntaxTree) {
         return new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage).translateTree(syntaxTree);
     }

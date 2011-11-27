@@ -106,20 +106,20 @@ public class TOCWidget extends WikiWidget {
     }
 
     private void initVarFlags() {
-        isVarGraceful = "true".equals(getRoot().findVariable(REGRACE_TOC).getValue());
-        isVarPropertied = "true".equals(getRoot().findVariable(PROPERTY_TOC).getValue());
-        isVarFiltered = "true".equals(getRoot().findVariable(FILTER_TOC).getValue());
-        isVarHelpShown = "true".equals(getRoot().findVariable(HELP_TOC).getValue());
+        isVarGraceful = "true".equals(getVariableSource().findVariable(REGRACE_TOC).getValue());
+        isVarPropertied = "true".equals(getVariableSource().findVariable(PROPERTY_TOC).getValue());
+        isVarFiltered = "true".equals(getVariableSource().findVariable(FILTER_TOC).getValue());
+        isVarHelpShown = "true".equals(getVariableSource().findVariable(HELP_TOC).getValue());
     }
 
     private void initMoreSuffix() {
-        Maybe<String> moreSuffixEnv = getRoot().findVariable(MORE_SUFFIX_TOC);
+        Maybe<String> moreSuffixEnv = getVariableSource().findVariable(MORE_SUFFIX_TOC);
         moreSuffix = moreSuffixEnv.isNothing() ? MORE_SUFFIX_DEFAULT : moreSuffixEnv.getValue();
     }
 
     private void initPropertyCharacters() {
         StringBuilder propChars = new StringBuilder();
-        Maybe<String> propsFromEnv = getRoot().findVariable(PROPERTY_CHARACTERS);
+        Maybe<String> propsFromEnv = getVariableSource().findVariable(PROPERTY_CHARACTERS);
         if (!propsFromEnv.isNothing()) propChars.append(propsFromEnv.getValue());
 
         int newLength = propChars.length();
@@ -131,7 +131,7 @@ public class TOCWidget extends WikiWidget {
     }
 
     private void initHelpTextPrefix() {
-        Maybe<String> helpPrefixEnv = getRoot().findVariable(HELP_PREFIX_TOC);
+        Maybe<String> helpPrefixEnv = getVariableSource().findVariable(HELP_PREFIX_TOC);
         helpTextPrefix = helpPrefixEnv.isNothing() ? HELP_PREFIX_DEFAULT : helpPrefixEnv.getValue();
     }
 

@@ -3,6 +3,7 @@
 package fitnesse.wikitext;
 
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.parser.VariableSource;
 import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.WidgetRoot;
 import util.GracefulNamer;
@@ -54,6 +55,10 @@ public abstract class WikiWidget {
     //!include: Expose the root widget via the parent
     public WidgetRoot getRoot() {
         return getParent().getRoot();
+    }
+
+    public VariableSource getVariableSource() {
+        return getRoot().getVariableSource();
     }
 }
 

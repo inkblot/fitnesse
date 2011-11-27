@@ -185,7 +185,7 @@ public class IncludeWidget extends ParentWidget {
     }
 
     private boolean isTeardownCollapsed() {
-        final Maybe<String> teardownCollapseVariable = getRoot().findVariable(COLLAPSE_TEARDOWN);
+        final Maybe<String> teardownCollapseVariable = getVariableSource().findVariable(COLLAPSE_TEARDOWN);
         return teardownCollapseVariable.isNothing() || "true".equals(teardownCollapseVariable.getValue());
     }
 
@@ -194,7 +194,7 @@ public class IncludeWidget extends ParentWidget {
     }
 
     private boolean isSetupCollapsed() {
-        final Maybe<String> setupCollapseVariable = getRoot().findVariable(COLLAPSE_SETUP);
+        final Maybe<String> setupCollapseVariable = getVariableSource().findVariable(COLLAPSE_SETUP);
         return setupCollapseVariable.isNothing() || "true".equals(setupCollapseVariable.getValue());
     }
 

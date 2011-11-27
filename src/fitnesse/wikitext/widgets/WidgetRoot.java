@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-public class WidgetRoot extends ParentWidget implements VariableSource {
+public class WidgetRoot extends ParentWidget {
     private final Map<String, String> variables;
     private WidgetBuilder builder;
     private final WikiPage page;
@@ -114,6 +114,15 @@ public class WidgetRoot extends ParentWidget implements VariableSource {
     }
 
     @Override
+    public VariableSource getVariableSource() {
+        return new VariableSource() {
+            @Override
+            public Maybe<String> findVariable(String name) {
+                return WidgetRoot.this.findVariable(name);
+            }
+        };
+    }
+
     public Maybe<String> findVariable(String name) {
         try {
             String value = getVariable(name);
@@ -135,6 +144,7 @@ public class WidgetRoot extends ParentWidget implements VariableSource {
         return value;
     }
 
+    // TODO: NR: is this interpolation?
     private String replaceAllKnownVariables(String value) throws IOException {
         int pos = 0;
         while ((pos = includesVariableAt(value, pos)) != -1) {

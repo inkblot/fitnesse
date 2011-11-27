@@ -28,7 +28,7 @@ public class VariableWidget extends ParentWidget {
 
     public String render() throws IOException {
         if (renderedText == null) {
-            Maybe<String> value = getRoot().findVariable(name);
+            Maybe<String> value = getVariableSource().findVariable(name);
             if (value.isNothing()) {
                 renderedText = HtmlUtil.metaText("undefined variable: " + name);
             } else {

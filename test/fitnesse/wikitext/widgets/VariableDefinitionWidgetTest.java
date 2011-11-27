@@ -79,12 +79,12 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
         widgetRoot = new WidgetRoot(page);
         VariableDefinitionWidget widget = new VariableDefinitionWidget(widgetRoot, "!define x {1}\n");
         assertEquals("<span class=\"meta\">variable defined: x=1</span>", widget.render());
-        assertEquals("1", widgetRoot.getRoot().findVariable("x").getValue());
+        assertEquals("1", widgetRoot.getVariableSource().findVariable("x").getValue());
 
         widgetRoot = new WidgetRoot(page2);
         widget = new VariableDefinitionWidget(widgetRoot, "!define xyzzy (\nbird\n)\n");
         widget.render();
-        assertEquals("\nbird\n", widgetRoot.getRoot().findVariable("xyzzy").getValue());
+        assertEquals("\nbird\n", widgetRoot.getVariableSource().findVariable("xyzzy").getValue());
     }
 
     @Test

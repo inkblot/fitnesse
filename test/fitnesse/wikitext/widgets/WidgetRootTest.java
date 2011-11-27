@@ -57,8 +57,8 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
         WidgetRoot includedRoot = new WidgetRoot(includedPage, widgetRoot);
         PageData data = includedPage.getData();
         assertEquals(INCLUDED_PAGE_NAME, data.getVariable("PAGE_NAME"));
-        assertEquals(INCLUDED_PAGE_NAME, includedRoot.getRoot().findVariable("PAGE_NAME").getValue());
-        assertEquals(ROOT_PAGE_NAME, includedRoot.getRoot().findVariable("RUNNING_PAGE_NAME").getValue());
+        assertEquals(INCLUDED_PAGE_NAME, includedRoot.getVariableSource().findVariable("PAGE_NAME").getValue());
+        assertEquals(ROOT_PAGE_NAME, includedRoot.getVariableSource().findVariable("RUNNING_PAGE_NAME").getValue());
     }
 
     @Test
@@ -66,9 +66,9 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         WikiPage includedPage = crawler.addPage(root, PathParser.parse("IncludedPage"));
         WidgetRoot includedRoot = new WidgetRoot(includedPage);
-        assertEquals("IncludedPage", includedRoot.getRoot().findVariable("PAGE_NAME").getValue());
+        assertEquals("IncludedPage", includedRoot.getVariableSource().findVariable("PAGE_NAME").getValue());
         // RUNNING_PAGE_NAME returns PAGE_NAME if the page isn't included.
-        assertEquals("IncludedPage", includedRoot.getRoot().findVariable("RUNNING_PAGE_NAME").getValue());
+        assertEquals("IncludedPage", includedRoot.getVariableSource().findVariable("RUNNING_PAGE_NAME").getValue());
     }
 
     @Test
@@ -85,8 +85,8 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
         WidgetRoot secondLevelRoot = new WidgetRoot(secondLevelIncludedPage, includedRoot);
         PageData data = secondLevelIncludedPage.getData();
         assertEquals(SECOND_LEVEL_INCLUDED_PAGE_NAME, data.getVariable("PAGE_NAME"));
-        assertEquals(SECOND_LEVEL_INCLUDED_PAGE_NAME, secondLevelRoot.getRoot().findVariable("PAGE_NAME").getValue());
-        assertEquals(ROOT_PAGE_NAME, secondLevelRoot.getRoot().findVariable("RUNNING_PAGE_NAME").getValue());
+        assertEquals(SECOND_LEVEL_INCLUDED_PAGE_NAME, secondLevelRoot.getVariableSource().findVariable("PAGE_NAME").getValue());
+        assertEquals(ROOT_PAGE_NAME, secondLevelRoot.getVariableSource().findVariable("RUNNING_PAGE_NAME").getValue());
     }
 
     @Test
@@ -153,14 +153,14 @@ public class WidgetRootTest extends FitnesseBaseTestCase {
     public void testShouldHavePortVariableAvailable() throws Exception {
         injector.getInstance(FitNesse.class);
         WidgetRoot root = new WidgetRoot("", this.root);
-        assertEquals(Integer.toString(PORT), root.getRoot().findVariable("FITNESSE_PORT").getValue());
+        assertEquals(Integer.toString(PORT), root.getVariableSource().findVariable("FITNESSE_PORT").getValue());
     }
 
     @Test
     public void testShouldHaveRootPathVariableAvailable() throws Exception {
         injector.getInstance(FitNesse.class);
         WidgetRoot root = new WidgetRoot("", this.root);
-        assertEquals(getRootPath(), root.getRoot().findVariable("FITNESSE_ROOTPATH").getValue());
+        assertEquals(getRootPath(), root.getVariableSource().findVariable("FITNESSE_ROOTPATH").getValue());
     }
 
     @Test

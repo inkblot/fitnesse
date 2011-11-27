@@ -9,6 +9,8 @@ import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
 import fitnesse.wikitext.widgets.WidgetWithTextArgument;
 import fitnesse.wikitext.widgets.XRefWidget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.ClockUtil;
 import util.Maybe;
 import util.StringUtil;
@@ -23,6 +25,8 @@ import static fitnesse.wiki.PageType.*;
 public class PageData implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger logger = LoggerFactory.getLogger(PageData.class);
 
     public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(
             XRefWidget.class);
@@ -86,7 +90,6 @@ public class PageData implements Serializable {
     private WikiPageProperties properties = new WikiPageProperties();
     private Set<VersionInfo> versions;
 
-
     private Symbol contentSyntaxTree = null;
     private ParsingPage parsingPage;
 
@@ -148,14 +151,11 @@ public class PageData implements Serializable {
         return relativePagePath.startsWith("ErrorLogs");
     }
 
-    // TODO: Should be written to a real logger, but it doesn't like FitNesse's
-    // logger is
-    // really intended for general logging.
     private void handleInvalidPageName(WikiPage wikiPage) {
         try {
             String msg = "WikiPage " + wikiPage + " does not have a valid name!"
                     + wikiPage.getName();
-            System.err.println(msg);
+            logger.error(msg);
             throw new RuntimeException(msg);
         } catch (Exception e) {
             throw new RuntimeException(e);

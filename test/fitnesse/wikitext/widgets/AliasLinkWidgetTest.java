@@ -44,7 +44,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
     @Test
     public void testHtmlAtTopLevelPage() throws Exception {
         crawler.addPage(root, PathParser.parse("TestPage"));
-        ParentWidget wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")));
+        ParentWidget wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")).getPage());
         AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][TestPage]]");
         String html = w.render();
         assertEquals("<a href=\"TestPage\">tag</a>", html);
@@ -53,7 +53,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
     @Test
     public void testHtmlAtTopLevelPageWithQuestionMark() throws Exception {
         crawler.addPage(root, PathParser.parse("TestPage"));
-        ParentWidget wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")));
+        ParentWidget wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")).getPage());
         AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][TestPage?test]]");
         String html = w.render();
         assertEquals("<a href=\"TestPage?test\">tag</a>", html);
@@ -62,7 +62,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
     @Test
     public void testHtmlAtTopLevelPageWithAnchor() throws Exception {
         crawler.addPage(root, PathParser.parse("TestPage"));
-        ParentWidget wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")));
+        ParentWidget wroot = new WidgetRoot(new PagePointer(root, PathParser.parse("TestPage")).getPage());
         AliasLinkWidget w = new AliasLinkWidget(wroot, "[[tag][TestPage#anchor]]");
         String html = w.render();
         assertEquals("<a href=\"TestPage#anchor\">tag</a>", html);
@@ -75,7 +75,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
         crawler.addPage(parent, PathParser.parse("ChilD"), "ChilD");
         crawler.addPage(parent, PathParser.parse("ChildTwo"), "ChildTwo");
         WikiPage child = parent.getChildPage("ChilD");
-        ParentWidget parentWidget = new WidgetRoot(new PagePointer(root, PathParser.parse("ParenT.ChilD")));
+        ParentWidget parentWidget = new WidgetRoot(new PagePointer(root, PathParser.parse("ParenT.ChilD")).getPage());
         AliasLinkWidget w = new AliasLinkWidget(parentWidget, "[[tag][ChildTwo]]");
         assertEquals("<a href=\"ParenT.ChildTwo\">tag</a>", w.render());
         AliasLinkWidget w2 = new AliasLinkWidget(new WidgetRoot(child), "[[tag][.ParenT]]");
@@ -85,7 +85,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
     @Test
     public void testHtmlForPageThatDoesNotExist() throws Exception {
         crawler.addPage(root, PathParser.parse("FrontPage"));
-        ParentWidget parentWidget = new WidgetRoot(new PagePointer(root, PathParser.parse("FrontPage")));
+        ParentWidget parentWidget = new WidgetRoot(new PagePointer(root, PathParser.parse("FrontPage")).getPage());
         AliasLinkWidget w = new AliasLinkWidget(parentWidget, "[[tag][TestPage]]");
         assertEquals("tag<a title=\"create page\" href=\"TestPage?edit&amp;nonExistent=true\">[?]</a>", w.render());
     }

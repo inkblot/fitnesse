@@ -6,11 +6,10 @@ import com.google.inject.Injector;
 import fitnesse.wiki.PagePointer;
 import fitnesse.wiki.WikiPageDummy;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.WidgetBuilder;
 
 public class MockWidgetRoot extends WidgetRoot {
     public MockWidgetRoot(Injector injector) throws Exception {
-        super(null, new PagePointer(new WikiPageDummy("RooT", injector), new WikiPagePath()), WidgetBuilder.htmlWidgetBuilder);
+        super(null, new PagePointer(new WikiPageDummy("RooT", injector), new WikiPagePath()).getPage());
     }
 
     protected void buildWidgets(String value) {

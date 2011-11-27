@@ -6,7 +6,6 @@ import com.google.inject.Key;
 import com.google.inject.name.Names;
 import fitnesse.FitNesseModule;
 import fitnesse.wiki.PageData;
-import fitnesse.wiki.PagePointer;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.WidgetBuilder;
@@ -40,23 +39,6 @@ public class WidgetRoot extends ParentWidget {
     private List<String> literals = new LinkedList<String>();
     private boolean isGatheringInfo = false;
     private WidgetRoot includingPage;
-
-    public WidgetRoot(PagePointer pagePointer) throws IOException {
-        this("", pagePointer);
-    }
-
-    public WidgetRoot(String value, PagePointer pagePointer) throws IOException {
-        this(value, pagePointer, WidgetBuilder.htmlWidgetBuilder);
-    }
-
-    public WidgetRoot(String value, PagePointer pagePointer, WidgetBuilder builder) throws IOException {
-        super(null);
-        this.variables = new HashMap<String, String>();
-        this.page = pagePointer.getPage();
-        this.builder = builder;
-        if (value != null)
-            buildWidgets(value);
-    }
 
     public WidgetRoot(WikiPage page) throws IOException {
         this("", page);

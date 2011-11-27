@@ -14,14 +14,6 @@ public class TextIgnoringWidgetRoot extends WidgetRoot {
         super(value, page, builder, /*isGatheringInfo=*/ true);
     }
 
-    //Parent Literals: T'I'W'Root ctor with parent's literals
-    public TextIgnoringWidgetRoot(String value, WikiPage page, List<String> literals, WidgetBuilder builder) throws IOException {
-        super(null, page, builder, /*isGatheringInfo=*/ true);
-        if (literals != null) this.setLiterals(literals);
-        this.buildWidgets(value);
-    }
-
-
     public void addChildWidgets(String value) {
         getBuilder().addChildWidgets(value, this, false);
     }

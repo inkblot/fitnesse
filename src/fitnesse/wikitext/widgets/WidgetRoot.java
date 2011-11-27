@@ -130,7 +130,6 @@ public class WidgetRoot extends ParentWidget {
         } catch (IOException e) {
             return Maybe.noString;
         }
-
     }
 
     private String getVariable(String key) throws IOException {
@@ -272,10 +271,6 @@ public class WidgetRoot extends ParentWidget {
 
     public List<String> getLiterals() {
         return literals;
-    }
-
-    public void setLiterals(List<String> literals) {
-        this.literals = literals;
     }
 
     public String asWikiText() {

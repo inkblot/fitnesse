@@ -8,6 +8,7 @@ import fitnesse.FitNesseModule;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +35,7 @@ public class LastModifiedWidgetTest extends WidgetTestCase {
     @Before
     public void setUp() throws Exception {
         page = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"), "some text");
-        widget = new LastModifiedWidget(new WidgetRoot(page), "!lastmodified");
+        widget = new LastModifiedWidget(new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder), "!lastmodified");
     }
 
     @Test

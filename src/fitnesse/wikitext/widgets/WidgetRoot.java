@@ -37,14 +37,6 @@ public class WidgetRoot extends ParentWidget {
     private final boolean ignoringText;
     private final WidgetRoot includingPage;
 
-    public WidgetRoot(WikiPage page) throws IOException {
-        this("", page);
-    }
-
-    public WidgetRoot(String value, WikiPage page) throws IOException {
-        this(value, page, WidgetBuilder.htmlWidgetBuilder);
-    }
-
     public WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
         this(value, page, builder, new HashMap<String, String>(), false, true, new LinkedList<String>(), null, new LinkedList<WikiWidget>(), 0);
     }

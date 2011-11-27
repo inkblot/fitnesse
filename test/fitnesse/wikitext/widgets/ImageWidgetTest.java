@@ -5,6 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,7 +51,7 @@ public class ImageWidgetTest extends WidgetTestCase {
     private void checkWikiTextReconstruction(String original) throws Exception {
         WikiPage root = InMemoryPage.makeRoot("root", injector);
         WikiPage somePage = root.getPageCrawler().addPage(root, PathParser.parse("SomePage"));
-        ParentWidget widgetRoot = new WidgetRoot(somePage);
+        ParentWidget widgetRoot = new WidgetRoot("", somePage, WidgetBuilder.htmlWidgetBuilder);
         ImageWidget widget = new ImageWidget(widgetRoot, original);
         assertEquals(original, widget.asWikiText());
     }

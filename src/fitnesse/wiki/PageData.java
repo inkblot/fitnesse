@@ -258,16 +258,10 @@ public class PageData implements Serializable {
     public List<String> getClasspaths() {
         Symbol tree = getSyntaxTree();
         return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage)).getPaths(tree);
-        //return getTextOfWidgets(classpathWidgetBuilder);
     }
 
     public List<String> getXrefPages() throws IOException {
-        return getTextOfWidgets(xrefWidgetBuilder);
-    }
-
-    private List<String> getTextOfWidgets(WidgetBuilder builder) throws IOException {
-        ParentWidget root = new TextIgnoringWidgetRoot(getContent(), wikiPage,
-                builder);
+        ParentWidget root = new TextIgnoringWidgetRoot(getContent(), wikiPage);
         List<WikiWidget> widgets = root.getChildren();
         List<String> values = new ArrayList<String>();
         for (WikiWidget widget : widgets) {

@@ -4,7 +4,6 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,13 +14,12 @@ import static org.junit.Assert.assertTrue;
 public class TextIgnoringWidgetRootTest extends FitnesseBaseTestCase {
     @Test
     public void testNoTextWidgetAreCreated() throws Exception {
-        String text = "Here is some text with '''bold''' and ''italics''.";
+        String text = "Here is some text with '''bold''' and ''italics'' and a cross reference: \n!see SomeOtherPage";
         WikiPageDummy page = new WikiPageDummy("SomePage", text, injector);
-        ParentWidget root = new TextIgnoringWidgetRoot(text, page, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget root = new TextIgnoringWidgetRoot(text, page);
         List<?> widgets = root.getChildren();
-        assertEquals(2, widgets.size());
-        assertTrue(widgets.get(0) instanceof BoldWidget);
-        assertTrue(widgets.get(1) instanceof ItalicWidget);
+        assertEquals(1, widgets.size());
+        assertTrue(widgets.get(0) instanceof XRefWidget);
     }
 
 }

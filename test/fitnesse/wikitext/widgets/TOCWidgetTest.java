@@ -7,6 +7,7 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -118,7 +119,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     @Test
     public void testTocOnRoot() throws Exception {
-        TOCWidget widget = new TOCWidget(new WidgetRoot(root), "!contents\n");
+        TOCWidget widget = new TOCWidget(new WidgetRoot("", root, WidgetBuilder.htmlWidgetBuilder), "!contents\n");
         String html = widget.render();
         assertHasRegexp("ParenT", html);
         assertHasRegexp("ParentTwo", html);
@@ -147,12 +148,12 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     @Test
     public void testIsNotHierarchical() throws Exception {
-        assertFalse(new TOCWidget(new WidgetRoot(parent), "!contents\n").isRecursive());
+        assertFalse(new TOCWidget(new WidgetRoot("", parent, WidgetBuilder.htmlWidgetBuilder), "!contents\n").isRecursive());
     }
 
     @Test
     public void testIsHierarchical() throws Exception {
-        assertTrue(new TOCWidget(new WidgetRoot(parent), "!contents -R\n").isRecursive());
+        assertTrue(new TOCWidget(new WidgetRoot("", parent, WidgetBuilder.htmlWidgetBuilder), "!contents -R\n").isRecursive());
     }
 
     private WikiPage addGrandChild(WikiPage parent, String childName)
@@ -171,7 +172,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //
     private String renderNormalTOCWidget()
             throws Exception {
-        return new TOCWidget(new WidgetRoot(parent), "!contents\n").render();
+        return new TOCWidget(new WidgetRoot("", parent, WidgetBuilder.htmlWidgetBuilder), "!contents\n").render();
     }
 
     private void assertHtmlWithNoHierarchy(String html) {
@@ -192,7 +193,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalTOCWidget()
             throws Exception {
-        return new TOCWidget(new WidgetRoot(parent), "!contents -R\n").render();
+        return new TOCWidget(new WidgetRoot("", parent, WidgetBuilder.htmlWidgetBuilder), "!contents -R\n").render();
     }
 
     private void assertHtmlWithGrandChild(String html) {
@@ -225,7 +226,7 @@ public class TOCWidgetTest extends WidgetTestCase {
         page.commit(data);
         fitNesseUtil.startFitnesse();
         try {
-            TOCWidget widget = new TOCWidget(new WidgetRoot(page), "!contents\n");
+            TOCWidget widget = new TOCWidget(new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder), "!contents\n");
             String html = widget.render();
             assertVirtualChildrenHtml(html);
         } finally {
@@ -260,7 +261,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //
     private String renderNormalRegracedTOCWidget()
             throws Exception {
-        WidgetRoot root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         return new TOCWidget(root, "!contents\n").render();
     }
@@ -275,14 +276,14 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalRegracedTOCWidgetByVar()
             throws Exception {
-        WidgetRoot root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         return new TOCWidget(root, "!contents -R\n").render();
     }
 
     private String renderHierarchicalRegracedTOCWidgetByOption()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        ParentWidget root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         return new TOCWidget(root, "!contents -R -g\n").render();
     }
 
@@ -330,7 +331,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //
     private String renderNormalRegracedPropTOCWidget()
             throws Exception {
-        WidgetRoot root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         root.addVariable(TOCWidget.PROPERTY_TOC, "true");
         return new TOCWidget(root, "!contents\n").render();
@@ -346,7 +347,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalRegracedPropTOCWidgetByVar()
             throws Exception {
-        WidgetRoot root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         root.addVariable(TOCWidget.PROPERTY_TOC, "true");
         return new TOCWidget(root, "!contents -R\n").render();
@@ -354,7 +355,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     private String renderHierarchicalRegracedPropTOCWidgetByOption()
             throws Exception {
-        WidgetRoot root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         return new TOCWidget(root, "!contents -R -p\n").render();
     }
@@ -373,7 +374,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalRegracedPropAltTOCWidget()
             throws Exception {
-        WidgetRoot root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         root.addVariable(TOCWidget.PROPERTY_CHARACTERS, "#!%");
         return new TOCWidget(root, "!contents -R -p\n").render();
@@ -408,7 +409,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //
     private String renderNormalFiltersTOCWidget()
             throws Exception {
-        WidgetRoot root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         root.addVariable(TOCWidget.FILTER_TOC, "true");
         return new TOCWidget(root, "!contents -g\n").render();
     }
@@ -423,14 +424,14 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalFiltersTOCWidgetByVar()
             throws Exception {
-        WidgetRoot root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         root.addVariable(TOCWidget.FILTER_TOC, "true");
         return new TOCWidget(root, "!contents -R -g\n").render();
     }
 
     private String renderHierarchicalFiltersTOCWidgetByOption()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        ParentWidget root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         return new TOCWidget(root, "!contents -R -g -f\n").render();
     }
 
@@ -463,7 +464,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //
     private String renderNormalHelpTOCWidget()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        ParentWidget root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         return new TOCWidget(root, "!contents -g\n").render();
     }
 
@@ -477,14 +478,14 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalHelpTOCWidgetByVar()
             throws Exception {
-        WidgetRoot root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         root.addVariable(TOCWidget.HELP_TOC, "true");
         return new TOCWidget(root, "!contents -R -g -f\n").render();
     }
 
     private String renderHierarchicalHelpTOCWidgetByOption()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        ParentWidget root = new WidgetRoot("", parent2, WidgetBuilder.htmlWidgetBuilder);
         return new TOCWidget(root, "!contents -R -g -f -h\n").render();
     }
 

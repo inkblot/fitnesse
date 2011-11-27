@@ -3,6 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Test;
 
 import java.util.regex.Matcher;
@@ -35,7 +36,7 @@ public class ClasspathWidgetTest extends WidgetTestCase {
     @Test
     public void testPathWithVariable() throws Exception {
         String text = "!define BASE {/my/base/}\n!path ${BASE}*.jar\n";
-        ParentWidget root = new WidgetRoot(text, new WikiPageDummy(injector));
+        ParentWidget root = new WidgetRoot(text, new WikiPageDummy(injector), WidgetBuilder.htmlWidgetBuilder);
         String html = root.render();
         assertSubString("/my/base/*.jar", html);
     }
@@ -43,7 +44,7 @@ public class ClasspathWidgetTest extends WidgetTestCase {
     @Test
     public void testPathWikiTextWithVariable() throws Exception {
         String text = "!define BASE {/my/base/}\n!path ${BASE}*.jar\n";
-        ParentWidget root = new WidgetRoot(text, new WikiPageDummy(injector));
+        ParentWidget root = new WidgetRoot(text, new WikiPageDummy(injector), WidgetBuilder.htmlWidgetBuilder);
         String text2 = root.asWikiText();
         assertSubString("!path ${BASE}*.jar", text2);
     }

@@ -4,6 +4,7 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class CommentWidgetTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         WikiPageDummy page = new WikiPageDummy(injector);
-        root = new WidgetRoot(page);
+        root = new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder);
     }
 
     @Test

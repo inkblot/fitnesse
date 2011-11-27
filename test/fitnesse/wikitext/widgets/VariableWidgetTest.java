@@ -29,7 +29,7 @@ public class VariableWidgetTest extends WidgetTestCase {
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
         WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"));
-        widgetRoot = new WidgetRoot("", page);
+        widgetRoot = new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder);
     }
 
     @Test
@@ -90,7 +90,7 @@ public class VariableWidgetTest extends WidgetTestCase {
     @Test
     public void testUndefinedVariable() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"));
-        ParentWidget widgetRoot = new WidgetRoot("", page);
+        ParentWidget widgetRoot = new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder);
         VariableWidget w = new VariableWidget(widgetRoot, "${x}");
         assertSubString("undefined variable: x", w.render());
     }

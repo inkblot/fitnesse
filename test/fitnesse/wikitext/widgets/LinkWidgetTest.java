@@ -3,6 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.WikiPageDummy;
+import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -51,7 +52,7 @@ public class LinkWidgetTest extends WidgetTestCase {
     @Test
     public void testLinkWikiWithVariable() throws Exception {
         String text = "!define HOST {somehost}\nhttp://www.${HOST}.com\n";
-        ParentWidget root = new WidgetRoot(text, new WikiPageDummy(injector));
+        ParentWidget root = new WidgetRoot(text, new WikiPageDummy(injector), WidgetBuilder.htmlWidgetBuilder);
         assertSubString("<a href=\"http://www.somehost.com\">http://www.somehost.com</a>", root.render());
         assertEquals(text, root.asWikiText());
     }

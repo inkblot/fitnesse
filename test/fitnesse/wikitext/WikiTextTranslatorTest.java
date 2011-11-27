@@ -92,7 +92,7 @@ public class WikiTextTranslatorTest extends FitnesseBaseTestCase {
     }
 
     private static String translate(String value, WikiPage source) throws Exception {
-        ParentWidget page = new WidgetRoot(value, source);
+        ParentWidget page = new WidgetRoot(value, source, WidgetBuilder.htmlWidgetBuilder);
         return page.render();
     }
 }

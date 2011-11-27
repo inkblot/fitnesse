@@ -39,7 +39,7 @@ public class IncludeWidget extends ParentWidget {
 
     private void addChildWidgetsThatRepresentTheInclusion() throws IOException {
         if (isParentOf(includedPage, includingPage))
-            addChildWidgets(String.format("!meta Error! Cannot include parent page (%s).\n", pageName));
+            addChildWidgets(String.format("!meta Error! Cannot include parent page (%s).\n", getPageName()));
         else
             buildWidget();
     }
@@ -67,7 +67,7 @@ public class IncludeWidget extends ParentWidget {
     protected String getIncludedPageContent() throws IOException {
         PageCrawler crawler = parentPage.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-        WikiPagePath pagePath = PathParser.parse(pageName);
+        WikiPagePath pagePath = PathParser.parse(getPageName());
         includedPage = crawler.getSiblingPage(includingPage, pagePath); //Retain this
 
         if (includedPage != null) {
@@ -81,21 +81,17 @@ public class IncludeWidget extends ParentWidget {
                 ProxyPage remoteIncludedPage = new ProxyPage("RemoteIncludedPage", null, host, port, pagePath, includedPage.getInjector());
                 return remoteIncludedPage.getData().getContent();
             } catch (Exception e) {
-                return "!meta '''Remote page " + host + ":" + port + "/" + pageName + " does not exist.'''";
+                return "!meta '''Remote page " + host + ":" + port + "/" + getPageName() + " does not exist.'''";
             }
         } else {
-            return "!meta '''Page include failed because the page " + pageName + " does not exist.'''";
+            return "!meta '''Page include failed because the page " + getPageName() + " does not exist.'''";
         }
     }
 
     protected WikiPage getIncludedPage() throws IOException {
         PageCrawler crawler = parentPage.getPageCrawler();
         crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
-        return crawler.getPage(parentPage, PathParser.parse(pageName));
-    }
-
-    protected WikiPage getParentPage() {
-        return getParent().getWikiPage().getParent();
+        return crawler.getPage(parentPage, PathParser.parse(getPageName()));
     }
 
     private String getOption(Matcher match) {
@@ -114,13 +110,13 @@ public class IncludeWidget extends ParentWidget {
         //Create impostor root with alias = this if included page found.
         ParentWidget incRoot = (includedPage == null) ? this : new WidgetRoot(includedPage, this);
 
-        if (isSeamLess(includeOption) || getRoot().isGatheringInfo()) {  //Use the impostor if found.
+        if (isSeamLess(includeOption) || getRoot().isIgnoringText()) {  //Use the impostor if found.
             incRoot.addChildWidgets(widgetText + "\n");
         } else {  //Use new constructor with dual scope.
             new CollapsableWidget(
                     incRoot,
                     this,
-                    getPrefix(includeOption) + pageName,
+                    getPrefix(includeOption) + getPageName(),
                     widgetText,
                     getCssClass(includeOption),
                     isCollapsed(includeOption)
@@ -208,11 +204,5 @@ public class IncludeWidget extends ParentWidget {
 
     public String asWikiText() {
         return "";
-    }
-
-    @Override
-    public String processLiterals(String value) throws IOException {
-        // TODO Auto-generated method stub
-        return super.processLiterals(value);
     }
 }

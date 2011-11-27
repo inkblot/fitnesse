@@ -6,16 +6,20 @@ import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WidgetBuilder;
 
 import java.io.IOException;
-import java.util.List;
 
 public class TextIgnoringWidgetRoot extends WidgetRoot {
     //Refactored for isGathering parameter.
     public TextIgnoringWidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
-        super(value, page, builder, /*isGatheringInfo=*/ true);
+        super(value, page, builder);
     }
 
     public void addChildWidgets(String value) {
         getBuilder().addChildWidgets(value, this, false);
+    }
+
+    @Override
+    public boolean isIgnoringText() {
+        return true;
     }
 }
 

@@ -33,7 +33,7 @@ public class WidgetRoot extends ParentWidget {
     private final WikiPage page;
     private final boolean doEscaping;
     private final List<String> literals;
-    private final boolean isGatheringInfo;
+    private final boolean ignoringText;
     private final WidgetRoot includingPage;
 
     public WidgetRoot(WikiPage page) throws IOException {
@@ -45,15 +45,11 @@ public class WidgetRoot extends ParentWidget {
     }
 
     public WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
-        this(value, page, builder, false);
-    }
-
-    protected WidgetRoot(String value, WikiPage page, WidgetBuilder builder, boolean isGathering) throws IOException {
         super(null);
         this.variables = new HashMap<String, String>();
         this.page = page;
         this.builder = builder;
-        this.isGatheringInfo = isGathering;
+        this.ignoringText = false;
         this.doEscaping = true;
         this.literals = new LinkedList<String>();
         this.includingPage = null;
@@ -70,7 +66,7 @@ public class WidgetRoot extends ParentWidget {
         this.variables = aliasRoot.variables;
         this.doEscaping = aliasRoot.doEscaping;
         this.literals = aliasRoot.literals;
-        this.isGatheringInfo = aliasRoot.isGatheringInfo;
+        this.ignoringText = aliasRoot.isIgnoringText();
         this.page = aliasPage;
         this.includingPage = aliasRoot;
     }
@@ -79,8 +75,8 @@ public class WidgetRoot extends ParentWidget {
         return this;
     }
 
-    public boolean isGatheringInfo() {
-        return isGatheringInfo;
+    public boolean isIgnoringText() {
+        return ignoringText;
     }
 
     public WidgetBuilder getBuilder() {
@@ -195,7 +191,7 @@ public class WidgetRoot extends ParentWidget {
         return value;
     }
 
-    public int includesVariableAt(String string, int pos) {
+    private int includesVariableAt(String string, int pos) {
         Matcher matcher = VariableWidget.pattern.matcher(string);
         if (matcher.find(pos))
             return matcher.start();
@@ -211,7 +207,7 @@ public class WidgetRoot extends ParentWidget {
     // Nested tables cannot be expanded in place due to ambiguities, and
     // newlines internal to table cells wreak havoc on table recognition.
     //
-    public String replaceVariable(String string, int pos) throws IOException {
+    private String replaceVariable(String string, int pos) throws IOException {
         Matcher matcher = VariableWidget.pattern.matcher(string);
         if (matcher.find(pos)) {
             String name = matcher.group(1);

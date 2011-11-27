@@ -216,10 +216,11 @@ public class PageData implements Serializable {
     }
 
     public String getVariable(String name) {
-        Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
+        VariableSource variableSource = new VariableFinder(getParsingPage());
+        Maybe<String> variable = variableSource.findVariable(name);
         if (variable.isNothing()) return null;
         //todo: push this into parser/translator
-        return new HtmlTranslator(null, getParsingPage()).translate(Parser.make(getParsingPage(), "${" + name + "}", variableDefinitionSymbolProvider).parse());
+        return new HtmlTranslator(null, getParsingPage()).translate(Parser.make(getParsingPage(), "${" + name + "}", variableSource, variableDefinitionSymbolProvider).parse());
     }
 
     public Symbol getSyntaxTree() {

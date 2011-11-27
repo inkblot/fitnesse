@@ -29,11 +29,6 @@ public abstract class ParentWidget extends WikiWidget {
             addToParent();  //...behaves like ctor(ParentWidget)
     }
 
-    //!include: Expose the root widget via the parent
-    public WidgetRoot getRoot() {
-        return getParent().getRoot();
-    }
-
     public void reset() {
         children.clear();
         currentChild = 0;
@@ -84,22 +79,6 @@ public abstract class ParentWidget extends WikiWidget {
         return wikiText.toString();
     }
 
-    public int defineLiteral(String literal) {
-        return getParent().defineLiteral(literal);
-    }
-
-    public String getLiteral(int literalNumber) {
-        return getParent().getLiteral(literalNumber);
-    }
-
-    public void addVariable(String key, String value) {
-        getParent().addVariable(key, value);
-    }
-
-    public String getVariable(String key) throws IOException {
-        return getParent().getVariable(key);
-    }
-
     public void addChildWidgets(String value) {
         getBuilder().addChildWidgets(value, this);
     }
@@ -110,10 +89,6 @@ public abstract class ParentWidget extends WikiWidget {
 
     public boolean doEscaping() {
         return getParent().doEscaping();
-    }
-
-    public boolean preProcessingComplete() {
-        return (children.size() == 1 && (children.get(0) instanceof TextWidget));
     }
 
     public void acceptVisitor(WidgetVisitor visitor) {

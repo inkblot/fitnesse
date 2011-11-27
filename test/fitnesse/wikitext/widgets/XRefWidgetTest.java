@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static util.RegexAssertions.assertHasRegexp;
 
 public class XRefWidgetTest extends WidgetTestCase {
-    private ParentWidget wroot, croot;
+    private WidgetRoot wroot, croot;
 
     @Test
     public void testRegexp() throws Exception {

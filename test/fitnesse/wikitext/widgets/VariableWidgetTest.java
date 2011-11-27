@@ -18,7 +18,7 @@ import static util.RegexAssertions.assertSubString;
 public class VariableWidgetTest extends WidgetTestCase {
     private WikiPage root;
     private PageCrawler crawler;
-    private ParentWidget widgetRoot;
+    private WidgetRoot widgetRoot;
 
     @Inject
     public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {

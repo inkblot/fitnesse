@@ -3,6 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;
+import util.Maybe;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -183,18 +184,18 @@ public class IncludeWidget extends ParentWidget {
         return optionPrefixMap;
     }
 
-    private boolean isTeardownCollapsed() throws IOException {
-        final String teardownCollapseVariable = getParent().getVariable(COLLAPSE_TEARDOWN);
-        return teardownCollapseVariable == null || "true".equals(teardownCollapseVariable);
+    private boolean isTeardownCollapsed() {
+        final Maybe<String> teardownCollapseVariable = getRoot().findVariable(COLLAPSE_TEARDOWN);
+        return teardownCollapseVariable.isNothing() || "true".equals(teardownCollapseVariable.getValue());
     }
 
     private boolean isTeardown(String option) {
         return "-teardown".equals(option);
     }
 
-    private boolean isSetupCollapsed() throws IOException {
-        final String setupCollapseVariable = getParent().getVariable(COLLAPSE_SETUP);
-        return setupCollapseVariable == null || "true".equals(setupCollapseVariable);
+    private boolean isSetupCollapsed() {
+        final Maybe<String> setupCollapseVariable = getRoot().findVariable(COLLAPSE_SETUP);
+        return setupCollapseVariable.isNothing() || "true".equals(setupCollapseVariable.getValue());
     }
 
     private boolean isSetup(String option) {

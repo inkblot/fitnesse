@@ -85,11 +85,11 @@ public class ParentWidgetTest extends FitnesseBaseTestCase {
         ParentWidget root = new WidgetRoot(rootPage);
         ParentWidget parent1 = new MockParentWidget(root);
         ParentWidget parent2 = new MockParentWidget(parent1);
-        parent2.addVariable("someKey", "someValue");
+        parent2.getRoot().addVariable("someKey", "someValue");
 
-        assertEquals("someValue", root.getVariable("someKey"));
-        assertEquals("someValue", parent1.getVariable("someKey"));
-        assertEquals("someValue", parent2.getVariable("someKey"));
+        assertEquals("someValue", root.getRoot().findVariable("someKey").getValue());
+        assertEquals("someValue", parent1.getRoot().findVariable("someKey").getValue());
+        assertEquals("someValue", parent2.getRoot().findVariable("someKey").getValue());
     }
 
 }

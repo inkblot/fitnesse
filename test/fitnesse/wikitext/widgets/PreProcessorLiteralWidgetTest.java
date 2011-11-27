@@ -8,7 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class PreProcessorLiteralWidgetTest extends WidgetTestCase {
-    private ParentWidget root;
+    private WidgetRoot root;
 
     @Before
     public void setUp() throws Exception {

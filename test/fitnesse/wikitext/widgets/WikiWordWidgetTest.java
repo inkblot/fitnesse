@@ -177,7 +177,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         WikiWordWidget widget = new WikiWordWidget(new WidgetRoot(page), "Wiki42Word");
         assertEquals(makeExpectedNonExistentWikiWord("Wiki42Word", "Wiki42Word"), widget.render());
         page = addPage(root, "Wiki42Word");
-        ParentWidget root = new WidgetRoot(page);
+        WidgetRoot root = new WidgetRoot(page);
         root.addVariable(WikiWordWidget.REGRACE_LINK, "true");
         widget = new WikiWordWidget(root, "Wiki42Word");
         assertEquals("<a href=\"Wiki42Word\">Wiki 42 Word</a>", widget.render());

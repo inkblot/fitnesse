@@ -115,7 +115,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
 
     @Test
     public void testSetUpCollapsed() throws Exception {
-        ParentWidget widgetRoot = new WidgetRoot(root);
+        WidgetRoot widgetRoot = new WidgetRoot(root);
         widgetRoot.addVariable(IncludeWidget.COLLAPSE_SETUP, "true");
         IncludeWidget widget = new IncludeWidget(widgetRoot, "!include -setup SomePage");
         assertSubString("Set Up: ", widget.render());
@@ -125,7 +125,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
 
     @Test
     public void testSetUpUncollapsed() throws Exception {
-        ParentWidget widgetRoot = new WidgetRoot(root);
+        WidgetRoot widgetRoot = new WidgetRoot(root);
         widgetRoot.addVariable(IncludeWidget.COLLAPSE_SETUP, "false");
         IncludeWidget widget = new IncludeWidget(widgetRoot, "!include -setup SomePage");
         assertSubString("Set Up: ", widget.render());
@@ -143,7 +143,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
 
     @Test
     public void testTearDownCollapsed() throws Exception {
-        ParentWidget widgetRoot = new WidgetRoot(root);
+        WidgetRoot widgetRoot = new WidgetRoot(root);
         widgetRoot.addVariable(IncludeWidget.COLLAPSE_TEARDOWN, "true");
         IncludeWidget widget = new IncludeWidget(widgetRoot, "!include -teardown SomePage");
         assertSubString("Tear Down: ", widget.render());
@@ -153,7 +153,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
 
     @Test
     public void testTearDownUncollapsed() throws Exception {
-        ParentWidget widgetRoot = new WidgetRoot(root);
+        WidgetRoot widgetRoot = new WidgetRoot(root);
         widgetRoot.addVariable(IncludeWidget.COLLAPSE_TEARDOWN, "false");
         IncludeWidget widget = new IncludeWidget(widgetRoot, "!include -teardown SomePage");
         assertSubString("Tear Down: ", widget.render());
@@ -174,7 +174,7 @@ public class IncludeWidgetTest extends WidgetTestCase {
     private void verifyLiteralsGetRendered(String option, String pageName)
             throws Exception {
         crawler.addPage(root, PathParser.parse(pageName), "!-one-!, !-two-!, !-three-!");
-        ParentWidget widgetRoot = new WidgetRoot(page1);
+        WidgetRoot widgetRoot = new WidgetRoot(page1);
         IncludeWidget widget = createIncludeWidget(widgetRoot, option + pageName);
         final String result = widget.render();
         assertSubString("one, two, three", result);

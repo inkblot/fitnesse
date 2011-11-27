@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 public class WidgetRoot extends ParentWidget implements VariableSource {
-    private Map<String, String> variables = new HashMap<String, String>();
+    private final Map<String, String> variables;
     private WidgetBuilder builder;
     private final WikiPage page;
     private boolean doEscaping = true;
@@ -74,6 +74,7 @@ public class WidgetRoot extends ParentWidget implements VariableSource {
 
     public WidgetRoot(String value, WikiPage page, WidgetBuilder builder, boolean isGathering) throws IOException {
         super(null);
+        this.variables = new HashMap<String, String>();
         this.page = page;
         this.builder = builder;
         this.isGatheringInfo = isGathering;
@@ -91,6 +92,7 @@ public class WidgetRoot extends ParentWidget implements VariableSource {
 
     public WidgetRoot(String value, PagePointer pagePointer, WidgetBuilder builder) throws IOException {
         super(null);
+        this.variables = new HashMap<String, String>();
         this.page = pagePointer.getPage();
         this.builder = builder;
         if (value != null)
@@ -111,7 +113,18 @@ public class WidgetRoot extends ParentWidget implements VariableSource {
         return childHtml();
     }
 
-    public String getVariable(String key) throws IOException {
+    @Override
+    public Maybe<String> findVariable(String name) {
+        try {
+            String value = getVariable(name);
+            return value == null ? Maybe.noString : new Maybe<String>(value);
+        } catch (IOException e) {
+            return Maybe.noString;
+        }
+
+    }
+
+    private String getVariable(String key) throws IOException {
         String value = getValueOfVariableFromAllPossibleSources(key);
         if (value != null) {
             value = replaceAllKnownVariables(value);
@@ -257,16 +270,6 @@ public class WidgetRoot extends ParentWidget implements VariableSource {
 
     public String asWikiText() {
         return childWikiText();
-    }
-
-    @Override
-    public Maybe<String> findVariable(String name) {
-        try {
-            return new Maybe<String>(getVariable(name));
-        } catch (IOException e) {
-            return Maybe.noString;
-        }
-
     }
 }
 

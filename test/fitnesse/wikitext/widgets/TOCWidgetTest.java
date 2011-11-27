@@ -260,7 +260,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //
     private String renderNormalRegracedTOCWidget()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot(parent2);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         return new TOCWidget(root, "!contents\n").render();
     }
@@ -275,7 +275,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalRegracedTOCWidgetByVar()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot(parent2);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         return new TOCWidget(root, "!contents -R\n").render();
     }
@@ -330,7 +330,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //
     private String renderNormalRegracedPropTOCWidget()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot(parent2);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         root.addVariable(TOCWidget.PROPERTY_TOC, "true");
         return new TOCWidget(root, "!contents\n").render();
@@ -346,7 +346,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalRegracedPropTOCWidgetByVar()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot(parent2);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         root.addVariable(TOCWidget.PROPERTY_TOC, "true");
         return new TOCWidget(root, "!contents -R\n").render();
@@ -354,7 +354,7 @@ public class TOCWidgetTest extends WidgetTestCase {
 
     private String renderHierarchicalRegracedPropTOCWidgetByOption()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot(parent2);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         return new TOCWidget(root, "!contents -R -p\n").render();
     }
@@ -373,7 +373,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalRegracedPropAltTOCWidget()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot(parent2);
         root.addVariable(TOCWidget.REGRACE_TOC, "true");
         root.addVariable(TOCWidget.PROPERTY_CHARACTERS, "#!%");
         return new TOCWidget(root, "!contents -R -p\n").render();
@@ -408,7 +408,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //
     private String renderNormalFiltersTOCWidget()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot(parent2);
         root.addVariable(TOCWidget.FILTER_TOC, "true");
         return new TOCWidget(root, "!contents -g\n").render();
     }
@@ -423,7 +423,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalFiltersTOCWidgetByVar()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot(parent2);
         root.addVariable(TOCWidget.FILTER_TOC, "true");
         return new TOCWidget(root, "!contents -R -g\n").render();
     }
@@ -477,7 +477,7 @@ public class TOCWidgetTest extends WidgetTestCase {
     //--  --  --  --  --  --  --  --  --  --
     private String renderHierarchicalHelpTOCWidgetByVar()
             throws Exception {
-        ParentWidget root = new WidgetRoot(parent2);
+        WidgetRoot root = new WidgetRoot(parent2);
         root.addVariable(TOCWidget.HELP_TOC, "true");
         return new TOCWidget(root, "!contents -R -g -f\n").render();
     }

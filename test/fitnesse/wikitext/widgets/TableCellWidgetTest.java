@@ -47,7 +47,7 @@ public class TableCellWidgetTest extends FitnesseBaseTestCase {
 
     @Test
     public void testLiteralInLiteralCell() throws Exception {
-        ParentWidget root = new MockWidgetRoot(injector);
+        WidgetRoot root = new MockWidgetRoot(injector);
         root.defineLiteral("blah");
         table = new StandardTableWidget(root, "");
         row = new TableRowWidget(table, "", true);
@@ -58,7 +58,7 @@ public class TableCellWidgetTest extends FitnesseBaseTestCase {
 
     @Test
     public void testVariableInLiteralCell() throws Exception {
-        ParentWidget root = new MockWidgetRoot(injector);
+        WidgetRoot root = new MockWidgetRoot(injector);
         root.addVariable("X", "abc");
         table = new StandardTableWidget(root, "");
         row = new TableRowWidget(table, "", true);

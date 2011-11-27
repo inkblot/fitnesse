@@ -119,7 +119,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
 
     @Test
     public void testVariableIsRenderedInAliasLink() throws Exception {
-        ParentWidget wroot = new WidgetRoot(root);
+        WidgetRoot wroot = new WidgetRoot(root);
         wroot.addVariable("X", "Y");
         AliasLinkWidget w = new AliasLinkWidget(wroot, "[[x][${X}]]");
         assertEquals("<a href=\"Y\">x</a>", w.render());
@@ -127,7 +127,7 @@ public class AliasLinkWidgetTest extends WidgetTestCase {
 
     @Test
     public void testVariableIsRenderedInAliasTag() throws Exception {
-        ParentWidget wroot = new WidgetRoot(root);
+        WidgetRoot wroot = new WidgetRoot(root);
         wroot.addVariable("X", "Y");
         AliasLinkWidget w = new AliasLinkWidget(wroot, "[[${X}][x]]");
         assertEquals("<a href=\"x\">Y</a>", w.render());

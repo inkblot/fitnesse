@@ -8,6 +8,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.html.RawHtml;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.WikiWidget;
+import util.Maybe;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -104,25 +105,22 @@ public class TOCWidget extends WikiWidget {
         return buildContentsDiv(page, 1).html();
     }
 
-    private void initVarFlags() throws IOException {
-        isVarGraceful = "true".equals(getParent().getVariable(REGRACE_TOC));
-        isVarPropertied = "true".equals(getParent().getVariable(PROPERTY_TOC));
-        isVarFiltered = "true".equals(getParent().getVariable(FILTER_TOC));
-        isVarHelpShown = "true".equals(getParent().getVariable(HELP_TOC));
+    private void initVarFlags() {
+        isVarGraceful = "true".equals(getRoot().findVariable(REGRACE_TOC).getValue());
+        isVarPropertied = "true".equals(getRoot().findVariable(PROPERTY_TOC).getValue());
+        isVarFiltered = "true".equals(getRoot().findVariable(FILTER_TOC).getValue());
+        isVarHelpShown = "true".equals(getRoot().findVariable(HELP_TOC).getValue());
     }
 
-    private void initMoreSuffix() throws IOException {
-        String moreSuffixEnv = getParent().getVariable(MORE_SUFFIX_TOC);
-        moreSuffix = (moreSuffixEnv != null) ? moreSuffixEnv : MORE_SUFFIX_DEFAULT;
+    private void initMoreSuffix() {
+        Maybe<String> moreSuffixEnv = getRoot().findVariable(MORE_SUFFIX_TOC);
+        moreSuffix = moreSuffixEnv.isNothing() ? MORE_SUFFIX_DEFAULT : moreSuffixEnv.getValue();
     }
 
     private void initPropertyCharacters() {
         StringBuilder propChars = new StringBuilder();
-        try {
-            String propsFromEnv = getParent().getVariable(PROPERTY_CHARACTERS);
-            if (propsFromEnv != null) propChars.append(propsFromEnv);
-        } catch (Exception e) {
-        }
+        Maybe<String> propsFromEnv = getRoot().findVariable(PROPERTY_CHARACTERS);
+        if (!propsFromEnv.isNothing()) propChars.append(propsFromEnv.getValue());
 
         int newLength = propChars.length();
 
@@ -132,9 +130,9 @@ public class TOCWidget extends WikiWidget {
         propertyCharacters = propChars.toString();
     }
 
-    private void initHelpTextPrefix() throws IOException {
-        String helpPrefixEnv = getParent().getVariable(HELP_PREFIX_TOC);
-        helpTextPrefix = (helpPrefixEnv != null) ? helpPrefixEnv : HELP_PREFIX_DEFAULT;
+    private void initHelpTextPrefix() {
+        Maybe<String> helpPrefixEnv = getRoot().findVariable(HELP_PREFIX_TOC);
+        helpTextPrefix = helpPrefixEnv.isNothing() ? HELP_PREFIX_DEFAULT : helpPrefixEnv.getValue();
     }
 
     private HtmlTag buildContentsDiv(WikiPage wikiPage, int currentDepth) throws IOException {

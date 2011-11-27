@@ -4,6 +4,7 @@ package fitnesse.wikitext;
 
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.widgets.ParentWidget;
+import fitnesse.wikitext.widgets.WidgetRoot;
 import util.GracefulNamer;
 
 import java.io.IOException;
@@ -39,16 +40,20 @@ public abstract class WikiWidget {
         return getClass().toString() + ".asWikiText()";
     }
 
-    public boolean isRegracing() throws IOException {
+    public boolean isRegracing() {
         return false;
     }
 
-    public String regrace(String disgracefulName) throws IOException {
+    public String regrace(String disgracefulName) {
         String newName = disgracefulName;
         //todo don't use the GracefulNamer for this.  It's only for java instance and variable names.  Write a different tool.
         if (isRegracing()) newName = GracefulNamer.regrace(disgracefulName);
         return newName;
     }
 
+    //!include: Expose the root widget via the parent
+    public WidgetRoot getRoot() {
+        return getParent().getRoot();
+    }
 }
 

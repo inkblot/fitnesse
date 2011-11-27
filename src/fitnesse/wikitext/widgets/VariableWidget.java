@@ -3,6 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.html.HtmlUtil;
+import util.Maybe;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -16,7 +17,6 @@ public class VariableWidget extends ParentWidget {
 
     private String name = null;
     private String renderedText;
-    private boolean rendered;
 
     public VariableWidget(ParentWidget parent, String text) {
         super(parent);
@@ -27,23 +27,16 @@ public class VariableWidget extends ParentWidget {
     }
 
     public String render() throws IOException {
-        if (!rendered)
-            doRender();
+        if (renderedText == null) {
+            Maybe<String> value = getRoot().findVariable(name);
+            if (value.isNothing()) {
+                renderedText = HtmlUtil.metaText("undefined variable: " + name);
+            } else {
+                addChildWidgets(value.getValue());
+                renderedText = childHtml();
+            }
+        }
         return renderedText;
-    }
-
-    private void doRender() throws IOException {
-        String value = getParent().getVariable(name);
-        if (value != null) {
-            addChildWidgets(value);
-            renderedText = childHtml();
-        } else
-            renderedText = makeUndefinedVariableExpression(name);
-        rendered = true;
-    }
-
-    private String makeUndefinedVariableExpression(String name) {
-        return HtmlUtil.metaText("undefined variable: " + name);
     }
 
     public String asWikiText() {

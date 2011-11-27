@@ -13,10 +13,7 @@ import fitnesse.wikitext.parser.VariableSource;
 import util.Maybe;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class WidgetRoot extends ParentWidget {
@@ -34,11 +31,10 @@ public class WidgetRoot extends ParentWidget {
     private final Map<String, String> variables;
     private final WidgetBuilder builder;
     private final WikiPage page;
-
-    private boolean doEscaping = true;
-    private List<String> literals = new LinkedList<String>();
-    private boolean isGatheringInfo = false;
-    private WidgetRoot includingPage;
+    private final boolean doEscaping;
+    private final List<String> literals;
+    private final boolean isGatheringInfo;
+    private final WidgetRoot includingPage;
 
     public WidgetRoot(WikiPage page) throws IOException {
         this("", page);
@@ -58,6 +54,9 @@ public class WidgetRoot extends ParentWidget {
         this.page = page;
         this.builder = builder;
         this.isGatheringInfo = isGathering;
+        this.doEscaping = true;
+        this.literals = new LinkedList<String>();
+        this.includingPage = null;
         if (value != null)
             buildWidgets(value);
     }

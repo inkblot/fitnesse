@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
-    private static final ArrayList<Symbol> emptySymbols = new ArrayList<Symbol>();
+    private static final List<Symbol> emptySymbols = new ArrayList<Symbol>();
 
     public static Parser make(WikiPage page, String input) {
         return make(new ParsingPage(new WikiSourcePage(page)), input);
@@ -26,13 +26,13 @@ public class Parser {
         return new Parser(null, currentPage, new Scanner(new TextMaker(variableSource, currentPage.getNamedPage()), input), variableSource, specification);
     }
 
-    private ParsingPage currentPage;
-    private VariableSource variableSource;
-    private Scanner scanner;
-    private Parser parent;
-    private ParseSpecification specification;
+    private final ParsingPage currentPage;
+    private final VariableSource variableSource;
+    private final Scanner scanner;
+    private final Parser parent;
+    private final ParseSpecification specification;
 
-    public Parser(Parser parent, ParsingPage currentPage, Scanner scanner, VariableSource variableSource, ParseSpecification specification) {
+    private Parser(Parser parent, ParsingPage currentPage, Scanner scanner, VariableSource variableSource, ParseSpecification specification) {
         this.parent = parent;
         this.currentPage = currentPage;
         this.scanner = scanner;
@@ -70,7 +70,7 @@ public class Parser {
     }
 
     public List<Symbol> moveNext(SymbolType[] symbolTypes) {
-        ArrayList<Symbol> tokens = new ArrayList<Symbol>();
+        List<Symbol> tokens = new ArrayList<Symbol>();
         for (SymbolType type : symbolTypes) {
             Symbol current = moveNext(1);
             if (!current.isType(type)) return new ArrayList<Symbol>();
@@ -188,8 +188,8 @@ public class Parser {
     }
 
     private boolean parentOwns(SymbolType current, ParseSpecification specification) {
-        if (parent == null) return false;
-        if (parent.specification.hasPriority(specification) && parent.specification.terminatesOn(current)) return true;
-        return parent.parentOwns(current, specification);
+        return parent != null &&
+                (parent.specification.hasPriority(specification) && parent.specification.terminatesOn(current) ||
+                        parent.parentOwns(current, specification));
     }
 }

@@ -5,10 +5,11 @@ import fitnesse.wikitext.widgets.WikiWordWidget;
 import java.util.regex.Pattern;
 
 public class TextMaker {
-    public static final String eMailPattern = "[\\w-_.]+@[\\w-_.]+\\.[\\w-_.]+";
+    // TODO: NR: this is a naive pattern
+    private static final String eMailPattern = "[-\\w_.]+@[-\\w_.]+\\.[-\\w_.]+";
 
-    private VariableSource variableSource;
-    private SourcePage sourcePage;
+    private final VariableSource variableSource;
+    private final SourcePage sourcePage;
 
     public TextMaker(VariableSource variableSource, SourcePage sourcePage) {
         this.variableSource = variableSource;

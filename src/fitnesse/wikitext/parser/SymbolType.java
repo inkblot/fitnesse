@@ -90,8 +90,9 @@ public class SymbolType implements Matchable {
     public static final SymbolType Whitespace = new SymbolType("Whitespace")
             .wikiMatcher(new Matcher().whitespace());
 
-    private String name;
-    private ArrayList<Matcher> wikiMatchers = new ArrayList<Matcher>();
+    private final String name;
+    private final List<Matcher> wikiMatchers = new ArrayList<Matcher>();
+
     private Rule wikiRule = null;
     private Translation htmlTranslation = null;
 

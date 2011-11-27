@@ -2,12 +2,14 @@ package fitnesse.wikitext.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class ParseSpecification {
+    private final Collection<SymbolType> terminators = new ArrayList<SymbolType>();
+    private final Collection<SymbolType> ignoresFirst = new ArrayList<SymbolType>();
+    private final Collection<SymbolType> ends = new ArrayList<SymbolType>();
+
     private SymbolProvider provider = SymbolProvider.wikiParsingProvider;
-    private ArrayList<SymbolType> terminators = new ArrayList<SymbolType>();
-    private ArrayList<SymbolType> ignoresFirst = new ArrayList<SymbolType>();
-    private ArrayList<SymbolType> ends = new ArrayList<SymbolType>();
     private int priority = 0;
 
     public ParseSpecification provider(SymbolProvider provider) {

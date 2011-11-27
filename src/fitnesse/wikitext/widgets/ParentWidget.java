@@ -12,11 +12,17 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public abstract class ParentWidget extends WikiWidget {
-    protected LinkedList<WikiWidget> children = new LinkedList<WikiWidget>();
-    protected int currentChild = 0;
+    private final List<WikiWidget> children;
+    private int currentChild;
 
     public ParentWidget(ParentWidget parent) {
+        this(parent, new LinkedList<WikiWidget>(), 0);
+    }
+
+    protected ParentWidget(ParentWidget parent, List<WikiWidget> children, int currentChild) {
         super(parent);
+        this.children = children;
+        this.currentChild = currentChild;
     }
 
     public void reset() {
@@ -34,6 +40,10 @@ public abstract class ParentWidget extends WikiWidget {
 
     public List<WikiWidget> getChildren() {
         return children;
+    }
+
+    public int getCurrentChild() {
+        return currentChild;
     }
 
     public WikiWidget nextChild() {

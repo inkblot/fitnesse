@@ -72,10 +72,10 @@ public class ListWidgetTest extends WidgetTestCase {
     public void testMultiLevelList() throws Exception {
         ListWidget list = new ListWidget(widgetRoot, " *Item1\n  1Item1a\n *Item2");
         assertEquals(2, list.numberOfChildren());
-        assertNotNull(list.children.get(0));
+        assertNotNull(list.getChildren().get(0));
         assertEquals(0, list.getLevel());
-        assertEquals(ListItemWidget.class, list.children.get(0).getClass());
-        assertEquals(ListItemWidget.class, list.children.get(1).getClass());
+        assertEquals(ListItemWidget.class, list.getChildren().get(0).getClass());
+        assertEquals(ListItemWidget.class, list.getChildren().get(1).getClass());
 
         WikiWidget child = ((ListItemWidget) list.getChildren().get(0)).getChildren().get(1);
         assertEquals(ListWidget.class, child.getClass());

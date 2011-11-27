@@ -66,7 +66,7 @@ public class StandardTableWidget extends ParentWidget implements TableWidget {
     }
 
     private void getMaxNumberOfColumns() {
-        for (WikiWidget widget : children) {
+        for (WikiWidget widget : getChildren()) {
             TableRowWidget rowWidget = (TableRowWidget) widget;
             columns = Math.max(columns, rowWidget.getColumns());
         }

@@ -45,7 +45,7 @@ public class TableCellWidget extends ParentWidget {
     }
 
     private String computeColSpan() {
-        int currentColumn = parentRow.children.indexOf(this) + 1;
+        int currentColumn = parentRow.getChildren().indexOf(this) + 1;
         int maxTableColumn = parentRow.getParentTable().getColumns();
         int maxColumnThisRow = parentRow.numberOfChildren();
 

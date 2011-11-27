@@ -36,7 +36,7 @@ public class HashWidget extends ParentWidget {
         StringBuilder html = new StringBuilder("<table class=\"hash_table\">");
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
-            WikiWidget widget = children.get(i);
+            WikiWidget widget = getChildren().get(i);
             html.append(String.format(
                     "<tr class=\"hash_row\">" +
                             "<td class=\"hash_key\">" +

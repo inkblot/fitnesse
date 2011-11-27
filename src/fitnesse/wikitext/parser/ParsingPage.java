@@ -11,24 +11,24 @@ import java.util.HashMap;
 public class ParsingPage implements VariableSource {
     private final SourcePage page;
     private final SourcePage namedPage;
-    private final HashMap<String, HashMap<String, Maybe<String>>> cache;
+    private final HashMap<String, HashMap<String, Maybe<String>>> variableCache;
 
     public ParsingPage(SourcePage page) {
         this(page, page, new HashMap<String, HashMap<String, Maybe<String>>>());
     }
 
+    private ParsingPage(SourcePage page, SourcePage namedPage, HashMap<String, HashMap<String, Maybe<String>>> variableCache) {
+        this.page = page;
+        this.namedPage = namedPage;
+        this.variableCache = variableCache;
+    }
+
     public ParsingPage copyForPage(SourcePage page) {
-        return new ParsingPage(page, page, this.cache);
+        return new ParsingPage(page, page, this.variableCache);
     }
 
     public ParsingPage copyForNamedPage(SourcePage namedPage) {
-        return new ParsingPage(this.page, namedPage, this.cache);
-    }
-
-    private ParsingPage(SourcePage page, SourcePage namedPage, HashMap<String, HashMap<String, Maybe<String>>> cache) {
-        this.page = page;
-        this.namedPage = namedPage;
-        this.cache = cache;
+        return new ParsingPage(this.page, namedPage, this.variableCache);
     }
 
     public SourcePage getPage() {
@@ -59,14 +59,14 @@ public class ParsingPage implements VariableSource {
     }
 
     public boolean inCache(SourcePage page) {
-        return cache.containsKey(page.getFullName());
+        return variableCache.containsKey(page.getFullName());
     }
 
     public Maybe<String> findVariable(SourcePage page, String name) {
         String key = page.getFullName();
-        if (!cache.containsKey(key)) return Maybe.noString;
-        if (!cache.get(key).containsKey(name)) return Maybe.noString;
-        return cache.get(key).get(name);
+        if (!variableCache.containsKey(key)) return Maybe.noString;
+        if (!variableCache.get(key).containsKey(name)) return Maybe.noString;
+        return variableCache.get(key).get(name);
     }
 
     @Override
@@ -76,8 +76,8 @@ public class ParsingPage implements VariableSource {
 
     public void putVariable(SourcePage page, String name, Maybe<String> value) {
         String key = page.getFullName();
-        if (!cache.containsKey(key)) cache.put(key, new HashMap<String, Maybe<String>>());
-        cache.get(key).put(name, value);
+        if (!variableCache.containsKey(key)) variableCache.put(key, new HashMap<String, Maybe<String>>());
+        variableCache.get(key).put(name, value);
     }
 
     public void putVariable(String name, String value) {

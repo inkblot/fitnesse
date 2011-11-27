@@ -219,7 +219,7 @@ public class PageData implements Serializable {
         Maybe<String> variable = new VariableFinder(getParsingPage()).findVariable(name);
         if (variable.isNothing()) return null;
         //todo: push this into parser/translator
-        return new HtmlTranslator(null, parsingPage).translate(Parser.make(parsingPage, "${" + name + "}", variableDefinitionSymbolProvider).parse());
+        return new HtmlTranslator(null, getParsingPage()).translate(Parser.make(getParsingPage(), "${" + name + "}", variableDefinitionSymbolProvider).parse());
     }
 
     public Symbol getSyntaxTree() {
@@ -244,7 +244,7 @@ public class PageData implements Serializable {
     }
 
     public String translateToHtml(Symbol syntaxTree) {
-        return new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage).translateTree(syntaxTree);
+        return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(syntaxTree);
     }
 
     public void setWikiPage(WikiPage page) {
@@ -257,7 +257,7 @@ public class PageData implements Serializable {
 
     public List<String> getClasspaths() {
         Symbol tree = getSyntaxTree();
-        return new Paths(new HtmlTranslator(new WikiSourcePage(wikiPage), parsingPage)).getPaths(tree);
+        return new Paths(new HtmlTranslator(parsingPage.getPage(), parsingPage)).getPaths(tree);
     }
 
     public List<String> getXrefPages() throws IOException {

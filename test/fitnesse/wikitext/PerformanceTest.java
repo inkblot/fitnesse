@@ -38,11 +38,12 @@ public class PerformanceTest extends FitnesseBaseTestCase {
         long start = System.currentTimeMillis();
         WikiPage page = new TestRoot(InMemoryPage.makeRoot("root", injector)).makePage("NewTest");
         //String result = ParserTest.translateTo(new TestRoot().makePage("NewTest"), pageContent);
-        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
+        ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
+        Symbol list = Parser.make(parsingPage, input).parse();
         System.out.println(System.currentTimeMillis() - start);
         start = System.currentTimeMillis();
         /*String result =*/
-        new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
+        new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(list);
         System.out.println(System.currentTimeMillis() - start);
         //System.out.println(result);
         assertEquals("done", "done");

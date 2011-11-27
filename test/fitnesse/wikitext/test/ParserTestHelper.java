@@ -74,13 +74,13 @@ public class ParserTestHelper {
     }
 
     public static String translateTo(WikiPage page, String input) {
-        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input).parse();
-        return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
+        return translateTo(new WikiSourcePage(page), input);
     }
 
     public static String translateTo(SourcePage page, String input) {
-        Symbol list = Parser.make(new ParsingPage(page), input).parse();
-        return new HtmlTranslator(page, new ParsingPage(page)).translateTree(list);
+        ParsingPage parsingPage = new ParsingPage(page);
+        Symbol list = Parser.make(parsingPage, input).parse();
+        return new HtmlTranslator(page, parsingPage).translateTree(list);
     }
 
     public static String roundTrip(SourcePage page, String input) {
@@ -89,8 +89,9 @@ public class ParserTestHelper {
     }
 
     public static String translateToHtml(WikiPage page, String input, VariableSource variableSource) {
-        Symbol list = Parser.make(new ParsingPage(new WikiSourcePage(page)), input, variableSource, SymbolProvider.wikiParsingProvider).parse();
-        return new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page))).translateTree(list);
+        ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
+        Symbol list = Parser.make(parsingPage, input, variableSource, SymbolProvider.wikiParsingProvider).parse();
+        return new HtmlTranslator(parsingPage.getPage(), parsingPage).translateTree(list);
     }
 
     public static String translateTo(WikiPage page) throws Exception {
@@ -98,11 +99,13 @@ public class ParserTestHelper {
     }
 
     public static String translateTo(SourcePage page, VariableSource variableSource) throws Exception {
-        return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page), page.getContent(), variableSource, SymbolProvider.wikiParsingProvider).parse());
+        ParsingPage parsingPage = new ParsingPage(page);
+        return new HtmlTranslator(page, parsingPage).translateTree(Parser.make(parsingPage, page.getContent(), variableSource, SymbolProvider.wikiParsingProvider).parse());
     }
 
     public static String translateTo(SourcePage page) throws Exception {
-        return new HtmlTranslator(page, new ParsingPage(page)).translateTree(Parser.make(new ParsingPage(page), page.getContent()).parse());
+        ParsingPage parsingPage = new ParsingPage(page);
+        return new HtmlTranslator(page, parsingPage).translateTree(Parser.make(parsingPage, page.getContent()).parse());
     }
 
     public static void assertParses(String input, String expected, Injector injector) throws Exception {

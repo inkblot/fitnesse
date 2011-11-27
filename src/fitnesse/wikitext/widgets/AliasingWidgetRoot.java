@@ -12,6 +12,8 @@ import java.io.IOException;
  */
 public class AliasingWidgetRoot extends WidgetRoot {
     public AliasingWidgetRoot(WikiPage aliasPage, ParentWidget impostorWidget) throws IOException {
-        super(aliasPage, impostorWidget);
+        super(impostorWidget.getChildren(), impostorWidget.getCurrentChild(), impostorWidget.getRoot().getVariables(), aliasPage,
+                impostorWidget.getBuilder(), impostorWidget.getRoot().isIgnoringText(), impostorWidget.getRoot().doEscaping(),
+                impostorWidget.getRoot().getLiterals(), impostorWidget.getRoot(), null);
     }
 }

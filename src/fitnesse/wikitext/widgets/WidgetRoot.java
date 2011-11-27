@@ -38,18 +38,11 @@ public abstract class WidgetRoot extends ParentWidget {
     private final WidgetRoot includingPage;
 
     protected WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
-        this(value, page, builder, new HashMap<String, String>(), false, true, new LinkedList<String>(), null, new LinkedList<WikiWidget>(), 0);
+        this(new LinkedList<WikiWidget>(), 0, new HashMap<String, String>(), page, builder, false, true, new LinkedList<String>(), null, value);
     }
 
-    //Constructor for IncludeWidget support (alias locale & scope)
-    protected WidgetRoot(WikiPage aliasPage, ParentWidget impostorWidget) throws IOException {
-        this(null, aliasPage, impostorWidget.getBuilder(), impostorWidget.getRoot().variables, impostorWidget.getRoot().isIgnoringText(),
-                impostorWidget.getRoot().doEscaping, impostorWidget.getRoot().literals, impostorWidget.getRoot(), impostorWidget.getChildren(),
-                impostorWidget.getCurrentChild());
-    }
-
-    private WidgetRoot(String value, WikiPage page, WidgetBuilder builder, Map<String, String> variables, boolean ignoringText,
-                       boolean escaping, List<String> literals, WidgetRoot includingPage, List<WikiWidget> children, int currentChild) throws IOException {
+    protected WidgetRoot(List<WikiWidget> children, int currentChild, Map<String, String> variables, WikiPage page, WidgetBuilder builder,
+                         boolean ignoringText, boolean escaping, List<String> literals, WidgetRoot includingPage, String value) throws IOException {
         super(null, children, currentChild);
         this.variables = variables;
         this.page = page;
@@ -245,6 +238,10 @@ public abstract class WidgetRoot extends ParentWidget {
 
     public String asWikiText() {
         return childWikiText();
+    }
+
+    public Map<String,String> getVariables() {
+        return variables;
     }
 }
 

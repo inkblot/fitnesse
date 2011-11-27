@@ -38,7 +38,8 @@ public class PathTest extends FitnesseBaseTestCase {
     @Test
     public void findsDefinitions() throws Exception {
         WikiPage page = new TestRoot(InMemoryPage.makeRoot("root", injector)).makePage("TestPage", "!path stuff\n!note and\n!path nonsense");
-        List<String> paths = new Paths(new HtmlTranslator(new WikiSourcePage(page), new ParsingPage(new WikiSourcePage(page)))).getPaths(ParserTestHelper.parse(page));
+        ParsingPage parsingPage = new ParsingPage(new WikiSourcePage(page));
+        List<String> paths = new Paths(new HtmlTranslator(parsingPage.getPage(), parsingPage)).getPaths(ParserTestHelper.parse(page));
         assertEquals(2, paths.size());
         assertEquals("stuff", paths.get(0));
         assertEquals("nonsense", paths.get(1));

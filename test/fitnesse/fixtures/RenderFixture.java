@@ -3,15 +3,14 @@
 package fitnesse.fixtures;
 
 import fit.ColumnFixture;
-import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.widgets.ParentWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.widgets.SimpleWidgetRoot;
 
 public class RenderFixture extends ColumnFixture {
     public String text;
 
     public String rendered() throws Exception {
-        ParentWidget root = new WidgetRoot(text, FitnesseFixtureContext.root, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget root = new SimpleWidgetRoot(text, FitnesseFixtureContext.root);
         return root.render();
     }
 

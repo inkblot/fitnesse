@@ -9,7 +9,6 @@ import fitnesse.FitNesseModule;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +38,7 @@ public class EvaluatorWidgetTest extends WidgetTestCase {
                 + "!define FmtCOLON {%03X:}";
 
         page = crawler.addPage(root, PathParser.parse("MyPage"), content);
-        widgetRoot = new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder);
+        widgetRoot = new SimpleWidgetRoot(page);
         Locale.setDefault(Locale.US);
     }
 

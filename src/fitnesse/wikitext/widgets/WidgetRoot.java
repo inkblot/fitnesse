@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 
-public class WidgetRoot extends ParentWidget {
+public abstract class WidgetRoot extends ParentWidget {
 
     private static final String RUNNING_PAGE_NAME = "RUNNING_PAGE_NAME";
     private static final String RUNNING_PAGE_PATH = "RUNNING_PAGE_PATH";
@@ -37,12 +37,12 @@ public class WidgetRoot extends ParentWidget {
     private final boolean ignoringText;
     private final WidgetRoot includingPage;
 
-    public WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
+    protected WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
         this(value, page, builder, new HashMap<String, String>(), false, true, new LinkedList<String>(), null, new LinkedList<WikiWidget>(), 0);
     }
 
     //Constructor for IncludeWidget support (alias locale & scope)
-    public WidgetRoot(WikiPage aliasPage, ParentWidget impostorWidget) throws IOException {
+    protected WidgetRoot(WikiPage aliasPage, ParentWidget impostorWidget) throws IOException {
         this(null, aliasPage, impostorWidget.getBuilder(), impostorWidget.getRoot().variables, impostorWidget.getRoot().isIgnoringText(),
                 impostorWidget.getRoot().doEscaping, impostorWidget.getRoot().literals, impostorWidget.getRoot(), impostorWidget.getChildren(),
                 impostorWidget.getCurrentChild());

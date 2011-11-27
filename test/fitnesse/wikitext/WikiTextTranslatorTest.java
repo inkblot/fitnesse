@@ -9,7 +9,7 @@ import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.widgets.ParentWidget;
-import fitnesse.wikitext.widgets.WidgetRoot;
+import fitnesse.wikitext.widgets.SimpleWidgetRoot;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -92,7 +92,7 @@ public class WikiTextTranslatorTest extends FitnesseBaseTestCase {
     }
 
     private static String translate(String value, WikiPage source) throws Exception {
-        ParentWidget page = new WidgetRoot(value, source, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget page = new SimpleWidgetRoot(value, source);
         return page.render();
     }
 }

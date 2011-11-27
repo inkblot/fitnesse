@@ -8,7 +8,6 @@ import fitnesse.FitNesseModule;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,10 +46,10 @@ public class HelpWidgetTest extends WidgetTestCase {
     @Test
     public void testResultsWithHelp() throws Exception {
         setUp();
-        HelpWidget widget = new HelpWidget(new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder), "!help");
+        HelpWidget widget = new HelpWidget(new SimpleWidgetRoot(page), "!help");
         assertEquals("some page is about some text", widget.render());
 
-        HelpWidget editableWidget = new HelpWidget(new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder), "!help -editable");
+        HelpWidget editableWidget = new HelpWidget(new SimpleWidgetRoot(page), "!help -editable");
         assertEquals("some page is about some text " +
                 "<a href=\"SomePage?properties\">(edit)</a>", editableWidget.render());
     }
@@ -58,10 +57,10 @@ public class HelpWidgetTest extends WidgetTestCase {
     @Test
     public void testResultsWithoutHelp() throws Exception {
         setUp();
-        HelpWidget widget = new HelpWidget(new WidgetRoot("", pageNoHelp, WidgetBuilder.htmlWidgetBuilder), "!help");
+        HelpWidget widget = new HelpWidget(new SimpleWidgetRoot(pageNoHelp), "!help");
         assertEquals("", widget.render());
 
-        HelpWidget editableWidget = new HelpWidget(new WidgetRoot("", pageNoHelp, WidgetBuilder.htmlWidgetBuilder), "!help -editable");
+        HelpWidget editableWidget = new HelpWidget(new SimpleWidgetRoot(pageNoHelp), "!help -editable");
         assertEquals(" <a href=\"NoHelp?properties\">(edit help text)</a>", editableWidget.render());
     }
 

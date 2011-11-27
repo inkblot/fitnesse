@@ -5,7 +5,6 @@ package fitnesse.wikitext.widgets;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,7 +82,7 @@ public class ParentWidgetTest extends FitnesseBaseTestCase {
 
     @Test
     public void testVariables() throws Exception {
-        ParentWidget root = new WidgetRoot("", rootPage, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget root = new SimpleWidgetRoot(rootPage);
         ParentWidget parent1 = new MockParentWidget(root);
         ParentWidget parent2 = new MockParentWidget(parent1);
         parent2.getRoot().addVariable("someKey", "someValue");

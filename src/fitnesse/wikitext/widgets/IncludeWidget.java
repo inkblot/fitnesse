@@ -108,7 +108,7 @@ public class IncludeWidget extends ParentWidget {
         String widgetText = processLiterals(includedText);
 
         //Create impostor root with alias = this if included page found.
-        ParentWidget incRoot = (includedPage == null) ? this : new WidgetRoot(includedPage, this);
+        ParentWidget incRoot = (includedPage == null) ? this : new AliasingWidgetRoot(includedPage, this);
 
         if (isSeamLess(includeOption) || getRoot().isIgnoringText()) {  //Use the impostor if found.
             incRoot.addChildWidgets(widgetText + "\n");

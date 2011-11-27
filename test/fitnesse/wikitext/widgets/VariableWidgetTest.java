@@ -8,7 +8,6 @@ import fitnesse.FitNesseModule;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +28,7 @@ public class VariableWidgetTest extends WidgetTestCase {
     public void setUp() throws Exception {
         crawler = root.getPageCrawler();
         WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"));
-        widgetRoot = new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder);
+        widgetRoot = new SimpleWidgetRoot(page);
     }
 
     @Test
@@ -73,7 +72,7 @@ public class VariableWidgetTest extends WidgetTestCase {
         WikiPage parent = crawler.addPage(root, PathParser.parse("ParentPage"), "!define var {zot}\n");
         WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "ick");
 
-        ParentWidget widgetRoot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget widgetRoot = new SimpleWidgetRoot(child);
         VariableWidget w = new VariableWidget(widgetRoot, "${var}");
         assertEquals("zot", w.render());
     }
@@ -90,7 +89,7 @@ public class VariableWidgetTest extends WidgetTestCase {
     @Test
     public void testUndefinedVariable() throws Exception {
         WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"));
-        ParentWidget widgetRoot = new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget widgetRoot = new SimpleWidgetRoot(page);
         VariableWidget w = new VariableWidget(widgetRoot, "${x}");
         assertSubString("undefined variable: x", w.render());
     }
@@ -116,7 +115,7 @@ public class VariableWidgetTest extends WidgetTestCase {
                                 "!define paren (!-paren literal-!)\n"
                 );
         WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "ick");
-        ParentWidget widgetRoot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget widgetRoot = new SimpleWidgetRoot(child);
 
         VariableWidget w = new VariableWidget(widgetRoot, "${var}");
         assertEquals("some literal", w.render());
@@ -129,7 +128,7 @@ public class VariableWidgetTest extends WidgetTestCase {
         WikiPage parent = crawler.addPage(root, PathParser.parse("ParentPage"), "!define var {zot}\n!define voo (x${var})\n");
         WikiPage child = crawler.addPage(parent, PathParser.parse("ChildPage"), "ick");
 
-        ParentWidget widgetRoot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget widgetRoot = new SimpleWidgetRoot(child);
         VariableWidget w = new VariableWidget(widgetRoot, "${voo}");
         assertEquals("xzot", w.render());
     }

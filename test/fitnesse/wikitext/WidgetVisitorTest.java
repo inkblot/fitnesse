@@ -43,17 +43,17 @@ public class WidgetVisitorTest extends FitnesseBaseTestCase implements WidgetVis
 
     @Test
     public void testSimpleVisitorVisitsAllWidgets() throws Exception {
-        ParentWidget root = new WidgetRoot("''hello''", this.root, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget root = new SimpleWidgetRoot("''hello''", this.root);
         root.acceptVisitor(this);
         assertEquals(3, visits.size());
-        assertEquals(WidgetRoot.class, visits.get(0).getClass());
+        assertEquals(SimpleWidgetRoot.class, visits.get(0).getClass());
         assertEquals(ItalicWidget.class, visits.get(1).getClass());
         assertEquals(TextWidget.class, visits.get(2).getClass());
     }
 
     @Test
     public void testComplexVisitorVisitsAllWidgets() throws Exception {
-        ParentWidget root = new WidgetRoot("|CellOne|CellTwo|\n|''hello''|'''hello'''|\n", this.root, WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget root = new SimpleWidgetRoot("|CellOne|CellTwo|\n|''hello''|'''hello'''|\n", this.root);
         root.acceptVisitor(this);
         assertEquals(14, visits.size());
     }

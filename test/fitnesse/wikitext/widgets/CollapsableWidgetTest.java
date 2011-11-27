@@ -6,7 +6,6 @@ import fitnesse.html.HtmlElement;
 import fitnesse.html.HtmlTag;
 import fitnesse.html.RawHtml;
 import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Test;
 
 import java.util.Iterator;
@@ -88,7 +87,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
     public void testTwoCollapsableSections() throws Exception {
         String text = "!* section1\nsection1 content\n*!\n" +
                 "!* section2\nsection2 content\n*!\n";
-        ParentWidget widgetRoot = new WidgetRoot(text, new WikiPageDummy(injector), WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget widgetRoot = new SimpleWidgetRoot(text, new WikiPageDummy(injector));
         String html = widgetRoot.render();
         assertSubString("<span class=\"meta\">section1", html);
         assertSubString("<span class=\"meta\">section2", html);
@@ -97,7 +96,7 @@ public class CollapsableWidgetTest extends WidgetTestCase {
     @Test
     public void testEatsNewlineAtEnd() throws Exception {
         String text = "!* section1\nsection1 content\n*!\n";
-        ParentWidget widgetRoot = new WidgetRoot(text, new WikiPageDummy(injector), WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget widgetRoot = new SimpleWidgetRoot(text, new WikiPageDummy(injector));
         String html = widgetRoot.render();
         assertNotSubString("<br/>", html);
     }

@@ -7,7 +7,6 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.test.ParserTestHelper;
 import org.junit.Before;
@@ -77,12 +76,12 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
         WikiPage page = crawler.addPage(root, PathParser.parse("MyPage"), "content");
         WikiPage page2 = crawler.addPage(root, PathParser.parse("SecondPage"), "content");
 
-        widgetRoot = new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder);
+        widgetRoot = new SimpleWidgetRoot(page);
         VariableDefinitionWidget widget = new VariableDefinitionWidget(widgetRoot, "!define x {1}\n");
         assertEquals("<span class=\"meta\">variable defined: x=1</span>", widget.render());
         assertEquals("1", widgetRoot.getVariableSource().findVariable("x").getValue());
 
-        widgetRoot = new WidgetRoot("", page2, WidgetBuilder.htmlWidgetBuilder);
+        widgetRoot = new SimpleWidgetRoot(page2);
         widget = new VariableDefinitionWidget(widgetRoot, "!define xyzzy (\nbird\n)\n");
         widget.render();
         assertEquals("\nbird\n", widgetRoot.getVariableSource().findVariable("xyzzy").getValue());
@@ -111,7 +110,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
 
     @Test
     public void testRenderedText() throws Exception {
-        WikiWidget widget = new VariableDefinitionWidget(new WidgetRoot("", root, WidgetBuilder.htmlWidgetBuilder), "!define x (1)\n");
+        WikiWidget widget = new VariableDefinitionWidget(new SimpleWidgetRoot(root), "!define x (1)\n");
         String renderedText = widget.render();
         assertSubString("x", renderedText);
         assertSubString("1", renderedText);
@@ -120,7 +119,7 @@ public class VariableDefinitionWidgetTest extends WidgetTestCase {
     //Test includeInto with periods
     @Test
     public void testRenderedTextWithPeriods() throws Exception {
-        WikiWidget widget = new VariableDefinitionWidget(new WidgetRoot("", root, WidgetBuilder.htmlWidgetBuilder), "!define x.y.z (1)\n");
+        WikiWidget widget = new VariableDefinitionWidget(new SimpleWidgetRoot(root), "!define x.y.z (1)\n");
         String renderedText = widget.render();
         assertSubString("x.y.z", renderedText);
         assertSubString("1", renderedText);

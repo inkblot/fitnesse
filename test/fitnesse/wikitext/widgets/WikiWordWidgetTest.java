@@ -7,7 +7,6 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -104,10 +103,10 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
     @Test
     public void testHtmlForNormalLink() throws Exception {
         WikiPage page = addPage(root, "PageOne");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder), "WikiWord");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(page), "WikiWord");
         assertEquals(makeExpectedNonExistentWikiWord("WikiWord", "WikiWord"), widget.render());
         page = addPage(root, "WikiWord");
-        widget = new WikiWordWidget(new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder), "WikiWord");
+        widget = new WikiWordWidget(new SimpleWidgetRoot(page), "WikiWord");
         assertEquals("<a href=\"WikiWord\">WikiWord</a>", widget.render());
     }
 
@@ -115,7 +114,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
     public void testHtmlForSetUpLink() throws Exception {
         WikiPage page = addPage(root, "PageOne");
         WikiPage pageTwo = addPage(page, "PageTwo");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", pageTwo, WidgetBuilder.htmlWidgetBuilder), ">SetUp");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(pageTwo), ">SetUp");
         assertEquals(makeExpectedNonExistentWikiWord("&gt;SetUp", "PageOne.PageTwo.SetUp"), widget.render());
     }
 
@@ -175,10 +174,10 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
     @Test
     public void testHtmlForNormalLinkRegraced() throws Exception {
         WikiPage page = addPage(root, "PageOne");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder), "Wiki42Word");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(page), "Wiki42Word");
         assertEquals(makeExpectedNonExistentWikiWord("Wiki42Word", "Wiki42Word"), widget.render());
         page = addPage(root, "Wiki42Word");
-        WidgetRoot root = new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder);
+        WidgetRoot root = new SimpleWidgetRoot(page);
         root.addVariable(WikiWordWidget.REGRACE_LINK, "true");
         widget = new WikiWordWidget(root, "Wiki42Word");
         assertEquals("<a href=\"Wiki42Word\">Wiki 42 Word</a>", widget.render());
@@ -249,7 +248,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
 
     @Test
     public void testAsWikiText() throws Exception {
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", addPage(root, "SomePage"), WidgetBuilder.htmlWidgetBuilder), "OldText");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(addPage(root, "SomePage")), "OldText");
         assertEquals("OldText", widget.asWikiText());
         widget.setText("NewText");
         assertEquals("NewText", widget.asWikiText());
@@ -261,10 +260,10 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         addPage(myPage, "SubPage");
 
         //todo ^ is deprecated, remove by 7/2007
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", myPage, WidgetBuilder.htmlWidgetBuilder), "^SubPage");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(myPage), "^SubPage");
         assertEquals(">NewName", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.NewName")));
 
-        widget = new WikiWordWidget(new WidgetRoot("", myPage, WidgetBuilder.htmlWidgetBuilder), ">SubPage");
+        widget = new WikiWordWidget(new SimpleWidgetRoot(myPage), ">SubPage");
         assertEquals(">NewName", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.NewName")));
     }
 
@@ -272,12 +271,12 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
     public void testQualifiedReferenceToRelativeReference() throws Exception {
         WikiPage myPage = addPage(root, "MyPage");
         addPage(root, "MyBrother");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", myPage, WidgetBuilder.htmlWidgetBuilder), "MyBrother");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(myPage), "MyBrother");
         assertEquals("MyBrother", widget.makeRenamedRelativeReference(PathParser.parse(".MyBrother")));
 
         WikiPage subPageOne = addPage(myPage, "SubPageOne");
         addPage(myPage, "SubPageTwo");
-        widget = new WikiWordWidget(new WidgetRoot("", subPageOne, WidgetBuilder.htmlWidgetBuilder), "SubPageTwo");
+        widget = new WikiWordWidget(new SimpleWidgetRoot(subPageOne), "SubPageTwo");
         assertEquals("SubPageTwo", widget.makeRenamedRelativeReference(PathParser.parse(".MyPage.SubPageTwo")));
     }
 
@@ -292,7 +291,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
     public void testSimpleRenamePage() throws Exception {
         WikiPage pageToRename = addPage(root, "OldPageName");
         WikiPage p1 = addPage(root, "PageOne");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", p1, WidgetBuilder.htmlWidgetBuilder), "OldPageName");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(p1), "OldPageName");
         widget.renamePageIfReferenced(pageToRename, "NewPageName");
         assertEquals("NewPageName", widget.getText());
     }
@@ -303,7 +302,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         WikiPage pageToRename = addPage(topPage, "OldPageName");
         @SuppressWarnings("unused")
         WikiPage lastPage = addPage(pageToRename, "LastPage");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", topPage, WidgetBuilder.htmlWidgetBuilder), "TopPage.OldPageName.LastPage");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(topPage), "TopPage.OldPageName.LastPage");
         widget.renamePageIfReferenced(pageToRename, "NewPageName");
         assertEquals("TopPage.NewPageName.LastPage", widget.getText());
     }
@@ -314,7 +313,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         WikiPage pageToRename = addPage(topPage, "OldPageName");
         @SuppressWarnings("unused")
         WikiPage lastPage = addPage(pageToRename, "LastPage");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", topPage, WidgetBuilder.htmlWidgetBuilder), ".TopPage.OldPageName.LastPage");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(topPage), ".TopPage.OldPageName.LastPage");
         widget.renamePageIfReferenced(pageToRename, "NewPageName");
         assertEquals(".TopPage.NewPageName.LastPage", widget.getText());
     }
@@ -325,7 +324,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         WikiPage pageToRename = addPage(topPage, "OldPageName");
         @SuppressWarnings("unused")
         WikiPage lastPage = addPage(pageToRename, "LastPage");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", topPage, WidgetBuilder.htmlWidgetBuilder), "^OldPageName.LastPage");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(topPage), "^OldPageName.LastPage");
         widget.renamePageIfReferenced(pageToRename, "NewPageName");
         assertEquals(">NewPageName.LastPage", widget.getText());
     }
@@ -335,7 +334,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         WikiPage topPage = addPage(root, "TopPage");
         WikiPage pageToRename = addPage(topPage, "OldPageName");
         WikiPage lastPage = addPage(pageToRename, "LastPage");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", lastPage, WidgetBuilder.htmlWidgetBuilder), "<TopPage.OldPageName");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(lastPage), "<TopPage.OldPageName");
         widget.renamePageIfReferenced(pageToRename, "NewPageName");
         assertEquals("<TopPage.NewPageName", widget.getText());
     }
@@ -359,7 +358,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         WikiPage page1 = addPage(root, "PageOne");
         WikiPage page2 = addPage(root, "PageTwo");
 
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", page1, WidgetBuilder.htmlWidgetBuilder), "PageTwo");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(page1), "PageTwo");
         widget.renameMovedPageIfReferenced(page2, "PageOne");
         assertEquals(".PageOne.PageTwo", widget.getText());
     }
@@ -369,7 +368,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         WikiPage page1 = addPage(root, "PageOne");
         WikiPage page2 = addPage(page1, "PageTwo");
 
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", page1, WidgetBuilder.htmlWidgetBuilder), ">PageTwo");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(page1), ">PageTwo");
         widget.renameMovedPageIfReferenced(page2, "");
         assertEquals(".PageTwo", widget.getText());
     }
@@ -380,7 +379,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         addPage(root, "FitNesse");
         addPage(root, "FitNesse.SuiteAcceptanceTests");
         WikiPage parentPage = addPage(root, "FitNesse.SuiteAcceptanceTests.SuiteWikiPageResponderTests");
-        WikiWordWidget widget = new WikiWordWidget(new WidgetRoot("", parentPage, WidgetBuilder.htmlWidgetBuilder), "WikiWord");
+        WikiWordWidget widget = new WikiWordWidget(new SimpleWidgetRoot(parentPage), "WikiWord");
         widget.parentPage = parentPage;
 
         try {

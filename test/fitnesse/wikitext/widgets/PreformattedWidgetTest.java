@@ -4,7 +4,6 @@ package fitnesse.wikitext.widgets;
 
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPageDummy;
-import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Test;
 
 import java.util.regex.Pattern;
@@ -44,14 +43,14 @@ public class PreformattedWidgetTest extends FitnesseBaseTestCase {
 
     @Test
     public void testThatLiteralsWorkInPreformattedText() throws Exception {
-        ParentWidget root = new WidgetRoot("{{{abc !-123-! xyz}}}", new WikiPageDummy(injector), WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget root = new SimpleWidgetRoot("{{{abc !-123-! xyz}}}", new WikiPageDummy(injector));
         String text = root.render();
         assertEquals("<pre>abc 123 xyz</pre>", text);
     }
 
     @Test
     public void testThatVariablesWorkInPreformattedText() throws Exception {
-        ParentWidget root = new WidgetRoot("!define X {123}\n{{{abc ${X} xyz}}}", new WikiPageDummy(injector), WidgetBuilder.htmlWidgetBuilder);
+        ParentWidget root = new SimpleWidgetRoot("!define X {123}\n{{{abc ${X} xyz}}}", new WikiPageDummy(injector));
         String text = root.render();
         assertSubString("<pre>abc 123 xyz</pre>", text);
     }

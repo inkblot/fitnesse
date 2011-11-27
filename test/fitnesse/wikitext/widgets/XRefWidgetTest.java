@@ -5,7 +5,6 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.WidgetBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,8 +33,8 @@ public class XRefWidgetTest extends WidgetTestCase {
         /*child2*/
         root.getPageCrawler().addPage(page, PathParser.parse("SomeChild2"));
 
-        wroot = new WidgetRoot("", page, WidgetBuilder.htmlWidgetBuilder);
-        croot = new WidgetRoot("", child, WidgetBuilder.htmlWidgetBuilder);
+        wroot = new SimpleWidgetRoot(page);
+        croot = new SimpleWidgetRoot(child);
     }
 
     @Test

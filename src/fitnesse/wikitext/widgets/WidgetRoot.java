@@ -9,6 +9,7 @@ import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.WidgetBuilder;
+import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.VariableSource;
 import util.Maybe;
 
@@ -45,30 +46,28 @@ public class WidgetRoot extends ParentWidget {
     }
 
     public WidgetRoot(String value, WikiPage page, WidgetBuilder builder) throws IOException {
-        super(null);
-        this.variables = new HashMap<String, String>();
-        this.page = page;
-        this.builder = builder;
-        this.ignoringText = false;
-        this.doEscaping = true;
-        this.literals = new LinkedList<String>();
-        this.includingPage = null;
-        if (value != null)
-            buildWidgets(value);
+        this(value, page, builder, new HashMap<String, String>(), false, true, new LinkedList<String>(), null, new LinkedList<WikiWidget>(), 0);
     }
 
     //Constructor for IncludeWidget support (alias locale & scope)
-    public WidgetRoot(WikiPage aliasPage, ParentWidget impostorWidget) {
-        super(impostorWidget.getParent(), impostorWidget.getChildren(), impostorWidget.getCurrentChild());
-        WidgetRoot aliasRoot = impostorWidget.getRoot();
+    public WidgetRoot(WikiPage aliasPage, ParentWidget impostorWidget) throws IOException {
+        this(null, aliasPage, impostorWidget.getBuilder(), impostorWidget.getRoot().variables, impostorWidget.getRoot().isIgnoringText(),
+                impostorWidget.getRoot().doEscaping, impostorWidget.getRoot().literals, impostorWidget.getRoot(), impostorWidget.getChildren(),
+                impostorWidget.getCurrentChild());
+    }
 
-        this.builder = impostorWidget.getBuilder();
-        this.variables = aliasRoot.variables;
-        this.doEscaping = aliasRoot.doEscaping;
-        this.literals = aliasRoot.literals;
-        this.ignoringText = aliasRoot.isIgnoringText();
-        this.page = aliasPage;
-        this.includingPage = aliasRoot;
+    private WidgetRoot(String value, WikiPage page, WidgetBuilder builder, Map<String, String> variables, boolean ignoringText,
+                       boolean escaping, List<String> literals, WidgetRoot includingPage, List<WikiWidget> children, int currentChild) throws IOException {
+        super(null, children, currentChild);
+        this.variables = variables;
+        this.page = page;
+        this.builder = builder;
+        this.ignoringText = ignoringText;
+        this.doEscaping = escaping;
+        this.literals = literals;
+        this.includingPage = includingPage;
+        if (value != null)
+            buildWidgets(value);
     }
 
     public WidgetRoot getRoot() {

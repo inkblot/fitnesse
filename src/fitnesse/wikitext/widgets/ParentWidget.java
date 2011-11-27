@@ -13,20 +13,10 @@ import java.util.regex.Pattern;
 
 public abstract class ParentWidget extends WikiWidget {
     protected LinkedList<WikiWidget> children = new LinkedList<WikiWidget>();
-    private int currentChild = 0;
+    protected int currentChild = 0;
 
     public ParentWidget(ParentWidget parent) {
         super(parent);
-    }
-
-    //!include: New constructor for alias
-    public ParentWidget(ParentWidget alias, boolean isAlias) {
-        super(alias.getParent());
-        if (isAlias) {
-            children = alias.children;
-            currentChild = alias.currentChild;
-        } else //not an alias
-            addToParent();  //...behaves like ctor(ParentWidget)
     }
 
     public void reset() {

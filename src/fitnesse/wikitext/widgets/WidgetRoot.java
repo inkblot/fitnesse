@@ -59,7 +59,10 @@ public class WidgetRoot extends ParentWidget {
 
     //Constructor for IncludeWidget support (alias locale & scope)
     public WidgetRoot(WikiPage aliasPage, ParentWidget impostorWidget) {
-        super(impostorWidget, /*is alias=*/ true);
+        super(impostorWidget.getParent());
+        children = impostorWidget.children;
+        currentChild = impostorWidget.currentChild;
+
         WidgetRoot aliasRoot = impostorWidget.getRoot();
 
         this.builder = impostorWidget.getBuilder();

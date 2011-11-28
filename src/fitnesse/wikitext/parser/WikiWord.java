@@ -1,7 +1,7 @@
 package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlText;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 import util.GracefulNamer;
 
 public class WikiWord extends SymbolType implements Translation {
@@ -27,7 +27,7 @@ public class WikiWord extends SymbolType implements Translation {
     }
 
     private String formatWikiWord(String originalName, Symbol symbol) {
-        String regraceOption = symbol.getVariable(WikiWordWidget.REGRACE_LINK, "");
+        String regraceOption = symbol.getVariable(WikiWordUtil.REGRACE_LINK, "");
         return regraceOption.equals("true") ? GracefulNamer.regrace(originalName) : originalName;
     }
 }

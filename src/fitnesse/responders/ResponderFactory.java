@@ -25,7 +25,7 @@ import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 import util.StringUtil;
 
 import java.io.File;
@@ -143,7 +143,7 @@ public class ResponderFactory {
             return injector.getInstance(WikiPageResponder.class);
         } else if (resource.startsWith("files/") || resource.equals("files")) {
             return makeFileResponder(injector, request.getResource(), rootPagePath);
-        } else if (WikiWordWidget.isWikiWord(resource) || "root".equals(resource)) {
+        } else if (WikiWordUtil.isWikiWord(resource) || "root".equals(resource)) {
             return injector.getInstance(WikiPageResponder.class);
         } else {
             return new NotFoundResponder(htmlPageFactory);

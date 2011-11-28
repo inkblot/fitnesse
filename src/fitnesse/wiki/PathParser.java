@@ -2,7 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 
 import java.util.Iterator;
 import java.util.regex.Pattern;
@@ -12,7 +12,7 @@ import static org.apache.commons.lang.StringUtils.isEmpty;
 public class PathParser {
     public static final String PATH_SEPARATOR = ".";
 
-    private static final Pattern wikiWordPattern = Pattern.compile(WikiWordWidget.REGEXP);
+    private static final Pattern wikiWordPattern = Pattern.compile(WikiWordUtil.REGEXP);
     private WikiPagePath path;
 
     public static WikiPagePath parse(String pathName) {

@@ -3,13 +3,14 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.html.HtmlUtil;
+import fitnesse.wikitext.WikiWordUtil;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class XRefWidget extends ParentWidget implements WidgetWithTextArgument {
-    public static final String REGEXP = "^!see " + WikiWordWidget.REGEXP;
+    public static final String REGEXP = "^!see " + WikiWordUtil.REGEXP;
     private static final Pattern pattern = Pattern.compile("^!see (.*)");
     private String pageName;
 

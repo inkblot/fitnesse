@@ -3,7 +3,7 @@
 package fitnesse.wiki;
 
 import com.google.inject.Injector;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,7 +167,7 @@ public class FileSystemPage extends CachingPage {
     }
 
     private boolean fileIsValid(final String filename, final File dir) {
-        if (WikiWordWidget.isWikiWord(filename)) {
+        if (WikiWordUtil.isWikiWord(filename)) {
             final File f = new File(dir, filename);
             if (f.isDirectory()) {
                 return true;

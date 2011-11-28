@@ -29,10 +29,6 @@ public abstract class WikiWidget {
 
     public abstract String render() throws IOException;
 
-    public void acceptVisitor(WidgetVisitor visitor) {
-        visitor.visit(this);
-    }
-
     public WikiPage getWikiPage() {
         return getParent().getWikiPage();
     }

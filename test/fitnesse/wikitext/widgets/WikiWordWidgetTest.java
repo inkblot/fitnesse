@@ -7,6 +7,7 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiWordUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,9 +32,9 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
 
     @Test
     public void testIsSingleWikiWord() throws Exception {
-        assertTrue(WikiWordWidget.isSingleWikiWord("WikiWord"));
-        assertFalse(WikiWordWidget.isSingleWikiWord("notWikiWord"));
-        assertFalse(WikiWordWidget.isSingleWikiWord("NotSingle.WikiWord"));
+        assertTrue(WikiWordUtil.isSingleWikiWord("WikiWord"));
+        assertFalse(WikiWordUtil.isSingleWikiWord("notWikiWord"));
+        assertFalse(WikiWordUtil.isSingleWikiWord("NotSingle.WikiWord"));
     }
 
     @Test
@@ -93,11 +94,11 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
 
     @Test
     public void testMakeWikiWord() {
-        assertEquals("ExistingWikiWord", WikiWordWidget.makeWikiWord("ExistingWikiWord"));
-        assertEquals("LowercaseworD", WikiWordWidget.makeWikiWord("lowercaseword"));
-        assertEquals("AaA", WikiWordWidget.makeWikiWord("a"));
-        assertEquals("AbA", WikiWordWidget.makeWikiWord("ab"));
-        assertEquals("AbC", WikiWordWidget.makeWikiWord("aBc"));
+        assertEquals("ExistingWikiWord", WikiWordUtil.makeWikiWord("ExistingWikiWord"));
+        assertEquals("LowercaseworD", WikiWordUtil.makeWikiWord("lowercaseword"));
+        assertEquals("AaA", WikiWordUtil.makeWikiWord("a"));
+        assertEquals("AbA", WikiWordUtil.makeWikiWord("ab"));
+        assertEquals("AbC", WikiWordUtil.makeWikiWord("aBc"));
     }
 
     @Test
@@ -158,10 +159,10 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         @SuppressWarnings("unused")
         WikiPage subTarget = addPage(target, "SubTarget");
 
-        String actual = WikiWordWidget.expandPrefix(referer, "<TargetPage.SubTarget");
+        String actual = WikiWordUtil.expandPrefix(referer, "<TargetPage.SubTarget");
         assertEquals(".TopPage.TargetPage.SubTarget", actual);
 
-        actual = WikiWordWidget.expandPrefix(referer, "<NoSuchPage");
+        actual = WikiWordUtil.expandPrefix(referer, "<NoSuchPage");
         assertEquals(".NoSuchPage", actual);
 
         PageData data = referer.getData();
@@ -178,7 +179,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         assertEquals(makeExpectedNonExistentWikiWord("Wiki42Word", "Wiki42Word"), widget.render());
         page = addPage(root, "Wiki42Word");
         WidgetRoot root = new SimpleWidgetRoot(page);
-        root.addVariable(WikiWordWidget.REGRACE_LINK, "true");
+        root.addVariable(WikiWordUtil.REGRACE_LINK, "true");
         widget = new WikiWordWidget(root, "Wiki42Word");
         assertEquals("<a href=\"Wiki42Word\">Wiki 42 Word</a>", widget.render());
     }
@@ -189,7 +190,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         WikiPage childPage = addPage(superPage, "SubPage");
 
         PageData data = superPage.getData();
-        data.setContent("!define " + WikiWordWidget.REGRACE_LINK + " {true}");
+        data.setContent("!define " + WikiWordUtil.REGRACE_LINK + " {true}");
         superPage.commit(data);
 
         data = childPage.getData();
@@ -213,7 +214,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
         WikiPage subTarget = addPage(target, "SubTarget");
 
         PageData data = top.getData();
-        data.setContent("!define " + WikiWordWidget.REGRACE_LINK + " {true}");
+        data.setContent("!define " + WikiWordUtil.REGRACE_LINK + " {true}");
         top.commit(data);
 
         data = referer.getData();
@@ -228,7 +229,7 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
     }
 
     private void checkWord(boolean expectedMatch, String word) {
-        Pattern p = Pattern.compile(WikiWordWidget.REGEXP, Pattern.DOTALL | Pattern.MULTILINE);
+        Pattern p = Pattern.compile(WikiWordUtil.REGEXP, Pattern.DOTALL | Pattern.MULTILINE);
         Matcher match = p.matcher(word);
         final boolean matches = match.find();
         final boolean matchEquals = matches && word.equals(match.group(0));
@@ -242,8 +243,8 @@ public class WikiWordWidgetTest extends FitnesseBaseTestCase {
 
     @Test
     public void testIsWikiWord() throws Exception {
-        assertEquals(true, WikiWordWidget.isWikiWord("HelloThere"));
-        assertEquals(false, WikiWordWidget.isWikiWord("not.a.wiki.word"));
+        assertEquals(true, WikiWordUtil.isWikiWord("HelloThere"));
+        assertEquals(false, WikiWordUtil.isWikiWord("not.a.wiki.word"));
     }
 
     @Test

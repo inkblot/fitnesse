@@ -3,6 +3,7 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wiki.*;
+import fitnesse.wikitext.WikiWordUtil;
 import util.Maybe;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class IncludeWidget extends ParentWidget {
     public static final String REGEXP =
-            "^!include(?: +-setup| +-teardown| +-seamless| +-c)? " + WikiWordWidget.REGEXP + "\n" + "?";
+            "^!include(?: +-setup| +-teardown| +-seamless| +-c)? " + WikiWordUtil.REGEXP + "\n" + "?";
     static final Pattern pattern = Pattern.compile("^!include *(-setup|-teardown|-seamless|-c)? (.*)");
 
     public static final String COLLAPSE_SETUP = "COLLAPSE_SETUP";

@@ -11,7 +11,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 
 import java.io.IOException;
 
@@ -72,7 +72,7 @@ public class AddChildPageResponder implements SecureResponder {
     }
 
     private boolean nameIsInvalid(String name) {
-        return isEmpty(name) || !WikiWordWidget.isSingleWikiWord(name);
+        return isEmpty(name) || !WikiWordUtil.isSingleWikiWord(name);
     }
 
     private void createChildPage() throws IOException {

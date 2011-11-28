@@ -14,7 +14,7 @@ import fitnesse.responders.ErrorResponder;
 import fitnesse.responders.NotFoundResponder;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 import org.apache.commons.lang.StringUtils;
 import util.EnvironmentVariableTool;
 
@@ -135,7 +135,7 @@ public class SymbolicLinkResponder implements Responder {
     }
 
     private boolean isInternalPageThatDoesntExist(String linkPath) throws Exception {
-        String expandedPath = WikiWordWidget.expandPrefix(page, linkPath);
+        String expandedPath = WikiWordUtil.expandPrefix(page, linkPath);
         WikiPagePath path = PathParser.parse(expandedPath);
         WikiPage start = path.isRelativePath() ? page.getParent() : page; //TODO -AcD- a better way?
         return !crawler.pageExists(start, path);

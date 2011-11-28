@@ -9,7 +9,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 
 public class RenamePageResponder extends PageMovementResponder {
     private String newName;
@@ -29,7 +29,7 @@ public class RenamePageResponder extends PageMovementResponder {
     @Override
     protected boolean getAndValidateRefactoringParameters(Request request) throws Exception {
         newName = (String) request.getInput("newName");
-        return (newName != null && WikiWordWidget.isSingleWikiWord(newName) && !"FrontPage".equals(oldNameOfPageToBeMoved));
+        return (newName != null && WikiWordUtil.isSingleWikiWord(newName) && !"FrontPage".equals(oldNameOfPageToBeMoved));
     }
 
     @Override

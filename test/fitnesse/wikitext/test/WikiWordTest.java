@@ -3,7 +3,7 @@ package fitnesse.wikitext.test;
 import com.google.inject.Inject;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +46,7 @@ public class WikiWordTest extends FitnesseBaseTestCase {
 
     @Test
     public void regracesWikiWords() throws Exception {
-        root.setPageData(pageOne, "!define " + WikiWordWidget.REGRACE_LINK + " {true}\nPageOne\n!define " + WikiWordWidget.REGRACE_LINK + " {false}\n");
+        root.setPageData(pageOne, "!define " + WikiWordUtil.REGRACE_LINK + " {true}\nPageOne\n!define " + WikiWordUtil.REGRACE_LINK + " {false}\n");
         assertTrue(ParserTestHelper.translateTo(pageOne).contains(wikiLink("PageOne", "Page One")));
     }
 

@@ -11,7 +11,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 
 import java.util.regex.Pattern;
 
@@ -44,7 +44,7 @@ public class NotFoundResponder implements Responder {
     private String makeRightColumn(String name) throws Exception {
         StringBuffer buffer = new StringBuffer();
         buffer.append("The requested resource: <i>").append(name).append("</i> was not found.");
-        if (Pattern.matches(WikiWordWidget.REGEXP, name)) {
+        if (Pattern.matches(WikiWordUtil.REGEXP, name)) {
             makeCreateThisPageWithButton(name, buffer);
         }
         return buffer.toString();

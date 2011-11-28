@@ -8,7 +8,7 @@ import fitnesse.wiki.PathParser;
 import fitnesse.wiki.ProxyPage;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
-import fitnesse.wikitext.WidgetVisitor;
+import fitnesse.wikitext.WikiWordUtil;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -43,7 +43,7 @@ public class AliasLinkWidget extends ParentWidget {
     }
 
     private String makeLinkTag(String url, String urlSuffix) throws IOException {
-        if (WikiWordWidget.isWikiWord(url))
+        if (WikiWordUtil.isWikiWord(url))
             return makeLinkTagForWikiWord(url, urlSuffix);
         else {
             url = LinkWidget.makeUrlUsable(url);
@@ -88,15 +88,4 @@ public class AliasLinkWidget extends ParentWidget {
         return "[[" + childWikiText() + "][" + href + "]]";
     }
 
-    public void acceptVisitor(WidgetVisitor visitor) {
-        visitor.visit(this);
-    }
-
-    public void renamePageIfReferenced(WikiPage pageToRename, String newName) {
-        if (WikiWordWidget.isWikiWord(href)) {
-            WikiWordWidget www = new WikiWordWidget(new BlankParentWidget(this, ""), href);
-            www.renamePageIfReferenced(pageToRename, newName);
-            href = www.getText();
-        }
-    }
 }

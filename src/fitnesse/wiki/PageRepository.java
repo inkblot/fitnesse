@@ -1,6 +1,6 @@
 package fitnesse.wiki;
 
-import fitnesse.wikitext.widgets.WikiWordWidget;
+import fitnesse.wikitext.WikiWordUtil;
 import util.FileSystem;
 
 import java.io.IOException;
@@ -46,10 +46,10 @@ public class PageRepository {
             String childPath = parent.getFileSystemPath() + "/" + child;
             if (child.endsWith(".html")) {
                 children.add(new ExternalTestPage(childPath,
-                        WikiWordWidget.makeWikiWord(child.replace(".html", "")), parent, fileSystem, parent.getInjector()));
+                        WikiWordUtil.makeWikiWord(child.replace(".html", "")), parent, fileSystem, parent.getInjector()));
             } else if (hasHtmlChild(childPath)) {
                 children.add(new ExternalSuitePage(childPath,
-                        WikiWordWidget.makeWikiWord(child), parent, fileSystem, parent.getInjector()));
+                        WikiWordUtil.makeWikiWord(child), parent, fileSystem, parent.getInjector()));
             }
         }
         return children;

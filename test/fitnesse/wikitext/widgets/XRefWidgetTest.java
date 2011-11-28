@@ -5,6 +5,7 @@ package fitnesse.wikitext.widgets;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PathParser;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.WikiWordUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,7 +54,7 @@ public class XRefWidgetTest extends WidgetTestCase {
         assertHasRegexp("<b>See: <a href=.*SomePage.SomeChild2.*SomePage.SomeChild2</a></b>", widget.render());
 
         //Regracing
-        wroot.addVariable(WikiWordWidget.REGRACE_LINK, "true");
+        wroot.addVariable(WikiWordUtil.REGRACE_LINK, "true");
         widget = new XRefWidget(wroot, "!see SomePage");
         assertHasRegexp("<b>See: <a href=.*Some Page</a></b>", widget.render());
 
@@ -63,7 +64,7 @@ public class XRefWidgetTest extends WidgetTestCase {
         widget = new XRefWidget(wroot, "!see >SomeChild");
         assertHasRegexp("<b>See: <a href=.*SomePage.SomeChild.*&gt;Some Child</a></b>", widget.render());
 
-        croot.addVariable(WikiWordWidget.REGRACE_LINK, "true");
+        croot.addVariable(WikiWordUtil.REGRACE_LINK, "true");
         widget = new XRefWidget(croot, "!see <SomePage.SomeChild2");
         assertHasRegexp("<b>See: <a href=.*SomePage.SomeChild2.*&lt;Some Page .Some Child 2</a></b>", widget.render());
     }

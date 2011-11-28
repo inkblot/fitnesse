@@ -3,7 +3,6 @@
 package fitnesse.wikitext.widgets;
 
 import fitnesse.wikitext.WidgetBuilder;
-import fitnesse.wikitext.WidgetVisitor;
 import fitnesse.wikitext.WikiWidget;
 
 import java.io.IOException;
@@ -89,15 +88,6 @@ public abstract class ParentWidget extends WikiWidget {
 
     public boolean doEscaping() {
         return getParent().doEscaping();
-    }
-
-    public void acceptVisitor(WidgetVisitor visitor) {
-        visitor.visit(this);
-        currentChild = 0;
-        while (hasNextChild()) {
-            WikiWidget child = nextChild();
-            child.acceptVisitor(visitor);
-        }
     }
 
     public String processLiterals(String value) throws IOException {

@@ -2,11 +2,7 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.*;
-import fitnesse.wikitext.widgets.ParentWidget;
-import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
-import fitnesse.wikitext.widgets.WidgetWithTextArgument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ClockUtil;
@@ -255,15 +251,21 @@ public class PageData implements Serializable {
     }
 
     public List<String> getXrefPages() throws IOException {
-        ParentWidget root = new TextIgnoringWidgetRoot(getContent(), wikiPage);
-        List<WikiWidget> widgets = root.getChildren();
-        List<String> values = new ArrayList<String>();
-        for (WikiWidget widget : widgets) {
-            if (widget instanceof WidgetWithTextArgument)
-                values.add(((WidgetWithTextArgument) widget).getText());
-            else
-                widget.render();
-        }
+        final List<String> values = new ArrayList<String>();
+        getSyntaxTree().walkPreOrder(new SymbolTreeWalker() {
+            @Override
+            public boolean visit(Symbol node) {
+                if (node.isType(new See())) {
+                    values.add(node.childAt(0).getContent());
+                }
+                return true;
+            }
+
+            @Override
+            public boolean visitChildren(Symbol node) {
+                return !node.isType(new See());
+            }
+        });
         return values;
     }
 

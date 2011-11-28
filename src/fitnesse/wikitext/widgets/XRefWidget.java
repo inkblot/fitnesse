@@ -10,8 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class XRefWidget extends ParentWidget implements WidgetWithTextArgument {
-    public static final String REGEXP = "^!see " + WikiWordUtil.REGEXP;
-    private static final Pattern pattern = Pattern.compile("^!see (.*)");
+    public static final String REGEXP = "!see " + WikiWordUtil.REGEXP;
+    private static final Pattern pattern = Pattern.compile("!see (.*)");
     private String pageName;
 
     public XRefWidget(ParentWidget parent, String text) {

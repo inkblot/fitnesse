@@ -20,17 +20,14 @@ public class PlainTextTable extends SymbolType implements Rule {
         parser.moveNext(1);
         if (parser.atEnd()) return Symbol.nothing;
 
-        SymbolProvider plainTextTableTypes;
+        SymbolProvider plainTextTableTypes = new SymbolProvider(
+                SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType,
+                Variable.symbolType);
         if (!parser.getCurrent().isType(SymbolType.Newline) && !parser.getCurrent().isType(SymbolType.Whitespace)) {
             Matchable columnSeparator = new ColumnSeparator(parser.getCurrent().getContent().substring(0, 1));
-            plainTextTableTypes = new SymbolProvider(new SymbolType[]
-                    {SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
             plainTextTableTypes.addMatcher(columnSeparator);
             parser.moveNext(1);
             if (parser.atEnd()) return Symbol.nothing;
-        } else {
-            plainTextTableTypes = new SymbolProvider(new SymbolType[]
-                    {SymbolType.Newline, SymbolType.ClosePlainTextTable, Evaluator.symbolType, Literal.symbolType, Variable.symbolType});
         }
 
         if (parser.getCurrent().isType(SymbolType.Whitespace)) {

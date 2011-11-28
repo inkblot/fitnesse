@@ -5,7 +5,8 @@ import util.Maybe;
 public class Preformat extends SymbolType implements Rule {
     public static final Preformat symbolType = new Preformat();
     private static final SymbolProvider preformatProvider = new SymbolProvider(
-            new SymbolType[]{SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType, Variable.symbolType});
+            SymbolType.ClosePreformat, SymbolType.CloseBrace, SymbolType.CloseLiteral, Literal.symbolType,
+            Variable.symbolType);
 
     public Preformat() {
         super("Preformat");

@@ -38,7 +38,7 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
     @Before
     public void setUp() throws Exception {
         testProperties = new Properties();
-        testProvider = new SymbolProvider(new SymbolType[]{});
+        testProvider = new SymbolProvider();
     }
 
     @After

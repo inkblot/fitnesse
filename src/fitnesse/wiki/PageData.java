@@ -2,13 +2,11 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wiki;
 
-import fitnesse.wikitext.WidgetBuilder;
 import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.*;
 import fitnesse.wikitext.widgets.ParentWidget;
 import fitnesse.wikitext.widgets.TextIgnoringWidgetRoot;
 import fitnesse.wikitext.widgets.WidgetWithTextArgument;
-import fitnesse.wikitext.widgets.XRefWidget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.ClockUtil;
@@ -21,21 +19,16 @@ import java.util.*;
 
 import static fitnesse.wiki.PageType.*;
 
-@SuppressWarnings("unchecked")
 public class PageData implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private static final Logger logger = LoggerFactory.getLogger(PageData.class);
 
-    public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(
-            XRefWidget.class);
-
-    private static SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(new SymbolType[]{
-            Literal.symbolType, new Define(), new Include(), SymbolType.CloseLiteral, Comment.symbolType, SymbolType.Whitespace,
-            SymbolType.Newline, Variable.symbolType, Preformat.symbolType,
-            SymbolType.ClosePreformat, SymbolType.Text
-    });
+    private static SymbolProvider variableDefinitionSymbolProvider = new SymbolProvider(
+            Literal.symbolType, new Define(), new Include(), SymbolType.CloseLiteral, Comment.symbolType,
+            SymbolType.Whitespace, SymbolType.Newline, Variable.symbolType, Preformat.symbolType,
+            SymbolType.ClosePreformat, SymbolType.Text);
 
     // TODO: Find a better place for us
     public static final String PropertyLAST_MODIFIED = "LastModified";

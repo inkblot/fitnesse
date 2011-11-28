@@ -2,14 +2,16 @@
 // Released under the terms of the CPL Common Public License version 1.0.
 package fitnesse.wikitext.widgets;
 
-import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wikitext.WidgetBuilder;
 
 import java.io.IOException;
 
 public class TextIgnoringWidgetRoot extends WidgetRoot {
+    public static WidgetBuilder xrefWidgetBuilder = new WidgetBuilder(XRefWidget.class);
+
     public TextIgnoringWidgetRoot(String value, WikiPage page) throws IOException {
-        super(value, page, PageData.xrefWidgetBuilder);
+        super(value, page, xrefWidgetBuilder);
     }
 
     public void addChildWidgets(String value) {

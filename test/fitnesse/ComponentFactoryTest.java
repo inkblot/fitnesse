@@ -7,8 +7,6 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiPageResponder;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.WidgetInterceptor;
-import fitnesse.wikitext.WikiWidget;
 import fitnesse.wikitext.parser.*;
 import org.junit.After;
 import org.junit.Before;
@@ -16,8 +14,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
@@ -47,7 +43,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         FileOutputStream out = new FileOutputStream(file);
         out.write("".getBytes());
         out.close();
-        TestWidgetInterceptor.widgetsIntercepted.clear();
     }
 
     @Test
@@ -99,14 +94,6 @@ public class ComponentFactoryTest extends FitnesseBaseTestCase {
         assertSubString(Today.class.getName(), output);
 
         assertMatch("!today", true);
-    }
-
-    public static class TestWidgetInterceptor implements WidgetInterceptor {
-        public static List<Class<?>> widgetsIntercepted = new ArrayList<Class<?>>();
-
-        public void intercept(WikiWidget widget) {
-            widgetsIntercepted.add(widget.getClass());
-        }
     }
 
     static class DummyPlugin {

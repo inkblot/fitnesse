@@ -28,11 +28,6 @@ The property provided should be a comma separated list of key:value pairs, where
 ''motivation:'' Custom security scheme.
 The class provided must extend the fitnesse.authentication.Authenticator class.  The class will be instantiated and asked ''isAuthenticated(String username, String password)'' when ever authentication is required.  See SecurityDescription for more information on security.
 
-!3 !-WikiWidgets-!
-''required property:'' '''!-WikiWidgets-! = <class name>[,<class name]'''
-''motivation:'' Custom look-n-feel, or custom functionality hook.
-The classes supplied must extend ''!-fitnesse.wikitext.WikiWidget-!''.  In addition, custom !-WikiWidget-! must have a public static field of type String and named REGEXP.  The value of REGEXP should be a regular expresion that matches your custom widget.  REGEXP '''cannot''' contain any groups.
-
 !3 !-Content Filter-!
 ''required property:'' '''!-ContentFilter-! = <class name>'''
 ''motivation:'' Restrict the content that is saved on wiki pages. (Damn spammers!)

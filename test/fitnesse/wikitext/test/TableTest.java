@@ -1,30 +1,31 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-public class TableTest {
+public class TableTest extends FitnesseBaseTestCase {
     @Test
     public void scansTables() {
-        ParserTestHelper.assertScansTokenType("|a|\n", "Table", true);
-        ParserTestHelper.assertScansTokenType("!|a|\n", "Table", true);
-        ParserTestHelper.assertScansTokenType("-|a|\n", "Table", true);
-        ParserTestHelper.assertScansTokenType("-!|a|\n", "Table", true);
+        ParserTestHelper.assertScansTokenType("|a|\n", "Table", true, injector);
+        ParserTestHelper.assertScansTokenType("!|a|\n", "Table", true, injector);
+        ParserTestHelper.assertScansTokenType("-|a|\n", "Table", true, injector);
+        ParserTestHelper.assertScansTokenType("-!|a|\n", "Table", true, injector);
     }
 
     @Test
     public void translatesTables() {
-        ParserTestHelper.assertTranslatesTo("|a|\n", tableWithCell("a"));
-        ParserTestHelper.assertTranslatesTo("|a| \n", tableWithCell("a"));
-        ParserTestHelper.assertTranslatesTo("|a|", tableWithCell("a"));
-        ParserTestHelper.assertTranslatesTo("||\n", tableWithCell(""));
-        ParserTestHelper.assertTranslatesTo("| a |\n", tableWithCell("a"));
-        ParserTestHelper.assertTranslatesTo("|!- a -!|\n", tableWithCell(" a "));
-        ParserTestHelper.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"));
-        ParserTestHelper.assertTranslatesTo("|!c a|\n", tableWithCell("<div class=\"centered\">a</div>"));
+        ParserTestHelper.assertTranslatesTo("|a|\n", tableWithCell("a"), injector);
+        ParserTestHelper.assertTranslatesTo("|a| \n", tableWithCell("a"), injector);
+        ParserTestHelper.assertTranslatesTo("|a|", tableWithCell("a"), injector);
+        ParserTestHelper.assertTranslatesTo("||\n", tableWithCell(""), injector);
+        ParserTestHelper.assertTranslatesTo("| a |\n", tableWithCell("a"), injector);
+        ParserTestHelper.assertTranslatesTo("|!- a -!|\n", tableWithCell(" a "), injector);
+        ParserTestHelper.assertTranslatesTo("|''a''|\n", tableWithCell("<i>a</i>"), injector);
+        ParserTestHelper.assertTranslatesTo("|!c a|\n", tableWithCell("<div class=\"centered\">a</div>"), injector);
         ParserTestHelper.assertTranslatesTo("|http://mysite.org|\n",
-                tableWithCell("<a href=\"http://mysite.org\">http://mysite.org</a>"));
-        ParserTestHelper.assertTranslatesTo("|!-line\nbreaks\n-!|\n", tableWithCell("line\nbreaks\n"));
+                tableWithCell("<a href=\"http://mysite.org\">http://mysite.org</a>"), injector);
+        ParserTestHelper.assertTranslatesTo("|!-line\nbreaks\n-!|\n", tableWithCell("line\nbreaks\n"), injector);
 
         ParserTestHelper.assertTranslatesTo("|a|b|c|\n|d|e|f|\n",
                 "<table border=\"1\" cellspacing=\"0\">" + HtmlElement.endl +
@@ -38,23 +39,23 @@ public class TableTest {
                         "\t\t<td>e</td>" + HtmlElement.endl +
                         "\t\t<td>f</td>" + HtmlElement.endl +
                         "\t</tr>" + HtmlElement.endl +
-                        "</table>" + HtmlElement.endl);
+                        "</table>" + HtmlElement.endl, injector);
     }
 
     @Test
     public void ignoresMalformedTables() {
-        ParserTestHelper.assertTranslatesTo("!|\n\n|a|\n", "!|\n" + ParserTestHelper.newLineRendered + tableWithCell("a"));
+        ParserTestHelper.assertTranslatesTo("!|\n\n|a|\n", "!|\n" + ParserTestHelper.newLineRendered + tableWithCell("a"), injector);
     }
 
     @Test
     public void ignoreMostMarkupInLiteralTable() {
-        ParserTestHelper.assertTranslatesTo("!|''<a''|\n", tableWithCell("''&lt;a''"));
-        ParserTestHelper.assertTranslatesTo("!|a@b.com|\n", tableWithCell("a@b.com"));
+        ParserTestHelper.assertTranslatesTo("!|''<a''|\n", tableWithCell("''&lt;a''"), injector);
+        ParserTestHelper.assertTranslatesTo("!|a@b.com|\n", tableWithCell("a@b.com"), injector);
     }
 
     @Test
     public void evaluatesExpressionsInLiteralTable() {
-        ParserTestHelper.assertTranslatesTo("!|${=3+4=}|\n", tableWithCell("7"));
+        ParserTestHelper.assertTranslatesTo("!|${=3+4=}|\n", tableWithCell("7"), injector);
     }
 
     @Test
@@ -73,23 +74,23 @@ public class TableTest {
                         "\t\t<td>e</td>" + HtmlElement.endl +
                         "\t\t<td>f</td>" + HtmlElement.endl +
                         "\t</tr>" + HtmlElement.endl +
-                        "</table>" + HtmlElement.endl);
+                        "</table>" + HtmlElement.endl, injector);
     }
 
     @Test
     public void hidesFirstRowInCommentTable() {
-        ParserTestHelper.assertTranslatesTo("-|a|\n", tableWithCellAndRow("a", "<tr class=\"hidden\">"));
+        ParserTestHelper.assertTranslatesTo("-|a|\n", tableWithCellAndRow("a", "<tr class=\"hidden\">"), injector);
     }
 
     @Test
     public void combinesLiteralAndCommentOptions() {
-        ParserTestHelper.assertTranslatesTo("-!|''<a''|\n", tableWithCellAndRow("''&lt;a''", "<tr class=\"hidden\">"));
+        ParserTestHelper.assertTranslatesTo("-!|''<a''|\n", tableWithCellAndRow("''&lt;a''", "<tr class=\"hidden\">"), injector);
     }
 
     @Test
     public void overridesNestedRule() {
-        ParserTestHelper.assertTranslatesTo("|''|\n", tableWithCell("''"));
-        ParserTestHelper.assertTranslatesTo("|''a|\n''", tableWithCell("''a") + "''");
+        ParserTestHelper.assertTranslatesTo("|''|\n", tableWithCell("''"), injector);
+        ParserTestHelper.assertTranslatesTo("|''a|\n''", tableWithCell("''a") + "''", injector);
     }
 
     @Test

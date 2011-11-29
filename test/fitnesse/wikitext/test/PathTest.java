@@ -17,14 +17,14 @@ import static org.junit.Assert.assertEquals;
 public class PathTest extends FitnesseBaseTestCase {
     @Test
     public void scansPaths() {
-        ParserTestHelper.assertScansTokenType("!path stuff", "Path", true);
+        ParserTestHelper.assertScansTokenType("!path stuff", "Path", true, injector);
     }
 
     @Test
     public void translatesPaths() throws Exception {
-        ParserTestHelper.assertTranslatesTo("!path stuff", "<span class=\"meta\">classpath: stuff</span>");
+        ParserTestHelper.assertTranslatesTo("!path stuff", "<span class=\"meta\">classpath: stuff</span>", injector);
         ParserTestHelper.assertTranslatesTo("!path stuff\n",
-                "<span class=\"meta\">classpath: stuff</span>" + ParserTestHelper.newLineRendered);
+                "<span class=\"meta\">classpath: stuff</span>" + ParserTestHelper.newLineRendered, injector);
     }
 
     @Test

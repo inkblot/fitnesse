@@ -1,20 +1,21 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-public class HashTableTest {
+public class HashTableTest extends FitnesseBaseTestCase {
     @Test
     public void scansHashTables() {
-        ParserTestHelper.assertScansTokenType("!{a:b,c:d}", "HashTable", true);
-        ParserTestHelper.assertScansTokenType("!{a:b,c:d}", "Colon", true);
-        ParserTestHelper.assertScansTokenType("!{a:b,c:d}", "Comma", true);
+        ParserTestHelper.assertScansTokenType("!{a:b,c:d}", "HashTable", true, injector);
+        ParserTestHelper.assertScansTokenType("!{a:b,c:d}", "Colon", true, injector);
+        ParserTestHelper.assertScansTokenType("!{a:b,c:d}", "Comma", true, injector);
     }
 
     @Test
     public void translatesHashTables() {
-        ParserTestHelper.assertTranslatesTo("!{a:b,c:d}", hashTable());
-        ParserTestHelper.assertTranslatesTo("!{a:b, c:d}", hashTable());
+        ParserTestHelper.assertTranslatesTo("!{a:b,c:d}", hashTable(), injector);
+        ParserTestHelper.assertTranslatesTo("!{a:b, c:d}", hashTable(), injector);
     }
 
     private String hashTable() {

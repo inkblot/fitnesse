@@ -7,8 +7,8 @@ import org.junit.Test;
 public class PlainTextTableTest extends FitnesseBaseTestCase {
     @Test
     public void scansPlainTextTables() {
-        ParserTestHelper.assertScansTokenType("![\nstuff\n]!", "PlainTextTable", true);
-        ParserTestHelper.assertScansTokenType("![\nstuff\n]!", "ClosePlainTextTable", true);
+        ParserTestHelper.assertScansTokenType("![\nstuff\n]!", "PlainTextTable", true, injector);
+        ParserTestHelper.assertScansTokenType("![\nstuff\n]!", "ClosePlainTextTable", true, injector);
     }
 
     @Test
@@ -23,7 +23,7 @@ public class PlainTextTableTest extends FitnesseBaseTestCase {
                         "\t<tr>" + HtmlElement.endl +
                         "\t\t<td>stuff</td>" + HtmlElement.endl +
                         "\t</tr>" + HtmlElement.endl +
-                        "</table>" + HtmlElement.endl);
+                        "</table>" + HtmlElement.endl, injector);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class PlainTextTableTest extends FitnesseBaseTestCase {
                         "\t<tr class=\"hidden\">" + HtmlElement.endl +
                         "\t\t<td>stuff</td>" + HtmlElement.endl +
                         "\t</tr>" + HtmlElement.endl +
-                        "</table>" + HtmlElement.endl);
+                        "</table>" + HtmlElement.endl, injector);
     }
 
     @Test
@@ -44,6 +44,6 @@ public class PlainTextTableTest extends FitnesseBaseTestCase {
                         "\t\t<td>stuff</td>" + HtmlElement.endl +
                         "\t\t<td>nonsense</td>" + HtmlElement.endl +
                         "\t</tr>" + HtmlElement.endl +
-                        "</table>" + HtmlElement.endl);
+                        "</table>" + HtmlElement.endl, injector);
     }
 }

@@ -10,16 +10,18 @@ import org.junit.Test;
 public class AliasTest extends FitnesseBaseTestCase {
 
     private WikiPage root;
+    private TestSourcePage sourcePage;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, TestSourcePage sourcePage) {
         this.root = root;
+        this.sourcePage = sourcePage;
     }
 
     @Test
     public void scansAliases() {
-        ParserTestHelper.assertScansTokenType("[[tag][link]]", "Alias", true);
-        ParserTestHelper.assertScansTokenType("[ [tag][link]]", "Alias", false);
+        ParserTestHelper.assertScansTokenType("[[tag][link]]", "Alias", true, injector);
+        ParserTestHelper.assertScansTokenType("[ [tag][link]]", "Alias", false, injector);
     }
 
     @Test
@@ -31,7 +33,7 @@ public class AliasTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesAliases() throws Exception {
-        TestSourcePage page = new TestSourcePage().withTarget("PageOne");
+        TestSourcePage page = sourcePage.withTarget("PageOne");
         ParserTestHelper.assertTranslatesTo(page, "[[tag][link]]", link("tag", "link"));
         ParserTestHelper.assertTranslatesTo(page, "[[tag][#anchor]]", link("tag", "#anchor"));
         ParserTestHelper.assertTranslatesTo(page, "[[tag][PageOne]]", link("tag", "PageOne"));
@@ -44,7 +46,7 @@ public class AliasTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesLinkToNonExistent() {
-        ParserTestHelper.assertTranslatesTo(new TestSourcePage().withUrl("NonExistentPage"), "[[tag][NonExistentPage]]",
+        ParserTestHelper.assertTranslatesTo(sourcePage.withUrl("NonExistentPage"), "[[tag][NonExistentPage]]",
                 "tag<a title=\"create page\" href=\"NonExistentPage?edit&nonExistent=true\">[?]</a>");
     }
 

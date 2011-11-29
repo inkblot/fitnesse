@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class VariableTest extends FitnesseBaseTestCase {
     @Test
     public void scansVariables() {
-        ParserTestHelper.assertScansTokenType("${x}", "Variable", true);
+        ParserTestHelper.assertScansTokenType("${x}", "Variable", true, injector);
     }
 
     @Test

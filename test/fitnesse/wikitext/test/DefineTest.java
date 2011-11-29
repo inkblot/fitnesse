@@ -14,8 +14,8 @@ import static org.junit.Assert.assertEquals;
 public class DefineTest extends FitnesseBaseTestCase {
     @Test
     public void scansDefine() {
-        ParserTestHelper.assertScansTokenType("!define x {y}", "Define", true);
-        ParserTestHelper.assertScansTokenType("|!define x {y}|/n", "Define", true);
+        ParserTestHelper.assertScansTokenType("!define x {y}", "Define", true, injector);
+        ParserTestHelper.assertScansTokenType("|!define x {y}|/n", "Define", true, injector);
     }
 
     @Test

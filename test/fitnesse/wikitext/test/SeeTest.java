@@ -8,8 +8,8 @@ import org.junit.Test;
 public class SeeTest extends FitnesseBaseTestCase {
     @Test
     public void scansSees() {
-        ParserTestHelper.assertScansTokenType("!see Stuff", "See", true);
-        ParserTestHelper.assertScansTokenType("!seeStuff", "See", false);
+        ParserTestHelper.assertScansTokenType("!see Stuff", "See", true, injector);
+        ParserTestHelper.assertScansTokenType("!seeStuff", "See", false, injector);
     }
 
     @Test

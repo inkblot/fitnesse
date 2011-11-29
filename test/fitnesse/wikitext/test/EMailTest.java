@@ -11,6 +11,6 @@ public class EMailTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesEMail() {
-        ParserTestHelper.assertTranslatesTo("bob@bl.org", "<a href=\"mailto:bob@bl.org\">bob@bl.org</a>");
+        ParserTestHelper.assertTranslatesTo("bob@bl.org", "<a href=\"mailto:bob@bl.org\">bob@bl.org</a>", injector);
     }
 }

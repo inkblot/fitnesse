@@ -1,5 +1,6 @@
 package fitnesse.wikitext.test;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import fitnesse.wikitext.parser.SourcePage;
 import util.Maybe;
@@ -9,11 +10,18 @@ import java.util.Collection;
 import java.util.HashMap;
 
 public class TestSourcePage implements SourcePage {
+    private final Injector injector;
+
     public String content;
     public HashMap<String, String> properties = new HashMap<String, String>();
     public SourcePage includedPage;
     public String targetPath;
     public String url;
+
+    @Inject
+    public TestSourcePage(Injector injector) {
+        this.injector = injector;
+    }
 
     public TestSourcePage withContent(String content) {
         this.content = content;
@@ -102,6 +110,6 @@ public class TestSourcePage implements SourcePage {
 
     @Override
     public Injector getInjector() {
-        throw new UnsupportedOperationException("Implement this if you start to hit it.  Needs to be a context injector.  See production code for an example.");
+        return injector;
     }
 }

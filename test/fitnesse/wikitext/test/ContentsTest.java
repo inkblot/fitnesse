@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class ContentsTest extends FitnesseBaseTestCase {
     @Test
     public void scansContents() {
-        ParserTestHelper.assertScansTokenType("!contents", "Contents", true);
+        ParserTestHelper.assertScansTokenType("!contents", "Contents", true, injector);
     }
 
     @Test

@@ -6,7 +6,7 @@ import org.junit.Test;
 public class ImageTest extends FitnesseBaseTestCase {
     @Test
     public void scansImages() {
-        ParserTestHelper.assertScansTokenType("!img name", "Image", true);
+        ParserTestHelper.assertScansTokenType("!img name", "Image", true, injector);
     }
 
     @Test
@@ -20,9 +20,9 @@ public class ImageTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesImages() {
-        ParserTestHelper.assertTranslatesTo("!img name", "<img src=\"name\"/>");
-        ParserTestHelper.assertTranslatesTo("!img http://name", "<img src=\"http://name\"/>");
-        ParserTestHelper.assertTranslatesTo("!img-l name", "<img src=\"name\" class=\"left\"/>");
-        ParserTestHelper.assertTranslatesTo("!img-r name", "<img src=\"name\" class=\"right\"/>");
+        ParserTestHelper.assertTranslatesTo("!img name", "<img src=\"name\"/>", injector);
+        ParserTestHelper.assertTranslatesTo("!img http://name", "<img src=\"http://name\"/>", injector);
+        ParserTestHelper.assertTranslatesTo("!img-l name", "<img src=\"name\" class=\"left\"/>", injector);
+        ParserTestHelper.assertTranslatesTo("!img-r name", "<img src=\"name\" class=\"right\"/>", injector);
     }
 }

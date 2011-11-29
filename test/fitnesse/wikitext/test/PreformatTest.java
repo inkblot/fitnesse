@@ -1,19 +1,20 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-public class PreformatTest {
+public class PreformatTest extends FitnesseBaseTestCase {
     @Test
     public void scansPreformats() {
-        ParserTestHelper.assertScansTokenType("{{{stuff}}}", "Preformat", true);
+        ParserTestHelper.assertScansTokenType("{{{stuff}}}", "Preformat", true, injector);
     }
 
     @Test
     public void translatesPreformats() {
-        ParserTestHelper.assertTranslatesTo("{{{stuff}}}", "<pre>stuff</pre>" + HtmlElement.endl);
-        ParserTestHelper.assertTranslatesTo("{{{''stuff''}}}", "<pre>''stuff''</pre>" + HtmlElement.endl);
-        ParserTestHelper.assertTranslatesTo("{{{<stuff>}}}", "<pre>&lt;stuff&gt;</pre>" + HtmlElement.endl);
+        ParserTestHelper.assertTranslatesTo("{{{stuff}}}", "<pre>stuff</pre>" + HtmlElement.endl, injector);
+        ParserTestHelper.assertTranslatesTo("{{{''stuff''}}}", "<pre>''stuff''</pre>" + HtmlElement.endl, injector);
+        ParserTestHelper.assertTranslatesTo("{{{<stuff>}}}", "<pre>&lt;stuff&gt;</pre>" + HtmlElement.endl, injector);
     }
 
     @Test

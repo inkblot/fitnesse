@@ -8,7 +8,7 @@ import org.junit.Test;
 public class CollapsibleTest extends FitnesseBaseTestCase {
     @Test
     public void scansCollapsible() {
-        ParserTestHelper.assertScansTokenType("!* title\ncontent\n*!", "Collapsible", true);
+        ParserTestHelper.assertScansTokenType("!* title\ncontent\n*!", "Collapsible", true, injector);
     }
 
     @Test
@@ -23,19 +23,19 @@ public class CollapsibleTest extends FitnesseBaseTestCase {
     public void translatesCollapsible() {
         Collapsible.resetId();
         ParserTestHelper.assertTranslatesTo("!* Some title\n''content''\n*!",
-                sectionWithClass("collapsable", "Open", "<i>content</i><br/>"));
+                sectionWithClass("collapsable", "Open", "<i>content</i><br/>"), injector);
 
         Collapsible.resetId();
         ParserTestHelper.assertTranslatesTo("!* Some title\n\n*!",
-                sectionWithClass("collapsable", "Open", "<br/>"));
+                sectionWithClass("collapsable", "Open", "<br/>"), injector);
 
         Collapsible.resetId();
         ParserTestHelper.assertTranslatesTo("!*> Some title\n content \n*!",
-                sectionWithClass("hidden", "Closed", " content <br/>"));
+                sectionWithClass("hidden", "Closed", " content <br/>"), injector);
 
         Collapsible.resetId();
         ParserTestHelper.assertTranslatesTo("!*< Some title\n content \n*!",
-                "<div class=\"invisible\"> content <br/></div>" + HtmlElement.endl);
+                "<div class=\"invisible\"> content <br/></div>" + HtmlElement.endl, injector);
     }
 
     private String sectionWithClass(String sectionClass, String image, String content) {

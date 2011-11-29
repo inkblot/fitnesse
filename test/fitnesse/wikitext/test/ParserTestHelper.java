@@ -11,13 +11,13 @@ import static org.junit.Assert.assertTrue;
 public class ParserTestHelper {
     public static final String newLineRendered = "<br/>";
 
-    public static void assertScans(String input, String expected) {
-        Scanner scanner = new Scanner(new TestSourcePage(), input);
+    public static void assertScans(String input, String expected, Injector injector) {
+        Scanner scanner = new Scanner(injector.getInstance(TestSourcePage.class), input);
         assertScans(expected, scanner);
     }
 
-    public static void assertScansTokenType(String input, String expected, boolean found) {
-        Scanner scanner = new Scanner(new TestSourcePage(), input);
+    public static void assertScansTokenType(String input, String expected, boolean found, Injector injector) {
+        Scanner scanner = new Scanner(injector.getInstance(TestSourcePage.class), input);
         while (true) {
             scanner.moveNext();
             if (scanner.isEnd()) break;
@@ -44,8 +44,8 @@ public class ParserTestHelper {
         assertEquals(expected, result.toString());
     }
 
-    public static void assertTranslatesTo(String input, String expected) {
-        assertTranslatesTo(new TestSourcePage(), input, expected);
+    public static void assertTranslatesTo(String input, String expected, Injector injector) {
+        assertTranslatesTo(injector.getInstance(TestSourcePage.class), input, expected);
     }
 
     public static void assertTranslatesTo(WikiPage page, VariableSource variableSource, String expected) throws Exception {

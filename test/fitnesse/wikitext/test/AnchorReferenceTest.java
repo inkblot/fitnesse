@@ -7,10 +7,10 @@ import org.junit.Test;
 public class AnchorReferenceTest extends FitnesseBaseTestCase {
     @Test
     public void scansAnchors() {
-        ParserTestHelper.assertScansTokenType(".#anchorName", "AnchorReference", true);
-        ParserTestHelper.assertScansTokenType(".# anchorName", "AnchorReference", true);
-        ParserTestHelper.assertScansTokenType(". #anchor Name", "AnchorReference", false);
-        ParserTestHelper.assertScansTokenType("blah.#anchorName", "AnchorReference", true);
+        ParserTestHelper.assertScansTokenType(".#anchorName", "AnchorReference", true, injector);
+        ParserTestHelper.assertScansTokenType(".# anchorName", "AnchorReference", true, injector);
+        ParserTestHelper.assertScansTokenType(". #anchor Name", "AnchorReference", false, injector);
+        ParserTestHelper.assertScansTokenType("blah.#anchorName", "AnchorReference", true, injector);
     }
 
     @Test
@@ -21,11 +21,11 @@ public class AnchorReferenceTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesAnchors() {
-        ParserTestHelper.assertTranslatesTo(".#anchorName", anchorReferenceWithName("anchorName"));
-        ParserTestHelper.assertTranslatesTo(".#anchorName stuff", anchorReferenceWithName("anchorName") + " stuff");
-        ParserTestHelper.assertTranslatesTo("more.#anchorName stuff", "more" + anchorReferenceWithName("anchorName") + " stuff");
+        ParserTestHelper.assertTranslatesTo(".#anchorName", anchorReferenceWithName("anchorName"), injector);
+        ParserTestHelper.assertTranslatesTo(".#anchorName stuff", anchorReferenceWithName("anchorName") + " stuff", injector);
+        ParserTestHelper.assertTranslatesTo("more.#anchorName stuff", "more" + anchorReferenceWithName("anchorName") + " stuff", injector);
         ParserTestHelper.assertTranslatesTo("more\n.#anchorName stuff",
-                "more" + ParserTestHelper.newLineRendered + anchorReferenceWithName("anchorName") + " stuff");
+                "more" + ParserTestHelper.newLineRendered + anchorReferenceWithName("anchorName") + " stuff", injector);
     }
 
     private String anchorReferenceWithName(String name) {

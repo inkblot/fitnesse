@@ -6,10 +6,10 @@ import org.junit.Test;
 public class LinkTest extends FitnesseBaseTestCase {
     @Test
     public void scansLinks() {
-        ParserTestHelper.assertScansTokenType("http://mysite.org", "Link", true);
-        ParserTestHelper.assertScansTokenType("https://mysite.org", "Link", true);
-        ParserTestHelper.assertScansTokenType("http:/mysite.org", "Link", false);
-        ParserTestHelper.assertScansTokenType("httpx://mysite.org", "Link", false);
+        ParserTestHelper.assertScansTokenType("http://mysite.org", "Link", true, injector);
+        ParserTestHelper.assertScansTokenType("https://mysite.org", "Link", true, injector);
+        ParserTestHelper.assertScansTokenType("http:/mysite.org", "Link", false, injector);
+        ParserTestHelper.assertScansTokenType("httpx://mysite.org", "Link", false, injector);
     }
 
     @Test
@@ -19,9 +19,9 @@ public class LinkTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesLinks() {
-        ParserTestHelper.assertTranslatesTo("http://mysite.org", "<a href=\"http://mysite.org\">http://mysite.org</a>");
-        ParserTestHelper.assertTranslatesTo("http://files/myfile", "<a href=\"/files/myfile\">http://files/myfile</a>");
-        ParserTestHelper.assertTranslatesTo("''http://files/myfile''", "<i><a href=\"/files/myfile\">http://files/myfile</a></i>");
+        ParserTestHelper.assertTranslatesTo("http://mysite.org", "<a href=\"http://mysite.org\">http://mysite.org</a>", injector);
+        ParserTestHelper.assertTranslatesTo("http://files/myfile", "<a href=\"/files/myfile\">http://files/myfile</a>", injector);
+        ParserTestHelper.assertTranslatesTo("''http://files/myfile''", "<i><a href=\"/files/myfile\">http://files/myfile</a></i>", injector);
     }
 
     @Test
@@ -31,6 +31,6 @@ public class LinkTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesImageLinks() {
-        ParserTestHelper.assertTranslatesTo("http://some.jpg", "<img src=\"http://some.jpg\"/>");
+        ParserTestHelper.assertTranslatesTo("http://some.jpg", "<img src=\"http://some.jpg\"/>", injector);
     }
 }

@@ -1,30 +1,31 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import org.junit.Test;
 
-public class ListTest {
+public class ListTest extends FitnesseBaseTestCase {
     @Test
     public void scansLists() {
-        ParserTestHelper.assertScansTokenType(" * item", "UnorderedList", true);
-        ParserTestHelper.assertScansTokenType(" *item", "UnorderedList", true);
-        ParserTestHelper.assertScansTokenType("  * item", "UnorderedList", true);
-        ParserTestHelper.assertScansTokenType("* item", "UnorderedList", false);
-        ParserTestHelper.assertScansTokenType(" 1 item", "OrderedList", true);
-        ParserTestHelper.assertScansTokenType("  9 item", "OrderedList", true);
-        ParserTestHelper.assertScansTokenType("1 item", "OrderedList", false);
+        ParserTestHelper.assertScansTokenType(" * item", "UnorderedList", true, injector);
+        ParserTestHelper.assertScansTokenType(" *item", "UnorderedList", true, injector);
+        ParserTestHelper.assertScansTokenType("  * item", "UnorderedList", true, injector);
+        ParserTestHelper.assertScansTokenType("* item", "UnorderedList", false, injector);
+        ParserTestHelper.assertScansTokenType(" 1 item", "OrderedList", true, injector);
+        ParserTestHelper.assertScansTokenType("  9 item", "OrderedList", true, injector);
+        ParserTestHelper.assertScansTokenType("1 item", "OrderedList", false, injector);
     }
 
     @Test
     public void translatesUnorderedLists() {
         ParserTestHelper.assertTranslatesTo(" * item1\n * item2\n",
-                list("ul", 0) + listItem("item1", 1) + listItem("item2", 1) + list("/ul", 0));
+                list("ul", 0) + listItem("item1", 1) + listItem("item2", 1) + list("/ul", 0), injector);
     }
 
     @Test
     public void overridesNestedPairRule() {
         ParserTestHelper.assertTranslatesTo(" * item--1\n--",
-                list("ul", 0) + listItem("item--1", 1) + list("/ul", 0) + "--");
+                list("ul", 0) + listItem("item--1", 1) + list("/ul", 0) + "--", injector);
     }
 
     private String list(String tag, int level) {
@@ -47,7 +48,7 @@ public class ListTest {
         ParserTestHelper.assertTranslatesTo(" * item1\n  * item2\n  * item3\n",
                 list("ul", 0) +
                         listItem("item1" + list("ul", 0) + listItem("item2", 1) + listItem("item3", 1) + list("/ul", 0), 1) +
-                        list("/ul", 0));
+                        list("/ul", 0), injector);
     }
 
     @Test
@@ -56,12 +57,12 @@ public class ListTest {
                 list("ul", 0) +
                         listItem("item1" + list("ul", 0) + listItem("item11", 1) + list("/ul", 0), 1) +
                         listItem("item2" + list("ul", 0) + listItem("item21", 1) + list("/ul", 0), 1) +
-                        list("/ul", 0));
+                        list("/ul", 0), injector);
     }
 
     @Test
     public void translatesOrderedLists() {
         ParserTestHelper.assertTranslatesTo(" 1 item1\n 2 item2\n",
-                list("ol", 0) + listItem("item1", 1) + listItem("item2", 1) + list("/ol", 0));
+                list("ol", 0) + listItem("item1", 1) + listItem("item2", 1) + list("/ol", 0), injector);
     }
 }

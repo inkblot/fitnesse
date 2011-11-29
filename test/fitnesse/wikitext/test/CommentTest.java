@@ -6,8 +6,8 @@ import org.junit.Test;
 public class CommentTest extends FitnesseBaseTestCase {
     @Test
     public void scansComments() {
-        ParserTestHelper.assertScansTokenType("# comment\n", "Comment", true);
-        ParserTestHelper.assertScansTokenType(" # comment\n", "Comment", false);
+        ParserTestHelper.assertScansTokenType("# comment\n", "Comment", true, injector);
+        ParserTestHelper.assertScansTokenType(" # comment\n", "Comment", false, injector);
     }
 
     @Test
@@ -18,7 +18,7 @@ public class CommentTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesComments() {
-        ParserTestHelper.assertTranslatesTo("# comment\n", "");
-        ParserTestHelper.assertTranslatesTo("# comment", "");
+        ParserTestHelper.assertTranslatesTo("# comment\n", "", injector);
+        ParserTestHelper.assertTranslatesTo("# comment", "", injector);
     }
 }

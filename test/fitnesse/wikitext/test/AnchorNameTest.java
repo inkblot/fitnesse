@@ -6,8 +6,8 @@ import org.junit.Test;
 public class AnchorNameTest extends FitnesseBaseTestCase {
     @Test
     public void scansAnchors() {
-        ParserTestHelper.assertScansTokenType("!anchor name", "AnchorName", true);
-        ParserTestHelper.assertScansTokenType("! anchor name", "AnchorName", false);
+        ParserTestHelper.assertScansTokenType("!anchor name", "AnchorName", true, injector);
+        ParserTestHelper.assertScansTokenType("! anchor name", "AnchorName", false, injector);
     }
 
     @Test
@@ -20,10 +20,10 @@ public class AnchorNameTest extends FitnesseBaseTestCase {
 
     @Test
     public void translatesAnchors() {
-        ParserTestHelper.assertTranslatesTo("!anchor name", anchorWithName("name"));
-        ParserTestHelper.assertTranslatesTo("!anchor name stuff", anchorWithName("name") + " stuff");
-        ParserTestHelper.assertTranslatesTo("more!anchor name stuff", "more" + anchorWithName("name") + " stuff");
-        ParserTestHelper.assertTranslatesTo("more !anchor name stuff", "more " + anchorWithName("name") + " stuff");
+        ParserTestHelper.assertTranslatesTo("!anchor name", anchorWithName("name"), injector);
+        ParserTestHelper.assertTranslatesTo("!anchor name stuff", anchorWithName("name") + " stuff", injector);
+        ParserTestHelper.assertTranslatesTo("more!anchor name stuff", "more" + anchorWithName("name") + " stuff", injector);
+        ParserTestHelper.assertTranslatesTo("more !anchor name stuff", "more " + anchorWithName("name") + " stuff", injector);
     }
 
     private String anchorWithName(String name) {

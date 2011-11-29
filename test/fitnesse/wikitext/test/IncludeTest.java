@@ -19,7 +19,7 @@ public class IncludeTest extends FitnesseBaseTestCase {
 
     @Test
     public void scansIncludes() {
-        ParserTestHelper.assertScansTokenType("!include name", "Include", true);
+        ParserTestHelper.assertScansTokenType("!include name", "Include", true, injector);
     }
 
     @Test
@@ -89,17 +89,17 @@ public class IncludeTest extends FitnesseBaseTestCase {
     }
 
     private TestSourcePage makePageThatIncludesSetup() {
-        return new TestSourcePage()
+        return injector.getInstance(TestSourcePage.class)
                 .withContent("!include -setup >SetUp")
                 .withTarget("PageTwo.SetUp")
-                .withIncludedPage(new TestSourcePage().withContent("setup"));
+                .withIncludedPage(injector.getInstance(TestSourcePage.class).withContent("setup"));
     }
 
     private TestSourcePage makePageThatIncludesTeardown() {
-        return new TestSourcePage()
+        return injector.getInstance(TestSourcePage.class)
                 .withContent("!include -teardown >TearDown")
                 .withTarget("PageTwo.TearDown")
-                .withIncludedPage(new TestSourcePage().withContent("teardown"));
+                .withIncludedPage(injector.getInstance(TestSourcePage.class).withContent("teardown"));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package fitnesse.wikitext.test;
 
+import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.PageData;
 import org.junit.Test;
 import util.SystemTimeKeeper;
@@ -7,10 +8,10 @@ import util.TestTimeKeeper;
 
 import java.util.GregorianCalendar;
 
-public class LastModifiedTest {
+public class LastModifiedTest extends FitnesseBaseTestCase {
     @Test
     public void scansLastModified() {
-        ParserTestHelper.assertScansTokenType("!lastmodified", "LastModified", true);
+        ParserTestHelper.assertScansTokenType("!lastmodified", "LastModified", true, injector);
     }
 
     @Test
@@ -45,7 +46,7 @@ public class LastModifiedTest {
     }
 
     private TestSourcePage makeTestPage() {
-        return new TestSourcePage().withContent("!lastmodified");
+        return injector.getInstance(TestSourcePage.class).withContent("!lastmodified");
     }
 
 }

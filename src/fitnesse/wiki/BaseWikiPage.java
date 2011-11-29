@@ -17,7 +17,7 @@ public abstract class BaseWikiPage implements WikiPage {
     protected final String name;
     protected WikiPage parent;
     protected WikiPage parentForVariables;
-    private transient final Injector injector;
+    protected transient Injector injector;
 
     protected BaseWikiPage(String name, WikiPage parent, Injector injector) {
         this.name = name;

@@ -48,7 +48,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
         fitNesseUtil.startFitnesse();
 
         proxy = new ProxyPage(original, injector);
-        proxy.setTransientValues("localhost", clock.currentClockTimeInMillis());
+        proxy.setTransientValues("localhost", clock.currentClockTimeInMillis(), injector);
         proxy.setHostPort(FitNesseUtil.DEFAULT_PORT);
     }
 
@@ -92,7 +92,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
     @Test
     public void testSetHostAndPort() throws Exception {
         List<WikiPage> children = proxy.getChildren();
-        proxy.setTransientValues("a.new.host", clock.currentClockTimeInMillis());
+        proxy.setTransientValues("a.new.host", clock.currentClockTimeInMillis(), injector);
         proxy.setHostPort(123);
 
         assertEquals("a.new.host", proxy.getHost());

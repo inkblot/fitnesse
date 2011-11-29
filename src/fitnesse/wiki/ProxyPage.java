@@ -45,11 +45,11 @@ public class ProxyPage extends CachingPage implements Serializable {
         realPath = path;
     }
 
-    public static ProxyPage retrievePage(String urlString) throws IOException {
+    public static ProxyPage retrievePage(String urlString, Injector injector) throws IOException {
         retrievalCount++;
         URL url = new URL(urlString + "?responder=proxy&type=bones");
         ProxyPage page = (ProxyPage) getObjectFromUrl(url);
-        page.setTransientValues(url.getHost(), ClockUtil.currentTimeInMillis());
+        page.setTransientValues(url.getHost(), ClockUtil.currentTimeInMillis(), injector);
         int port = url.getPort();
         page.setHostPort((port == -1) ? 80 : port);
         page.lastLoadChildrenTime = ClockUtil.currentTimeInMillis();
@@ -63,7 +63,7 @@ public class ProxyPage extends CachingPage implements Serializable {
 
     protected void loadChildren() throws IOException {
         if (cacheTime <= (ClockUtil.currentTimeInMillis() - lastLoadChildrenTime)) {
-            ProxyPage page = retrievePage(getThisPageUrl());
+            ProxyPage page = retrievePage(getThisPageUrl(), getInjector());
             children.clear();
             for (WikiPage wikiPage : page.children.values()) {
                 ProxyPage child = (ProxyPage) wikiPage;
@@ -91,12 +91,13 @@ public class ProxyPage extends CachingPage implements Serializable {
         }
     }
 
-    public void setTransientValues(String host, long lastLoadTime) {
+    public void setTransientValues(String host, long lastLoadTime, Injector injector) {
         this.host = host;
         lastLoadChildrenTime = lastLoadTime;
+        this.injector = injector;
         for (WikiPage wikiPage : children.values()) {
             ProxyPage page = (ProxyPage) wikiPage;
-            page.setTransientValues(host, lastLoadTime);
+            page.setTransientValues(host, lastLoadTime, injector);
         }
     }
 

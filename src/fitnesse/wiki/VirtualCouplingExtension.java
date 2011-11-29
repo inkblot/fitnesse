@@ -36,15 +36,15 @@ public class VirtualCouplingExtension implements Extension {
         return virtualCoupling;
     }
 
-    protected void detectAndLoadVirtualChildren() throws IOException {
+    private void detectAndLoadVirtualChildren() throws IOException {
         PageData data = hostPage.getData();
         if (data.hasAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE))
             loadVirtualChildren(data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE));
     }
 
-    public void loadVirtualChildren(String url) throws IOException {
+    private void loadVirtualChildren(String url) throws IOException {
         try {
-            ProxyPage proxy = ProxyPage.retrievePage(url);
+            ProxyPage proxy = ProxyPage.retrievePage(url, hostPage.getInjector());
             virtualCoupling = new VirtualCouplingPage(hostPage, proxy);
         } catch (Exception e) {
             WikiPage page = hostPage.getChildPage("VirtualWikiNetworkError");

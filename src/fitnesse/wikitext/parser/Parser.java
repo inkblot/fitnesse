@@ -18,7 +18,7 @@ public class Parser {
     }
 
     public static Parser make(ParsingPage currentPage, String input, SymbolProvider provider) {
-        return make(currentPage, input, new VariableFinder(currentPage), provider);
+        return make(currentPage, input, currentPage.getVariableSource(), provider);
     }
 
     public static Parser make(ParsingPage currentPage, String input, VariableSource variableSource, SymbolProvider provider) {

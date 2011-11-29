@@ -1,9 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import com.google.inject.Key;
-import com.google.inject.name.Names;
-import fitnesse.FitNesseModule;
-import fitnesse.wiki.WikiPageFactory;
 import util.Maybe;
 
 import java.util.HashMap;
@@ -39,25 +35,6 @@ public class ParsingPage implements VariableSource {
         return namedPage;
     }
 
-    public Maybe<String> getSpecialVariableValue(String key) {
-        String value;
-        if (key.equals("RUNNING_PAGE_NAME"))
-            value = page.getName();
-        else if (key.equals("RUNNING_PAGE_PATH"))
-            value = page.getPath();
-        else if (key.equals("PAGE_NAME"))
-            value = namedPage.getName();
-        else if (key.equals("PAGE_PATH"))
-            value = namedPage.getPath();
-        else if (key.equals("FITNESSE_PORT"))
-            value = page.getInjector().getInstance(Key.get(Integer.class, Names.named(FitNesseModule.PORT))).toString();
-        else if (key.equals("FITNESSE_ROOTPATH"))
-            value = page.getInjector().getInstance(Key.get(String.class, Names.named(WikiPageFactory.ROOT_PATH)));
-        else
-            return Maybe.noString;
-        return new Maybe<String>(value);
-    }
-
     public boolean inCache(SourcePage page) {
         return variableCache.containsKey(page.getFullName());
     }
@@ -82,5 +59,13 @@ public class ParsingPage implements VariableSource {
 
     public void putVariable(String name, String value) {
         putVariable(page, name, new Maybe<String>(value));
+    }
+
+    public VariableSource getVariableSource() {
+        return new VariableFinder(
+                new SpecialVariableSource(this),
+                new PageVariableSource(this),
+                new EnvironmentVariableSource(),
+                new PropertiesVariableSource(System.getProperties()));
     }
 }

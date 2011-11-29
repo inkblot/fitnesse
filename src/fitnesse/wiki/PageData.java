@@ -205,7 +205,7 @@ public class PageData implements Serializable {
     }
 
     public String getVariable(String name) {
-        VariableSource variableSource = new VariableFinder(getParsingPage());
+        VariableSource variableSource = getParsingPage().getVariableSource();
         Maybe<String> variable = variableSource.findVariable(name);
         if (variable.isNothing()) return null;
         //todo: push this into parser/translator

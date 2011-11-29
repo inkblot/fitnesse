@@ -1,9 +1,5 @@
 package fitnesse.wikitext.parser;
 
-import com.google.inject.Key;
-import com.google.inject.name.Names;
-import fitnesse.FitNesseModule;
-import fitnesse.wiki.WikiPageFactory;
 import util.Maybe;
 
 /**
@@ -30,10 +26,6 @@ class SpecialVariableSource implements VariableSource {
             value = page.getNamedPage().getName();
         else if (name.equals("PAGE_PATH"))
             value = page.getNamedPage().getPath();
-        else if (name.equals("FITNESSE_PORT"))
-            value = page.getPage().getInjector().getInstance(Key.get(Integer.class, Names.named(FitNesseModule.PORT))).toString();
-        else if (name.equals("FITNESSE_ROOTPATH"))
-            value = page.getPage().getInjector().getInstance(Key.get(String.class, Names.named(WikiPageFactory.ROOT_PATH)));
         else
             return Maybe.noString;
         return new Maybe<String>(value);

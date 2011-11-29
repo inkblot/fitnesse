@@ -7,12 +7,17 @@ import fitnesse.responders.editing.ContentFilter;
 import fitnesse.wiki.VersionsController;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wikitext.parser.Context;
+import fitnesse.wikitext.parser.MapVariableSource;
 import fitnesse.wikitext.parser.SymbolProviderModule;
+import fitnesse.wikitext.parser.VariableSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.UtilModule;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -71,6 +76,11 @@ public class FitNesseModule extends AbstractModule {
         bind(Integer.class).annotatedWith(Names.named(PORT)).toInstance(port);
         bind(WikiPage.class).annotatedWith(Names.named(ROOT_PAGE)).toProvider(RootPageProvider.class);
         bind(Boolean.class).annotatedWith(Names.named(ENABLE_CHUNKING)).toInstance(enableChunking);
+
+        Map<String, String> contextVariables = new HashMap<String, String>();
+        contextVariables.put("FITNESSE_PORT", Integer.toString(port));
+        contextVariables.put("FITNESSE_ROOTPATH", rootPath);
+        bind(VariableSource.class).annotatedWith(Context.class).toInstance(new MapVariableSource(contextVariables));
     }
 
     @Singleton

@@ -1,5 +1,6 @@
 package fitnesse.wikitext.parser;
 
+import com.google.inject.Key;
 import util.Maybe;
 
 import java.util.HashMap;
@@ -62,8 +63,10 @@ public class ParsingPage implements VariableSource {
     }
 
     public VariableSource getVariableSource() {
+        VariableSource contextVariableSource = getPage().getInjector().getInstance(Key.get(VariableSource.class, Context.class));
         return new VariableFinder(
                 new SpecialVariableSource(this),
+                contextVariableSource,
                 new PageVariableSource(this),
                 new EnvironmentVariableSource(),
                 new PropertiesVariableSource(System.getProperties()));

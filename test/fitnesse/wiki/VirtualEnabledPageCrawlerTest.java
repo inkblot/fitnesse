@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.Before;
@@ -22,7 +21,7 @@ public class VirtualEnabledPageCrawlerTest extends FitnesseBaseTestCase {
     private WikiPagePath child1Path = PathParser.parse("ChildOne");
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

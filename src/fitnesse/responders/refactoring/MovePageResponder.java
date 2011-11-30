@@ -5,14 +5,10 @@ package fitnesse.responders.refactoring;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 
 import java.io.IOException;
 
@@ -21,7 +17,7 @@ public class MovePageResponder extends PageMovementResponder implements SecureRe
     private String newParentName;
 
     @Inject
-    public MovePageResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public MovePageResponder(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         super(htmlPageFactory, root);
     }
 

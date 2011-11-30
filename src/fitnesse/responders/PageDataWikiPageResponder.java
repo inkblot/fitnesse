@@ -4,15 +4,15 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.html.HtmlPageFactory;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 
 public class PageDataWikiPageResponder extends BasicWikiPageResponder {
     @Inject
-    public PageDataWikiPageResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public PageDataWikiPageResponder(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         super(htmlPageFactory, root);
     }
 

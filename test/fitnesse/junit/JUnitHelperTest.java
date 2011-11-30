@@ -1,7 +1,7 @@
 package fitnesse.junit;
 
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.WikiModule;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class JUnitHelperTest {
 
     protected Properties getProperties() {
         Properties properties = new Properties();
-        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        properties.setProperty(WikiModule.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         return properties;
     }
 

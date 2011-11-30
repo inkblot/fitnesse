@@ -25,7 +25,7 @@ public class HistoryComparatorTest extends FitnesseBaseTestCase {
     private String secondContent;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

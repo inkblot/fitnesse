@@ -4,7 +4,6 @@ package fitnesse.responders.run.slimResponder;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.responders.run.ClassPathBuilder;
 import util.CommandRunner;
@@ -46,7 +45,7 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
     private SlimTestSystem testSystem;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

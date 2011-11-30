@@ -2,7 +2,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,12 +40,12 @@ public class RootPageTypeTest extends FitnesseBaseTestCase {
     @Override
     protected Properties getProperties() {
         Properties properties = super.getProperties();
-        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, wikiPageClass.getName());
+        properties.setProperty(WikiModule.WIKI_PAGE_CLASS, wikiPageClass.getName());
         return properties;
     }
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

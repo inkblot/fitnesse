@@ -2,7 +2,6 @@ package fitnesse.components;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
@@ -33,7 +32,7 @@ public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase im
     }
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

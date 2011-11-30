@@ -5,6 +5,7 @@ import com.google.inject.name.Named;
 import fitnesse.*;
 import fitnesse.responders.run.SuiteExecutionReport.PageHistoryReference;
 import fitnesse.responders.run.TestSummary;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class SuiteHistoryFormatterTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

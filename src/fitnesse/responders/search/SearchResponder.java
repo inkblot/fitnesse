@@ -9,6 +9,7 @@ import fitnesse.components.RegularExpressionWikiPageFinder;
 import fitnesse.components.TitleWikiPageFinder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.RunningTestingTracker;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ import static org.apache.commons.lang.StringUtils.isNotEmpty;
 public class SearchResponder extends ResultResponder {
 
     @Inject
-    public SearchResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
+    public SearchResponder(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
         super(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
     }
 

@@ -2,7 +2,6 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -12,10 +11,7 @@ import fitnesse.http.SimpleResponse;
 import fitnesse.slimTables.HtmlTableScanner;
 import fitnesse.slimTables.Table;
 import fitnesse.slimTables.TableScanner;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPagePath;
+import fitnesse.wiki.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,7 +29,7 @@ public class PacketResponder implements SecureResponder {
     private final WikiPage root;
 
     @Inject
-    public PacketResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public PacketResponder(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

@@ -9,6 +9,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class MergeResponderTest extends FitnesseBaseTestCase {
     private Clock clock;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;

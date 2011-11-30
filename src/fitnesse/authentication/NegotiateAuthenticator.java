@@ -12,6 +12,7 @@ import fitnesse.html.HtmlUtil;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.ietf.jgss.*;
 import util.ImpossibleException;
@@ -79,7 +80,7 @@ public class NegotiateAuthenticator extends Authenticator {
     }
 
     @Inject
-    public NegotiateAuthenticator(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, Injector injector, HtmlPageFactory htmlPageFactory) throws Exception {
+    public NegotiateAuthenticator(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, @Named(WikiModule.ROOT_PAGE) WikiPage root, Injector injector, HtmlPageFactory htmlPageFactory) throws Exception {
         this(GSSManager.getInstance(), properties, root, injector, htmlPageFactory);
     }
 

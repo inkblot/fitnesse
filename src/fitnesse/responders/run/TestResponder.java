@@ -15,6 +15,7 @@ import fitnesse.responders.ChunkingResponder;
 import fitnesse.responders.run.formatters.*;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class TestResponder extends ChunkingResponder implements SecureResponder 
 
     @Inject
     public TestResponder(HtmlPageFactory htmlPageFactory,
-                         @Named(FitNesseModule.ROOT_PAGE) WikiPage root,
+                         @Named(WikiModule.ROOT_PAGE) WikiPage root,
                          @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath,
                          @Named(FitNesseModule.PORT) Integer port,
                          SocketDealer socketDealer,

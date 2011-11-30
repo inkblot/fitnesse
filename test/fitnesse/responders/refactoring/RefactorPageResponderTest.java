@@ -9,6 +9,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class RefactorPageResponderTest extends FitnesseBaseTestCase {
     private Responder responder;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

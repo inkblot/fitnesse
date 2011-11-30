@@ -9,6 +9,7 @@ import fitnesse.responders.run.TestExecutionReport;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.testHistory.PageHistory;
 import fitnesse.responders.testHistory.TestHistory;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.apache.velocity.VelocityContext;
 import org.junit.Before;
@@ -33,7 +34,7 @@ public class CachingSuiteXmlFormatterTest extends FitnesseBaseTestCase {
     private File testResultsPath;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
         this.root = root;
         this.testResultsPath = new File(testResultsPath);
     }

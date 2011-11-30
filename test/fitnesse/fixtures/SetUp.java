@@ -12,8 +12,8 @@ import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.SaveRecorder;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageFactory;
 import util.Clock;
 import util.FileUtil;
 import util.SystemClock;
@@ -27,7 +27,7 @@ import static fitnesse.fixtures.FitnesseFixtureContext.testResultsPath;
 public class SetUp extends Fixture {
     public SetUp() throws Exception {
         Properties properties = new Properties();
-        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        properties.setProperty(WikiModule.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         FitnesseFixtureContext.clock = new SystemClock();
         Injector injector = Guice.createInjector(
                 new FitNesseModule(properties, null, rootPath, "RooT", 9123, true),
@@ -56,7 +56,7 @@ public class SetUp extends Fixture {
 
         FitnesseFixtureContext.injector = injector;
         testResultsPath = injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.TEST_RESULTS_PATH)));
-        root = injector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
+        root = injector.getInstance(Key.get(WikiPage.class, Names.named(WikiModule.ROOT_PAGE)));
         fitnesse = injector.getInstance(FitNesse.class);
         File historyDirectory = new File(testResultsPath);
         if (historyDirectory.exists())

@@ -4,10 +4,10 @@ package fitnesse.responders.refactoring;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WikiWordUtil;
 
@@ -15,7 +15,7 @@ public class RenamePageResponder extends PageMovementResponder {
     private String newName;
 
     @Inject
-    public RenamePageResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public RenamePageResponder(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         super(htmlPageFactory, root);
     }
 

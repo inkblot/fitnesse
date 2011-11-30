@@ -11,6 +11,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
 import fitnesse.responders.run.RunningTestingTracker;
 import fitnesse.wiki.PageType;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class ExecuteSearchPropertiesResponder extends ResultResponder {
     public static final String SPECIAL = "Special";
 
     @Inject
-    public ExecuteSearchPropertiesResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
+    public ExecuteSearchPropertiesResponder(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
         super(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
     }
 

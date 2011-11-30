@@ -5,15 +5,15 @@ package fitnesse.testutil;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.authentication.Authenticator;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 
 public class SimpleAuthenticator extends Authenticator {
     public boolean authenticated = false;
 
     @Inject
-    public SimpleAuthenticator(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, Injector injector) {
+    public SimpleAuthenticator(@Named(WikiModule.ROOT_PAGE) WikiPage root, Injector injector) {
         super(root, injector);
     }
 

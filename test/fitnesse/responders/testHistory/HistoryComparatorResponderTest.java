@@ -7,6 +7,7 @@ import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.WikiModule;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
@@ -30,7 +31,7 @@ public class HistoryComparatorResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath) {
         this.htmlPageFactory = htmlPageFactory;
         this.rootPagePath = rootPagePath;
         this.testResultsPath = testResultsPath;

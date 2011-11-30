@@ -6,7 +6,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.Request;
@@ -25,6 +24,7 @@ import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wikitext.WikiWordUtil;
 import util.StringUtil;
 
@@ -43,7 +43,7 @@ public class ResponderFactory {
     private final HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public ResponderFactory(Injector injector, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, HtmlPageFactory htmlPageFactory) {
+    public ResponderFactory(Injector injector, @Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath, HtmlPageFactory htmlPageFactory) {
         this.rootPagePath = rootPagePath;
         this.injector = injector;
         this.htmlPageFactory = htmlPageFactory;

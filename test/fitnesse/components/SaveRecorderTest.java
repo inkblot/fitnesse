@@ -4,7 +4,6 @@ package fitnesse.components;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.*;
 import org.junit.Before;
@@ -21,7 +20,7 @@ public class SaveRecorderTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(Clock clock, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.clock = clock;
         this.root = root;
     }

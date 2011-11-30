@@ -9,6 +9,7 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.ResponderFactory;
+import fitnesse.wiki.WikiModule;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class DirectoryResponderTest extends FitnesseBaseTestCase {
     private SampleFileUtility samples;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, SampleFileUtility samples) {
+    public void inject(@Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath, SampleFileUtility samples) {
         this.rootPagePath = rootPagePath;
         this.samples = samples;
     }

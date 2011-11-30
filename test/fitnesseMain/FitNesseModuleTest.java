@@ -2,7 +2,6 @@ package fitnesseMain;
 
 import com.google.inject.*;
 import com.google.inject.name.Named;
-import com.google.inject.name.Names;
 import fitnesse.*;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.MultiUserAuthenticator;
@@ -26,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
+import static com.google.inject.name.Names.named;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
@@ -102,16 +102,16 @@ public class FitNesseModuleTest {
     public void testWikiPageClassDefault() {
         Injector injector = Guice.createInjector(
                 new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
-        Class wikiPageClass = injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS)));
+        Class wikiPageClass = injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, named(WikiModule.WIKI_PAGE_CLASS)));
         assertEquals(wikiPageClass, FileSystemPage.class);
     }
 
     @Test
     public void testInMemoryWikiPageClass() {
-        testProperties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        testProperties.setProperty(WikiModule.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         Injector injector = Guice.createInjector(
                 new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
-        Class wikiPageClass = injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS)));
+        Class wikiPageClass = injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, named(WikiModule.WIKI_PAGE_CLASS)));
         assertEquals(wikiPageClass, InMemoryPage.class);
     }
 
@@ -185,13 +185,13 @@ public class FitNesseModuleTest {
                 new FitNesseModule(testProperties, null, ROOT_PATH, "RooT", 2156, true));
         assertNotNull(injector.getInstance(Authenticator.class));
         assertNotNull(injector.getInstance(VersionsController.class));
-        assertNotNull(injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, Names.named(WikiPageFactory.WIKI_PAGE_CLASS))));
+        assertNotNull(injector.getInstance(Key.get(new TypeLiteral<Class<? extends WikiPage>>(){}, named(WikiModule.WIKI_PAGE_CLASS))));
         assertNotNull(injector.getInstance(FileSystem.class));
-        assertNotNull(injector.getInstance(Key.get(Properties.class, Names.named(FitNesseModule.PROPERTIES_FILE))));
-        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(WikiPageFactory.ROOT_PATH))));
-        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(WikiPageFactory.ROOT_PAGE_NAME))));
-        assertNotNull(injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PAGE_PATH))));
-        assertNotNull(injector.getInstance(Key.get(Integer.class, Names.named(FitNesseModule.PORT))));
+        assertNotNull(injector.getInstance(Key.get(Properties.class, named(FitNesseModule.PROPERTIES_FILE))));
+        assertNotNull(injector.getInstance(Key.get(String.class, named(WikiModule.ROOT_PATH))));
+        assertNotNull(injector.getInstance(Key.get(String.class, named(WikiModule.ROOT_PAGE_NAME))));
+        assertNotNull(injector.getInstance(Key.get(String.class, named(WikiModule.ROOT_PAGE_PATH))));
+        assertNotNull(injector.getInstance(Key.get(Integer.class, named(FitNesseModule.PORT))));
         assertNotNull(injector.getInstance(WikiPageFactory.class));
         assertNotNull(injector.getInstance(ResponderFactory.class));
         assertNotNull(injector.getInstance(FitNesse.class));

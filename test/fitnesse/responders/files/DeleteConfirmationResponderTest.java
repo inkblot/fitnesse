@@ -8,6 +8,7 @@ import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.WikiModule;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class DeleteConfirmationResponderTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.htmlPageFactory = htmlPageFactory;
         this.rootPagePath = rootPagePath;
     }

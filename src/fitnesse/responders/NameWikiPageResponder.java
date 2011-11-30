@@ -4,10 +4,10 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.html.HtmlPageFactory;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class NameWikiPageResponder extends BasicWikiPageResponder {
     @Inject
-    public NameWikiPageResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public NameWikiPageResponder(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         super(htmlPageFactory, root);
     }
 

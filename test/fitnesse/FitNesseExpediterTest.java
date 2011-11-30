@@ -8,6 +8,7 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.authentication.UnauthorizedResponder;
 import fitnesse.http.*;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class FitNesseExpediterTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

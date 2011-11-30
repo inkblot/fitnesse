@@ -5,7 +5,6 @@ package fitnesse.responders.editing;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.authentication.SecureWriteOperation;
@@ -34,7 +33,7 @@ public class SaveResponder implements SecureResponder {
     private long editTimeStamp;
 
     @Inject
-    public SaveResponder(Provider<ContentFilter> contentFilterProvider, HtmlPageFactory htmlPageFactory, Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public SaveResponder(Provider<ContentFilter> contentFilterProvider, HtmlPageFactory htmlPageFactory, Clock clock, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.contentFilterProvider = contentFilterProvider;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;

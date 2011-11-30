@@ -4,7 +4,8 @@ package fitnesse.wikitext;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.*;
+import fitnesse.FitnesseBaseTestCase;
+import fitnesse.Responder;
 import fitnesse.html.HtmlPage;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
@@ -31,7 +32,7 @@ public class WikiImportPropertyTest extends FitnesseBaseTestCase {
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
+    public void inject(Clock clock, HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;

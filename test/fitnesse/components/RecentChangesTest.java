@@ -4,9 +4,9 @@ package fitnesse.components;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ public class RecentChangesTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

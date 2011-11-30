@@ -6,6 +6,7 @@ import fitnesse.*;
 import fitnesse.responders.run.TestSystem.Descriptor;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ public class TestSystemTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

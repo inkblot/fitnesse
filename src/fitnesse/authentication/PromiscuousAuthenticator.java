@@ -5,12 +5,12 @@ package fitnesse.authentication;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 
 public class PromiscuousAuthenticator extends Authenticator {
     @Inject
-    public PromiscuousAuthenticator(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, Injector injector) {
+    public PromiscuousAuthenticator(@Named(WikiModule.ROOT_PAGE) WikiPage root, Injector injector) {
         super(root, injector);
     }
 

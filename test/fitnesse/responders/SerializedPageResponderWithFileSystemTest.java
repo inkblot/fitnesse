@@ -1,7 +1,7 @@
 package fitnesse.responders;
 
 import fitnesse.http.MockRequest;
-import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.WikiModule;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
@@ -19,7 +19,7 @@ public class SerializedPageResponderWithFileSystemTest extends SerializedPageRes
     @Override
     protected Properties getProperties() {
         Properties properties = super.getProperties();
-        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        properties.remove(WikiModule.WIKI_PAGE_CLASS);
         return properties;
     }
 

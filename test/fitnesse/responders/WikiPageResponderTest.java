@@ -32,7 +32,7 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private Properties properties;
 
     @Inject
-    public void inject(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
+    public void inject(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
         this.properties = properties;
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;

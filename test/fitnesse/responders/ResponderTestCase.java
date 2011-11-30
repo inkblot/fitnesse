@@ -4,12 +4,12 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.wiki.PageCrawler;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.junit.Before;
 
@@ -21,7 +21,7 @@ public abstract class ResponderTestCase extends FitnesseBaseTestCase {
     protected HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public final void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, HtmlPageFactory htmlPageFactory) {
+    public final void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root, HtmlPageFactory htmlPageFactory) {
         this.root = root;
         this.htmlPageFactory = htmlPageFactory;
     }

@@ -5,6 +5,7 @@ package fitnesseMain;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
 import fitnesse.*;
+import fitnesse.wiki.WikiModule;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -33,7 +34,7 @@ public class FitNesseMainTest extends FitnesseBaseTestCase {
     public void testDirCreations() throws Exception {
         injector.getInstance(FitNesse.class);
 
-        String rootPagePath = injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.ROOT_PAGE_PATH)));
+        String rootPagePath = injector.getInstance(Key.get(String.class, Names.named(WikiModule.ROOT_PAGE_PATH)));
 
         assertTrue(new File(rootPagePath).exists());
         assertTrue(new File(rootPagePath, "files").exists());

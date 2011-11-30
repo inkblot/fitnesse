@@ -4,7 +4,6 @@ package fitnesse.responders;
 
 import com.google.inject.*;
 import com.google.inject.name.Names;
-import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.OneUserAuthenticator;
@@ -51,7 +50,7 @@ public class WikiImportingResponderTest extends ImporterTestCase {
     @Before
     public void setUp() throws Exception {
         htmlPageFactory = localInjector.getInstance(HtmlPageFactory.class);
-        root = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
+        root = localInjector.getInstance(Key.get(WikiPage.class, Names.named(WikiModule.ROOT_PAGE)));
         runningTestingTracker = localInjector.getInstance(RunningTestingTracker.class);
         remoteAuthenticator = new PromiscuousAuthenticator(remoteRoot, remoteInjector);
         fitNesseUtil = remoteInjector.getInstance(FitNesseUtil.class);

@@ -7,6 +7,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import fitnesse.http.*;
+import fitnesse.wiki.WikiModule;
 import util.socketservice.SocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class FitNesse {
     }
 
     @Inject
-    public FitNesse(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseModule.PORT) Integer port, Injector injector) {
+    public FitNesse(@Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath, @Named(FitNesseModule.PORT) Integer port, Injector injector) {
         this.injector = injector;
         this.rootPagePath = rootPagePath;
         this.port = port;

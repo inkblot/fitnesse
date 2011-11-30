@@ -4,7 +4,6 @@ package fitnesse.responders.run;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
@@ -12,6 +11,7 @@ import fitnesse.http.Response;
 import fitnesse.testutil.FitSocketReceiver;
 import fitnesse.wiki.PageCrawler;
 import fitnesse.wiki.PathParser;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import junit.framework.Assert;
 import org.junit.After;
@@ -35,7 +35,7 @@ public class ExposeThreadingIssueInMockResponseTest extends FitnesseBaseTestCase
     }
 
     @Inject
-    public void inject(TestResponder responder, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
+    public void inject(TestResponder responder, @Named(WikiModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer) {
         this.root = root;
         this.socketDealer = socketDealer;
         this.responder = responder;

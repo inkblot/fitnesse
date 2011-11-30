@@ -4,7 +4,6 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
@@ -12,6 +11,7 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.http.UploadedFile;
+import fitnesse.wiki.WikiModule;
 import org.apache.commons.io.IOUtils;
 import util.FileUtil;
 
@@ -25,7 +25,7 @@ public class UploadResponder implements SecureResponder {
     private final String rootPagePath;
 
     @Inject
-    public UploadResponder(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public UploadResponder(@Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
     }
 

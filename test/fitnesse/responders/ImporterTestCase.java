@@ -34,7 +34,7 @@ public class ImporterTestCase {
 
     protected Properties getFitNesseProperties() {
         Properties properties = new Properties();
-        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        properties.setProperty(WikiModule.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         return properties;
     }
 
@@ -43,7 +43,7 @@ public class ImporterTestCase {
         remoteInjector = Guice.createInjector(override(
                 new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/remote", "RooT", 1999, true))
                 .with(getRemoteOverrides()));
-        remoteRoot = remoteInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
+        remoteRoot = remoteInjector.getInstance(Key.get(WikiPage.class, Names.named(WikiModule.ROOT_PAGE)));
         PageCrawler crawler = remoteRoot.getPageCrawler();
         crawler.addPage(remoteRoot, PathParser.parse("PageOne"), "page one");
         crawler.addPage(remoteRoot, PathParser.parse("PageOne.ChildOne"), "child one");
@@ -51,7 +51,7 @@ public class ImporterTestCase {
 
         localInjector = Guice.createInjector(
                 new FitNesseModule(getFitNesseProperties(), null, TEST_ROOT_PATH + "/local", "local", FitNesseConstants.DEFAULT_PORT, true));
-        localRoot = localInjector.getInstance(Key.get(WikiPage.class, Names.named(FitNesseModule.ROOT_PAGE)));
+        localRoot = localInjector.getInstance(Key.get(WikiPage.class, Names.named(WikiModule.ROOT_PAGE)));
         pageOne = localRoot.addChildPage("PageOne");
         childPageOne = pageOne.addChildPage("ChildOne");
         pageTwo = localRoot.addChildPage("PageTwo");

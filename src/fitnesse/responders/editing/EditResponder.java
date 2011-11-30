@@ -35,7 +35,7 @@ public class EditResponder implements SecureResponder {
     private final WikiPage root;
 
     @Inject
-    public EditResponder(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public EditResponder(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, HtmlPageFactory htmlPageFactory, Clock clock, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.properties = properties;
         this.htmlPageFactory = htmlPageFactory;
         this.clock = clock;

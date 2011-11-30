@@ -4,7 +4,7 @@ import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
 import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.WikiPageFactory;
+import fitnesse.wiki.WikiModule;
 import org.junit.After;
 import org.movealong.junit.BaseInjectedTestCase;
 import util.FileUtil;
@@ -35,7 +35,7 @@ public abstract class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     @After
     public final void afterContextualText() {
-        FileUtil.deleteFileSystemDirectory(injector.getInstance(Key.get(String.class, Names.named(WikiPageFactory.ROOT_PATH))));
+        FileUtil.deleteFileSystemDirectory(injector.getInstance(Key.get(String.class, Names.named(WikiModule.ROOT_PATH))));
     }
 
     protected String getUserPass() {
@@ -44,7 +44,7 @@ public abstract class FitnesseBaseTestCase extends BaseInjectedTestCase {
 
     protected Properties getProperties() {
         Properties properties = new Properties();
-        properties.setProperty(WikiPageFactory.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
+        properties.setProperty(WikiModule.WIKI_PAGE_CLASS, InMemoryPage.class.getName());
         return properties;
     }
 

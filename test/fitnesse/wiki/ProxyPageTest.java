@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.After;
@@ -27,7 +26,7 @@ public class ProxyPageTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
+    public void inject(Clock clock, @Named(WikiModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
         this.clock = clock;
         this.root = root;
         this.fitNesseUtil = fitNesseUtil;

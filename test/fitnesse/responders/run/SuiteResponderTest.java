@@ -80,7 +80,7 @@ public class SuiteResponderTest extends FitnesseBaseTestCase {
     }
 
     @Inject
-    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, RunningTestingTracker runningTestingTracker) {
+    public void inject(Provider<Clock> clockProvider, HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, SocketDealer socketDealer, @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath, RunningTestingTracker runningTestingTracker) {
         this.clockProvider = clockProvider;
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;

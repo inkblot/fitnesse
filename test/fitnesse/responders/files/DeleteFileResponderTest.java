@@ -4,10 +4,10 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Response;
+import fitnesse.wiki.WikiModule;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class DeleteFileResponderTest extends FitnesseBaseTestCase {
     private String rootPagePath;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(@Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
     }
 

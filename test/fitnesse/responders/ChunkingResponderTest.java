@@ -4,13 +4,13 @@ package fitnesse.responders;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.ChunkedResponse;
 import fitnesse.http.MockRequest;
 import fitnesse.http.MockResponseSender;
 import fitnesse.responders.run.RunningTestingTracker;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPagePath;
 import org.junit.Before;
@@ -29,7 +29,7 @@ public class ChunkingResponderTest extends FitnesseBaseTestCase {
     private RunningTestingTracker runningTestingTracker;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
         this.runningTestingTracker = runningTestingTracker;

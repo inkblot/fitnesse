@@ -7,6 +7,7 @@ import com.google.inject.name.Named;
 import fitnesse.FitNesseModule;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.run.RunningTestingTracker;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.io.IOException;
 public class WhereUsedResponder extends ResultResponder {
 
     @Inject
-    public WhereUsedResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
+    public WhereUsedResponder(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
         super(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
     }
 

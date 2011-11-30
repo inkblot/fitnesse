@@ -22,10 +22,7 @@ import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
 import fitnesse.testutil.FitNesseUtil;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageCrawler;
-import fitnesse.wiki.PathParser;
-import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileUtil;
@@ -43,7 +40,7 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     private String rootPagePath;
 
     @Inject
-    public void inject(ResponderFactory responderFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(ResponderFactory responderFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, @Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.responderFactory = responderFactory;
         this.root = root;
         this.rootPagePath = rootPagePath;

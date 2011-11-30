@@ -24,7 +24,7 @@ public class FitNesseServerTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(SampleFileUtility samples, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(SampleFileUtility samples, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.samples = samples;
         this.root = root;
     }

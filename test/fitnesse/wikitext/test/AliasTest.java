@@ -2,8 +2,8 @@ package fitnesse.wikitext.test;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ public class AliasTest extends FitnesseBaseTestCase {
     private TestSourcePage sourcePage;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, TestSourcePage sourcePage) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root, TestSourcePage sourcePage) {
         this.root = root;
         this.sourcePage = sourcePage;
     }

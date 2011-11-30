@@ -5,7 +5,6 @@ package fitnesse.responders;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitNesseConstants;
-import fitnesse.FitNesseModule;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureReadOperation;
 import fitnesse.authentication.SecureResponder;
@@ -31,7 +30,7 @@ public class RssResponder implements SecureResponder {
     private final WikiPage root;
 
     @Inject
-    public RssResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public RssResponder(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

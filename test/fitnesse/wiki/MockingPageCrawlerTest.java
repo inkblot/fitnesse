@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +17,7 @@ public class MockingPageCrawlerTest extends FitnesseBaseTestCase {
     private PageCrawler crawler;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 

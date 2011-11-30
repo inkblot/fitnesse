@@ -15,6 +15,7 @@ import fitnesse.responders.run.SuiteResponder;
 import fitnesse.responders.run.TestResponder;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wikitext.WikiImportProperty;
 import org.junit.After;
@@ -45,7 +46,7 @@ public class WikiImportTestEventListenerTest extends FitnesseBaseTestCase {
     @Inject
     public void inject(
             HtmlPageFactory htmlPageFactory,
-            @Named(FitNesseModule.ROOT_PAGE) WikiPage root,
+            @Named(WikiModule.ROOT_PAGE) WikiPage root,
             @Named(FitNesseModule.TEST_RESULTS_PATH) String testResultsPath,
             @Named(FitNesseModule.PORT) Integer port,
             SocketDealer socketDealer,

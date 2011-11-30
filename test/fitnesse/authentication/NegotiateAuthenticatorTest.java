@@ -2,7 +2,6 @@ package fitnesse.authentication;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.Responder;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.components.Base64;
@@ -10,6 +9,7 @@ import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.Request;
 import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import org.ietf.jgss.*;
 import org.junit.Assert;
@@ -33,7 +33,7 @@ public class NegotiateAuthenticatorTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
     }

@@ -4,13 +4,13 @@ package fitnesse.responders.files;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.authentication.AlwaysSecureOperation;
 import fitnesse.authentication.SecureOperation;
 import fitnesse.authentication.SecureResponder;
 import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
+import fitnesse.wiki.WikiModule;
 import util.FileUtil;
 
 import java.io.File;
@@ -20,7 +20,7 @@ public class DeleteFileResponder implements SecureResponder {
     private final String rootPagePath;
 
     @Inject
-    public DeleteFileResponder(@Named(FitNesseModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public DeleteFileResponder(@Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.rootPagePath = rootPagePath;
     }
 

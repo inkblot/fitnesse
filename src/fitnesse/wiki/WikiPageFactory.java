@@ -9,9 +9,6 @@ import java.lang.reflect.Method;
 
 @Singleton
 public class WikiPageFactory {
-    public static final String WIKI_PAGE_CLASS = "WikiPage";
-    public static final String ROOT_PATH = "fitnesse.rootPath";
-    public static final String ROOT_PAGE_NAME = "fitnesse.rootPageName";
 
     private final Injector injector;
     private final String rootPath;
@@ -21,9 +18,9 @@ public class WikiPageFactory {
 
     @Inject
     public WikiPageFactory(Injector injector,
-                           @Named(WikiPageFactory.WIKI_PAGE_CLASS) Class<? extends WikiPage> wikiPageClass,
-                           @Named(ROOT_PATH) String rootPath,
-                           @Named(ROOT_PAGE_NAME) String rootPageName) {
+                           @Named(WikiModule.WIKI_PAGE_CLASS) Class<? extends WikiPage> wikiPageClass,
+                           @Named(WikiModule.ROOT_PATH) String rootPath,
+                           @Named(WikiModule.ROOT_PAGE_NAME) String rootPageName) {
         this.injector = injector;
         this.wikiPageClass = wikiPageClass;
         this.rootPath = rootPath;

@@ -30,7 +30,7 @@ public class WikiImportingResponder extends ChunkingResponder implements SecureR
     private HtmlPageFactory htmlPageFactory;
 
     @Inject
-    public WikiImportingResponder(HtmlPageFactory htmlPageFactory, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
+    public WikiImportingResponder(HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, RunningTestingTracker runningTestingTracker, @Named(FitNesseModule.ENABLE_CHUNKING) boolean chunkingEnabled) {
         super(htmlPageFactory, root, runningTestingTracker, chunkingEnabled);
         this.htmlPageFactory = htmlPageFactory;
     }

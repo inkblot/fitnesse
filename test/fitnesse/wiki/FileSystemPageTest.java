@@ -5,7 +5,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,12 +31,12 @@ public class FileSystemPageTest extends FitnesseBaseTestCase {
     @Override
     protected Properties getProperties() {
         Properties properties = super.getProperties();
-        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        properties.remove(WikiModule.WIKI_PAGE_CLASS);
         return properties;
     }
 
     @Inject
-    public void inject(Clock clock, @Named(FitNesseModule.ROOT_PAGE) WikiPage root, WikiPageFactory wikiPageFactory) {
+    public void inject(Clock clock, @Named(WikiModule.ROOT_PAGE) WikiPage root, WikiPageFactory wikiPageFactory) {
         this.clock = clock;
         this.root = root;
         this.wikiPageFactory = wikiPageFactory;

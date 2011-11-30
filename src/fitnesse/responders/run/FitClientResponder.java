@@ -35,7 +35,7 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
     private String suiteFilter;
 
     @Inject
-    public FitClientResponder(@Named(FitNesseModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, Injector injector) {
+    public FitClientResponder(@Named(WikiModule.ROOT_PAGE) WikiPage root, @Named(FitNesseModule.PORT) Integer port, SocketDealer socketDealer, RunningTestingTracker runningTestingTracker, Injector injector) {
         this.root = root;
         this.port = port;
         this.socketDealer = socketDealer;

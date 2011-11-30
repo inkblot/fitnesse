@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitNesseModule;
 import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +22,7 @@ public class FileSystemPageZipFileVersioningTest extends FitnesseBaseTestCase {
     private WikiPage root;
 
     @Inject
-    public void inject(@Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+    public void inject(@Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.root = root;
     }
 
@@ -41,7 +40,7 @@ public class FileSystemPageZipFileVersioningTest extends FitnesseBaseTestCase {
     @Override
     protected Properties getProperties() {
         Properties properties = super.getProperties();
-        properties.remove(WikiPageFactory.WIKI_PAGE_CLASS);
+        properties.remove(WikiModule.WIKI_PAGE_CLASS);
         return properties;
     }
 

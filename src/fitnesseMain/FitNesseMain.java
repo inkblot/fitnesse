@@ -11,6 +11,7 @@ import fitnesse.responders.ResponderFactory;
 import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.wiki.PageVersionPruner;
+import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
 import fitnesse.wiki.WikiPageFactory;
 import fitnesse.wikitext.parser.SymbolProvider;
@@ -54,7 +55,7 @@ public class FitNesseMain {
     public static void launchFitNesse(Arguments arguments, Properties properties) throws Exception {
         new PluginsClassLoader().addPluginsToClassLoader();
 
-        Injector injector = GuiceHelper.makeContext(arguments, properties);
+        Injector injector = makeContext(arguments, properties);
 
         SymbolProvider wikiSymbols = injector.getInstance(Key.get(SymbolProvider.class, Names.named(SymbolProvider.WIKI_PARSING)));
         ResponderFactory responderFactory = injector.getInstance(ResponderFactory.class);
@@ -93,6 +94,14 @@ public class FitNesseMain {
                 fitnesse.stop();
             }
         }
+    }
+
+    public static Injector makeContext(Properties properties, String userpass, String rootPath, String rootPageName, int port, boolean enableChunking) throws Exception {
+        return Guice.createInjector(new FitNesseModule(properties, userpass, rootPath, rootPageName, port, enableChunking));
+    }
+
+    public static Injector makeContext(Arguments arguments, Properties pluginProperties) throws Exception {
+        return makeContext(pluginProperties, arguments.getUserpass(), arguments.getRootPath(), arguments.getRootDirectory(), arguments.getPort(), arguments.getCommand() == null);
     }
 
     public static class Arguments {
@@ -187,7 +196,7 @@ public class FitNesseMain {
                 @Named(FitNesseModule.PORT) Integer port,
                 HtmlPageFactory htmlPageFactory,
                 Provider<Authenticator> authenticatorProvider,
-                @Named(FitNesseModule.ROOT_PAGE) WikiPage root) {
+                @Named(WikiModule.ROOT_PAGE) WikiPage root) {
             String endl = System.getProperty("line.separator");
             StringBuilder buffer = new StringBuilder();
             buffer.append("\t").append("port:              ").append(port).append(endl);

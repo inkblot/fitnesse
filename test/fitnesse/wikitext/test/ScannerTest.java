@@ -1,11 +1,11 @@
 package fitnesse.wikitext.test;
 
 import com.google.inject.Inject;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import fitnesse.wikitext.parser.Scanner;
 import org.junit.Test;
 
-public class ScannerTest extends FitnesseBaseTestCase {
+public class ScannerTest extends WikiBaseTestCase {
 
     private TestSourcePage sourcePage;
 

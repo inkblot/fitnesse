@@ -1,9 +1,9 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class EvaluatorTest extends FitnesseBaseTestCase {
+public class EvaluatorTest extends WikiBaseTestCase {
     @Test
     public void scansEvaluators() {
         ParserTestHelper.assertScansTokenType("${=3+4=}", "Evaluator", true, injector);

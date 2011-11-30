@@ -1,11 +1,11 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class EqualPairTest extends FitnesseBaseTestCase {
+public class EqualPairTest extends WikiBaseTestCase {
     @Test
     public void scansTripleQuotes() {
         ParserTestHelper.assertScansTokenType("'''bold'''", "Bold", true, injector);

@@ -1,6 +1,5 @@
 package fitnesse.wiki;
 
-import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import static fitnesse.wiki.PageType.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class PageTypeTest extends FitnesseBaseTestCase {
+public class PageTypeTest extends WikiBaseTestCase {
 
     @Test
     public void fromString() {

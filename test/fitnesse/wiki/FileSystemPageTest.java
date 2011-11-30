@@ -5,7 +5,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
@@ -20,7 +19,7 @@ import java.util.Properties;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
-public class FileSystemPageTest extends FitnesseBaseTestCase {
+public class FileSystemPageTest extends WikiBaseTestCase {
     private PageCrawler crawler;
     private static List<String> cmMethodCalls = new ArrayList<String>();
 

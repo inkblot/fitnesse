@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +13,7 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class PageCrawlerTest extends FitnesseBaseTestCase implements TraversalListener {
+public class PageCrawlerTest extends WikiBaseTestCase implements TraversalListener {
     private WikiPage root;
     private WikiPage page1;
     private WikiPage page2;

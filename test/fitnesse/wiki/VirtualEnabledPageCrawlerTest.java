@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.testutil.FitNesseUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class VirtualEnabledPageCrawlerTest extends FitnesseBaseTestCase {
+public class VirtualEnabledPageCrawlerTest extends WikiBaseTestCase {
     private WikiPage root;
     private WikiPage target;
     private WikiPage vlink;

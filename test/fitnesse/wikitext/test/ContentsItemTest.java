@@ -1,17 +1,13 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
-import fitnesse.wiki.InMemoryPage;
-import fitnesse.wiki.PageData;
-import fitnesse.wiki.WikiPage;
-import fitnesse.wiki.WikiPageProperties;
+import fitnesse.wiki.*;
 import fitnesse.wikitext.parser.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ContentsItemTest extends FitnesseBaseTestCase {
+public class ContentsItemTest extends WikiBaseTestCase {
     @Test
     public void buildsPlain() throws Exception {
         assertBuilds("PlainItem", new String[]{}, "", "", "<a href=\"PlainItem\">PlainItem</a>");

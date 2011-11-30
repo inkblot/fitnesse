@@ -1,13 +1,13 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 import util.SystemTimeKeeper;
 import util.TestTimeKeeper;
 
 import java.util.GregorianCalendar;
 
-public class TodayTest extends FitnesseBaseTestCase {
+public class TodayTest extends WikiBaseTestCase {
     @Test
     public void translatesTodays() {
         SystemTimeKeeper.instance = new TestTimeKeeper(new GregorianCalendar(2002, 2, 4, 15, 6, 7).getTime());

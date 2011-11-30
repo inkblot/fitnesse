@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class HashTableTest extends FitnesseBaseTestCase {
+public class HashTableTest extends WikiBaseTestCase {
     @Test
     public void scansHashTables() {
         ParserTestHelper.assertScansTokenType("!{a:b,c:d}", "HashTable", true, injector);

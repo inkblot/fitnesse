@@ -1,13 +1,12 @@
 package fitnesse.wiki;
 
-import fitnesse.FitnesseBaseTestCase;
 import org.junit.Test;
 import util.FileSystem;
 import util.MemoryFileSystem;
 
 import static org.junit.Assert.assertEquals;
 
-public class ExternalSuitePageTest extends FitnesseBaseTestCase {
+public class ExternalSuitePageTest extends WikiBaseTestCase {
     @Test
     public void ContentIsTableOfContents() throws Exception {
         assertEquals("!contents", new ExternalSuitePage("somewhere", "MyTest", null, null, injector).getData().getContent());

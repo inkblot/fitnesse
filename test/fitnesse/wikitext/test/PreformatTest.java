@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class PreformatTest extends FitnesseBaseTestCase {
+public class PreformatTest extends WikiBaseTestCase {
     @Test
     public void scansPreformats() {
         ParserTestHelper.assertScansTokenType("{{{stuff}}}", "Preformat", true, injector);

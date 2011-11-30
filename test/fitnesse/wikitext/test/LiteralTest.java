@@ -1,9 +1,9 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class LiteralTest extends FitnesseBaseTestCase {
+public class LiteralTest extends WikiBaseTestCase {
     @Test
     public void scansLiteral() {
         ParserTestHelper.assertScansTokenType("!- stuff -!", "Literal", true, injector);

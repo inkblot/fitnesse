@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-public class InMemoryPageTest extends FitnesseBaseTestCase {
+public class InMemoryPageTest extends WikiBaseTestCase {
     private WikiPage page1;
     private WikiPage page2;
     private WikiPage root;

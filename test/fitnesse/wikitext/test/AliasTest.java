@@ -2,12 +2,12 @@ package fitnesse.wikitext.test;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class AliasTest extends FitnesseBaseTestCase {
+public class AliasTest extends WikiBaseTestCase {
 
     private WikiPage root;
     private TestSourcePage sourcePage;

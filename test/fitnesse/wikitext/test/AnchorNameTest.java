@@ -1,9 +1,9 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class AnchorNameTest extends FitnesseBaseTestCase {
+public class AnchorNameTest extends WikiBaseTestCase {
     @Test
     public void scansAnchors() {
         ParserTestHelper.assertScansTokenType("!anchor name", "AnchorName", true, injector);

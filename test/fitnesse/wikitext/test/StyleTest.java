@@ -1,9 +1,9 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class StyleTest extends FitnesseBaseTestCase {
+public class StyleTest extends WikiBaseTestCase {
     @Test
     public void scansParenthesisStyle() throws Exception {
         ParserTestHelper.assertScansTokenType("!style_x(my text)", "Style", true, injector);

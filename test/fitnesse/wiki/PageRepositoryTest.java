@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Module;
 import com.google.inject.name.Named;
-import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 import util.FileSystem;
@@ -14,7 +13,7 @@ import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 
-public class PageRepositoryTest extends FitnesseBaseTestCase {
+public class PageRepositoryTest extends WikiBaseTestCase {
     private PageRepository pageRepository;
     private FileSystemPage rootPage;
 

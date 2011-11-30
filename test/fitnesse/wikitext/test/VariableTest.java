@@ -1,14 +1,14 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class VariableTest extends FitnesseBaseTestCase {
+public class VariableTest extends WikiBaseTestCase {
     @Test
     public void scansVariables() {
         ParserTestHelper.assertScansTokenType("${x}", "Variable", true, injector);

@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 import static util.RegexAssertions.assertDoesNotHaveRegexp;
 import static util.RegexAssertions.assertHasRegexp;
 
-public class PageDataTest extends FitnesseBaseTestCase {
+public class PageDataTest extends WikiBaseTestCase {
     public WikiPage page;
     private WikiPage root;
     private PageCrawler crawler;

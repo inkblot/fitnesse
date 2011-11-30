@@ -4,7 +4,6 @@ package fitnesse.wiki;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import fitnesse.FitnesseBaseTestCase;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +14,7 @@ import static fitnesse.wiki.zip.ZipFileVersionsController.dateFormat;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
-public class FileSystemPageZipFileVersioningTest extends FitnesseBaseTestCase {
+public class FileSystemPageZipFileVersioningTest extends WikiBaseTestCase {
     public FileSystemPage page;
     private VersionInfo firstVersion;
     private PageCrawler crawler;

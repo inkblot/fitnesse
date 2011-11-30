@@ -1,12 +1,12 @@
 package fitnesse.wikitext.test;
 
 import com.google.inject.Inject;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class WikiTranslatorTest extends FitnesseBaseTestCase {
+public class WikiTranslatorTest extends WikiBaseTestCase {
 
     private TestSourcePage sourcePage;
 

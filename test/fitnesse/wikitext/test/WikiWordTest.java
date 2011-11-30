@@ -1,15 +1,15 @@
 package fitnesse.wikitext.test;
 
 import com.google.inject.Inject;
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiBaseTestCase;
 import fitnesse.wikitext.WikiWordUtil;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class WikiWordTest extends FitnesseBaseTestCase {
+public class WikiWordTest extends WikiBaseTestCase {
     private TestRoot root;
     private WikiPage pageOne;
     private WikiPage pageOneTwo;

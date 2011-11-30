@@ -1,14 +1,14 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.PageData;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 import util.SystemTimeKeeper;
 import util.TestTimeKeeper;
 
 import java.util.GregorianCalendar;
 
-public class LastModifiedTest extends FitnesseBaseTestCase {
+public class LastModifiedTest extends WikiBaseTestCase {
     @Test
     public void scansLastModified() {
         ParserTestHelper.assertScansTokenType("!lastmodified", "LastModified", true, injector);

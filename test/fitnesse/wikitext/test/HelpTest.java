@@ -1,12 +1,12 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.WikiPage;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class HelpTest extends FitnesseBaseTestCase {
+public class HelpTest extends WikiBaseTestCase {
     @Test
     public void parsesHelp() throws Exception {
         ParserTestHelper.assertParses("!help", "SymbolList[Help]", injector);

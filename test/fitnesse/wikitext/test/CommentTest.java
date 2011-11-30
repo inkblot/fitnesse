@@ -1,9 +1,9 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class CommentTest extends FitnesseBaseTestCase {
+public class CommentTest extends WikiBaseTestCase {
     @Test
     public void scansComments() {
         ParserTestHelper.assertScansTokenType("# comment\n", "Comment", true, injector);

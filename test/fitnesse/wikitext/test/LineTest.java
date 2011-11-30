@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class LineTest extends FitnesseBaseTestCase {
+public class LineTest extends WikiBaseTestCase {
     @Test
     public void scansHeaders() {
         ParserTestHelper.assertScans("!1 some text\n", "HeaderLine=!1,Whitespace= ,Text=some,Whitespace= ,Text=text,Newline=\n", injector);

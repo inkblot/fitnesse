@@ -1,14 +1,14 @@
 package fitnesse.wikitext.test;
 
 import com.google.inject.Inject;
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import fitnesse.wikitext.parser.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class TextMakerTest extends FitnesseBaseTestCase {
+public class TextMakerTest extends WikiBaseTestCase {
     private VariableSource source = new TestVariableSource("x", "y");
     private SourcePage sourcePage;
 

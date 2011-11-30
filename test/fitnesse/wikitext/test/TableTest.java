@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class TableTest extends FitnesseBaseTestCase {
+public class TableTest extends WikiBaseTestCase {
     @Test
     public void scansTables() {
         ParserTestHelper.assertScansTokenType("|a|\n", "Table", true, injector);

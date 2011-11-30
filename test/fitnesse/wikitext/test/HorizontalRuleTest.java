@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class HorizontalRuleTest extends FitnesseBaseTestCase {
+public class HorizontalRuleTest extends WikiBaseTestCase {
     @Test
     public void scansHorizontalRules() {
         ParserTestHelper.assertScansTokenType("----", "HorizontalRule", true, injector);

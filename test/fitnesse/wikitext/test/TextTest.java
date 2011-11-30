@@ -1,9 +1,9 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class TextTest extends FitnesseBaseTestCase {
+public class TextTest extends WikiBaseTestCase {
     @Test
     public void scansTextAsWords() {
         ParserTestHelper.assertScans("hi mom", "Text=hi,Whitespace= ,Text=mom", injector);

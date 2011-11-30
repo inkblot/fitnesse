@@ -1,10 +1,10 @@
 package fitnesse.wikitext.test;
 
-import fitnesse.FitnesseBaseTestCase;
 import fitnesse.html.HtmlElement;
+import fitnesse.wiki.WikiBaseTestCase;
 import org.junit.Test;
 
-public class ListTest extends FitnesseBaseTestCase {
+public class ListTest extends WikiBaseTestCase {
     @Test
     public void scansLists() {
         ParserTestHelper.assertScansTokenType(" * item", "UnorderedList", true, injector);

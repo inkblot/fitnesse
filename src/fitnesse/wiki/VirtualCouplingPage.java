@@ -114,4 +114,19 @@ public class VirtualCouplingPage implements WikiPage {
     public Injector getInjector() {
         return hostPage.getInjector();
     }
+
+    @Override
+    public boolean isRemote() {
+        return false;
+    }
+
+    @Override
+    public String getPageName() {
+        return getLocalPageName();
+    }
+
+    @Override
+    public String getLocalPageName() {
+        return PathParser.render(getPageCrawler().getFullPath(this));
+    }
 }

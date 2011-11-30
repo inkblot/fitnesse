@@ -34,10 +34,6 @@ public class ProxyPage extends CachingPage implements Serializable {
         }
     }
 
-    protected ProxyPage(String name, WikiPage parent, Injector injector) {
-        super(name, parent, injector);
-    }
-
     public ProxyPage(String name, WikiPage parent, String host, int port, WikiPagePath path, Injector injector) {
         super(name, parent, injector);
         this.host = host;
@@ -63,7 +59,7 @@ public class ProxyPage extends CachingPage implements Serializable {
 
     protected void loadChildren() throws IOException {
         if (cacheTime <= (ClockUtil.currentTimeInMillis() - lastLoadChildrenTime)) {
-            ProxyPage page = retrievePage(getThisPageUrl(), getInjector());
+            ProxyPage page = retrievePage(getPageName(), getInjector());
             children.clear();
             for (WikiPage wikiPage : page.children.values()) {
                 ProxyPage child = (ProxyPage) wikiPage;
@@ -72,14 +68,6 @@ public class ProxyPage extends CachingPage implements Serializable {
             }
             lastLoadChildrenTime = ClockUtil.currentTimeInMillis();
         }
-    }
-
-    public String getThisPageUrl() {
-        StringBuilder url = new StringBuilder("http://");
-        url.append(host);
-        url.append(":").append(getHostPort());
-        url.append("/").append(PathParser.render(realPath));
-        return url.toString();
     }
 
     public boolean hasChildPage(String pageName) throws IOException {
@@ -122,7 +110,7 @@ public class ProxyPage extends CachingPage implements Serializable {
     }
 
     public PageData getMeat(String versionName) throws IOException {
-        StringBuilder urlString = new StringBuilder(getThisPageUrl());
+        StringBuilder urlString = new StringBuilder(getPageName());
         urlString.append("?responder=proxy&type=meat");
         if (versionName != null)
             urlString.append("&version=").append(versionName);
@@ -161,6 +149,20 @@ public class ProxyPage extends CachingPage implements Serializable {
         if (data == null)
             throw new NoSuchVersionException("There is no version '" + versionName + "'");
         return data;
+    }
+
+    @Override
+    public boolean isRemote() {
+        return true;
+    }
+
+    @Override
+    public String getPageName() {
+        StringBuilder url = new StringBuilder("http://");
+        url.append(host);
+        url.append(":").append(getHostPort());
+        url.append("/").append(PathParser.render(realPath));
+        return url.toString();
     }
 
     //TODO-MdM these are not needed

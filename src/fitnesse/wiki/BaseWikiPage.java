@@ -115,34 +115,33 @@ public abstract class BaseWikiPage implements WikiPage {
     }
 
     public List<WikiPageAction> getActions() throws IOException {
-        WikiPagePath localPagePath = getPageCrawler().getFullPath(this);
-        String localPageName = PathParser.render(localPagePath);
-        String localOrRemotePageName = localPageName;
-        boolean newWindowIfRemote = false;
-        if (this instanceof ProxyPage) {
-            ProxyPage proxyPage = (ProxyPage) this;
-            localOrRemotePageName = proxyPage.getThisPageUrl();
-            newWindowIfRemote = true;
-        }
-        return makeActions(localPageName, localOrRemotePageName, newWindowIfRemote);
-    }
-
-    private List<WikiPageAction> makeActions(String localPageName, String localOrRemotePageName, boolean newWindowIfRemote) throws IOException {
+        String localPageName = getLocalPageName();
+        String localOrRemotePageName = getPageName();
         PageData pageData = getData();
         List<WikiPageAction> actions = new ArrayList<WikiPageAction>();
-        addActionForAttribute("Test", pageData, localPageName, newWindowIfRemote, null, null, actions);
-        addActionForAttribute("Suite", pageData, localPageName, newWindowIfRemote, "", null, actions);
-        addActionForAttribute("Edit", pageData, localOrRemotePageName, newWindowIfRemote, null, null, actions);
-        addActionForAttribute("Properties", pageData, localOrRemotePageName, newWindowIfRemote, null, null, actions);
-        addActionForAttribute("Refactor", pageData, localOrRemotePageName, newWindowIfRemote, null, null, actions);
-        addActionForAttribute("Where Used", pageData, localOrRemotePageName, newWindowIfRemote, null, "whereUsed", actions);
-        addActionForAttribute("Search", pageData, "", newWindowIfRemote, null, "searchForm", actions);
-        addActionForAttribute("Files", pageData, "/files", newWindowIfRemote, null, "", actions);
-        addActionForAttribute("Versions", pageData, localOrRemotePageName, newWindowIfRemote, null, null, actions);
-        addActionForAttribute("Recent Changes", pageData, "/RecentChanges", newWindowIfRemote, "", "", actions);
-        addAction("User Guide", ".FitNesse.UserGuide", newWindowIfRemote, "", "", actions);
-        addAction("Test History", "?testHistory", newWindowIfRemote, "", "", actions);
+        addActionForAttribute("Test", pageData, localPageName, isRemote(), null, null, actions);
+        addActionForAttribute("Suite", pageData, localPageName, isRemote(), "", null, actions);
+        addActionForAttribute("Edit", pageData, localOrRemotePageName, isRemote(), null, null, actions);
+        addActionForAttribute("Properties", pageData, localOrRemotePageName, isRemote(), null, null, actions);
+        addActionForAttribute("Refactor", pageData, localOrRemotePageName, isRemote(), null, null, actions);
+        addActionForAttribute("Where Used", pageData, localOrRemotePageName, isRemote(), null, "whereUsed", actions);
+        addActionForAttribute("Search", pageData, "", isRemote(), null, "searchForm", actions);
+        addActionForAttribute("Files", pageData, "/files", isRemote(), null, "", actions);
+        addActionForAttribute("Versions", pageData, localOrRemotePageName, isRemote(), null, null, actions);
+        addActionForAttribute("Recent Changes", pageData, "/RecentChanges", isRemote(), "", "", actions);
+        addAction("User Guide", ".FitNesse.UserGuide", isRemote(), "", "", actions);
+        addAction("Test History", "?testHistory", isRemote(), "", "", actions);
         return actions;
+    }
+
+    @Override
+    public String getPageName() {
+        return getLocalPageName();
+    }
+
+    @Override
+    public String getLocalPageName() {
+        return PathParser.render(getPageCrawler().getFullPath(this));
     }
 
     private void addActionForAttribute(String attribute, PageData pageData, String pageName, boolean newWindowIfRemote,
@@ -202,5 +201,10 @@ public abstract class BaseWikiPage implements WikiPage {
 
     public Injector getInjector() {
         return injector;
+    }
+
+    @Override
+    public boolean isRemote() {
+        return false;
     }
 }

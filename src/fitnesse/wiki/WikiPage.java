@@ -51,6 +51,12 @@ public interface WikiPage extends Serializable, Comparable<Object> {
     public List<WikiPageAction> getActions() throws IOException;
 
     Injector getInjector();
+
+    boolean isRemote();
+
+    String getPageName();
+
+    String getLocalPageName();
 }
 
 

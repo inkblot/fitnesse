@@ -181,15 +181,15 @@ public class WikiSourcePage implements SourcePage {
     }
 
     public String makeUrl(String wikiWordPath) {
-        if (!(page instanceof ProxyPage))
+        if (page instanceof ProxyPage) {
+            String remoteURLOfPage = page.getPageName();
+            String nameOfThisPage = page.getName();
+            int startOfThisPageName = remoteURLOfPage.lastIndexOf(nameOfThisPage);
+            String remoteURLOfParent = remoteURLOfPage.substring(0, startOfThisPageName);
+            return remoteURLOfParent + wikiWordPath;
+        } else {
             return makeFullPathOfTarget(wikiWordPath);
-
-        ProxyPage proxy = (ProxyPage) page;
-        String remoteURLOfPage = proxy.getThisPageUrl();
-        String nameOfThisPage = proxy.getName();
-        int startOfThisPageName = remoteURLOfPage.lastIndexOf(nameOfThisPage);
-        String remoteURLOfParent = remoteURLOfPage.substring(0, startOfThisPageName);
-        return remoteURLOfParent + wikiWordPath;
+        }
     }
 
     private boolean isParentOf(WikiPage possibleParent) {

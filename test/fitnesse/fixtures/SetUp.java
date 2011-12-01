@@ -10,7 +10,6 @@ import fitnesse.FitNesseModule;
 import fitnesse.authentication.Authenticator;
 import fitnesse.authentication.PromiscuousAuthenticator;
 import fitnesse.components.SaveRecorder;
-import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.wiki.InMemoryPage;
 import fitnesse.wiki.WikiModule;
 import fitnesse.wiki.WikiPage;
@@ -50,9 +49,6 @@ public class SetUp extends Fixture {
                 });
 
         FitnesseFixtureContext.authenticator = new PromiscuousAuthenticator(null, injector);
-
-        //TODO - Inject the test listeners
-        WikiImportTestEventListener.register();
 
         FitnesseFixtureContext.injector = injector;
         testResultsPath = injector.getInstance(Key.get(String.class, Names.named(FitNesseModule.TEST_RESULTS_PATH)));

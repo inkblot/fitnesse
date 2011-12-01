@@ -8,7 +8,6 @@ import fitnesse.authentication.Authenticator;
 import fitnesse.components.PluginsClassLoader;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.responders.ResponderFactory;
-import fitnesse.responders.WikiImportTestEventListener;
 import fitnesse.responders.run.formatters.BaseFormatter;
 import fitnesse.wiki.PageVersionPruner;
 import fitnesse.wiki.WikiModule;
@@ -69,8 +68,6 @@ public class FitNesseMain {
                 properties);
         extraOutput += ComponentFactory.loadResponders(responderFactory, properties);
         extraOutput += ComponentFactory.loadSymbolTypes(properties, wikiSymbols);
-
-        WikiImportTestEventListener.register();
 
         PageVersionPruner.daysTillVersionsExpire = arguments.getDaysTillVersionsExpire();
         updateAndLaunch(arguments, injector, fitnesse, extraOutput);

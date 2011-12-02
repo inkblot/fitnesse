@@ -2,7 +2,6 @@ package fitnesse.wikitext.parser;
 
 import fitnesse.html.HtmlTag;
 import fitnesse.html.HtmlUtil;
-import fitnesse.wikitext.WikiImportProperty;
 import fitnesse.wiki.PageData;
 import fitnesse.wiki.PageType;
 import util.GracefulNamer;
@@ -123,7 +122,6 @@ public class ContentsItemBuilder {
         String result = "";
         if (sourcePage.hasProperty(PageType.SUITE.toString())) result += "*";
         if (sourcePage.hasProperty(PageType.TEST.toString())) result += "+";
-        if (sourcePage.hasProperty(WikiImportProperty.PROPERTY_NAME)) result += "@";
         if (sourcePage.hasProperty(PageData.PropertyPRUNE)) result += "-";
         return result;
     }

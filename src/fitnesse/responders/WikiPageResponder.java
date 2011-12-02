@@ -18,7 +18,6 @@ import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.editing.EditResponder;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.WikiImportProperty;
 import org.apache.velocity.VelocityContext;
 import util.Clock;
 
@@ -92,17 +91,12 @@ public class WikiPageResponder implements SecureResponder {
         velocityContext.put("page_name", page.getName());
         velocityContext.put("full_path", fullPathName);
         html.main.add(VelocityFactory.translateTemplate(velocityContext, "fitnesse/templates/addChildPagePopup.vm"));
-        handleSpecialProperties(html, page, pageData);
         return html.html();
     }
 
     /* hook for subclasses */
     protected String generateHtml(PageData pageData) throws IOException {
         return HtmlUtil.makePageHtmlWithHeaderAndFooter(pageData);
-    }
-
-    private void handleSpecialProperties(HtmlPage html, WikiPage page, PageData pageData) {
-        WikiImportProperty.handleImportProperties(html, page, pageData);
     }
 
     public SecureOperation getSecureOperation() {

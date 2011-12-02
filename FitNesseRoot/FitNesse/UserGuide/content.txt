@@ -50,7 +50,6 @@ If you'll be spending a lot of time writing tests, you'll probably want to study
 |[[Markup Language Reference][>MarkupLanguageReference]]|''A reference for formatting FitNesse pages using the wiki markup language.''|
 |[[Sub Wikis][>SubWiki]]|''How to create hierarchies of FitNesse pages.''|
 |[[Special Wiki Functions][>SpecialWikiFunctions]]|''Special things you can do with wikis.''|
-|[[Wiki Import][>WikiImport]]|''Importing wiki pages from a remote FitNesse server.''|
 |[[Symbolic Links][>SymbolicLinks]]|''Dynamically altering the wiki page structure.''|
 |[[Special Pages][>SpecialPages]]|''Some pages in FitNesse that serve special purposes.''|
 |[[Quick Reference Guide][>QuickReferenceGuide]]|''A cheat sheet for markups and usage.''|

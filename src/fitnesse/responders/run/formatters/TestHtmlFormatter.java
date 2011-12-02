@@ -3,7 +3,6 @@
 package fitnesse.responders.run.formatters;
 
 import fitnesse.html.*;
-import fitnesse.wikitext.WikiImportProperty;
 import fitnesse.responders.run.CompositeExecutionLog;
 import fitnesse.responders.run.TestSummary;
 import fitnesse.responders.run.TestSystem;
@@ -133,7 +132,6 @@ public abstract class TestHtmlFormatter extends BaseFormatter {
         html.header.add(String.format("&nbsp;<a style=\"font-size:small;\" href=\"%s?pageHistory\"> [history]</a>", fullPathName));
         PageData data = getPage().getData();
         html.actions.use(HtmlUtil.makeActions(getPage().getActions()));
-        WikiImportProperty.handleImportProperties(html, getPage(), data);
         return html;
     }
 

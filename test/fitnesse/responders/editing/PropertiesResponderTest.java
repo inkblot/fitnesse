@@ -8,7 +8,6 @@ import fitnesse.*;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.wikitext.WikiImportProperty;
 import fitnesse.wiki.*;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -152,60 +151,6 @@ public class PropertiesResponderTest extends FitnesseBaseTestCase {
         SimpleResponse response = (SimpleResponse) responder.makeResponse(request);
         content = response.getContent();
         return page;
-    }
-
-    @Test
-    public void testWikiImportForm() throws Exception {
-        getContentFromSimplePropertiesPage();
-
-        checkUpdateForm();
-        assertSubString("Wiki Import.", content);
-        assertSubString("value=\"Import\"", content);
-        assertSubString("type=\"text\"", content);
-        assertSubString("name=\"remoteUrl\"", content);
-    }
-
-    private void checkUpdateForm() {
-        assertSubString("<form", content);
-        assertSubString("action=\"SomePage#end\"", content);
-        assertSubString("<input", content);
-        assertSubString("type=\"hidden\"", content);
-        assertSubString("name=\"responder\"", content);
-        assertSubString("value=\"import\"", content);
-    }
-
-    @Test
-    public void testWikiImportUpdate() throws Exception {
-        WikiImportProperty property = new WikiImportProperty("http://my.host.com/PageRoot");
-        property.setRoot(true);
-        testWikiImportUpdateWith(property);
-        assertSubString(" imports its subpages from ", content);
-        assertSubString("value=\"Update Subpages\"", content);
-
-        assertSubString("Automatically update imported content when executing tests", content);
-    }
-
-    @Test
-    public void testWikiImportUpdateNonroot() throws Exception {
-        testWikiImportUpdateWith(new WikiImportProperty("http://my.host.com/PageRoot"));
-        assertSubString(" imports its content and subpages from ", content);
-        assertSubString("value=\"Update Content and Subpages\"", content);
-
-        assertSubString("Automatically update imported content when executing tests", content);
-    }
-
-    private void testWikiImportUpdateWith(WikiImportProperty property) throws Exception {
-        WikiPage page = root.addChildPage("SomePage");
-        PageData data = page.getData();
-        property.addTo(data.getProperties());
-        page.commit(data);
-
-        getPropertiesContentFromPage(page);
-        checkUpdateForm();
-        assertSubString("Wiki Import Update", content);
-        assertSubString("<a href=\"http://my.host.com/PageRoot\">http://my.host.com/PageRoot</a>", content);
-
-        assertNotSubString("value=\"Import\"", content);
     }
 
     @Test

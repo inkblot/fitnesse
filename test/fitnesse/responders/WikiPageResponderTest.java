@@ -13,7 +13,6 @@ import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
 import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
-import fitnesse.wikitext.WikiImportProperty;
 import org.junit.Before;
 import org.junit.Test;
 import util.Clock;
@@ -25,19 +24,17 @@ import static util.RegexAssertions.*;
 
 public class WikiPageResponderTest extends FitnesseBaseTestCase {
     private WikiPage root;
-    private FitNesseUtil fitNesseUtil;
     private PageCrawler crawler;
     private HtmlPageFactory htmlPageFactory;
     private Clock clock;
     private Properties properties;
 
     @Inject
-    public void inject(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, FitNesseUtil fitNesseUtil) {
+    public void inject(@Named(FitNesseModule.PROPERTIES_FILE) Properties properties, Clock clock, HtmlPageFactory htmlPageFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root) {
         this.properties = properties;
         this.clock = clock;
         this.htmlPageFactory = htmlPageFactory;
         this.root = root;
-        this.fitNesseUtil = fitNesseUtil;
     }
 
     @Before
@@ -134,51 +131,6 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
         final SimpleResponse response = requestPage("LinkerPage.ChildPage");
 
         assertSubString("child content", response.getContent());
-    }
-
-    @Test
-    public void testVirtualPageIndication() throws Exception {
-        final WikiPage targetPage = crawler.addPage(root, PathParser.parse("TargetPage"));
-        crawler.addPage(targetPage, PathParser.parse("ChildPage"));
-        final WikiPage linkPage = crawler.addPage(root, PathParser.parse("LinkPage"));
-        VirtualCouplingExtensionTest.setVirtualWiki(linkPage, FitNesseUtil.URL + "TargetPage");
-
-        fitNesseUtil.startFitnesse();
-        SimpleResponse response = null;
-        try {
-            response = requestPage("LinkPage.ChildPage");
-        } finally {
-            fitNesseUtil.stopFitnesse();
-        }
-
-        assertSubString("<body class=\"virtual\">", response.getContent());
-    }
-
-    @Test
-    public void testImportedPageIndication() throws Exception {
-        final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
-        final PageData data = page.getData();
-        final WikiImportProperty importProperty = new WikiImportProperty("blah");
-        importProperty.addTo(data.getProperties());
-        page.commit(data);
-
-        final String content = requestPage("SamplePage").getContent();
-
-        assertSubString("<body class=\"imported\">", content);
-    }
-
-    @Test
-    public void testImportedPageIndicationNotOnRoot() throws Exception {
-        final WikiPage page = crawler.addPage(root, PathParser.parse("SamplePage"));
-        final PageData data = page.getData();
-        final WikiImportProperty importProperty = new WikiImportProperty("blah");
-        importProperty.setRoot(true);
-        importProperty.addTo(data.getProperties());
-        page.commit(data);
-
-        final String content = requestPage("SamplePage").getContent();
-
-        assertNotSubString("<body class=\"imported\">", content);
     }
 
     @Test

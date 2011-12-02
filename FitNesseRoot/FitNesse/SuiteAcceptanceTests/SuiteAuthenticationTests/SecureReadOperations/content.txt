@@ -16,7 +16,6 @@
 |pageData|
 |raw|
 |rss|
-|importAndView|
 |getPage|
 |packet|
 

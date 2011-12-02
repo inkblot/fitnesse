@@ -9,5 +9,5 @@
 |script|
 |start|Page Builder|
 |line|I'm younger, but wiser|
-|attributes|!-WikiImport-!=true,Prune=true,Suites=FC2|
+|attributes|Prune=true,Suites=FC2|
 |page|!-ParentPage.SecondChild-!|

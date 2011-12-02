@@ -30,8 +30,8 @@ public class ContentsItemTest extends WikiBaseTestCase {
 
     @Test
     public void buildsProperties() throws Exception {
-        assertBuildsOption("PlainItem", new String[]{"Suite=true", "Test=true", "WikiImport=true", "Prune=true"}, "-p", "PROPERTY_TOC",
-                "<a href=\"PlainItem\">PlainItem *+@-</a>");
+        assertBuildsOption("PlainItem", new String[]{"Suite=true", "Test=true", "Prune=true"}, "-p", "PROPERTY_TOC",
+                "<a href=\"PlainItem\">PlainItem *+-</a>");
     }
 
     @Test

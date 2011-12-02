@@ -12,7 +12,6 @@ import fitnesse.http.Request;
 import fitnesse.http.Response;
 import fitnesse.http.SimpleResponse;
 import fitnesse.responders.NotFoundResponder;
-import fitnesse.wikitext.WikiImportProperty;
 import fitnesse.wiki.*;
 import fitnesse.wikitext.Utils;
 import org.json.JSONObject;
@@ -124,16 +123,7 @@ public class PropertiesResponder implements SecureResponder {
     private HtmlTag makeFormSections() throws Exception {
         TagGroup html = new TagGroup();
         html.add(makePropertiesForm());
-
-        WikiImportProperty importProperty = WikiImportProperty.createFrom(pageData
-                .getProperties());
-        if (importProperty != null)
-            html.add(makeImportUpdateForm(importProperty));
-        else
-            html.add(makeImportForm());
-
         html.add(makeSymbolicLinkSection());
-
         return html;
     }
 
@@ -229,61 +219,6 @@ public class PropertiesResponder implements SecureResponder {
         virtualWiki.add(HtmlUtil.NBSP);
         virtualWiki.add(HtmlUtil.NBSP);
         return virtualWiki;
-    }
-
-    private HtmlTag makeImportForm() {
-        HtmlTag form = HtmlUtil.makeFormTag("post", resource + "#end");
-        form.add(HtmlUtil.HR);
-        form.add("Wiki Import.  Supply the URL for the wiki you'd like to import.");
-        form.add(HtmlUtil.BR);
-        form.add("Remote Wiki URL:");
-        HtmlTag remoteUrlField = HtmlUtil.makeInputTag("text", "remoteUrl");
-        remoteUrlField.addAttribute("size", "70");
-        form.add(remoteUrlField);
-        form.add(HtmlUtil.BR);
-        HtmlTag autoUpdateCheckBox = HtmlUtil.makeInputTag("checkbox",
-                "autoUpdate", "checked");
-        autoUpdateCheckBox.addAttribute("checked", "true");
-        form.add(autoUpdateCheckBox);
-        form.add("- Automatically update imported content when executing tests");
-        form.add(HtmlUtil.BR);
-        form.add(HtmlUtil.makeInputTag("hidden", "responder", "import"));
-        form.add(HtmlUtil.makeInputTag("submit", "save", "Import"));
-        return form;
-    }
-
-    private HtmlTag makeImportUpdateForm(WikiImportProperty importProps)
-            throws Exception {
-        HtmlTag form = HtmlUtil.makeFormTag("post", resource + "#end");
-
-        form.add(HtmlUtil.HR);
-        form.add(new HtmlTag("b", "Wiki Import Update"));
-        form.add(HtmlUtil.BR);
-        String buttonMessage;
-        form.add(HtmlUtil.makeLink(page.getName(), page.getName()));
-        if (importProps.isRoot()) {
-            form.add(" imports its subpages from ");
-            buttonMessage = "Update Subpages";
-        } else {
-            form.add(" imports its content and subpages from ");
-            buttonMessage = "Update Content and Subpages";
-        }
-        form.add(HtmlUtil.makeLink(importProps.getSourceUrl(), importProps
-                .getSourceUrl()));
-        form.add(".");
-        form.add(HtmlUtil.BR);
-        HtmlTag autoUpdateCheckBox = HtmlUtil
-                .makeInputTag("checkbox", "autoUpdate");
-        if (importProps.isAutoUpdate())
-            autoUpdateCheckBox.addAttribute("checked", "true");
-        form.add(autoUpdateCheckBox);
-
-        form.add("- Automatically update imported content when executing tests");
-        form.add(HtmlUtil.BR);
-        form.add(HtmlUtil.makeInputTag("hidden", "responder", "import"));
-        form.add(HtmlUtil.makeInputTag("submit", "save", buttonMessage));
-
-        return form;
     }
 
     private HtmlTag makeSymbolicLinkSection() throws Exception {

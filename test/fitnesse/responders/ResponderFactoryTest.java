@@ -240,11 +240,6 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     }
 
     @Test
-    public void testPageImporterResponder() throws Exception {
-        assertResponderTypeMatchesInput("import", WikiImportingResponder.class);
-    }
-
-    @Test
     public void testShutdownResponder() throws Exception {
         assertResponderTypeMatchesInput("shutdown", ShutdownResponder.class);
     }

@@ -79,12 +79,10 @@ public class ResponderFactory {
         addResponder("renameConfirmation", RenameFileConfirmationResponder.class);
         addResponder("raw", RawContentResponder.class);
         addResponder("rss", RssResponder.class);
-        addResponder("import", WikiImportingResponder.class);
         addResponder("files", FileSystemResponder.class);
         addResponder("shutdown", ShutdownResponder.class);
         addResponder("format", TestResultFormattingResponder.class);
         addResponder("symlink", SymbolicLinkResponder.class);
-        addResponder("importAndView", ImportAndViewResponder.class);
         addResponder("getPage", WikiPageResponder.class);
         addResponder("packet", PacketResponder.class);
         addResponder("testHistory", TestHistoryResponder.class);

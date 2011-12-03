@@ -8,10 +8,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Named;
 import com.google.inject.name.Names;
-import fitnesse.FitNesseConstants;
-import fitnesse.FitNesseModule;
-import fitnesse.FitnesseBaseTestCase;
-import fitnesse.TestCaseHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +18,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 
-public class SymbolicPageTest extends FitnesseBaseTestCase {
+public class SymbolicPageTest extends WikiBaseTestCase {
     private PageCrawler crawler;
     private WikiPage root;
     private WikiPage pageOne;
@@ -121,7 +117,7 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
 
     @Test
     public void testSymbolicPageUsingExternalDirectory() throws Exception {
-        CreateExternalRoot();
+        createExternalRoot();
 
         assertEquals(2, symPage.getChildren().size());
 
@@ -138,9 +134,8 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
         assertEquals("external child", symChild.getData().getContent());
     }
 
-    private void CreateExternalRoot() throws Exception {
-        Injector externalInjector = Guice.createInjector(
-                new FitNesseModule(getProperties(), getUserPass(), TestCaseHelper.getRootPath(getClass().getSimpleName()) + "/external", "ExternalRoot", FitNesseConstants.DEFAULT_PORT, true));
+    private void createExternalRoot() throws Exception {
+        Injector externalInjector = Guice.createInjector(new WikiModule(getRootPath() + "/external", "ExternalRoot", getProperties()));
         externalRoot = externalInjector.getInstance(Key.get(WikiPage.class, Names.named(WikiModule.ROOT_PAGE)));
         assertThat(externalRoot, instanceOf(InMemoryPage.class));
         PageCrawler externalCrawler = externalRoot.getPageCrawler();
@@ -153,14 +148,11 @@ public class SymbolicPageTest extends FitnesseBaseTestCase {
 
     @Test
     public void testCommittingToExternalRoot() throws Exception {
-        CreateExternalRoot();
+        createExternalRoot();
 
         commitNewContent(symPage);
-
         assertEquals("new content", externalRoot.getData().getContent());
-
         commitNewContent(symPage.getChildPage("ExternalPageOne"));
-
         assertEquals("new content", externalRoot.getChildPage("ExternalPageOne").getData().getContent());
     }
 

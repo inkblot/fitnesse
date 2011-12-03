@@ -3,7 +3,6 @@
 
 package fitnesse.wiki;
 
-import fitnesse.testutil.SimpleCachingPage;
 import org.junit.Before;
 import org.junit.Test;
 

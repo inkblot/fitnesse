@@ -5,7 +5,6 @@ package fitnesse;
  * User: inkblot
  * Date: 10/20/11
  * Time: 7:21 AM
- * To change this template use File | Settings | File Templates.
  */
 public class FitNesseConstants {
     public static final String DEFAULT_PATH = ".";

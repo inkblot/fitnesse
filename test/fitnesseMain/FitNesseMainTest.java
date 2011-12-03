@@ -11,12 +11,19 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
+import java.util.Properties;
 
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.mockito.Mockito.*;
 
 public class FitNesseMainTest extends FitnesseBaseTestCase {
+    @Override
+    protected Properties getProperties() {
+        Properties properties = super.getProperties();
+        properties.remove(WikiModule.WIKI_PAGE_CLASS);
+        return properties;
+    }
 
     @Test
     public void commandArgCallsExecuteSingleCommand() throws Exception {

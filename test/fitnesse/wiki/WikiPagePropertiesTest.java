@@ -36,7 +36,6 @@ public class WikiPagePropertiesTest extends WikiBaseTestCase {
                     tab + tab + "<SubLink>&gt;SubChild.SymLink</SubLink>" + endl +
                     tab + "</SymbolicLinks>" + endl +
                     tab + "<Test/>" + endl +
-                    tab + "<VirtualWiki>http://someurl</VirtualWiki>" + endl +
                     "</properties>" + endl;
     static String[] sampleXmlFragments = sampleXml.split("\t*" + endl);
 
@@ -62,7 +61,6 @@ public class WikiPagePropertiesTest extends WikiBaseTestCase {
         assertTrue(properties.has("Edit"));
         assertTrue(properties.has("Test"));
         assertFalse(properties.has("Suite"));
-        assertEquals("http://someurl", properties.get("VirtualWiki"));
 
         WikiPageProperty parentOne = properties.getProperty("ParentOne");
         assertEquals(null, parentOne.getValue());

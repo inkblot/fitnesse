@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitnesseBaseTestCase;
 import fitnesse.components.SearchObserver;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,14 +82,6 @@ public class WhereUsedPageFinderTest extends FitnesseBaseTestCase implements Sea
         crawler.addPage(root, PathParser.parse("NewPage"), "{{{ PageThree }}}");
         List<WikiPage> resultList = whereUsed.search(pageThree);
         assertEquals(0, resultList.size());
-    }
-
-    @Test
-    public void testDontLookForReferencesInVirtualPages() throws Exception {
-        FitNesseUtil.bindVirtualLinkToPage(pageOne, pageTwo);
-        whereUsed = new WhereUsedPageFinder(pageOne, this);
-        whereUsed.search(pageOne);
-        assertEquals(0, hits.size());
     }
 
 }

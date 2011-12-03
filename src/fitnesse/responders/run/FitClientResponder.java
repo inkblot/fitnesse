@@ -45,7 +45,6 @@ public class FitClientResponder implements Responder, ResponsePuppeteer, TestSys
 
     public Response makeResponse(Request request) {
         crawler = root.getPageCrawler();
-        crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         resource = request.getResource();
         shouldIncludePaths = request.hasInput("includePaths");
         suiteFilter = (String) request.getInput("suiteFilter");

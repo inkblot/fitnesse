@@ -100,17 +100,7 @@ public class SuiteContentsFinder {
     private static List<WikiPage> getChildren(WikiPage page) throws IOException {
         List<WikiPage> children = new ArrayList<WikiPage>();
         children.addAll(page.getChildren());
-        addVirtualChildrenIfAny(page, children);
         return children;
-    }
-
-    private static void addVirtualChildrenIfAny(WikiPage context, List<WikiPage> children) throws IOException {
-        if (context.hasExtension(VirtualCouplingExtension.NAME)) {
-            VirtualCouplingExtension extension = (VirtualCouplingExtension) context.getExtension(
-                    VirtualCouplingExtension.NAME
-            );
-            children.addAll(extension.getVirtualCoupling().getChildren());
-        }
     }
 
     protected List<WikiPage> gatherCrossReferencedTestPages() throws IOException {

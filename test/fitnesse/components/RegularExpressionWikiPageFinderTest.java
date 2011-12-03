@@ -3,7 +3,6 @@ package fitnesse.components;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import fitnesse.FitnesseBaseTestCase;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -22,7 +21,7 @@ public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase im
     private WikiPage root;
     private WikiPage pageOne;
     private WikiPage childPage;
-    private WikiPage virtualPage;
+    private WikiPage pageTwo;
 
     List<WikiPage> foundPages = new ArrayList<WikiPage>();
     private WikiPageFinder pageFinder;
@@ -42,11 +41,8 @@ public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase im
         pageOne = crawler.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
         childPage = crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"),
                 "PageChild is a child of PageOne");
-        virtualPage = crawler.addPage(root, PathParser.parse("PageTwo"),
+        pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"),
                 "PageTwo has a bit of content too\n^PageOneChild");
-        PageData data = virtualPage.getData();
-        data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "PageOne");
-        virtualPage.commit(data);
         foundPages.clear();
     }
 
@@ -54,20 +50,20 @@ public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase im
     public void searcher() throws Exception {
         pageFinder = pageFinder("has");
         pageFinder.search(root);
-        assertThat(foundPages, found(pageOne, virtualPage));
+        assertThat(foundPages, found(pageOne, pageTwo));
     }
 
     @Test
     public void searcherAgain() throws Exception {
         pageFinder = pageFinder("a");
         pageFinder.search(root);
-        assertThat(foundPages, found(pageOne, childPage, virtualPage));
+        assertThat(foundPages, found(pageOne, childPage, pageTwo));
     }
 
     @Test
     public void dontSearchProxyPages() throws Exception {
         pageFinder = pageFinder("a");
-        pageFinder.search(virtualPage);
+        pageFinder.search(pageTwo);
         assertEquals(1, foundPages.size());
     }
 
@@ -102,7 +98,7 @@ public class RegularExpressionWikiPageFinderTest extends FitnesseBaseTestCase im
 
         pageFinder.search(root);
 
-        assertThat(foundPages, found(root, pageOne, childPage, virtualPage));
+        assertThat(foundPages, found(root, pageOne, childPage, pageTwo));
     }
 
     @Test

@@ -55,7 +55,6 @@ public class ResponderFactory {
         addResponder("stoptest", StopTestResponder.class);
         addResponder("test", TestResponder.class);
         addResponder("suite", SuiteResponder.class);
-        addResponder("proxy", SerializedPageResponder.class);
         addResponder("versions", VersionSelectionResponder.class);
         addResponder("viewVersion", VersionResponder.class);
         addResponder("rollback", RollbackResponder.class);

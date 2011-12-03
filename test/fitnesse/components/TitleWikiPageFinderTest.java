@@ -35,9 +35,6 @@ public class TitleWikiPageFinderTest extends FitnesseBaseTestCase implements Sea
         crawler.addPage(root, PathParser.parse("PageOne"), "has PageOne content");
         crawler.addPage(root, PathParser.parse("PageOne.PageOneChild"), "PageChild is a child of PageOne");
         WikiPage pageTwo = crawler.addPage(root, PathParser.parse("PageTwo"), "PageTwo has a bit of content too\n^PageOneChild");
-        PageData data = pageTwo.getData();
-        data.setAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE, FitNesseUtil.URL + "PageOne");
-        pageTwo.commit(data);
         hits.clear();
     }
 

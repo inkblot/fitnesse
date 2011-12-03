@@ -11,7 +11,6 @@ import fitnesse.authentication.SecureResponder;
 import fitnesse.html.HtmlPageFactory;
 import fitnesse.http.MockRequest;
 import fitnesse.http.SimpleResponse;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -120,17 +119,6 @@ public class WikiPageResponderTest extends FitnesseBaseTestCase {
         request.setResource(name);
         final Responder responder = new WikiPageResponder(properties, htmlPageFactory, clock, root);
         return (SimpleResponse) responder.makeResponse(request);
-    }
-
-    @Test
-    public void testShouldGetVirtualPage() throws Exception {
-        final WikiPage pageOne = crawler.addPage(root, PathParser.parse("TargetPage"), "some content");
-        crawler.addPage(pageOne, PathParser.parse("ChildPage"), "child content");
-        final WikiPage linkerPage = crawler.addPage(root, PathParser.parse("LinkerPage"), "linker content");
-        FitNesseUtil.bindVirtualLinkToPage(linkerPage, pageOne);
-        final SimpleResponse response = requestPage("LinkerPage.ChildPage");
-
-        assertSubString("child content", response.getContent());
     }
 
     @Test

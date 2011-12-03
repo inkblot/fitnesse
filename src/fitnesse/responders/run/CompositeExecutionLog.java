@@ -17,7 +17,7 @@ public class CompositeExecutionLog {
     public CompositeExecutionLog(WikiPage testPage) {
         crawler = testPage.getPageCrawler();
         root = crawler.getRoot(testPage);
-        crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
+        crawler.setDeadEndStrategy(new MockingPageCrawler());
         errorLogPagePath = crawler.getFullPath(testPage).addNameToFront(ExecutionLog.ErrorLogName);
         errorLogPageName = PathParser.render(errorLogPagePath);
     }

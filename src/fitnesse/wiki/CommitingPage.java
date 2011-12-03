@@ -6,7 +6,7 @@ import com.google.inject.Injector;
 
 import java.io.IOException;
 
-public abstract class CommitingPage extends ExtendableWikiPage {
+public abstract class CommitingPage extends BaseWikiPage {
     private static final long serialVersionUID = 1L;
 
     protected CommitingPage(String name, WikiPage parent, Injector injector) {

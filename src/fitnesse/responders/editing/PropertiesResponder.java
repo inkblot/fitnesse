@@ -141,7 +141,6 @@ public class PropertiesResponder implements SecureResponder {
         checkBoxesSection.add(makeSecurityCheckboxesHtml(pageData));
         HtmlTag virtualWikiSection = new HtmlTag("div");
         virtualWikiSection.addAttribute("class", "virtual-wiki-properties");
-        virtualWikiSection.add(makeVirtualWikiHtml());
         virtualWikiSection.add(makeTagsHtml(pageData));
         virtualWikiSection.add(makeHelpTextHtml(pageData));
         trisection.add(checkBoxesSection);
@@ -202,23 +201,6 @@ public class PropertiesResponder implements SecureResponder {
         checkbox.addAttribute("value", attribute);
         checkbox.tail = " - " + attribute;
         return checkbox;
-    }
-
-    private HtmlTag makeVirtualWikiHtml() throws Exception {
-        HtmlTag virtualWiki = new HtmlTag("div");
-        virtualWiki.addAttribute("style", "float: left; width: 450px;");
-        virtualWiki.add("VirtualWiki URL: ");
-        HtmlTag deprecated = new HtmlTag("span", "(DEPRECATED)");
-        deprecated.addAttribute("style", "color: #FF0000;");
-        virtualWiki.add(deprecated);
-        virtualWiki.add(HtmlUtil.BR);
-        HtmlTag vwInput = HtmlUtil.makeInputTag("text", "VirtualWiki",
-                getVirtualWikiValue(pageData));
-        vwInput.addAttribute("size", "40");
-        virtualWiki.add(vwInput);
-        virtualWiki.add(HtmlUtil.NBSP);
-        virtualWiki.add(HtmlUtil.NBSP);
-        return virtualWiki;
     }
 
     private HtmlTag makeSymbolicLinkSection() throws Exception {
@@ -282,11 +264,8 @@ public class PropertiesResponder implements SecureResponder {
         WikiPagePath wikiPagePath = PathParser.parse(linkPath);
 
         if (wikiPagePath != null) {
-            WikiPage parent = wikiPagePath.isRelativePath() ? page.getParent() : page; // TODO
-            // -AcD-
-            // a
-            // better
-            // way?
+            // TODO -AcD- a better way?
+            WikiPage parent = wikiPagePath.isRelativePath() ? page.getParent() : page;
             PageCrawler crawler = parent.getPageCrawler();
             WikiPage target = crawler.getPage(parent, wikiPagePath);
             WikiPagePath fullPath;
@@ -298,14 +277,6 @@ public class PropertiesResponder implements SecureResponder {
             return HtmlUtil.makeLink(fullPath.toString(), Utils.escapeHTML(linkPath));
         } else
             return new RawHtml(linkPath);
-    }
-
-    public static String getVirtualWikiValue(PageData data) throws Exception {
-        String value = data.getAttribute(WikiPageProperties.VIRTUAL_WIKI_ATTRIBUTE);
-        if (value == null)
-            return "";
-        else
-            return value;
     }
 
     public SecureOperation getSecureOperation() {

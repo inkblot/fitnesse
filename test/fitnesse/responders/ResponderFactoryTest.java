@@ -21,7 +21,6 @@ import fitnesse.responders.testHistory.TestHistoryResponder;
 import fitnesse.responders.versions.RollbackResponder;
 import fitnesse.responders.versions.VersionResponder;
 import fitnesse.responders.versions.VersionSelectionResponder;
-import fitnesse.testutil.FitNesseUtil;
 import fitnesse.wiki.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,22 +33,18 @@ import static org.junit.Assert.assertTrue;
 
 public class ResponderFactoryTest extends FitnesseBaseTestCase {
     private MockRequest request;
-    private PageCrawler crawler;
     private ResponderFactory responderFactory;
-    private WikiPage root;
     private String rootPagePath;
 
     @Inject
-    public void inject(ResponderFactory responderFactory, @Named(WikiModule.ROOT_PAGE) WikiPage root, @Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath) {
+    public void inject(ResponderFactory responderFactory, @Named(WikiModule.ROOT_PAGE_PATH) String rootPagePath) {
         this.responderFactory = responderFactory;
-        this.root = root;
         this.rootPagePath = rootPagePath;
     }
 
     @Before
     public void setUp() throws Exception {
         request = new MockRequest();
-        crawler = root.getPageCrawler();
     }
 
     @Test
@@ -137,11 +132,6 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     @Test
     public void testSearchResponder() throws Exception {
         assertResponderTypeMatchesInput("search", SearchResponder.class);
-    }
-
-    @Test
-    public void testSerializedPageResponder() throws Exception {
-        assertResponderTypeMatchesInput("proxy", SerializedPageResponder.class);
     }
 
     @Test
@@ -267,17 +257,6 @@ public class ResponderFactoryTest extends FitnesseBaseTestCase {
     @Test
     public void testReplaceResponder() throws Exception {
         assertResponderTypeMatchesInput("replace", SearchReplaceResponder.class);
-    }
-
-    @Test
-    public void testWillDisplayVirtualPages() throws Exception {
-        WikiPage root = InMemoryPage.makeRoot("RooT", injector);
-        WikiPage page1 = crawler.addPage(root, PathParser.parse("PageOne"));
-        crawler.addPage(page1, PathParser.parse("ChildOne"), "child content");
-        WikiPage page2 = crawler.addPage(root, PathParser.parse("PageTwo"));
-        FitNesseUtil.bindVirtualLinkToPage(page2, page1);
-        request.setResource("PageTwo.ChildOne");
-        assertResponderType(WikiPageResponder.class);
     }
 
     @Test

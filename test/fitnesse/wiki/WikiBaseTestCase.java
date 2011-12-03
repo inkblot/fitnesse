@@ -10,6 +10,7 @@ import fitnesse.wikitext.parser.VariableSource;
 import org.junit.After;
 import org.movealong.junit.BaseInjectedTestCase;
 import util.FileUtil;
+import util.UtilModule;
 
 import java.io.File;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public class WikiBaseTestCase extends BaseInjectedTestCase {
     protected Module[] getBaseModules() {
         return new Module[] {
                 new WikiModule(getRootPath(), getRootPageName(), getProperties()),
+                new UtilModule(),
                 new AbstractModule() {
                     @Override
                     protected void configure() {

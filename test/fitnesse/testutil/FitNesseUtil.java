@@ -4,9 +4,6 @@ package fitnesse.testutil;
 
 import com.google.inject.Inject;
 import fitnesse.FitNesse;
-import fitnesse.wiki.VirtualCouplingExtension;
-import fitnesse.wiki.VirtualCouplingPage;
-import fitnesse.wiki.WikiPage;
 
 import static org.junit.Assert.assertFalse;
 
@@ -34,11 +31,6 @@ public class FitNesseUtil {
             fitNesse.stop();
             running = false;
         }
-    }
-
-    public static void bindVirtualLinkToPage(WikiPage host, WikiPage proxy) throws Exception {
-        VirtualCouplingPage coupling = new VirtualCouplingPage(host, proxy);
-        ((VirtualCouplingExtension) host.getExtension(VirtualCouplingExtension.NAME)).setVirtualCoupling(coupling);
     }
 
 }

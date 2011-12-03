@@ -29,7 +29,6 @@ public class InMemoryPage extends CommitingPage {
     protected InMemoryPage(String name, WikiPage parent, Injector injector) {
         super(name, parent, injector);
         clock = injector.getInstance(Clock.class);
-        addExtention(new VirtualCouplingExtension(this));
         versions.put(currentVersionName, new PageData(this, ""));
     }
 

@@ -24,7 +24,6 @@ public abstract class CachingPage extends CommitingPage {
 
     public CachingPage(String name, WikiPage parent, Injector injector) {
         super(name, parent, injector);
-        addExtention(new VirtualCouplingExtension(this));
     }
 
     public abstract boolean hasChildPage(String pageName) throws IOException;

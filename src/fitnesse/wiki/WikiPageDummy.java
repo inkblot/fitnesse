@@ -9,6 +9,8 @@ import util.Clock;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 public class WikiPageDummy implements WikiPage {
     private static final long serialVersionUID = 1L;
 
@@ -105,20 +107,12 @@ public class WikiPageDummy implements WikiPage {
         return null;
     }
 
-    public boolean hasExtension(String extensionName) {
-        return false;
-    }
-
-    public Extension getExtension(String extensionName) {
-        return null;
-    }
-
     public String getHelpText() {
         return "Dummy help text";
     }
 
     public List<WikiPageAction> getActions() {
-        return null;
+        return emptyList();
     }
 
     @Override

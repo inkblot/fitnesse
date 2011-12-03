@@ -41,11 +41,6 @@ public interface WikiPage extends Serializable, Comparable<Object> {
 
     public WikiPage getFooterPage() throws IOException;
 
-    //TODO Delete these method alone with ProxyPage when the time is right.
-    public boolean hasExtension(String extensionName);
-
-    public Extension getExtension(String extensionName);
-
     public String getHelpText() throws IOException;
 
     public List<WikiPageAction> getActions() throws IOException;

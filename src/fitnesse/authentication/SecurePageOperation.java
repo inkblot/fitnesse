@@ -15,7 +15,7 @@ public abstract class SecurePageOperation implements SecureOperation {
         try {
             WikiPagePath path = PathParser.parse(request.getResource());
             PageCrawler crawler = root.getPageCrawler();
-            crawler.setDeadEndStrategy(new VirtualMockingPageCrawler());
+            crawler.setDeadEndStrategy(new MockingPageCrawler());
             WikiPage page = crawler.getPage(root, path);
             if (page == null)
                 return false;

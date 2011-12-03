@@ -475,18 +475,6 @@ span.page_title {
   color: darkGreen;
 }
 
-.virtual {
-  background-image: url("/files/images/virtualPage.jpg");
-  background-position: center top;
-  background-repeat: no-repeat;
-}
-
-.imported {
-  background-image: url("/files/images/importedPage.jpg");
-  background-position: center top;
-  background-repeat: no-repeat;
-}
-
 .meta {
   color: #BF8660;
   font-style: italic;

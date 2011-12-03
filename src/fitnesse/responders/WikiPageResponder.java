@@ -42,7 +42,6 @@ public class WikiPageResponder implements SecureResponder {
     public Response makeResponse(Request request) throws Exception {
         WikiPagePath path = PathParser.parse(request.getResource());
         PageCrawler crawler = root.getPageCrawler();
-        crawler.setDeadEndStrategy(new VirtualEnabledPageCrawler());
         WikiPage page = crawler.getPage(root, path);
 
         if (page == null) return notFoundResponse(request, root);

@@ -22,7 +22,6 @@ import fitnesse.wikitext.Utils;
 import fitnesse.wikitext.parser.Collapsible;
 import fitnesse.wikitext.parser.Include;
 import fitnesse.wikitext.parser.Symbol;
-import fitnesse.wikitext.test.ParserTestHelper;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -524,9 +523,9 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
         Symbol includeParent = getCollapsibleSymbol(scenarios);
         assertNotNull(includeParent);
-        assertEquals("Precompiled Libraries", ParserTestHelper.serializeContent(includeParent.childAt(0)));
+        assertEquals("Precompiled Libraries", serializeContent(includeParent.childAt(0)));
         Symbol childLibraryInclude = getIncludeSymbol(includeParent.childAt(1));
-        assertTrue(ParserTestHelper.serializeContent(childLibraryInclude).contains("child library"));
+        assertTrue(serializeContent(childLibraryInclude).contains("child library"));
     }
 
     @Test
@@ -539,10 +538,10 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
 
         Symbol includeParent = getCollapsibleSymbol(scenarios);
         assertNotNull(includeParent);
-        assertEquals("Precompiled Libraries", ParserTestHelper.serializeContent(includeParent.childAt(0)));
+        assertEquals("Precompiled Libraries", serializeContent(includeParent.childAt(0)));
         Symbol uncleLibraryInclude = getIncludeSymbol(includeParent.childAt(1));
         assertNotNull(uncleLibraryInclude);
-        assertTrue(ParserTestHelper.serializeContent(uncleLibraryInclude).contains("uncle library"));
+        assertTrue(serializeContent(uncleLibraryInclude).contains("uncle library"));
     }
 
     @Test
@@ -618,4 +617,12 @@ public class SlimTestSystemTest extends FitnesseBaseTestCase {
                 slimServer.getSocketService().close();
         }
     }
+
+    public static String serializeContent(Symbol symbol) {
+        StringBuilder result = new StringBuilder();
+        if (symbol.getContent() != null) result.append(symbol.getContent());
+        for (Symbol child : symbol.getChildren()) result.append(serializeContent(child));
+        return result.toString();
+    }
+
 }
